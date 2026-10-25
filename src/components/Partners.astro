@@ -1,0 +1,157 @@
+---
+/**
+ * Partner cards (home and About). Everything readable without hovering: logo on a light plate,
+ * category, name, one line, dated facts, link. Facts nobody has confirmed are TODO boxes in development
+ * builds only. Words from i18n/about.json (partners), logos and links from data/partners.ts.
+ */
+import Arrow from './ui/Arrow.astro';
+import { pick, fill, type Lang } from '../i18n';
+import about from '../i18n/about.json';
+import home from '../i18n/home.json';
+import { PARTNERS } from '../data/partners';
+
+interface Props {
+  lang: Lang;
+  /** number shown in the kicker (home: 09); omit for no stream node */
+  index?: string;
+}
+const { lang, index } = Astro.props;
+const t = pick(about, lang).partners;
+const kicker = pick(home, lang).partners.kicker;
+const byId = Object.fromEntries(t.items.map((c) => [c.id, c]));
+const dev = import.meta.env.DEV;
+const host = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+const id = lang === 'cs' ? 'partneri' : 'partners';
+---
+
+<section class="adv-partners adv-section" id={id} aria-labelledby="adv-partners-title">
+  <div class="adv-wrap">
+    <div class="adv-head">
+      <div>
+        <p class="adv-kicker" data-node={index ? '' : undefined}>
+          <i></i>{index && <b>{index}</b>}{kicker}
+        </p>
+        <h2 id="adv-partners-title" class="adv-h2" data-reveal>{t.title}</h2>
+      </div>
+      <p class="adv-lead" data-reveal style="--i:1">{t.line}</p>
+    </div>
+    <ul class="adv-partners__grid">
+      {
+        PARTNERS.map((p, i) => {
+          const c = byId[p.id] ?? { category: '', line: '', facts: [] as string[] };
+          const together = (c as { together?: string }).together;
+          return (
+            <li class="adv-card adv-card--lift adv-partners__card" data-reveal style={`--i:${i}`}>
+              <div class:list={['adv-partners__plate', { 'is-dark': (p as { plate?: string }).plate === 'dark' }]}>
+                <img src={p.logo} alt={p.name} style={`height:${p.logoH}px`} loading="lazy" decoding="async" />
+              </div>
+              <p class="adv-label">{c.category}</p>
+              <h3 class="adv-partners__name">{p.name}</h3>
+              <p class="adv-partners__line">{c.line}</p>
+              {c.facts.length > 0 && (
+                <ul class="adv-partners__facts">
+                  {c.facts.map((f: string) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+              )}
+              {together ? (
+                <p class="adv-partners__together">
+                  <span class="adv-label">{t.togetherLabel}</span>
+                  {together}
+                </p>
+              ) : (
+                dev && <p class="adv-todo">{fill(t.todoTogether, { name: p.name })}</p>
+              )}
+              <span class="adv-rule" />
+              {p.url ? (
+                <a class="adv-link adv-partners__link" href={p.url} target="_blank" rel="noopener noreferrer">
+                  {fill(t.visit, { host: host(p.url) })}
+                  <Arrow dir="up" />
+                </a>
+              ) : (
+                dev && <p class="adv-todo">{fill(t.todoLink, { name: p.name })}</p>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .adv-partners__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-partners__card {
+    padding: 14px 14px 24px;
+  }
+  .adv-partners__card > :not(.adv-partners__plate) {
+    margin-inline: 10px;
+  }
+  .adv-partners__plate {
+    display: grid;
+    place-items: center;
+    height: 132px;
+    margin-bottom: 10px;
+    border-radius: 14px;
+    background:
+      radial-gradient(120% 90% at 30% 0%, #ffffff, transparent 60%),
+      linear-gradient(165deg, #eef1f6, #d9dee8);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+  .adv-partners__plate.is-dark {
+    background:
+      radial-gradient(120% 90% at 30% 0%, rgba(124, 200, 255, 0.12), transparent 60%),
+      linear-gradient(165deg, #1c2030, #0d0f15);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .adv-partners__plate img {
+    width: auto;
+    max-width: 70%;
+    object-fit: contain;
+  }
+  .adv-partners__name {
+    font-size: var(--adv-h3);
+  }
+  .adv-partners__line {
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  .adv-partners__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-partners__facts li {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--adv-edge);
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    color: var(--adv-muted);
+  }
+  .adv-partners__together {
+    display: grid;
+    gap: 4px;
+    font-size: 0.9375rem;
+  }
+  .adv-partners__link {
+    align-self: flex-start;
+    font-size: 0.875rem;
+  }
+  @media (max-width: 900px) {
+    .adv-partners__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

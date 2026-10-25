@@ -1,0 +1,344 @@
+---
+/**
+ * Kesia spotlight: the featured case. Drawn chart (sample spot-price line + area fade, labelled as a
+ * sample), three count-ups from the case's footnoted results, each with a thin chart: a bar meter, the
+ * two fee bars to scale, six daily updates. Links to the case page.
+ * Naming rule: the client is "Kesia" only (docs/BRAND.md).
+ */
+import Arrow from '../ui/Arrow.astro';
+import { pick, loc, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+import kesia from '../../i18n/kesia.json';
+import { routes } from '../../data/routes';
+import { findCaseStudy } from '../../data/caseStudies';
+import { numberFor } from '../../data/homeNumbers';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).kesia;
+const k = pick(kesia, lang).kesia;
+const c = findCaseStudy('kesia-live-pricing');
+const link = numberFor('business-optimisation')?.linkLabel;
+const nf = new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB');
+const [hours, fees, daily] = k.results.items;
+
+// Sample series (illustration only, labelled on the page): a calm random walk, fixed so the build is stable.
+const pts: number[] = [];
+let v = 2742;
+for (let i = 0; i < 40; i++) {
+  v += Math.sin(i * 0.7) * 3.1 + Math.cos(i * 0.31) * 2.2 + (i > 24 ? 1.6 : 0.2);
+  pts.push(v);
+}
+const min = Math.min(...pts) - 4;
+const max = Math.max(...pts) + 4;
+const X = (i: number) => (i / (pts.length - 1)) * 400;
+const Y = (p: number) => 150 - ((p - min) / (max - min)) * 140;
+const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(p).toFixed(1)}`).join(' ');
+const area = `${line} L400 160 L0 160Z`;
+const lastP = pts[pts.length - 1];
+---
+
+{
+  c && (
+    <section class="adv-kesia adv-section" aria-labelledby="adv-kesia-title">
+      <div class="adv-wrap">
+        <p class="adv-kicker" data-node>
+          <i />
+          <b>05</b>
+          {t.kicker} · Kesia
+        </p>
+        <div class="adv-kesia__panel adv-panel" data-reveal>
+          <div class="adv-kesia__copy">
+            <h2 id="adv-kesia-title" class="adv-kesia__title">{k.title}</h2>
+            <p class="adv-lead">{loc(c.outcome, lang)}</p>
+            <a class="adv-link" href={routes.case(lang, c.slug)}>
+              {link ? loc(link, lang) : k.metaTitle}
+              <Arrow />
+            </a>
+          </div>
+          <figure class="adv-kesia__chart" data-play>
+            <figcaption>
+              <span>{t.chartLabel}</span>
+              <span class="adv-kesia__live">
+                <i />
+                {nf.format(Math.round(lastP))}
+              </span>
+            </figcaption>
+            <svg viewBox="0 0 400 160" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="adv-kesia-area" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="rgba(124,200,255,0.28)" />
+                  <stop offset="1" stop-color="rgba(124,200,255,0)" />
+                </linearGradient>
+              </defs>
+              <g class="adv-kesia__gridlines">
+                <path d="M0 40 H400 M0 80 H400 M0 120 H400" />
+              </g>
+              <path class="adv-kesia__area" d={area} fill="url(#adv-kesia-area)" />
+              <path class="adv-kesia__line" d={line} pathLength="100" />
+            </svg>
+            <p class="adv-kesia__note">{k.ticker.note}</p>
+          </figure>
+          <ul class="adv-kesia__stats">
+            <li data-play>
+              <p class="adv-kesia__num">
+                <span data-count={hours.target} data-prefix={hours.prefix} data-suffix={hours.suffix} aria-hidden="true">
+                  {hours.final}
+                </span>
+                <span class="screen-reader-text">{hours.final}</span>
+              </p>
+              <p class="adv-kesia__label">{hours.label}</p>
+              <span class="adv-meter" aria-hidden="true">
+                <i />
+              </span>
+            </li>
+            <li data-play>
+              <p class="adv-kesia__num">
+                <span data-count={fees.target} data-prefix={fees.prefix} data-suffix={fees.suffix} aria-hidden="true">
+                  {fees.final}
+                </span>
+                <span class="screen-reader-text">{fees.final}</span>
+              </p>
+              <p class="adv-kesia__label">{fees.label}</p>
+              <span class="adv-fee" aria-hidden="true">
+                <i style="--w:1" />
+                <i style="--w:0.209" />
+              </span>
+            </li>
+            <li data-play>
+              <p class="adv-kesia__num">
+                <span data-count={daily.target} data-prefix={daily.prefix} data-suffix={daily.suffix} aria-hidden="true">
+                  {daily.final}
+                </span>
+                <span class="screen-reader-text">{daily.final}</span>
+              </p>
+              <p class="adv-kesia__label">{daily.label}</p>
+              <span class="adv-dots" aria-hidden="true">
+                {[0, 1, 2, 3, 4, 5].map((i) => (
+                  <i style={`--k:${i}`} />
+                ))}
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style is:global>
+  .adv-kesia__panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(28px, 4vw, 56px);
+    padding: clamp(24px, 4vw, 52px);
+    overflow: hidden;
+  }
+  .adv-kesia__panel::before {
+    content: '';
+    position: absolute;
+    right: -10%;
+    top: -30%;
+    width: 70%;
+    height: 120%;
+    background: radial-gradient(closest-side, rgba(32, 64, 170, 0.32), transparent 70%);
+    pointer-events: none;
+  }
+  .adv-kesia__copy {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 22px;
+  }
+  .adv-kesia__title {
+    font-size: clamp(1.875rem, 1.3rem + 2vw, 3rem);
+  }
+  .adv-kesia__copy .adv-link {
+    justify-self: start;
+  }
+  .adv-kesia__chart {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    padding: 18px 18px 14px;
+    border-radius: 16px;
+    background: rgba(7, 8, 12, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .adv-kesia__chart figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--adv-muted);
+  }
+  .adv-kesia__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--adv-text);
+  }
+  .adv-kesia__live i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+    animation: adv-pulse 2.4s var(--adv-ease) infinite;
+  }
+  .adv-kesia__chart svg {
+    width: 100%;
+    height: clamp(150px, 18vw, 220px);
+    overflow: visible;
+  }
+  .adv-kesia__gridlines path {
+    stroke: rgba(255, 255, 255, 0.06);
+    stroke-dasharray: 2 4;
+    vector-effect: non-scaling-stroke;
+  }
+  .adv-kesia__line {
+    fill: none;
+    stroke: var(--adv-accent);
+    stroke-width: 1.6;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+  }
+  .adv-kesia__note {
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+  .js [data-play].is-armed .adv-kesia__line {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 2200ms var(--adv-ease-io);
+  }
+  .js [data-play].is-armed .adv-kesia__area {
+    opacity: 0;
+    transition: opacity 1200ms var(--adv-ease) 1200ms;
+  }
+  .js [data-play].is-playing .adv-kesia__line {
+    stroke-dashoffset: 0;
+  }
+  .js [data-play].is-playing .adv-kesia__area {
+    opacity: 1;
+  }
+
+  .adv-kesia__stats {
+    position: relative;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--adv-line);
+  }
+  .adv-kesia__stats li {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    padding: 26px 24px 4px 0;
+  }
+  .adv-kesia__stats li + li {
+    padding-left: 24px;
+    border-left: 1px solid var(--adv-line);
+  }
+  .adv-kesia__num {
+    font-family: var(--adv-display);
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-kesia__label {
+    max-width: 28ch;
+    font-size: 0.9375rem;
+    color: var(--adv-muted);
+  }
+
+  /* thin charts */
+  .adv-meter {
+    display: block;
+    height: 4px;
+    margin-top: 8px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+  }
+  .adv-meter i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(124, 200, 255, 0.4), var(--adv-accent));
+    transform-origin: left;
+  }
+  .adv-fee {
+    display: grid;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .adv-fee i {
+    display: block;
+    height: 4px;
+    width: calc(var(--w) * 100%);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.22);
+    transform-origin: left;
+  }
+  .adv-fee i + i {
+    background: var(--adv-accent);
+  }
+  .adv-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .adv-dots i {
+    width: 14px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--adv-accent);
+  }
+  .js [data-play].is-armed .adv-meter i,
+  .js [data-play].is-armed .adv-fee i {
+    transform: scaleX(0);
+    transition: transform 1400ms var(--adv-ease);
+  }
+  .js [data-play].is-armed .adv-fee i + i {
+    transition-delay: 250ms;
+  }
+  .js [data-play].is-armed .adv-dots i {
+    opacity: 0.15;
+    transition: opacity 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 160ms + 200ms);
+  }
+  .js [data-play].is-playing .adv-meter i,
+  .js [data-play].is-playing .adv-fee i {
+    transform: scaleX(1);
+  }
+  .js [data-play].is-playing .adv-dots i {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .adv-kesia__panel {
+      grid-template-columns: 1fr;
+    }
+    .adv-kesia__stats {
+      grid-template-columns: 1fr;
+    }
+    .adv-kesia__stats li,
+    .adv-kesia__stats li + li {
+      padding: 22px 0 4px;
+      border-left: 0;
+    }
+    .adv-kesia__stats li + li {
+      border-top: 1px solid var(--adv-line);
+    }
+  }
+</style>

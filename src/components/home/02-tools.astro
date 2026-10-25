@@ -1,0 +1,110 @@
+---
+/**
+ * Tools strip: the systems we connect, as a slow marquee of names in the mono face.
+ * TODO (Honza): the list is a placeholder until confirmed (docs/STATUS.md). Names only, no logos:
+ * third-party logos need permission and would pull the eye away from ours.
+ */
+import { pick, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).tools;
+// TODO (Honza): confirm the tool list.
+const TOOLS = ['Shoptet', 'Shopify', 'Google Workspace', 'Microsoft 365', 'Pohoda', 'Fakturoid', 'n8n', 'Make', 'OpenAI', 'Claude'];
+const dev = import.meta.env.DEV;
+---
+
+<section class="adv-tools" aria-labelledby="adv-tools-title">
+  <div class="adv-wrap adv-tools__head">
+    <p class="adv-kicker" data-node><i></i><b>02</b>{t.kicker}</p>
+    <h2 id="adv-tools-title" class="adv-tools__title" data-reveal>{t.title}</h2>
+    {dev && <p class="adv-todo">TODO: seznam nástrojů je zástupný, potvrdit (jen ve vývojovém buildu).</p>}
+  </div>
+  <div class="adv-tools__rail" data-live>
+    <ul class="adv-tools__track">
+      {TOOLS.map((n) => <li>{n}</li>)}
+    </ul>
+    <ul class="adv-tools__track" aria-hidden="true">
+      {TOOLS.map((n) => <li>{n}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .adv-tools {
+    position: relative;
+    padding: clamp(40px, 6vw, 80px) 0 clamp(70px, 8vw, 110px);
+  }
+  .adv-tools__head {
+    display: grid;
+    justify-items: start;
+  }
+  .adv-tools__title {
+    max-width: 24ch;
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--adv-muted);
+  }
+  .adv-tools__head .adv-todo {
+    margin-top: 14px;
+  }
+  .adv-tools__rail {
+    display: flex;
+    margin-top: 40px;
+    overflow: clip;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    border-block: 1px solid var(--adv-line);
+  }
+  .adv-tools__track {
+    display: flex;
+    flex: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: adv-marquee 48s linear infinite;
+  }
+  .adv-tools__track li {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 22px 22px;
+    font-family: var(--adv-display);
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: rgba(241, 242, 245, 0.62);
+    white-space: nowrap;
+  }
+  .adv-tools__track li::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin-left: 22px;
+    border-radius: 2px;
+    border: 1px solid rgba(var(--adv-accent-rgb), 0.6);
+  }
+  @keyframes adv-marquee {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .adv-tools__rail {
+      flex-wrap: wrap;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .adv-tools__track {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .adv-tools__track[aria-hidden] {
+      display: none;
+    }
+  }
+</style>

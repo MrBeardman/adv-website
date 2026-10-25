@@ -1,0 +1,58 @@
+---
+/** Statement: one sentence lit word by word as it scrolls past ("Most of the work is routine."). */
+import { pick, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).statement;
+---
+
+<section class="adv-statement adv-section" aria-labelledby="adv-statement-title">
+  <div class="adv-wrap">
+    <p class="adv-kicker" data-node><i></i><b>03</b>{t.kicker}</p>
+    <h2 id="adv-statement-title" class="adv-statement__text" data-lit>
+      <span class="adv-statement__lead">{t.lead}</span>
+      {t.rest}
+    </h2>
+  </div>
+</section>
+
+<style is:global>
+  .adv-statement {
+    position: relative;
+  }
+  .adv-statement::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(1100px, 120vw);
+    height: 600px;
+    translate: -50% -50%;
+    background: radial-gradient(closest-side, rgba(32, 64, 170, 0.22), transparent 70%);
+    pointer-events: none;
+  }
+  .adv-statement__text {
+    position: relative;
+    max-width: 22ch;
+    font-size: clamp(2.125rem, 1.2rem + 3.6vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+  .adv-statement__lead {
+    display: block;
+    margin-bottom: 0.1em;
+  }
+  .adv-statement__lead .adv-w {
+    color: rgb(124 200 255 / calc(0.25 + var(--lit, 0) * 0.75));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .adv-statement__lead .adv-w {
+      color: var(--adv-accent);
+    }
+  }
+</style>

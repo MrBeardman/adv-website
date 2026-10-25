@@ -1,0 +1,13 @@
+---
+/** The site's one arrow (links, buttons, cards). `dir="up"` is the diagonal ↗ for external/open links. */
+interface Props {
+  dir?: 'right' | 'up' | 'left';
+  size?: number;
+}
+const { dir = 'right', size = 16 } = Astro.props;
+const d = dir === 'up' ? 'M5 11 11 5M6 5h5v5' : dir === 'left' ? 'M13 8H3m4-4L3 8l4 4' : 'M3 8h10M9 4l4 4-4 4';
+---
+
+<svg class="adv-arr" width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d={d} stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>

@@ -1,0 +1,319 @@
+---
+import Logo from './ui/Logo.astro';
+import Arrow from './ui/Arrow.astro';
+import { pick, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  alternates: Partial<Record<Lang, string>>;
+}
+const { lang, alternates } = Astro.props;
+const t = pick(chrome, lang);
+const other: Lang = lang === 'cs' ? 'en' : 'cs';
+const switchHref = alternates[other] ?? routes.home(other);
+const path = Astro.url.pathname;
+const links = [
+  { href: routes.services(lang), label: t.nav.services },
+  { href: routes.work(lang), label: t.nav.work },
+  { href: `${routes.about(lang)}#${lang === 'cs' ? 'partneri' : 'partners'}`, label: t.nav.partners },
+  { href: routes.about(lang), label: t.nav.about },
+];
+const current = (href: string) => !href.includes('#') && href !== routes.home(lang) && path.startsWith(href);
+---
+
+<header class="adv-header" data-header>
+  <div class="adv-header__bar adv-wrap">
+    <a class="adv-header__logo" href={routes.home(lang)} aria-label={t.footer.logoLabel}>
+      <Logo decorative />
+    </a>
+    <nav class="adv-header__nav" aria-label={t.nav.wordmark}>
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={current(l.href) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="adv-header__end">
+      <a class="adv-header__lang" href={switchHref} hreflang={other} lang={other} aria-label={t.nav.langSwitch}>
+        <span aria-hidden="true" class:list={[{ on: lang === 'cs' }]}>CS</span>
+        <span aria-hidden="true" class="adv-header__sep">/</span>
+        <span aria-hidden="true" class:list={[{ on: lang === 'en' }]}>EN</span>
+      </a>
+      <a class="adv-btn adv-btn--primary adv-btn--sm adv-header__cta" href={routes.contact(lang)}>
+        {t.nav.contact}
+        <Arrow />
+      </a>
+      <button
+        class="adv-header__burger"
+        type="button"
+        data-burger
+        aria-expanded="false"
+        aria-controls="adv-drawer"
+        aria-label={t.nav.menu}
+        data-open={t.nav.menu}
+        data-close={t.nav.close}
+      >
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="adv-drawer" id="adv-drawer" data-drawer>
+    <nav class="adv-wrap" aria-label={t.nav.wordmark}>
+      <ul>
+        {
+          [{ href: routes.home(lang), label: t.nav.home }, ...links, { href: routes.contact(lang), label: t.nav.contact }].map(
+            (l, i) => (
+              <li style={`--i:${i}`}>
+                <a href={l.href}>
+                  <span class="adv-drawer__n">{String(i + 1).padStart(2, '0')}</span>
+                  {l.label}
+                </a>
+              </li>
+            ),
+          )
+        }
+      </ul>
+      <div class="adv-drawer__foot">
+        <a href={`mailto:${t.brand.email}`}>{t.brand.email}</a>
+        <a href={`tel:${t.brand.phoneHref}`}>{t.brand.phone}</a>
+        <a href={switchHref} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Čeština'}</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style is:global>
+  .adv-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    transition: transform 450ms var(--adv-ease);
+  }
+  .adv-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    height: var(--adv-header-h);
+    background: rgba(9, 10, 14, 0.72);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border-bottom: 1px solid var(--adv-line);
+    opacity: 0;
+    transition: opacity 300ms var(--adv-ease);
+  }
+  .adv-header.is-scrolled::before {
+    opacity: 1;
+  }
+  .adv-header.is-hidden {
+    transform: translateY(-100%);
+  }
+  .adv-header__bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: var(--adv-header-h);
+  }
+  .adv-header__logo {
+    display: block;
+    width: 132px;
+    flex: none;
+    border-radius: 6px;
+  }
+  .adv-header__nav {
+    margin-inline: auto;
+  }
+  .adv-header__nav ul {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-header__nav a {
+    position: relative;
+    display: block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--adv-muted);
+    text-decoration: none;
+    transition: color var(--adv-fast) var(--adv-ease);
+  }
+  .adv-header__nav a::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 3px;
+    height: 1px;
+    background: var(--adv-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--adv-med) var(--adv-ease);
+  }
+  .adv-header__nav a:hover,
+  .adv-header__nav a[aria-current='page'] {
+    color: var(--adv-text);
+  }
+  .adv-header__nav a:hover::after,
+  .adv-header__nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .adv-header__end {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .adv-header__lang {
+    display: inline-flex;
+    gap: 6px;
+    padding: 8px 6px;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--adv-muted);
+    text-decoration: none;
+  }
+  .adv-header__lang .on {
+    color: var(--adv-text);
+  }
+  .adv-header__lang:hover span {
+    color: var(--adv-text);
+  }
+  .adv-header__sep {
+    opacity: 0.4;
+  }
+  .adv-header__burger {
+    display: none;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--adv-edge);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+  }
+  .adv-header__burger span {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    height: 1.5px;
+    background: var(--adv-text);
+    transition:
+      transform 350ms var(--adv-ease),
+      top 350ms var(--adv-ease);
+  }
+  .adv-header__burger span:first-child {
+    top: 17px;
+  }
+  .adv-header__burger span:last-child {
+    top: 25px;
+  }
+  .adv-header.is-open .adv-header__burger span:first-child {
+    top: 21px;
+    transform: rotate(45deg);
+  }
+  .adv-header.is-open .adv-header__burger span:last-child {
+    top: 21px;
+    transform: rotate(-45deg);
+  }
+
+  .adv-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    padding-top: calc(var(--adv-header-h) + 24px);
+    background: rgba(9, 10, 14, 0.96);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 350ms var(--adv-ease),
+      visibility 0s linear 350ms;
+    overflow-y: auto;
+  }
+  .adv-header.is-open .adv-drawer {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 350ms var(--adv-ease);
+  }
+  .adv-drawer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-drawer li {
+    border-bottom: 1px solid var(--adv-line);
+    opacity: 0;
+    translate: 0 12px;
+    transition:
+      opacity 500ms var(--adv-ease),
+      translate 500ms var(--adv-ease);
+    transition-delay: calc(var(--i) * 50ms + 80ms);
+  }
+  .adv-header.is-open .adv-drawer li {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .adv-drawer li a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    font-family: var(--adv-display);
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .adv-drawer__n {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--adv-accent);
+  }
+  .adv-drawer__foot {
+    display: grid;
+    gap: 10px;
+    padding: 28px 0 40px;
+    color: var(--adv-muted);
+  }
+  .adv-drawer__foot a {
+    text-decoration: none;
+  }
+
+  @media (max-width: 1000px) {
+    .adv-header__nav,
+    .adv-header__cta {
+      display: none;
+    }
+    .adv-header__burger {
+      display: block;
+    }
+    .adv-header__end {
+      margin-left: auto;
+    }
+  }
+  @media (min-width: 1001px) {
+    .adv-drawer {
+      display: none;
+    }
+  }
+  @media (max-width: 420px) {
+    .adv-header__logo {
+      width: 120px;
+    }
+  }
+</style>

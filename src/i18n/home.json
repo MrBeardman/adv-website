@@ -1,0 +1,216 @@
+{
+  "cs": {
+    "hero": {
+      "pill": "První konzultace zdarma",
+      "typeWords": ["byznysu.", "času.", "klidu.", "prodejů."],
+      "ctaWork": "Prohlédnout realizace",
+      "window": {
+        "file": "faktury-schvalovani.flow",
+        "state": "běží",
+        "sample": "Ukázkový workflow",
+        "nodes": {
+          "trigger": "Faktura přijata",
+          "triggerSub": "e-mail",
+          "extract": "Vytěžení dat",
+          "extractSub": "částka, splatnost",
+          "check": "Nad 50 000 Kč?",
+          "approve": "Schválení",
+          "approveSub": "čeká na ano",
+          "book": "Zaúčtování",
+          "bookSub": "Pohoda",
+          "done": "Hotovo"
+        },
+        "yes": "ano",
+        "no": "ne",
+        "log": "Poslední běhy",
+        "booked": "zaúčtováno",
+        "waiting": "čeká na schválení",
+        "approved": "schváleno"
+      },
+      "grid": {
+        "labels": "vytěžit,ověřit,schválit,zapsat,upozornit,roztřídit,spárovat,odeslat",
+        "first": "start",
+        "last": "hotovo"
+      }
+    },
+    "tools": {
+      "kicker": "Nástroje",
+      "title": "Napojíme to na nástroje, které už používáte."
+    },
+    "statement": {
+      "kicker": "Proč",
+      "lead": "Většina práce je rutina.",
+      "rest": "Přepisování faktur, přeceňování produktů, odpovědi na pořád stejné dotazy. Tu necháme strojům. Lidem zůstane úsudek."
+    },
+    "values": {
+      "kicker": "Služby",
+      "title": "Co děláme.",
+      "em": "děláme",
+      "link": "Detail služby",
+      "cards": {
+        "ai-automation": "Automatizujte rutinu",
+        "business-optimisation": "Optimalizujte firmu",
+        "software": "Prototyp vašeho nápadu",
+        "websites": "Nový web, který prodává"
+      },
+      "scene": {
+        "rows": ["Faktura", "Objednávka", "Dotaz"],
+        "before": "Před",
+        "after": "Po",
+        "unit": "hodin týdně",
+        "bookings": "Rezervace"
+      }
+    },
+    "kesia": {
+      "kicker": "Případová studie",
+      "chartLabel": "Burzovní cena zlata, Kč za gram"
+    },
+    "numbers": {
+      "kicker": "Čísla",
+      "title": "Co se dá změřit.",
+      "em": "změřit"
+    },
+    "savings": {
+      "kicker": "Kalkulačka",
+      "title": "Kolik hodin týdně tým přepisuje data?",
+      "sub": "Posuňte jezdcem a uvidíte, kolik času a peněz to dělá za rok.",
+      "slider": "Hodin týdně",
+      "hours": "hodin ročně zpátky týmu",
+      "money": "ročně v práci, kterou už nikdo nemusí dělat ručně",
+      "today": "Dnes",
+      "after": "Po automatizaci",
+      "perWeek": "h týdně",
+      "note": "Orientační odhad: 46 pracovních týdnů, automatizace převezme 70 % té práce, hodina práce stojí 450 Kč včetně odvodů. Skutečné číslo spočítáme při konzultaci.",
+      "cta": "Spočítat to přesně"
+    },
+    "process": {
+      "kicker": "Postup",
+      "steps": [
+        { "title": "Hovor", "body": "Půlhodina o tom, kde ve firmě mizí čas. Zdarma a bez závazků." },
+        { "title": "Mapování", "body": "Čas strávený ve firmě dřív, než se cokoli naplánuje: kde mizí hodiny, co se vyplatí automatizovat a jakou to pro vás má hodnotu." },
+        { "title": "Demo", "body": "Funkční ukázka brzy, pokud to jde, tak na vašich datech, abyste se rozhodovali nad něčím, na co se dá kliknout, ne nad slajdem." },
+        { "title": "Stavba", "body": "Stavíme po etapách, takže první část se používá dřív, než se plánuje ta poslední." },
+        { "title": "Podpora", "body": "Předáme to lidem, kteří s tím budou pracovat, a zůstáváme: podpora a cokoli, co bude firma potřebovat dál." }
+      ]
+    },
+    "partners": {
+      "kicker": "Partneři"
+    },
+    "cta": {
+      "kicker": "Začněme",
+      "title": "Který úkol byste už nikdy nedělali?",
+      "sub": "Napište nám ho. Odpovíme do jednoho pracovního dne a první konzultace je zdarma.",
+      "task": "Úkol",
+      "taskPlaceholder": "Třeba: každé pondělí přepisujeme objednávky z e-mailu do Pohody.",
+      "submit": "Odeslat",
+      "or": "Nebo rovnou zavolejte"
+    }
+  },
+  "en": {
+    "hero": {
+      "pill": "First consultation free",
+      "typeWords": ["business.", "time.", "focus.", "sales."],
+      "ctaWork": "See our work",
+      "window": {
+        "file": "invoice-approval.flow",
+        "state": "running",
+        "sample": "Sample workflow",
+        "nodes": {
+          "trigger": "Invoice received",
+          "triggerSub": "email",
+          "extract": "Data extracted",
+          "extractSub": "amount, due date",
+          "check": "Over 50,000 CZK?",
+          "approve": "Approval",
+          "approveSub": "waiting for yes",
+          "book": "Booked",
+          "bookSub": "Pohoda",
+          "done": "Done"
+        },
+        "yes": "yes",
+        "no": "no",
+        "log": "Recent runs",
+        "booked": "booked",
+        "waiting": "awaiting approval",
+        "approved": "approved"
+      },
+      "grid": {
+        "labels": "fetch,parse,enrich,approve,sync,notify,route,check",
+        "first": "trigger",
+        "last": "done"
+      }
+    },
+    "tools": {
+      "kicker": "Tools",
+      "title": "We connect it to the tools you already use."
+    },
+    "statement": {
+      "kicker": "Why",
+      "lead": "Most of the work is routine.",
+      "rest": "Retyping invoices, repricing products, answering the same questions again. We hand that to machines. People keep the judgement."
+    },
+    "values": {
+      "kicker": "Services",
+      "title": "What we do.",
+      "em": "do",
+      "link": "Service details",
+      "cards": {
+        "ai-automation": "Automate the routine",
+        "business-optimisation": "Optimise your business",
+        "software": "Prototype your idea",
+        "websites": "Launch a brand-new website"
+      },
+      "scene": {
+        "rows": ["Invoice", "Order", "Enquiry"],
+        "before": "Before",
+        "after": "After",
+        "unit": "hours a week",
+        "bookings": "Bookings"
+      }
+    },
+    "kesia": {
+      "kicker": "Case study",
+      "chartLabel": "Gold spot price, CZK per gram"
+    },
+    "numbers": {
+      "kicker": "Numbers",
+      "title": "What can be measured.",
+      "em": "measured"
+    },
+    "savings": {
+      "kicker": "Estimate",
+      "title": "How many hours a week does your team spend retyping?",
+      "sub": "Move the slider to see what it adds up to in a year.",
+      "slider": "Hours a week",
+      "hours": "hours a year back to the team",
+      "money": "a year in work nobody has to do by hand any more",
+      "today": "Today",
+      "after": "After automation",
+      "perWeek": "h a week",
+      "note": "A rough estimate: 46 working weeks, automation takes over 70% of that work, an hour of work costs 450 CZK including payroll costs. We work out the real figure in the consultation.",
+      "cta": "Work out the real number"
+    },
+    "process": {
+      "kicker": "Process",
+      "steps": [
+        { "title": "Call", "body": "Half an hour on where the time goes in your business. Free, no strings attached." },
+        { "title": "Map", "body": "Time inside the business before anything is scoped: where the hours go, what is worth automating, and what it is worth to you." },
+        { "title": "Demo", "body": "A working demo early, on your own data where we can, so decisions are made on something you can click rather than a slide." },
+        { "title": "Build", "body": "We build in stages, so the first part is in use before the last one is planned." },
+        { "title": "Support", "body": "We hand it over to the people who use it, and stay on for support and whatever the business needs next." }
+      ]
+    },
+    "partners": {
+      "kicker": "Partners"
+    },
+    "cta": {
+      "kicker": "Let's start",
+      "title": "Which task would you never do again?",
+      "sub": "Tell us. We reply within one working day, and the first consultation is free.",
+      "task": "The task",
+      "taskPlaceholder": "For example: every Monday we retype orders from email into our accounting system.",
+      "submit": "Send",
+      "or": "Or just call"
+    }
+  }
+}

@@ -1,0 +1,148 @@
+---
+import Logo from './ui/Logo.astro';
+import { pick, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import services from '../i18n/services.json';
+import { routes } from '../data/routes';
+import { ENABLED_SERVICES } from '../data/capabilities';
+
+interface Props {
+  lang: Lang;
+  alternates: Partial<Record<Lang, string>>;
+}
+const { lang, alternates } = Astro.props;
+const t = pick(chrome, lang);
+const s = pick(services, lang);
+const titleOf = (slug: string) => s.capabilities.items.find((i) => i.slug === slug)?.title ?? slug;
+const year = new Date().getFullYear();
+---
+
+<footer class="adv-footer">
+  <div class="adv-wrap">
+    <div class="adv-footer__grid">
+      <div class="adv-footer__brand">
+        <a href={routes.home(lang)} class="adv-footer__logo" aria-label={t.footer.logoLabel}><Logo decorative /></a>
+        <p>{t.meta.description}</p>
+      </div>
+      <nav aria-label={t.nav.services}>
+        <p class="adv-label">{t.nav.services}</p>
+        <ul>
+          {
+            ENABLED_SERVICES.map((sv) => (
+              <li>
+                <a href={routes.service(lang, sv.slug)}>{titleOf(sv.slug)}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <nav aria-label="ADV Innovations">
+        <p class="adv-label">ADV</p>
+        <ul>
+          <li><a href={routes.work(lang)}>{t.nav.work}</a></li>
+          <li><a href={routes.about(lang)}>{t.nav.about}</a></li>
+          <li><a href={`${routes.about(lang)}#${lang === 'cs' ? 'partneri' : 'partners'}`}>{t.nav.partners}</a></li>
+          <li><a href={routes.contact(lang)}>{t.nav.contact}</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="adv-label">{t.nav.contact}</p>
+        <ul>
+          <li><a href={`mailto:${t.brand.email}`}>{t.brand.email}</a></li>
+          <li><a href={`tel:${t.brand.phoneHref}`}>{t.brand.phone}</a></li>
+          <li>{t.footer.location}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="adv-footer__base">
+      <p>© {year} {t.footer.name}</p>
+      <p class="adv-footer__langs" aria-label={t.footer.langLabel}>
+        {
+          (['cs', 'en'] as const).map((l) =>
+            l === lang ? (
+              <span aria-current="true">{l.toUpperCase()}</span>
+            ) : (
+              <a href={alternates[l] ?? routes.home(l)} hreflang={l} lang={l}>
+                {l.toUpperCase()}
+              </a>
+            ),
+          )
+        }
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style is:global>
+  .adv-footer {
+    position: relative;
+    z-index: 1;
+    padding: clamp(64px, 8vw, 110px) 0 36px;
+    border-top: 1px solid var(--adv-line);
+    background: linear-gradient(180deg, rgba(9, 10, 14, 0), rgba(9, 10, 14, 0.7) 40%);
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  .adv-footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: 40px;
+  }
+  .adv-footer__logo {
+    display: block;
+    width: 150px;
+    margin-bottom: 20px;
+  }
+  .adv-footer__brand p {
+    max-width: 36ch;
+  }
+  .adv-footer ul {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-footer a {
+    text-decoration: none;
+    background: linear-gradient(var(--adv-accent), var(--adv-accent)) 0 100% / 0 1px no-repeat;
+    transition:
+      color var(--adv-fast) var(--adv-ease),
+      background-size var(--adv-med) var(--adv-ease);
+  }
+  .adv-footer a:hover {
+    color: var(--adv-text);
+    background-size: 100% 1px;
+  }
+  .adv-footer__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--adv-line);
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+  .adv-footer__langs {
+    display: flex;
+    gap: 14px;
+  }
+  .adv-footer__langs [aria-current] {
+    color: var(--adv-text);
+  }
+  @media (max-width: 900px) {
+    .adv-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .adv-footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 480px) {
+    .adv-footer__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

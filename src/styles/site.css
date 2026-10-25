@@ -553,12 +553,132 @@ a.adv-card:hover,
 }
 .adv-line > span {
   display: inline-block;
+}
+.js .adv-line > span {
   translate: 0 105%;
   transition: translate 1000ms var(--adv-ease);
   transition-delay: calc(var(--l, 0) * 110ms + var(--d, 0ms));
 }
-.is-lines-in .adv-line > span {
+.js .is-lines-in .adv-line > span {
   translate: 0 0;
+}
+
+/* Section kicker = a node on the stream: mono label with a small square that lights and ticks. */
+.adv-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+  font-family: var(--adv-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--adv-muted);
+  transition: color 500ms var(--adv-ease);
+}
+.adv-kicker i {
+  position: relative;
+  width: 11px;
+  height: 11px;
+  flex: none;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: var(--adv-bg-2);
+  transition:
+    border-color 500ms var(--adv-ease),
+    background-color 500ms var(--adv-ease),
+    box-shadow 500ms var(--adv-ease);
+}
+.adv-kicker b {
+  font-weight: 500;
+  color: rgba(var(--adv-accent-rgb), 0.85);
+}
+.adv-kicker.is-lit {
+  color: var(--adv-text);
+}
+.adv-kicker.is-lit i {
+  border-color: var(--adv-accent);
+  background: rgba(var(--adv-accent-rgb), 0.16);
+  box-shadow: 0 0 14px rgba(var(--adv-accent-rgb), 0.45);
+}
+
+/* ---------- Stream of light (scripts/stream.ts) ---------- */
+.adv-stream {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: clip;
+}
+.adv-stream__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+.adv-stream__base {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+}
+.adv-stream__lit {
+  fill: none;
+  stroke-linecap: round;
+}
+.adv-stream__tail {
+  fill: none;
+  stroke: #e9f6ff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+.adv-stream__dot {
+  fill: #eaf6ff;
+}
+.adv-stream__head {
+  transition: opacity 300ms linear;
+}
+.adv-stream__node rect {
+  fill: var(--adv-bg-2);
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1;
+  transition:
+    stroke 400ms var(--adv-ease),
+    fill 400ms var(--adv-ease);
+}
+.adv-stream__tick {
+  fill: none;
+  stroke: var(--adv-accent);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 9;
+  stroke-dashoffset: 9;
+  transition: stroke-dashoffset 450ms var(--adv-ease) 150ms;
+}
+.adv-stream__branch {
+  fill: none;
+  stroke: rgba(var(--adv-accent-rgb), 0.55);
+  stroke-width: 1;
+  stroke-dasharray: var(--len) var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 600ms var(--adv-ease);
+}
+.adv-stream__node.is-lit rect {
+  stroke: var(--adv-accent);
+  fill: #0f1d2e;
+}
+.adv-stream__node.is-lit .adv-stream__tick,
+.adv-stream__node.is-lit .adv-stream__branch {
+  stroke-dashoffset: 0;
+}
+
+/* Live scenes pause off screen ([data-live].is-paused) and every loop pauses in a hidden tab. */
+[data-live].is-paused,
+[data-live].is-paused *,
+.is-away *,
+.is-away *::before,
+.is-away *::after {
+  animation-play-state: paused !important;
 }
 /* Scroll-lit words: each word's brightness follows scroll (--lit 0..1 per word, site.ts) */
 [data-lit] .adv-w {

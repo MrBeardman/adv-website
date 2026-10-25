@@ -1,0 +1,130 @@
+---
+/**
+ * Four value cards, one per enabled service, each with its own looping scene (ui/Scene.astro), the
+ * approved one-line service body and the service's headline number. Matte finish from the palette study.
+ */
+import Scene from '../ui/Scene.astro';
+import Arrow from '../ui/Arrow.astro';
+import { pick, loc, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+import services from '../../i18n/services.json';
+import { ENABLED_SERVICES } from '../../data/capabilities';
+import { numberFor } from '../../data/homeNumbers';
+import { routes } from '../../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).values;
+const caps = pick(services, lang).capabilities.items;
+// Order of the story: automate, optimise, prototype, launch.
+const ORDER = ['ai-automation', 'business-optimisation', 'software', 'websites'];
+const cards = ORDER.filter((slug) => ENABLED_SERVICES.some((s) => s.slug === slug)).map((slug) => ({
+  slug,
+  title: (t.cards as Record<string, string>)[slug],
+  body: caps.find((c) => c.slug === slug)?.body ?? '',
+  number: numberFor(slug),
+}));
+const dev = import.meta.env.DEV;
+const [before, after] = t.title.split(t.em);
+---
+
+<section class="adv-values adv-section" aria-labelledby="adv-values-title">
+  <div class="adv-wrap">
+    <div class="adv-head">
+      <div>
+        <p class="adv-kicker" data-node><i></i><b>04</b>{t.kicker}</p>
+        <h2 id="adv-values-title" class="adv-h2" data-reveal>{before}<em class="adv-em">{t.em}</em>{after}</h2>
+      </div>
+    </div>
+    <ul class="adv-values__grid">
+      {
+        cards.map((c, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <a class="adv-card adv-values__card" href={routes.service(lang, c.slug)}>
+              <Scene kind={c.slug} lang={lang} />
+              <span class="adv-go">
+                <Arrow dir="up" />
+              </span>
+              <h3 class="adv-values__title">{c.title}</h3>
+              <p class="adv-values__body">{c.body}</p>
+              <span class="adv-rule" />
+              {c.number && (
+                <p class="adv-values__num">
+                  <strong class:list={[{ 'adv-ph': dev && c.number.placeholder }]}>{loc(c.number.value, lang)}</strong>
+                  <span>{loc(c.number.short, lang)}</span>
+                </p>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .adv-values__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-values__grid > li {
+    display: flex;
+  }
+  .adv-values__card {
+    flex: 1;
+    padding: 14px 14px 22px;
+  }
+  .adv-values__card .adv-scene {
+    margin-bottom: 8px;
+  }
+  .adv-values__card .adv-go {
+    top: auto;
+    bottom: 22px;
+  }
+  .adv-values__title {
+    padding: 0 8px;
+    font-size: var(--adv-h3);
+    line-height: 1.15;
+  }
+  .adv-values__body {
+    padding: 0 8px;
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+    flex: 1;
+  }
+  .adv-values__card .adv-rule {
+    margin: 4px 8px 0;
+  }
+  .adv-values__num {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 40px 0 8px;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-values__num strong {
+    font-family: var(--adv-display);
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--adv-text);
+    white-space: nowrap;
+  }
+  @media (max-width: 1100px) {
+    .adv-values__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 620px) {
+    .adv-values__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

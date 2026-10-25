@@ -1,0 +1,232 @@
+---
+/**
+ * Numbers band: the four headline numbers (data/homeNumbers.ts, the one place they live), each counting
+ * up with a thin drawn chart. Placeholders (invented, see the launch checklist in docs/STATUS.md) get a
+ * dashed outline in development builds.
+ */
+import Arrow from '../ui/Arrow.astro';
+import { pick, loc, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+import { HOME_NUMBERS } from '../../data/homeNumbers';
+import { ENABLED_SERVICES } from '../../data/capabilities';
+import { routes } from '../../data/routes';
+import { findCaseStudy } from '../../data/caseStudies';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).numbers;
+const dev = import.meta.env.DEV;
+const items = HOME_NUMBERS.filter((n) => ENABLED_SERVICES.some((s) => s.slug === n.slug)).map((n) => ({
+  ...n,
+  href:
+    n.link.kind === 'case' && findCaseStudy(n.link.slug)
+      ? routes.case(lang, n.link.slug)
+      : routes.service(lang, n.link.kind === 'service' ? n.link.slug : n.slug),
+}));
+const [before, after] = t.title.split(t.em);
+const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1];
+---
+
+<section class="adv-numbers adv-section" aria-labelledby="adv-numbers-title">
+  <div class="adv-wrap">
+    <p class="adv-kicker" data-node><i></i><b>06</b>{t.kicker}</p>
+    <h2 id="adv-numbers-title" class="adv-h2 adv-numbers__title" data-reveal>{before}<em class="adv-em">{t.em}</em>{after}</h2>
+    <ul class="adv-numbers__grid">
+      {
+        items.map((n, i) => (
+          <li class="adv-numbers__item" data-play data-reveal style={`--i:${i}`}>
+            <p class="adv-numbers__value">
+              <span
+                class:list={[{ 'adv-ph': dev && n.placeholder }]}
+                data-count={n.count}
+                data-prefix={n.prefix ?? ''}
+                data-suffix={loc(n.suffix, lang)}
+                data-delay={i * 120}
+                aria-hidden="true"
+              >
+                {loc(n.value, lang)}
+              </span>
+              <span class="screen-reader-text">{loc(n.value, lang)}</span>
+            </p>
+            <p class="adv-numbers__label">{loc(n.label, lang)}</p>
+            <div class={`adv-mini adv-mini--${n.slug}`} aria-hidden="true">
+              {n.slug === 'ai-automation' && (
+                <span class="adv-mini__cols">
+                  {bars.map((h, k) => (
+                    <i style={`--h:${h};--k:${k}`} />
+                  ))}
+                </span>
+              )}
+              {n.slug === 'business-optimisation' && (
+                <span class="adv-fee">
+                  <i style="--w:1" />
+                  <i style="--w:0.209" />
+                </span>
+              )}
+              {n.slug === 'websites' && (
+                <svg viewBox="0 0 200 50" preserveAspectRatio="none">
+                  <path class="adv-mini__line" pathLength="100" d="M0 44 L40 42 L80 40 L100 36 L120 28 L150 18 L175 12 L200 6" />
+                </svg>
+              )}
+              {n.slug === 'software' && (
+                <span class="adv-mini__days">
+                  {Array.from({ length: 14 }, (_, k) => (
+                    <i style={`--k:${k}`} />
+                  ))}
+                </span>
+              )}
+            </div>
+            <a class="adv-link adv-numbers__link" href={n.href}>
+              {loc(n.linkLabel, lang)}
+              <Arrow />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .adv-numbers__title {
+    margin-bottom: clamp(36px, 4.5vw, 60px);
+  }
+  .adv-numbers__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--adv-edge);
+  }
+  .adv-numbers__item {
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    gap: 12px;
+    padding: 30px 24px 8px;
+  }
+  .adv-numbers__item + .adv-numbers__item {
+    border-left: 1px solid var(--adv-line);
+  }
+  .adv-numbers__item:first-child {
+    padding-left: 0;
+  }
+  .adv-numbers__value {
+    font-family: var(--adv-display);
+    font-size: clamp(2.25rem, 1.3rem + 1.6vw, 2.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .adv-numbers__label {
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+    max-width: 26ch;
+  }
+  .adv-numbers__link {
+    justify-self: start;
+    font-size: 0.875rem;
+    margin-top: 6px;
+  }
+  .adv-mini {
+    height: 44px;
+    display: flex;
+    align-items: flex-end;
+  }
+  .adv-mini .adv-fee {
+    width: 100%;
+    margin: 0 0 6px;
+  }
+  .adv-mini__cols {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    width: 100%;
+    height: 100%;
+  }
+  .adv-mini__cols i {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(180deg, var(--adv-accent), rgba(124, 200, 255, 0.25));
+    transform-origin: bottom;
+  }
+  .adv-mini svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .adv-mini__line {
+    fill: none;
+    stroke: var(--adv-accent);
+    stroke-width: 1.6;
+    vector-effect: non-scaling-stroke;
+  }
+  .adv-mini__days {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 3px;
+    width: 100%;
+  }
+  .adv-mini__days i {
+    height: 10px;
+    border-radius: 2px;
+    background: var(--adv-accent);
+  }
+  .adv-mini__days i:last-child {
+    box-shadow: 0 0 10px rgba(124, 200, 255, 0.7);
+  }
+  .js [data-play].is-armed .adv-mini__cols i {
+    transform: scaleY(0);
+    transition: transform 900ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 60ms);
+  }
+  .js [data-play].is-armed .adv-mini__line {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 1600ms var(--adv-ease-io);
+  }
+  .js [data-play].is-armed .adv-mini__days i {
+    opacity: 0.12;
+    transition: opacity 300ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 80ms);
+  }
+  .js [data-play].is-playing .adv-mini__cols i {
+    transform: scaleY(1);
+  }
+  .js [data-play].is-playing .adv-mini__line {
+    stroke-dashoffset: 0;
+  }
+  .js [data-play].is-playing .adv-mini__days i {
+    opacity: 1;
+  }
+  @media (max-width: 1000px) {
+    .adv-numbers__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .adv-numbers__item:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .adv-numbers__item:nth-child(n + 3) {
+      border-top: 1px solid var(--adv-line);
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-numbers__grid {
+      grid-template-columns: 1fr;
+    }
+    .adv-numbers__item,
+    .adv-numbers__item + .adv-numbers__item {
+      padding-left: 0;
+      border-left: 0;
+    }
+    .adv-numbers__item + .adv-numbers__item {
+      border-top: 1px solid var(--adv-line);
+    }
+  }
+</style>

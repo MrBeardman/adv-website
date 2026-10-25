@@ -1,0 +1,18 @@
+{
+  "form_ok": {
+    "cs": "Děkujeme. Odpovíme do jednoho pracovního dne.",
+    "en": "Thank you. We will reply within one working day."
+  },
+  "form_invalid": {
+    "cs": "Zkontrolujte prosím e-mail a zprávu, něco v nich chybí.",
+    "en": "Please check the email address and the message, something is missing."
+  },
+  "form_error": {
+    "cs": "Zprávu se nepodařilo odeslat. Napište nám přímo na",
+    "en": "That did not send. Write to us directly at"
+  },
+  "form_busy": {
+    "cs": "Odesíláte zprávy příliš rychle za sebou. Zkuste to prosím za pár minut.",
+    "en": "That is a lot of messages in a short time. Please try again in a few minutes."
+  }
+}

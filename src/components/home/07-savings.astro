@@ -1,0 +1,306 @@
+---
+/**
+ * Savings slider: "How many hours a week does your team spend retyping?" → hours and money a year.
+ *
+ * Formula (shown to the visitor as a plain-language note, keep both in step):
+ *   hours saved a year = hours a week × WEEKS (46 working weeks) × SHARE (0.7, the part automation takes over)
+ *   money a year       = hours saved a year × RATE (450 CZK, loaded cost of one hour of work)
+ * Hours are rounded to whole hours, money to the nearest 1,000 CZK and shown as "~" (an estimate).
+ * TODO (Honza): confirm the three assumptions; they are new copy and listed in docs/STATUS.md.
+ */
+import Arrow from '../ui/Arrow.astro';
+import { pick, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+import { routes } from '../../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).savings;
+const WEEKS = 46;
+const SHARE = 0.7;
+const RATE = 450;
+const START = 8;
+const MAX = 40;
+const loc = lang === 'cs' ? 'cs-CZ' : 'en-GB';
+const nf = new Intl.NumberFormat(loc);
+const hoursYear = (h: number) => Math.round(h * WEEKS * SHARE);
+const moneyYear = (h: number) => Math.round((h * WEEKS * SHARE * RATE) / 1000) * 1000;
+const cur = lang === 'cs' ? ' Kč' : ' CZK';
+---
+
+<section class="adv-savings adv-section" aria-labelledby="adv-savings-title">
+  <div class="adv-wrap">
+    <p class="adv-kicker" data-node><i></i><b>07</b>{t.kicker}</p>
+    <div
+      class="adv-savings__panel adv-panel"
+      data-savings
+      data-weeks={WEEKS}
+      data-share={SHARE}
+      data-rate={RATE}
+      data-max={MAX}
+      data-loc={loc}
+      data-cur={cur}
+      data-reveal
+    >
+      <div class="adv-savings__ask">
+        <h2 id="adv-savings-title" class="adv-savings__title">{t.title}</h2>
+        <p class="adv-savings__sub">{t.sub}</p>
+        <div class="adv-savings__control">
+          <label for="adv-hours" class="adv-label">{t.slider}</label>
+          <output for="adv-hours" class="adv-savings__hours" data-out-week>{START}<small> {t.perWeek}</small></output>
+          <input
+            id="adv-hours"
+            class="adv-range"
+            type="range"
+            min="1"
+            max={MAX}
+            step="1"
+            value={START}
+            style={`--v:${(START - 1) / (MAX - 1)}`}
+          />
+          <div class="adv-savings__scale" aria-hidden="true"><span>1</span><span>{MAX}</span></div>
+        </div>
+      </div>
+      <div class="adv-savings__result" aria-live="polite">
+        <div class="adv-savings__big">
+          <p><strong data-out-hours>{nf.format(hoursYear(START))}</strong></p>
+          <p class="adv-savings__unit">{t.hours}</p>
+        </div>
+        <div class="adv-savings__big">
+          <p><strong data-out-money>~{nf.format(moneyYear(START))}{cur}</strong></p>
+          <p class="adv-savings__unit">{t.money}</p>
+        </div>
+        <div class="adv-savings__bars" aria-hidden="true">
+          <p><span>{t.today}</span><i data-bar-today style={`--w:${START / MAX}`}></i></p>
+          <p><span>{t.after}</span><i data-bar-after style={`--w:${(START * (1 - SHARE)) / MAX}`}></i></p>
+        </div>
+        <p class="adv-savings__note">{t.note}</p>
+        <a class="adv-btn adv-btn--ghost adv-btn--sm" href={routes.contact(lang)}>{t.cta}<Arrow /></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .adv-savings__panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    padding: clamp(24px, 4vw, 56px);
+    overflow: hidden;
+  }
+  .adv-savings__panel::before {
+    content: '';
+    position: absolute;
+    left: -15%;
+    bottom: -40%;
+    width: 70%;
+    height: 110%;
+    background: radial-gradient(closest-side, rgba(32, 64, 170, 0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .adv-savings__ask,
+  .adv-savings__result {
+    position: relative;
+  }
+  .adv-savings__title {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  }
+  .adv-savings__sub {
+    margin-top: 16px;
+    color: var(--adv-muted);
+  }
+  .adv-savings__control {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 14px 16px;
+    margin-top: 40px;
+  }
+  .adv-savings__hours {
+    font-family: var(--adv-display);
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--adv-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-savings__hours small {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--adv-muted);
+  }
+  .adv-range {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 28px;
+    margin: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  .adv-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--adv-accent) calc(var(--v) * 100%), rgba(255, 255, 255, 0.12) 0);
+  }
+  .adv-range::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--adv-accent) calc(var(--v) * 100%), rgba(255, 255, 255, 0.12) 0);
+  }
+  .adv-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -9px;
+    border-radius: 50%;
+    border: 0;
+    background: #fff;
+    box-shadow:
+      0 0 0 5px rgba(124, 200, 255, 0.25),
+      0 4px 14px rgba(0, 0, 0, 0.5);
+    transition: box-shadow var(--adv-fast) var(--adv-ease);
+  }
+  .adv-range::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 0;
+    background: #fff;
+    box-shadow:
+      0 0 0 5px rgba(124, 200, 255, 0.25),
+      0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+  .adv-range:hover::-webkit-slider-thumb,
+  .adv-range:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+      0 0 0 8px rgba(124, 200, 255, 0.3),
+      0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+  .adv-range:focus-visible {
+    outline: none;
+  }
+  .adv-range:focus-visible::-webkit-slider-runnable-track {
+    outline: 2px solid var(--adv-accent);
+    outline-offset: 10px;
+  }
+  .adv-savings__scale {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    color: var(--adv-muted);
+  }
+  .adv-savings__result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+    gap: 24px;
+  }
+  .adv-savings__big strong {
+    display: block;
+    font-family: var(--adv-display);
+    font-size: clamp(2.25rem, 1.6rem + 2vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .adv-savings__unit {
+    margin-top: 10px;
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .adv-savings__bars {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 10px;
+  }
+  .adv-savings__bars p {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    color: var(--adv-muted);
+  }
+  .adv-savings__bars i {
+    display: block;
+    height: 10px;
+    width: calc(var(--w) * 100%);
+    min-width: 4px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width 400ms var(--adv-ease);
+  }
+  .adv-savings__bars p + p i {
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.6));
+    box-shadow: 0 0 14px rgba(124, 200, 255, 0.35);
+  }
+  .adv-savings__note {
+    grid-column: 1 / -1;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--adv-line);
+  }
+  .adv-savings__result .adv-btn {
+    justify-self: start;
+  }
+  @media (max-width: 900px) {
+    .adv-savings__panel {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .adv-savings__result {
+      grid-template-columns: 1fr;
+    }
+    .adv-savings__bars p {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-savings]').forEach((root) => {
+    const d = root.dataset;
+    const weeks = Number(d.weeks);
+    const share = Number(d.share);
+    const rate = Number(d.rate);
+    const max = Number(d.max);
+    const nf = new Intl.NumberFormat(d.loc);
+    const input = root.querySelector<HTMLInputElement>('input[type="range"]')!;
+    const week = root.querySelector<HTMLElement>('[data-out-week]')!;
+    const hours = root.querySelector<HTMLElement>('[data-out-hours]')!;
+    const money = root.querySelector<HTMLElement>('[data-out-money]')!;
+    const today = root.querySelector<HTMLElement>('[data-bar-today]')!;
+    const after = root.querySelector<HTMLElement>('[data-bar-after]')!;
+    const unit = week.querySelector('small')!.outerHTML;
+    const update = () => {
+      const h = Number(input.value);
+      const saved = h * weeks * share; // hours a year automation takes over
+      input.style.setProperty('--v', String((h - 1) / (max - 1)));
+      week.innerHTML = `${h}${unit}`;
+      hours.textContent = nf.format(Math.round(saved));
+      money.textContent = `~${nf.format(Math.round((saved * rate) / 1000) * 1000)}${d.cur}`;
+      today.style.setProperty('--w', String(h / max));
+      after.style.setProperty('--w', String((h * (1 - share)) / max));
+    };
+    input.addEventListener('input', update);
+    update();
+  });
+</script>

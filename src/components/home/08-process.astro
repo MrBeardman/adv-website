@@ -1,0 +1,167 @@
+---
+/**
+ * How we work, as a workflow timeline: call → map → demo → build → support. When it scrolls in, the line
+ * draws and each step lights and ticks in turn (the same node language as the hero and the stream).
+ */
+import { pick, type Lang } from '../../i18n';
+import home from '../../i18n/home.json';
+import services from '../../i18n/services.json';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(home, lang).process;
+const title = pick(services, lang).moves.title;
+---
+
+<section class="adv-process adv-section" aria-labelledby="adv-process-title">
+  <div class="adv-wrap">
+    <p class="adv-kicker" data-node><i></i><b>08</b>{t.kicker}</p>
+    <h2 id="adv-process-title" class="adv-h2" data-reveal>{title}</h2>
+    <ol class="adv-process__list" data-play>
+      {
+        t.steps.map((s, i) => (
+          <li style={`--k:${i}`}>
+            <span class="adv-process__node" aria-hidden="true">
+              <i />
+            </span>
+            <span class="adv-process__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="adv-process__title">{s.title}</h3>
+            <p class="adv-process__body">{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style is:global>
+  .adv-process__list {
+    --n: 5;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: 24px;
+    margin: clamp(40px, 5vw, 64px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-process__list::before,
+  .adv-process__list::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    right: 0;
+    top: 7px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .adv-process__list::after {
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.35));
+    transform-origin: left;
+  }
+  .adv-process__list li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+  }
+  .adv-process__node {
+    position: relative;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    margin-bottom: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--adv-accent);
+    background: #0f1d2e;
+    box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
+  }
+  .adv-process__node i {
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2l2 2 4-4.4' fill='none' stroke='%237cc8ff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / 100% no-repeat;
+  }
+  .adv-process__n {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .adv-process__title {
+    font-size: var(--adv-h3);
+  }
+  .adv-process__body {
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  /* played once */
+  .js .adv-process__list.is-armed::after {
+    transform: scaleX(0);
+    transition: transform 2400ms var(--adv-ease-io);
+  }
+  .js .adv-process__list.is-armed .adv-process__node {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--adv-bg-2);
+    box-shadow: none;
+    transition: all 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 480ms + 100ms);
+  }
+  .js .adv-process__list.is-armed .adv-process__node i {
+    opacity: 0;
+    transition: opacity 300ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 480ms + 250ms);
+  }
+  .js .adv-process__list.is-armed li > :not(.adv-process__node) {
+    opacity: 0.35;
+    transition: opacity 500ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 480ms + 100ms);
+  }
+  .js .adv-process__list.is-playing::after {
+    transform: scaleX(1);
+  }
+  .js .adv-process__list.is-playing .adv-process__node {
+    border-color: var(--adv-accent);
+    background: #0f1d2e;
+    box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
+  }
+  .js .adv-process__list.is-playing .adv-process__node i,
+  .js .adv-process__list.is-playing li > :not(.adv-process__node) {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .adv-process__list {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .adv-process__list::before,
+    .adv-process__list::after {
+      left: 7px;
+      right: auto;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      height: auto;
+    }
+    .adv-process__list::after {
+      transform-origin: top;
+    }
+    .js .adv-process__list.is-armed::after {
+      transform: scaleY(0);
+    }
+    .js .adv-process__list.is-playing::after {
+      transform: scaleY(1);
+    }
+    .adv-process__list li {
+      padding-left: 36px;
+    }
+    .adv-process__node {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      margin: 0;
+    }
+  }
+</style>

@@ -1,0 +1,209 @@
+---
+/**
+ * The final Ice panel: "Which task would you never do again?" with a two-field form (task + email) that
+ * posts to /api/contact. Where the page's stream of light ends ([data-stream-end]).
+ */
+import Arrow from './ui/Arrow.astro';
+import { pick, type Lang } from '../i18n';
+import home from '../i18n/home.json';
+import chrome from '../i18n/chrome.json';
+import contact from '../i18n/contact.json';
+
+interface Props {
+  lang: Lang;
+  /** kicker number (home: 10); omit for no stream node */
+  index?: string;
+}
+const { lang, index } = Astro.props;
+const t = pick(home, lang).cta;
+const c = pick(chrome, lang);
+const f = pick(contact, lang).contact;
+const uid = `cta-${lang}`;
+---
+
+<section class="adv-cta adv-section" aria-labelledby={`${uid}-title`}>
+  <div class="adv-wrap">
+    <p class="adv-kicker" data-node={index ? '' : undefined}><i></i>{index && <b>{index}</b>}{t.kicker}</p>
+    <div class="adv-cta__panel" data-stream-end data-reveal>
+      <div class="adv-cta__copy">
+        <h2 id={`${uid}-title`} class="adv-cta__title">{t.title}</h2>
+        <p class="adv-cta__sub">{t.sub}</p>
+        <p class="adv-cta__call">
+          <span>{t.or}</span>
+          <a href={`tel:${c.brand.phoneHref}`}>{c.brand.phone}</a>
+        </p>
+      </div>
+      <form
+        class="adv-cta__form"
+        action="/api/contact/"
+        method="post"
+        data-form
+        data-sending={f.sending}
+        data-success={f.success}
+        data-error={f.error}
+        data-mail={c.brand.email}
+      >
+        <input type="hidden" name="lang" value={lang} />
+        <input type="hidden" name="source" value="cta" />
+        <div class="adv-hp" aria-hidden="true">
+          <label for={`${uid}-web`}>Website</label>
+          <input id={`${uid}-web`} type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="adv-field">
+          <label for={`${uid}-task`}>{t.task}</label>
+          <textarea id={`${uid}-task`} class="adv-input" name="message" rows="3" required maxlength="5000" placeholder={t.taskPlaceholder}
+          ></textarea>
+        </div>
+        <div class="adv-cta__row">
+          <div class="adv-field">
+            <label for={`${uid}-email`}>{f.fields.email}</label>
+            <input
+              id={`${uid}-email`}
+              class="adv-input"
+              type="email"
+              name="email"
+              required
+              maxlength="200"
+              autocomplete="email"
+              placeholder={f.fields.emailPlaceholder}
+            />
+          </div>
+          <button class="adv-btn adv-cta__submit" type="submit">{t.submit}<Arrow /></button>
+        </div>
+        <p class="adv-form-status" data-status role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .adv-cta {
+    padding-bottom: clamp(90px, 10vw, 150px);
+  }
+  .adv-cta__panel {
+    --ink: #07101e;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 64px);
+    padding: clamp(28px, 5vw, 64px);
+    border-radius: var(--adv-r-xl);
+    color: var(--ink);
+    background:
+      radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
+      radial-gradient(70% 90% at 0% 100%, rgba(32, 64, 170, 0.35), transparent 60%),
+      linear-gradient(135deg, #9ad6ff, #7cc8ff 45%, #63b4f2);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.7),
+      inset -1px -1px 0 rgba(7, 16, 30, 0.15),
+      0 40px 120px -40px rgba(124, 200, 255, 0.45);
+    overflow: hidden;
+    isolation: isolate;
+    transition: box-shadow 900ms var(--adv-ease);
+  }
+  .adv-cta__panel::before {
+    /* fine grain on the Ice, so it reads as a material, not a flat fill */
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.18;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  .adv-cta__panel.is-reached {
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.7),
+      inset -1px -1px 0 rgba(7, 16, 30, 0.15),
+      0 0 0 6px rgba(124, 200, 255, 0.12),
+      0 40px 140px -30px rgba(124, 200, 255, 0.7);
+  }
+  .adv-cta__title {
+    font-size: clamp(2rem, 1.3rem + 2.8vw, 3.75rem);
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  .adv-cta__sub {
+    margin-top: 20px;
+    max-width: 40ch;
+    font-size: var(--adv-lead);
+    color: rgba(7, 16, 30, 0.78);
+  }
+  .adv-cta__call {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin-top: 28px;
+    font-size: 0.9375rem;
+    color: rgba(7, 16, 30, 0.7);
+  }
+  .adv-cta__call a {
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    background: linear-gradient(var(--ink), var(--ink)) 0 100% / 100% 1px no-repeat;
+  }
+  .adv-cta__form {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+  }
+  .adv-cta__form .adv-field label {
+    color: rgba(7, 16, 30, 0.7);
+  }
+  .adv-cta__form .adv-input {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.42);
+    border-color: rgba(7, 16, 30, 0.18);
+  }
+  .adv-cta__form .adv-input::placeholder {
+    color: rgba(7, 16, 30, 0.5);
+  }
+  .adv-cta__form .adv-input:hover {
+    border-color: rgba(7, 16, 30, 0.4);
+  }
+  .adv-cta__form .adv-input:focus {
+    border-color: var(--ink);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 3px rgba(7, 16, 30, 0.14);
+  }
+  .adv-cta__form :focus-visible {
+    outline-color: var(--ink);
+  }
+  .adv-cta__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 12px;
+  }
+  .adv-cta__submit {
+    background: var(--ink);
+    color: var(--adv-accent);
+  }
+  .adv-cta__submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px -14px rgba(7, 16, 30, 0.8);
+  }
+  .adv-cta__form .adv-form-status[data-state='ok'],
+  .adv-cta__form .adv-form-status[data-state='error'] {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .adv-cta__form .adv-form-status a {
+    color: var(--ink);
+  }
+  @media (max-width: 900px) {
+    .adv-cta__panel {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .adv-cta__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/form';
+</script>

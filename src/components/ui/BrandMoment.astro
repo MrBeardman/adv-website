@@ -1,0 +1,42 @@
+---
+/**
+ * Slot for an optional brand-moment image (a photo or render Honza may add later). Renders nothing until
+ * `src` is given. Give the webp path; an .avif next to it (same name) is used when `avif` is set.
+ * Fixed aspect ratio, so the image never shifts the layout; lazy and async, so it never competes with
+ * the hero for LCP.
+ *   <BrandMoment src="/media/brand/moment.webp" alt="..." width={2400} height={1200} avif />
+ */
+interface Props {
+  src?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  avif?: boolean;
+  caption?: string;
+}
+const { src, alt = '', width = 2400, height = 1200, avif = false, caption } = Astro.props;
+---
+
+{
+  src && (
+    <figure class="adv-moment adv-wrap" data-reveal>
+      <picture>
+        {avif && <source type="image/avif" srcset={src.replace(/\.webp$/, '.avif')} />}
+        <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+      </picture>
+      {caption && <figcaption class="adv-label">{caption}</figcaption>}
+    </figure>
+  )
+}
+
+<style is:global>
+  .adv-moment img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--adv-r-xl);
+    box-shadow: var(--adv-shadow-card);
+  }
+  .adv-moment figcaption {
+    margin-top: 12px;
+  }
+</style>
