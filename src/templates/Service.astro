@@ -1,0 +1,194 @@
+---
+/**
+ * One service page (/sluzby/<cs-path>/, /en/services/<en-path>/), enabled services only.
+ * Head with "Service n of total", the long text and what it covers; the scene; the headline number;
+ * the work behind it (rows, or a plain line when there is none yet); previous/next service.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Scene from '../components/ui/Scene.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import WorkRows from '../components/WorkRows.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, loc, fill, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import services from '../i18n/services.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { numberFor } from '../data/homeNumbers';
+import { caseStudiesFor, findCaseStudy } from '../data/caseStudies';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+const { lang, slug } = Astro.props;
+const c = pick(chrome, lang);
+const s = pick(services, lang);
+const idx = ENABLED_SERVICES.findIndex((x) => x.slug === slug);
+const total = ENABLED_SERVICES.length;
+const title = (sl: string) => s.capabilities.items.find((i) => i.slug === sl)!.title;
+const copy = s.capabilities.items.find((i) => i.slug === slug)!;
+const prev = ENABLED_SERVICES[(idx - 1 + total) % total].slug;
+const next = ENABLED_SERVICES[(idx + 1) % total].slug;
+const number = numberFor(slug);
+const numberHref =
+  number && number.link.kind === 'case' && findCaseStudy(number.link.slug) ? routes.case(lang, number.link.slug) : null;
+const work = caseStudiesFor(slug);
+const dev = import.meta.env.DEV;
+const alternates = { cs: routes.service('cs', slug), en: routes.service('en', slug) };
+---
+
+<Base lang={lang} title={`${copy.title} · ${c.meta.siteName}`} description={copy.body} alternates={alternates}>
+  <PageHead kicker={fill(s.service.eyebrow, { n: idx + 1, total })} title={copy.title} lead={copy.long}>
+    <a slot="before" class="adv-back" href={routes.services(lang)}><Arrow dir="left" />{c.nav.services}</a>
+    <ul class="adv-chips adv-svc__chips" data-reveal style="--i:3">
+      {copy.covers.map((cv) => <li>{cv}</li>)}
+    </ul>
+  </PageHead>
+
+  <section class="adv-svc" aria-label={copy.title}>
+    <div class="adv-wrap adv-svc__grid">
+      <div class="adv-panel adv-svc__scene" data-reveal>
+        <Scene kind={slug} lang={lang} />
+      </div>
+      {
+        number && (
+          <div class="adv-panel adv-svc__num" data-reveal style="--i:1">
+            <p class="adv-svc__value">
+              <span
+                class:list={[{ 'adv-ph': dev && number.placeholder }]}
+                data-count={number.count}
+                data-prefix={number.prefix ?? ''}
+                data-suffix={loc(number.suffix, lang)}
+                aria-hidden="true"
+              >
+                {loc(number.value, lang)}
+              </span>
+              <span class="screen-reader-text">{loc(number.value, lang)}</span>
+            </p>
+            <p class="adv-svc__label">{loc(number.label, lang)}</p>
+            {numberHref && (
+              <a class="adv-link" href={numberHref}>
+                {loc(number.linkLabel, lang)}
+                <Arrow />
+              </a>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="adv-section adv-svc__work" aria-labelledby="adv-svc-work">
+    <div class="adv-wrap">
+      <div class="adv-head">
+        <div>
+          <p class="adv-kicker"><i></i>{c.nav.work}</p>
+          <h2 id="adv-svc-work" class="adv-h2" data-reveal>{s.service.selectedWork}</h2>
+        </div>
+        {
+          work.length > 0 && (
+            <a class="adv-link" href={`${routes.work(lang)}?service=${slug}`}>
+              {fill(s.service.allWork, { service: copy.title })}
+              <Arrow />
+            </a>
+          )
+        }
+      </div>
+      {work.length ? <WorkRows lang={lang} items={work} /> : <p class="adv-lead">{s.service.empty}</p>}
+    </div>
+  </section>
+
+  <nav class="adv-wrap adv-svc__pager" aria-label={c.nav.services}>
+    <a class="adv-card adv-card--lift" href={routes.service(lang, prev)} aria-label={fill(s.service.prevLabel, { service: title(prev) })}>
+      <span class="adv-label"><Arrow dir="left" /> {c.hero.prev}</span>
+      <span class="adv-svc__pagerTitle">{title(prev)}</span>
+    </a>
+    <a class="adv-card adv-card--lift adv-svc__next" href={routes.service(lang, next)} aria-label={fill(s.service.nextLabel, { service: title(next) })}>
+      <span class="adv-label">{c.hero.next} <Arrow /></span>
+      <span class="adv-svc__pagerTitle">{title(next)}</span>
+    </a>
+  </nav>
+
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-svc__chips {
+    margin-top: 28px;
+  }
+  .adv-svc__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 18px;
+  }
+  .adv-svc__scene {
+    padding: 14px;
+  }
+  .adv-svc__scene .adv-scene {
+    height: 100%;
+    min-height: 280px;
+  }
+  .adv-svc__num {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: clamp(24px, 3vw, 40px);
+  }
+  .adv-svc__value {
+    font-family: var(--adv-display);
+    font-size: clamp(2.75rem, 2rem + 2.4vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .adv-svc__label {
+    color: var(--adv-muted);
+    max-width: 30ch;
+  }
+  .adv-svc__num .adv-link {
+    align-self: flex-start;
+  }
+  .adv-svc__pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .adv-svc__pager .adv-card {
+    padding: 26px 26px 28px;
+    gap: 10px;
+  }
+  .adv-svc__pager .adv-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .adv-svc__next {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .adv-svc__pagerTitle {
+    font-family: var(--adv-display);
+    font-size: var(--adv-h3);
+    font-weight: 600;
+  }
+  @media (max-width: 860px) {
+    .adv-svc__grid {
+      grid-template-columns: 1fr;
+    }
+    .adv-svc__scene .adv-scene {
+      min-height: 190px;
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-svc__pager {
+      grid-template-columns: 1fr;
+    }
+    .adv-svc__value {
+      white-space: normal;
+    }
+  }
+</style>

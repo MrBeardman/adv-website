@@ -1,0 +1,11 @@
+---
+import Service from '../../../templates/Service.astro';
+import { ENABLED_SERVICES } from '../../../data/capabilities';
+
+export function getStaticPaths() {
+  return ENABLED_SERVICES.map((s) => ({ params: { slug: s.path.en }, props: { slug: s.slug } }));
+}
+const { slug } = Astro.props;
+---
+
+<Service lang="en" slug={slug} />

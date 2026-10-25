@@ -4,8 +4,8 @@
     "en": "Thank you. We will reply within one working day."
   },
   "form_invalid": {
-    "cs": "Zkontrolujte prosím e-mail a zprávu, něco v nich chybí.",
-    "en": "Please check the email address and the message, something is missing."
+    "cs": "Zkontrolujte prosím vyplněná pole: e-mail, telefon a zpráva.",
+    "en": "Please check the fields: email, phone and message."
   },
   "form_error": {
     "cs": "Zprávu se nepodařilo odeslat. Napište nám přímo na",

@@ -1,0 +1,217 @@
+---
+/**
+ * Case-study rows (service pages, the work index, related work on case pages). Each row shows, without
+ * hovering, everything needed to choose: thumbnail (the case's image, or a generated ADV cover), client,
+ * one outcome line, tags. A row is a link only when the case has a page in this build; rows without one
+ * carry no arrow and no hover, so nothing promises a page that does not exist.
+ * Drafts and placeholders only exist in `astro dev` (data/caseStudies.ts) and carry a badge there.
+ */
+import Arrow from './ui/Arrow.astro';
+import { pick, loc, type Lang } from '../i18n';
+import services from '../i18n/services.json';
+import { routes } from '../data/routes';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import type { CaseStudy } from '../data/caseStudies';
+
+interface Props {
+  lang: Lang;
+  items: CaseStudy[];
+  showService?: boolean;
+}
+const { lang, items, showService = false } = Astro.props;
+const s = pick(services, lang);
+const serviceName = (slug: string) =>
+  ENABLED_SERVICES.some((x) => x.slug === slug) ? s.capabilities.items.find((i) => i.slug === slug)?.title : undefined;
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase();
+---
+
+<ul class="adv-rows">
+  {
+    items.map((c, i) => {
+      const client = loc(c.client, lang);
+      const tags = [loc(c.sector, lang), c.year, ...(showService ? c.services.map(serviceName) : [])].filter(Boolean);
+      const linked = !!c.detail;
+      const Tag = linked ? 'a' : 'div';
+      return (
+        <li data-services={c.services.join(' ')} data-reveal style={`--i:${Math.min(i, 6)}`}>
+          <Tag class:list={['adv-row', { 'adv-row--link': linked }]} href={linked ? routes.case(lang, c.slug) : undefined}>
+            <span class="adv-row__thumb">
+              {c.image ? (
+                <img src={c.image} alt="" loading="lazy" decoding="async" width="320" height="200" />
+              ) : (
+                <span class="adv-row__cover" aria-hidden="true">
+                  {initials(client)}
+                </span>
+              )}
+            </span>
+            <span class="adv-row__main">
+              <span class="adv-row__client">
+                {client}
+                {c.status !== 'published' && (
+                  <span class="adv-row__badge">{c.status === 'draft' ? s.service.badgeDraft : s.service.badgePlaceholder}</span>
+                )}
+              </span>
+              <span class="adv-row__outcome">{loc(c.outcome, lang)}</span>
+              {tags.length > 0 && (
+                <span class="adv-row__tags">
+                  {tags.map((tag) => (
+                    <span>{tag}</span>
+                  ))}
+                </span>
+              )}
+            </span>
+            {linked && (
+              <span class="adv-row__go">
+                <Arrow dir="up" size={18} />
+              </span>
+            )}
+          </Tag>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style is:global>
+  .adv-rows {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--adv-line);
+  }
+  .adv-rows > li {
+    border-bottom: 1px solid var(--adv-line);
+  }
+  .adv-rows > li[hidden] {
+    display: none;
+  }
+  .adv-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 168px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 28px;
+    padding: 22px 12px;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 14px;
+    transition: background-color 300ms var(--adv-ease);
+  }
+  .adv-row--link:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .adv-row__thumb {
+    display: block;
+    aspect-ratio: 16 / 10;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--adv-surface-1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .adv-row__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms var(--adv-ease);
+  }
+  .adv-row--link:hover .adv-row__thumb img {
+    transform: scale(1.04);
+  }
+  .adv-row__cover {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    font-family: var(--adv-mono);
+    font-size: 1.125rem;
+    letter-spacing: 0.08em;
+    color: rgba(124, 200, 255, 0.85);
+    background:
+      linear-gradient(rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 14px 14px,
+      linear-gradient(90deg, rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 14px 14px,
+      radial-gradient(80% 90% at 70% 20%, rgba(32, 64, 170, 0.45), transparent 70%),
+      linear-gradient(165deg, #181b24, #0b0c11);
+  }
+  .adv-row__main {
+    display: grid;
+    gap: 6px;
+  }
+  .adv-row__client {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--adv-display);
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .adv-row__badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px dashed rgba(255, 196, 120, 0.7);
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: #ffd9a8;
+  }
+  .adv-row__outcome {
+    color: var(--adv-muted);
+  }
+  .adv-row__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .adv-row__tags span {
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--adv-edge);
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    color: var(--adv-muted);
+  }
+  .adv-row__go {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--adv-edge);
+    color: var(--adv-muted);
+    transition:
+      color 300ms var(--adv-ease),
+      border-color 300ms var(--adv-ease),
+      transform 300ms var(--adv-ease);
+  }
+  .adv-row--link:hover .adv-row__go {
+    color: var(--adv-on-accent);
+    border-color: var(--adv-accent);
+    background: var(--adv-accent);
+    transform: rotate(0deg) scale(1.04);
+  }
+  @media (max-width: 700px) {
+    .adv-row {
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 16px;
+      padding: 18px 0;
+    }
+    .adv-row__go {
+      display: none;
+    }
+    .adv-row__client {
+      font-size: 1.125rem;
+    }
+    .adv-row__outcome {
+      font-size: 0.9375rem;
+    }
+  }
+</style>

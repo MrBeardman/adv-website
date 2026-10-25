@@ -9,15 +9,17 @@ import services from '../../i18n/services.json';
 
 interface Props {
   lang: Lang;
+  /** kicker number on the home stream (08); omit elsewhere */
+  index?: string;
 }
-const { lang } = Astro.props;
+const { lang, index } = Astro.props;
 const t = pick(home, lang).process;
 const title = pick(services, lang).moves.title;
 ---
 
 <section class="adv-process adv-section" aria-labelledby="adv-process-title">
   <div class="adv-wrap">
-    <p class="adv-kicker" data-node><i></i><b>08</b>{t.kicker}</p>
+    <p class="adv-kicker" data-node={index ? '' : undefined}><i></i>{index && <b>{index}</b>}{t.kicker}</p>
     <h2 id="adv-process-title" class="adv-h2" data-reveal>{title}</h2>
     <ol class="adv-process__list" data-play>
       {

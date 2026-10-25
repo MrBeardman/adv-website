@@ -1,0 +1,208 @@
+---
+/**
+ * Contact (/kontakt/, /en/contact/): the full form (name, email, phone, company, where to start, message)
+ * and the direct details. ?service=<slug> preselects "Where should we start?".
+ * Posts to /api/contact (src/pages/api/contact.ts).
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import { pick, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import contact from '../i18n/contact.json';
+import services from '../i18n/services.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { both, routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const t = pick(contact, lang).contact;
+const s = pick(services, lang);
+const options = ENABLED_SERVICES.map((sv) => ({
+  slug: sv.slug,
+  title: s.capabilities.items.find((i) => i.slug === sv.slug)!.title,
+}));
+const f = t.fields;
+---
+
+<Base lang={lang} title={`${c.nav.contact} · ${c.meta.siteName}`} description={t.line} alternates={both(routes.contact)}>
+  <PageHead kicker={t.eyebrow} title={t.title} lead={t.line} />
+  <section class="adv-contact" aria-label={t.eyebrow}>
+    <div class="adv-wrap adv-contact__grid">
+      <form
+        class="adv-panel adv-contact__form"
+        action="/api/contact/"
+        method="post"
+        data-form
+        data-sending={t.sending}
+        data-success={t.success}
+        data-error={t.error}
+        data-mail={c.brand.email}
+        data-reveal
+      >
+        <input type="hidden" name="lang" value={lang} />
+        <input type="hidden" name="source" value="contact" />
+        <div class="adv-hp" aria-hidden="true">
+          <label for="ct-web">Website</label>
+          <input id="ct-web" type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="adv-contact__row">
+          <div class="adv-field">
+            <label for="ct-name">{f.name}</label>
+            <input id="ct-name" class="adv-input" name="name" maxlength="120" autocomplete="name" placeholder={f.namePlaceholder} />
+          </div>
+          <div class="adv-field">
+            <label for="ct-company">{f.company}</label>
+            <input id="ct-company" class="adv-input" name="company" maxlength="160" autocomplete="organization" placeholder={f.companyPlaceholder} />
+          </div>
+        </div>
+        <div class="adv-contact__row">
+          <div class="adv-field">
+            <label for="ct-email">{f.email}</label>
+            <input id="ct-email" class="adv-input" type="email" name="email" required maxlength="200" autocomplete="email" placeholder={f.emailPlaceholder} />
+          </div>
+          <div class="adv-field">
+            <label for="ct-phone">{f.phone}</label>
+            <input
+              id="ct-phone"
+              class="adv-input"
+              type="tel"
+              name="phone"
+              maxlength="40"
+              autocomplete="tel"
+              placeholder={f.phonePlaceholder}
+              aria-describedby="ct-phone-err"
+            />
+            <p id="ct-phone-err" class="adv-contact__err" data-phone-error hidden>{f.phoneError}</p>
+          </div>
+        </div>
+        <div class="adv-field">
+          <label for="ct-service">{f.service}</label>
+          <select id="ct-service" class="adv-input" name="service" data-service-select>
+            <option value="">{f.servicePlaceholder}</option>
+            {options.map((o) => <option value={o.slug}>{o.title}</option>)}
+          </select>
+        </div>
+        <div class="adv-field">
+          <label for="ct-message">{f.message}</label>
+          <textarea id="ct-message" class="adv-input" name="message" rows="5" maxlength="5000" placeholder={f.messagePlaceholder}></textarea>
+        </div>
+        <div class="adv-contact__submit">
+          <button class="adv-btn adv-btn--primary" type="submit">{c.cta.assessment}<Arrow /></button>
+          <p class="adv-form-status" data-status role="status"></p>
+        </div>
+      </form>
+      <aside class="adv-contact__aside" data-reveal style="--i:1">
+        <p class="adv-pill"><i></i>{t.meta}</p>
+        <dl>
+          <div>
+            <dt>{t.emailLabel}</dt>
+            <dd><a class="adv-link" href={`mailto:${c.brand.email}`}>{c.brand.email}</a></dd>
+          </div>
+          <div>
+            <dt>{t.phoneLabel}</dt>
+            <dd><a class="adv-link" href={`tel:${c.brand.phoneHref}`}>{c.brand.phone}</a></dd>
+          </div>
+          <div>
+            <dt>{t.addressLabel}</dt>
+            <dd>{c.brand.address}</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .adv-contact {
+    padding-bottom: clamp(90px, 10vw, 150px);
+  }
+  .adv-contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: start;
+  }
+  .adv-contact__form {
+    display: grid;
+    gap: 18px;
+    padding: clamp(22px, 3.5vw, 40px);
+  }
+  .adv-contact__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .adv-contact__err {
+    font-size: 0.8125rem;
+    color: #ffb4a8;
+  }
+  .adv-input[aria-invalid='true'] {
+    border-color: #ffb4a8;
+  }
+  select.adv-input {
+    appearance: none;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%239298a8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+  }
+  select.adv-input option {
+    background: #0e1016;
+    color: var(--adv-text);
+  }
+  .adv-contact__submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+  .adv-contact__aside {
+    display: grid;
+    gap: 28px;
+    padding-top: 8px;
+  }
+  .adv-contact__aside .adv-pill {
+    justify-self: start;
+    white-space: normal;
+  }
+  .adv-contact__aside dl {
+    display: grid;
+    gap: 22px;
+    margin: 0;
+  }
+  .adv-contact__aside dt {
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--adv-muted);
+  }
+  .adv-contact__aside dd {
+    margin: 8px 0 0;
+    font-family: var(--adv-display);
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+  @media (max-width: 900px) {
+    .adv-contact__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-contact__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/form';
+  const sel = document.querySelector<HTMLSelectElement>('[data-service-select]');
+  const preset = new URL(location.href).searchParams.get('service');
+  if (sel && preset && [...sel.options].some((o) => o.value === preset)) sel.value = preset;
+</script>

@@ -1,0 +1,13 @@
+---
+/* Only cases with a page in this build: published ones in production, all in `astro dev`. */
+import Case from '../../templates/Case.astro';
+import KesiaLivePricing from '../../templates/KesiaLivePricing.astro';
+import { caseStudiesWithPages } from '../../data/caseStudies';
+
+export function getStaticPaths() {
+  return caseStudiesWithPages().map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+---
+
+{c.detail?.layout === 'kesia-live-pricing' ? <KesiaLivePricing lang="cs" c={c} /> : <Case lang="cs" c={c} />}

@@ -1,0 +1,79 @@
+---
+/** 404. One page for both languages (the server serves dist/client/404.html for any unknown path):
+ *  Czech first, the English line under it. */
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import { pick } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import { routes } from '../data/routes';
+
+const cs = pick(chrome, 'cs').notFound;
+const en = pick(chrome, 'en').notFound;
+---
+
+<Base lang="cs" title={cs.metaTitle} description={cs.body} alternates={{}} noindex>
+  <section class="adv-404">
+    <div class="adv-404__grid" aria-hidden="true"></div>
+    <div class="adv-wrap adv-404__inner">
+      <p class="adv-kicker is-lit"><i></i>404</p>
+      <h1 class="adv-404__title" data-lines><span class="adv-line"><span>{cs.title}</span></span></h1>
+      <p class="adv-lead" data-reveal style="--i:2">{cs.body}</p>
+      <div class="adv-404__ctas" data-reveal style="--i:3">
+        <a class="adv-btn adv-btn--primary" href={routes.home('cs')}>{cs.home}<Arrow /></a>
+        <a class="adv-btn adv-btn--ghost" href={routes.work('cs')}>{cs.work}</a>
+      </div>
+      <p class="adv-404__en" lang="en" data-reveal style="--i:4">
+        {en.title}
+        <a class="adv-link" href={routes.home('en')}>{en.home}<Arrow /></a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .adv-404 {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: 88svh;
+    padding: calc(var(--adv-header-h) + 60px) 0 80px;
+    overflow: clip;
+  }
+  .adv-404__grid {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px;
+    -webkit-mask-image: radial-gradient(60% 70% at 70% 40%, #000 10%, transparent 70%);
+    mask-image: radial-gradient(60% 70% at 70% 40%, #000 10%, transparent 70%);
+  }
+  .adv-404__inner {
+    position: relative;
+  }
+  .adv-404__title {
+    max-width: 16ch;
+    font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.75rem);
+    letter-spacing: -0.035em;
+  }
+  .adv-404 .adv-lead {
+    max-width: 50ch;
+    margin-top: 24px;
+  }
+  .adv-404__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .adv-404__en {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--adv-line);
+    color: var(--adv-muted);
+  }
+</style>

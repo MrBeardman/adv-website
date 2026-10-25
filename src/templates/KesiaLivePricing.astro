@@ -1,0 +1,747 @@
+---
+/**
+ * /realizace/kesia-live-pricing/ (EN /en/work/kesia-live-pricing/): live precious-metal pricing for Kesia.
+ * Ported from PersonalPortfolio src/pages/cases/KesiaLivePricing.jsx. Copy: i18n/kesia.json. Every number
+ * is a rounded estimate and keeps its footnote. Naming rule: "Kesia" only, the shops are "three e-shops".
+ *
+ * One authored moment per view, each played once when it scrolls in ([data-play], site.ts):
+ *   hero        the sample ticker ticks (sample numbers, labelled as such)
+ *   problem     164 products fill in while the edit count climbs to 328
+ *   constraint  the two fee bars grow to scale (90 / 430)
+ *   built       the price's path lights up node by node
+ *   results     three numbers count up
+ * Reduced motion / no JS: every view shows its final state and the ticker holds still.
+ */
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import WorkRows from '../components/WorkRows.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, loc, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import work from '../i18n/work.json';
+import services from '../i18n/services.json';
+import kesia from '../i18n/kesia.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { findCaseStudy, type CaseStudy } from '../data/caseStudies';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  c: CaseStudy;
+}
+const { lang, c } = Astro.props;
+const ch = pick(chrome, lang);
+const w = pick(work, lang).case;
+const s = pick(services, lang);
+const k = pick(kesia, lang).kesia;
+const IMG = '/media/cases/kesia';
+const serviceNames = c.services
+  .filter((sl) => ENABLED_SERVICES.some((x) => x.slug === sl))
+  .map((sl) => s.capabilities.items.find((i) => i.slug === sl)!.title);
+const meta = [loc(c.sector, lang), c.year, ...serviceNames].filter(Boolean).join(' · ');
+const related = (c.related ?? []).map((sl) => findCaseStudy(sl)).filter((x): x is CaseStudy => !!x);
+const nf2 = new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Sample values only, labelled as such on the page. Not prices.
+const SAMPLE = [
+  { id: 'au', base: 2750, step: 2.6 },
+  { id: 'ag', base: 36.4, step: 0.09 },
+  { id: 'pt', base: 1060, step: 1.8 },
+];
+const shots = {
+  groups: { name: '01-pricing-groups', w: 1308, h: 774, cap: k.built.figGroups, wide: true },
+  vip: { name: '02-product-cards-vip', w: 1308, h: 924, cap: k.built.figVip },
+  sales: { name: '03-sales-analytics', w: 1308, h: 774, cap: k.built.figSales },
+  alerts: { name: '04-spot-price-alerts', w: 1308, h: 305, cap: k.safety.figAlerts, wide: true },
+  audit: { name: '05-audit-log', w: 1308, h: 924, cap: k.safety.figAudit, wide: true },
+};
+type Shot = { name: string; w: number; h: number; cap: string; wide?: boolean };
+const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug) };
+---
+
+<Base
+  lang={lang}
+  title={k.metaTitle}
+  description={loc(c.outcome, lang)}
+  alternates={alternates}
+  ogImage={`${IMG}/cover.webp`}
+>
+  <article class="adv-k">
+    <header class="adv-k__hero">
+      <div class="adv-pagehead__grid" aria-hidden="true"></div>
+      <div class="adv-wrap adv-k__heroGrid">
+        <div class="adv-k__heroCopy">
+          <a class="adv-back" href={routes.work(lang)}><Arrow dir="left" />{w.back}</a>
+          <p class="adv-kicker"><i></i>{meta}</p>
+          <h1 class="adv-k__title" data-lines>
+            <span class="adv-line"><span>{k.title}</span></span>
+          </h1>
+          <p class="adv-lead" data-reveal style="--i:2">{k.lead}</p>
+        </div>
+        <div class="adv-k__ticker adv-panel" data-ticker data-reveal style="--i:2">
+          <p class="adv-label">{k.ticker.label}</p>
+          <p class="screen-reader-text">{k.ticker.srNote}</p>
+          <ul aria-hidden="true">
+            {
+              SAMPLE.map((m) => (
+                <li data-metal={m.id} data-base={m.base} data-step={m.step}>
+                  <span class="adv-k__metal">
+                    <span class={`adv-k__sym adv-k__sym--${m.id}`}>{m.id.charAt(0).toUpperCase() + m.id.slice(1)}</span>
+                    {(k.ticker.metals as Record<string, string>)[m.id]}
+                  </span>
+                  <span class="adv-k__price" data-price>
+                    {nf2.format(m.base)}
+                  </span>
+                  <span class="adv-k__delta" data-delta>
+                    {nf2.format(0)} %
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="adv-k__note">{k.ticker.note}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="adv-wrap">
+      <dl class="adv-facts" data-reveal>
+        <div><dt>{k.facts.client}</dt><dd>{k.facts.clientValue}</dd></div>
+        <div><dt>{k.facts.shops}</dt><dd>{k.facts.shopsValue}</dd></div>
+        <div><dt>{k.facts.live}</dt><dd>{k.facts.liveValue}</dd></div>
+        <div><dt>{k.facts.status}</dt><dd>{(w.state as Record<string, string>)[c.detail!.state]}</dd></div>
+      </dl>
+
+      <!-- Problem -->
+      <section class="adv-k__split" aria-labelledby="k-problem">
+        <div data-reveal>
+          <h2 id="k-problem" class="adv-k__h2">{k.problem.title}</h2>
+          <p class="adv-k__prose">{k.problem.body}</p>
+        </div>
+        <div class="adv-k__problem adv-panel" data-play>
+          <p class="adv-k__big">
+            <span data-count="328" data-count-manual aria-hidden="true">328</span>
+            <span class="screen-reader-text">328</span>
+            <span class="adv-k__bigLabel">{k.problem.counter}</span>
+          </p>
+          <div class="adv-k__cells" role="img" aria-label={k.problem.gridLabel}>
+            {Array.from({ length: 164 }, (_, i) => <i style={`--k:${i}`} />)}
+          </div>
+        </div>
+      </section>
+
+      <!-- Constraint -->
+      <section class="adv-k__split" aria-labelledby="k-constraint">
+        <div data-reveal>
+          <h2 id="k-constraint" class="adv-k__h2">{k.constraint.title}</h2>
+          <p class="adv-k__prose">{k.constraint.body}</p>
+        </div>
+        <figure class="adv-k__bars adv-panel" data-play>
+          <figcaption class="adv-label">{k.constraint.barsLabel}</figcaption>
+          <div class="adv-k__barRow">
+            <div class="adv-k__barHead"><span>{k.constraint.apiLabel}</span><strong>{k.constraint.apiValue}</strong></div>
+            <div class="adv-k__track"><i style="--w:1"></i></div>
+          </div>
+          <div class="adv-k__barRow">
+            <div class="adv-k__barHead"><span>{k.constraint.feedLabel}</span><strong>{k.constraint.feedValue}</strong></div>
+            <!-- 90 / 430 of the API route, to scale. -->
+            <div class="adv-k__track"><i class="is-feed" style="--w:0.209"></i></div>
+          </div>
+        </figure>
+      </section>
+
+      <!-- What we built -->
+      <section class="adv-k__stack" aria-labelledby="k-built">
+        <div class="adv-k__stackHead" data-reveal>
+          <h2 id="k-built" class="adv-k__h2">{k.built.title}</h2>
+          <p class="adv-k__prose">{k.built.body}</p>
+        </div>
+        <div class="adv-k__flowWrap">
+          <p class="adv-label">{k.built.flowLabel}</p>
+          <ol class="adv-k__flow" data-play>
+            {
+              k.built.flow.map((st, i) => (
+                <li style={`--k:${i}`}>
+                  <span class="adv-k__idx" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <strong>{st.title}</strong>
+                  <span>{st.body}</span>
+                </li>
+              ))
+            }
+            <li class="adv-k__nextNode" style={`--k:${k.built.flow.length}`}>
+              <span class="adv-k__idx" aria-hidden="true">+</span>
+              <strong>{k.built.nextNode.title}</strong>
+              <span>{k.built.nextNode.body}</span>
+            </li>
+          </ol>
+        </div>
+        <div class="adv-k__gallery">
+          {
+            [shots.groups, shots.vip, shots.sales].map((sh: Shot) => (
+              <figure class:list={['adv-k__shot', { 'is-wide': sh.wide }]} data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp 1308w`}
+                    sizes={sh.wide ? '(min-width: 1240px) 1200px, 100vw' : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'}
+                    width={sh.w}
+                    height={sh.h}
+                    alt={sh.cap}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+        <p class="adv-k__masked">{k.built.masked}</p>
+      </section>
+
+      <!-- Safety -->
+      <section class="adv-k__stack" aria-labelledby="k-safety">
+        <h2 id="k-safety" class="adv-k__h2" data-reveal>{k.safety.title}</h2>
+        <ul class="adv-k__safety">
+          {
+            k.safety.items.map((it, i) => (
+              <li class="adv-card" data-reveal style={`--i:${i}`}>
+                <h3>{it.title}</h3>
+                <p>{it.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="adv-k__gallery">
+          {
+            [shots.alerts, shots.audit].map((sh: Shot) => (
+              <figure class="adv-k__shot is-wide" data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp 1308w`}
+                    sizes="(min-width: 1240px) 1200px, 100vw"
+                    width={sh.w}
+                    height={sh.h}
+                    alt={sh.cap}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section class="adv-k__stack" aria-labelledby="k-results">
+        <h2 id="k-results" class="adv-k__h2" data-reveal>{k.results.title}</h2>
+        <ul class="adv-k__results">
+          {
+            k.results.items.map((r, i) => (
+              <li class="adv-panel" data-reveal style={`--i:${i}`}>
+                <p class="adv-k__resultValue">
+                  <span data-count={r.target} data-prefix={r.prefix} data-suffix={r.suffix} data-delay={i * 120} aria-hidden="true">
+                    {r.final}
+                  </span>
+                  <span class="screen-reader-text">{r.final}</span>
+                </p>
+                <p class="adv-k__resultLabel">{r.label}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="adv-k__footnote">{k.results.footnote}</p>
+      </section>
+
+      <!-- Next -->
+      <section class="adv-k__split adv-k__next" aria-labelledby="k-next" data-reveal>
+        <h2 id="k-next" class="adv-k__h2">{k.next.title}</h2>
+        <p class="adv-k__prose">{k.next.body}</p>
+      </section>
+
+      {
+        related.length > 0 && (
+          <section class="adv-k__stack" aria-labelledby="k-related">
+            <h2 id="k-related" class="adv-label" data-reveal>
+              {k.related}
+            </h2>
+            <WorkRows lang={lang} items={related} showService />
+          </section>
+        )
+      }
+      <p class="adv-k__ctaLine" data-reveal>{k.cta}</p>
+    </div>
+  </article>
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-k__hero {
+    position: relative;
+    padding: calc(var(--adv-header-h) + clamp(48px, 7vw, 100px)) 0 clamp(40px, 5vw, 64px);
+    overflow: clip;
+  }
+  .adv-k__hero .adv-pagehead__grid {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px;
+    -webkit-mask-image: radial-gradient(80% 90% at 75% 20%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(80% 90% at 75% 20%, #000 20%, transparent 75%);
+  }
+  .adv-k__hero::after {
+    content: '';
+    position: absolute;
+    right: -10%;
+    top: -10%;
+    width: 60vw;
+    height: 60vw;
+    max-width: 820px;
+    max-height: 820px;
+    background: radial-gradient(closest-side, var(--adv-glow), transparent 70%);
+    pointer-events: none;
+  }
+  .adv-k__heroGrid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(28px, 5vw, 72px);
+  }
+  .adv-k__title {
+    max-width: 16ch;
+    margin-bottom: 26px;
+    font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
+    letter-spacing: -0.035em;
+  }
+  .adv-k__ticker {
+    display: grid;
+    gap: 14px;
+    padding: 24px;
+  }
+  .adv-k__ticker ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-k__ticker li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+  .adv-k__metal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }
+  .adv-k__sym {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #07101e;
+  }
+  .adv-k__sym--au {
+    background: linear-gradient(135deg, #f3d98b, #c9a24a);
+  }
+  .adv-k__sym--ag {
+    background: linear-gradient(135deg, #eef1f5, #a9b0bd);
+  }
+  .adv-k__sym--pt {
+    background: linear-gradient(135deg, #dfe6ee, #8fa0b4);
+  }
+  .adv-k__price {
+    font-family: var(--adv-mono);
+    font-size: 1.0625rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-k__price.is-tick {
+    animation: adv-k-tick 900ms var(--adv-ease);
+  }
+  @keyframes adv-k-tick {
+    from {
+      color: var(--adv-accent);
+    }
+  }
+  .adv-k__delta {
+    min-width: 76px;
+    text-align: right;
+    font-family: var(--adv-mono);
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-k__delta.is-up {
+    color: var(--adv-accent);
+  }
+  .adv-k__delta.is-down {
+    color: #f0b4a8;
+  }
+  .adv-k__note {
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+
+  .adv-k__h2 {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.625rem);
+    max-width: 20ch;
+  }
+  .adv-k__prose {
+    margin-top: 18px;
+    max-width: 58ch;
+    color: var(--adv-muted);
+    font-size: 1.0625rem;
+  }
+  .adv-k__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(28px, 5vw, 72px);
+    padding: clamp(56px, 7vw, 100px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+  .adv-k__stack {
+    display: grid;
+    gap: 28px;
+    padding: clamp(56px, 7vw, 100px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+
+  .adv-k__problem {
+    padding: 24px;
+  }
+  .adv-k__big {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 18px;
+  }
+  .adv-k__big > span:first-child {
+    font-family: var(--adv-display);
+    font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--adv-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-k__bigLabel {
+    color: var(--adv-muted);
+  }
+  .adv-k__cells {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14px, 1fr));
+    gap: 4px;
+  }
+  .adv-k__cells i {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: rgba(124, 200, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.6);
+  }
+  .js .adv-k__problem.is-armed .adv-k__cells i {
+    opacity: 0.12;
+    transform: scale(0.55);
+    transition:
+      opacity 300ms var(--adv-ease),
+      transform 300ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 6ms);
+  }
+  .js .adv-k__problem.is-playing .adv-k__cells i {
+    opacity: 1;
+    transform: none;
+  }
+
+  .adv-k__bars {
+    display: grid;
+    gap: 22px;
+    padding: 26px;
+  }
+  .adv-k__barHead {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 0.9375rem;
+    color: var(--adv-muted);
+  }
+  .adv-k__barHead strong {
+    color: var(--adv-text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .adv-k__track {
+    height: 12px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+  .adv-k__track i {
+    display: block;
+    height: 100%;
+    width: calc(var(--w) * 100%);
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.16));
+    transform-origin: left;
+  }
+  .adv-k__track i.is-feed {
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.6));
+    box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
+  }
+  .js .adv-k__bars.is-armed .adv-k__track i {
+    transform: scaleX(0);
+    transition: transform 1100ms var(--adv-ease);
+  }
+  .js .adv-k__bars.is-armed .adv-k__barRow + .adv-k__barRow .adv-k__track i {
+    transition-delay: 180ms;
+  }
+  .js .adv-k__bars.is-playing .adv-k__track i {
+    transform: none;
+  }
+
+  .adv-k__flowWrap {
+    display: grid;
+    gap: 16px;
+  }
+  .adv-k__flow {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-k__flow li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 18px 16px;
+    border-radius: 14px;
+    background: linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2));
+    box-shadow: var(--adv-shadow-card);
+    font-size: 0.875rem;
+  }
+  .adv-k__flow li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    width: 12px;
+    height: 1px;
+    background: var(--adv-accent);
+  }
+  .adv-k__flow li > span:last-child {
+    color: var(--adv-muted);
+  }
+  .adv-k__idx {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .adv-k__nextNode {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
+    border: 1px dashed rgba(124, 200, 255, 0.35);
+  }
+  .js .adv-k__flow.is-armed li {
+    opacity: 0;
+    translate: 0 10px;
+    transition:
+      opacity 450ms var(--adv-ease),
+      translate 450ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 220ms);
+  }
+  .js .adv-k__flow.is-playing li {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .adv-k__gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .adv-k__shot.is-wide {
+    grid-column: 1 / -1;
+  }
+  .adv-k__shot a {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      var(--adv-shadow-card),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .adv-k__shot img {
+    width: 100%;
+    transition: transform 700ms var(--adv-ease);
+  }
+  .adv-k__shot a:hover img {
+    transform: scale(1.015);
+  }
+  .adv-k__shot figcaption {
+    margin-top: 10px;
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .adv-k__masked {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+  .adv-k__safety {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-k__safety h3 {
+    font-size: var(--adv-h3);
+  }
+  .adv-k__safety p {
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  .adv-k__results {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-k__results li {
+    padding: 26px;
+  }
+  .adv-k__resultValue {
+    font-family: var(--adv-display);
+    font-size: clamp(2.5rem, 1.8rem + 2vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-k__resultLabel {
+    margin-top: 12px;
+    color: var(--adv-muted);
+  }
+  .adv-k__footnote {
+    max-width: 90ch;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-k__next {
+    align-items: start;
+  }
+  .adv-k__ctaLine {
+    padding: clamp(48px, 6vw, 80px) 0 0;
+    font-family: var(--adv-display);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 600;
+    max-width: 30ch;
+  }
+
+  @media (max-width: 1000px) {
+    .adv-k__flow {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .adv-k__flow li:nth-child(3n)::after {
+      display: none;
+    }
+  }
+  @media (max-width: 860px) {
+    .adv-k__heroGrid,
+    .adv-k__split {
+      grid-template-columns: 1fr;
+    }
+    .adv-k__safety,
+    .adv-k__results {
+      grid-template-columns: 1fr;
+    }
+    .adv-k__gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-k__flow {
+      grid-template-columns: 1fr;
+    }
+    .adv-k__flow li::after {
+      display: none;
+    }
+    .adv-k__ticker li {
+      gap: 10px;
+    }
+    .adv-k__delta {
+      min-width: 0;
+    }
+  }
+</style>
+
+<script>
+  import { countUp } from '../scripts/count';
+
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Hero ticker: a mean-reverting random walk around fixed sample values, one tick every 1.8 s, only while
+     on screen. The moving numbers are aria-hidden; a screen reader gets one sentence saying what they are. */
+  const ticker = document.querySelector<HTMLElement>('[data-ticker]');
+  if (ticker && !RM) {
+    const loc = document.documentElement.lang.startsWith('cs') ? 'cs-CZ' : 'en-GB';
+    const nf = new Intl.NumberFormat(loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const rows = [...ticker.querySelectorAll<HTMLElement>('[data-metal]')].map((li) => ({
+      base: Number(li.dataset.base),
+      step: Number(li.dataset.step),
+      value: Number(li.dataset.base),
+      price: li.querySelector<HTMLElement>('[data-price]')!,
+      delta: li.querySelector<HTMLElement>('[data-delta]')!,
+    }));
+    let on = false;
+    new IntersectionObserver(([e]) => (on = e.isIntersecting)).observe(ticker);
+    setInterval(() => {
+      if (!on || document.hidden) return;
+      rows.forEach((r) => {
+        const move = (Math.random() - 0.5) * 2 * r.step + (r.base - r.value) * 0.25;
+        r.value += move;
+        const pct = (move / r.value) * 100;
+        r.price.textContent = nf.format(r.value);
+        r.price.classList.remove('is-tick');
+        void r.price.offsetWidth;
+        r.price.classList.add('is-tick');
+        r.delta.textContent = `${move >= 0 ? '▲ +' : '▼ '}${nf.format(pct)} %`;
+        r.delta.classList.toggle('is-up', move >= 0);
+        r.delta.classList.toggle('is-down', move < 0);
+      });
+    }, 1800);
+  }
+
+  /* Problem: the count climbs to 328 while the cells fill (the cells are CSS, see .is-playing). */
+  const problem = document.querySelector<HTMLElement>('.adv-k__problem');
+  const big = problem?.querySelector<HTMLElement>('[data-count]');
+  if (problem && big && !RM) {
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      countUp(big);
+    }, { threshold: 0.35 });
+    io.observe(problem);
+  }
+</script>

@@ -1,0 +1,129 @@
+---
+/**
+ * Work index (/realizace/, /en/work/): every visible case, filterable by service. The filter lives in
+ * the URL (?service=<slug>) so a service page's "All work" link lands pre-filtered and a filtered list
+ * can be shared. Without JS every case shows and the chips are hidden.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import WorkRows from '../components/WorkRows.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import work from '../i18n/work.json';
+import services from '../i18n/services.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { caseStudiesFor } from '../data/caseStudies';
+import { both, routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const t = pick(work, lang).workIndex;
+const s = pick(services, lang);
+const items = caseStudiesFor();
+const filters = ENABLED_SERVICES.filter((sv) => items.some((it) => it.services.includes(sv.slug))).map((sv) => ({
+  slug: sv.slug,
+  title: s.capabilities.items.find((i) => i.slug === sv.slug)!.title,
+}));
+---
+
+<Base lang={lang} title={t.metaTitle} description={t.sub} alternates={both(routes.work)}>
+  <PageHead kicker={c.nav.work} title={t.title} lead={t.sub} />
+  <section class="adv-work" aria-label={t.title} data-work>
+    <div class="adv-wrap">
+      <div class="adv-work__filters" role="group" aria-label={t.filterLabel}>
+        <button type="button" class="adv-filter" aria-pressed="true" data-filter="">{t.filterAll}</button>
+        {
+          filters.map((f) => (
+            <button type="button" class="adv-filter" aria-pressed="false" data-filter={f.slug}>
+              {f.title}
+            </button>
+          ))
+        }
+      </div>
+      <WorkRows lang={lang} items={items} showService />
+      <p class="adv-lead adv-work__empty" data-empty hidden>{t.empty}</p>
+    </div>
+  </section>
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-work__filters {
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .js .adv-work__filters {
+    display: flex;
+  }
+  .adv-filter {
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--adv-edge);
+    background: rgba(255, 255, 255, 0.02);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--adv-muted);
+    cursor: pointer;
+    transition:
+      color var(--adv-fast) var(--adv-ease),
+      border-color var(--adv-fast) var(--adv-ease),
+      background-color var(--adv-fast) var(--adv-ease);
+  }
+  .adv-filter:hover {
+    color: var(--adv-text);
+    border-color: var(--adv-edge-hi);
+  }
+  .adv-filter[aria-pressed='true'] {
+    color: var(--adv-on-accent);
+    border-color: var(--adv-accent);
+    background: var(--adv-accent);
+  }
+  .adv-filter:active {
+    transform: scale(0.97);
+  }
+  .adv-work__empty {
+    padding: 32px 0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-work]').forEach((root) => {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const rows = [...root.querySelectorAll<HTMLElement>('.adv-rows > li')];
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const apply = (slug: string, push: boolean) => {
+      if (slug && !buttons.some((b) => b.dataset.filter === slug)) slug = '';
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === slug)));
+      let shown = 0;
+      rows.forEach((li, i) => {
+        const on = !slug || (li.dataset.services ?? '').split(' ').includes(slug);
+        li.hidden = !on;
+        if (on) {
+          shown++;
+          li.animate?.([{ opacity: 0, translate: '0 8px' }, { opacity: 1, translate: '0 0' }], {
+            duration: 350,
+            delay: Math.min(i, 8) * 35,
+            easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+            fill: 'backwards',
+          });
+        }
+      });
+      empty.hidden = shown > 0;
+      if (push) {
+        const url = new URL(location.href);
+        if (slug) url.searchParams.set('service', slug);
+        else url.searchParams.delete('service');
+        history.replaceState(null, '', url);
+      }
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter ?? '', true)));
+    const initial = new URL(location.href).searchParams.get('service') ?? '';
+    if (initial) apply(initial, false);
+  });
+</script>

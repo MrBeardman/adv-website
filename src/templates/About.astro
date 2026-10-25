@@ -1,0 +1,124 @@
+---
+/**
+ * About (/o-nas/, /en/about/). Company voice. No people section yet: there is no approved team copy or
+ * photography, so the team slot is a TODO box in development builds only.
+ * The stats come from Jan Matyáš's freelance record, labelled as the team's experience. TODO (Honza):
+ * confirm them before launch (docs/STATUS.md).
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Partners from '../components/Partners.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import about from '../i18n/about.json';
+import { both, routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const t = pick(about, lang).about;
+const dev = import.meta.env.DEV;
+// countUp only where 0 is a meaningful start; "+" is a static suffix, never counted.
+const STATS = [
+  { key: 'years', count: true, suffix: '' },
+  { key: 'projects', count: true, suffix: '+' },
+  { key: 'range', count: false, suffix: '' },
+  { key: 'markets', count: false, suffix: '' },
+] as const;
+---
+
+<Base lang={lang} title={`${c.nav.about} · ${c.meta.siteName}`} description={t.p1} alternates={both(routes.about)}>
+  <PageHead kicker={c.nav.about} title={t.title} lead={t.p1} />
+  <section class="adv-about" aria-label={c.nav.about}>
+    <div class="adv-wrap">
+      <div class:list={['adv-about__grid', { 'has-todo': dev }]}>
+        <p class="adv-about__p2" data-reveal>{t.p2}</p>
+        {dev && <p class="adv-todo">{t.teamTodo}</p>}
+      </div>
+      <ul class="adv-about__stats">
+        {
+          STATS.map((s, i) => {
+            const st = t.stats[s.key];
+            return (
+              <li class="adv-panel" data-reveal style={`--i:${i}`}>
+                <p class="adv-about__value">
+                  {s.count ? (
+                    <>
+                      <span data-count={st.value} data-suffix={s.suffix} data-delay={i * 120} aria-hidden="true">
+                        {st.value}
+                        {s.suffix}
+                      </span>
+                      <span class="screen-reader-text">
+                        {st.value}
+                        {s.suffix}
+                      </span>
+                    </>
+                  ) : (
+                    st.value
+                  )}
+                </p>
+                <p class="adv-about__label">{st.label}</p>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+  <Partners lang={lang} />
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-about__grid {
+    display: grid;
+    gap: 32px;
+  }
+  .adv-about__grid.has-todo {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .adv-about__p2 {
+    max-width: 34ch;
+    font-family: var(--adv-display);
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+  .adv-about__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin: clamp(48px, 6vw, 80px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-about__stats li {
+    padding: 26px 24px;
+  }
+  .adv-about__value {
+    font-family: var(--adv-display);
+    font-size: clamp(2.25rem, 1.6rem + 1.8vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .adv-about__label {
+    margin-top: 12px;
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 900px) {
+    .adv-about__grid.has-todo {
+      grid-template-columns: 1fr;
+    }
+    .adv-about__stats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

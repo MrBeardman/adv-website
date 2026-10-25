@@ -4,10 +4,10 @@
  * prefers-reduced-motion the movement is dropped (see site.css) and every scene shows its final state.
  */
 import { initStream } from './stream';
+import { countUp } from './count';
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
-const lang = document.documentElement.lang.startsWith('cs') ? 'cs-CZ' : 'en-GB';
 
 /** One passive scroll/resize listener for everything that follows scroll position (rAF-throttled). */
 const scrollJobs: (() => void)[] = [];
@@ -171,25 +171,7 @@ function initSpotlight() {
   );
 }
 
-// 7. Count-ups: [data-count="340000"] (+ data-prefix, data-suffix, data-decimals) count from 0 when
-//    visible. The final text is in the markup, so no-JS and reduced motion read the real value.
-export function countUp(el: HTMLElement, delay = 0) {
-  const to = Number(el.dataset.count);
-  const dec = Number(el.dataset.decimals || 0);
-  const fmt = new Intl.NumberFormat(lang, { minimumFractionDigits: dec, maximumFractionDigits: dec });
-  const pre = el.dataset.prefix ?? '';
-  const suf = el.dataset.suffix ?? '';
-  const dur = 1500;
-  let t0 = 0;
-  const step = (now: number) => {
-    if (!t0) t0 = now + delay;
-    const p = Math.max(0, Math.min(1, (now - t0) / dur));
-    el.textContent = pre + fmt.format(to * (1 - Math.pow(1 - p, 4))) + suf;
-    if (p < 1) requestAnimationFrame(step);
-  };
-  el.textContent = pre + fmt.format(0) + suf;
-  requestAnimationFrame(step);
-}
+// 7. Count-ups (scripts/count.ts) when visible; [data-count-manual] ones are started by their section.
 function initCounters() {
   const els = document.querySelectorAll<HTMLElement>('[data-count]:not([data-count-manual])');
   if (reduceMotion || !('IntersectionObserver' in window)) return;
@@ -280,4 +262,21 @@ initCounters();
 initPlay();
 initType();
 initBackground();
-initStream({ reduceMotion, onScroll });
+if (document.querySelector('[data-stream]')) initStream({ reduceMotion, onScroll });
+else {
+  // Pages without the stream: a kicker lights when it scrolls into view.
+  const kick = document.querySelectorAll<HTMLElement>('.adv-kicker');
+  if (reduceMotion || !('IntersectionObserver' in window)) kick.forEach((k) => k.classList.add('is-lit'));
+  else {
+    const io = new IntersectionObserver(
+      (es) =>
+        es.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-lit');
+          io.unobserve(e.target);
+        }),
+      { rootMargin: '0px 0px -25% 0px' },
+    );
+    kick.forEach((k) => io.observe(k));
+  }
+}

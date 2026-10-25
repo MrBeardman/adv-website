@@ -1,0 +1,256 @@
+---
+/**
+ * Generic case page (cases with `detail` and no layout of their own). Situation, what we did in order,
+ * what changed. In production only published cases build (data/caseStudies.ts); drafts and placeholders
+ * appear in `astro dev` only, with a badge and noindex.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, loc, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import work from '../i18n/work.json';
+import services from '../i18n/services.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { nextCaseStudy, type CaseStudy } from '../data/caseStudies';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  c: CaseStudy;
+}
+const { lang, c } = Astro.props;
+const ch = pick(chrome, lang);
+const t = pick(work, lang).case;
+const s = pick(services, lang);
+const d = c.detail!;
+const serviceNames = c.services
+  .filter((sl) => ENABLED_SERVICES.some((x) => x.slug === sl))
+  .map((sl) => s.capabilities.items.find((i) => i.slug === sl)!.title);
+const client = loc(c.client, lang);
+const meta = [loc(c.sector, lang), c.year, ...serviceNames].filter(Boolean).join(' · ');
+const next = nextCaseStudy(c);
+const facts = [
+  { label: t.duration, value: loc(d.duration, lang) },
+  { label: t.team, value: loc(d.team, lang) },
+  { label: t.services, value: serviceNames.join(', ') },
+  { label: t.status, value: (t.state as Record<string, string>)[d.state] },
+].filter((f) => f.value);
+const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug) };
+---
+
+<Base
+  lang={lang}
+  title={`${client} · ${ch.meta.siteName}`}
+  description={loc(c.outcome, lang)}
+  alternates={alternates}
+  noindex={c.status !== 'published'}
+>
+  <PageHead kicker={meta} title={client} lead={loc(c.outcome, lang)}>
+    <a slot="before" class="adv-back" href={routes.work(lang)}><Arrow dir="left" />{t.back}</a>
+    {
+      c.status !== 'published' && (
+        <p class="adv-case__badge">{c.status === 'draft' ? s.service.badgeDraft : s.service.badgePlaceholder}</p>
+      )
+    }
+  </PageHead>
+
+  <div class="adv-wrap adv-case">
+    <dl class="adv-facts" data-reveal>
+      {
+        facts.map((f) => (
+          <div>
+            <dt>{f.label}</dt>
+            <dd>{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    {
+      c.image && (
+        <figure class="adv-case__image" data-reveal>
+          <img src={c.image} alt="" loading="lazy" decoding="async" width="1600" height="1000" />
+        </figure>
+      )
+    }
+
+    {
+      d.situation && (
+        <section class="adv-case__block" data-reveal>
+          <h2 class="adv-label">{t.situation}</h2>
+          <p class="adv-case__prose">{loc(d.situation, lang)}</p>
+        </section>
+      )
+    }
+
+    {
+      d.approach && (
+        <section class="adv-case__block">
+          <h2 class="adv-label" data-reveal>{t.approach}</h2>
+          <ol class="adv-case__steps">
+            {d.approach.map((st, i) => (
+              <li data-reveal style={`--i:${i}`}>
+                <span class="adv-case__n">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{loc(st.title, lang)}</h3>
+                  <p>{loc(st.body, lang)}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    {
+      d.results && (
+        <section class="adv-case__block">
+          <h2 class="adv-label" data-reveal>{t.results}</h2>
+          <ul class="adv-case__results">
+            {d.results.map((r, i) => {
+              const plain = /^\d+$/.test(r.value);
+              return (
+                <li class="adv-panel" data-reveal style={`--i:${i}`}>
+                  <p class="adv-case__value">
+                    {plain ? (
+                      <>
+                        <span data-count={r.value} aria-hidden="true">
+                          {r.value}
+                        </span>
+                        <span class="screen-reader-text">{r.value}</span>
+                      </>
+                    ) : (
+                      r.value
+                    )}
+                  </p>
+                  <p class="adv-case__rlabel">{loc(r.label, lang)}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )
+    }
+
+    {d.state === 'ongoing-support' && <p class="adv-case__ongoing" data-reveal>{t.ongoing}</p>}
+
+    {
+      next && (
+        <a class="adv-card adv-card--lift adv-case__next" href={routes.case(lang, next.slug)} data-reveal>
+          <span class="adv-label">{t.next}</span>
+          <span class="adv-case__nextClient">
+            {loc(next.client, lang)} <Arrow />
+          </span>
+          <span class="adv-case__nextOutcome">{loc(next.outcome, lang)}</span>
+        </a>
+      )
+    }
+  </div>
+
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-case__badge {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px dashed rgba(255, 196, 120, 0.7);
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    color: #ffd9a8;
+  }
+  .adv-case__image img {
+    width: 100%;
+    border-radius: var(--adv-r-xl);
+    box-shadow: var(--adv-shadow-card);
+  }
+  .adv-case__block {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 24px;
+    padding: clamp(36px, 5vw, 64px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+  .adv-case__prose {
+    max-width: 62ch;
+    font-size: var(--adv-lead);
+  }
+  .adv-case__steps {
+    display: grid;
+    gap: 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-case__steps li {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+  }
+  .adv-case__n {
+    font-family: var(--adv-mono);
+    font-size: 0.8125rem;
+    color: var(--adv-accent);
+    padding-top: 4px;
+  }
+  .adv-case__steps h3 {
+    font-size: var(--adv-h3);
+  }
+  .adv-case__steps p {
+    margin-top: 6px;
+    color: var(--adv-muted);
+  }
+  .adv-case__results {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-case__results li {
+    padding: 24px;
+  }
+  .adv-case__value {
+    font-family: var(--adv-display);
+    font-size: clamp(2rem, 1.6rem + 1.4vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .adv-case__rlabel {
+    margin-top: 8px;
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  .adv-case__ongoing {
+    padding: 28px 0;
+    color: var(--adv-muted);
+  }
+  .adv-case__next {
+    margin-top: clamp(40px, 5vw, 72px);
+    padding: 28px;
+  }
+  .adv-case__nextClient {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--adv-display);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 600;
+  }
+  .adv-case__nextOutcome {
+    color: var(--adv-muted);
+  }
+  @media (max-width: 860px) {
+    .adv-case__block {
+      grid-template-columns: 1fr;
+    }
+    .adv-case__results {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,151 @@
+---
+/** Services overview (/sluzby/, /en/services/): every enabled service as a wide card with its scene. */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Scene from '../components/ui/Scene.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import Process from '../components/home/08-process.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, loc, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import services from '../i18n/services.json';
+import home from '../i18n/home.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { numberFor } from '../data/homeNumbers';
+import { both, routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const s = pick(services, lang);
+const h = pick(home, lang).values;
+const dev = import.meta.env.DEV;
+const items = ENABLED_SERVICES.map((sv) => ({
+  slug: sv.slug,
+  copy: s.capabilities.items.find((i) => i.slug === sv.slug)!,
+  number: numberFor(sv.slug),
+}));
+---
+
+<Base
+  lang={lang}
+  title={`${c.nav.services} · ${c.meta.siteName}`}
+  description={c.meta.description}
+  alternates={both(routes.services)}
+>
+  <PageHead kicker={c.nav.services} title={s.capabilities.title} em={h.em} lead={c.hero.sub} />
+  <section class="adv-svc-list" aria-label={c.nav.services}>
+    <div class="adv-wrap">
+      <ol>
+        {
+          items.map((it, i) => (
+            <li data-reveal>
+              <a class="adv-card adv-svc-card" href={routes.service(lang, it.slug)}>
+                <Scene kind={it.slug} lang={lang} />
+                <div class="adv-svc-card__copy">
+                  <p class="adv-label">{String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</p>
+                  <h2 class="adv-svc-card__title">{it.copy.title}</h2>
+                  <p class="adv-svc-card__long">{it.copy.long}</p>
+                  <ul class="adv-chips">
+                    {it.copy.covers.map((cv) => (
+                      <li>{cv}</li>
+                    ))}
+                  </ul>
+                  <span class="adv-rule" />
+                  <div class="adv-svc-card__foot">
+                    {it.number && (
+                      <p class="adv-svc-card__num">
+                        <strong class:list={[{ 'adv-ph': dev && it.number.placeholder }]}>{loc(it.number.value, lang)}</strong>
+                        <span>{loc(it.number.label, lang)}</span>
+                      </p>
+                    )}
+                    <span class="adv-link">
+                      {s.service.open}
+                      <Arrow />
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+  <Process lang={lang} />
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-svc-list ol {
+    display: grid;
+    gap: 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-svc-card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(24px, 4vw, 56px);
+    padding: 16px clamp(16px, 3vw, 40px) 16px 16px;
+  }
+  .adv-svc-card .adv-scene {
+    height: auto;
+    min-height: 260px;
+  }
+  .adv-svc-card__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: clamp(8px, 2vw, 24px) 0;
+  }
+  .adv-svc-card__title {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  }
+  .adv-svc-card__long {
+    color: var(--adv-muted);
+    max-width: 58ch;
+  }
+  .adv-svc-card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .adv-svc-card__num {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    color: var(--adv-muted);
+    font-size: 0.875rem;
+  }
+  .adv-svc-card__num strong {
+    font-family: var(--adv-display);
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--adv-text);
+    white-space: nowrap;
+  }
+  .adv-svc-card:hover .adv-link {
+    background-size: 100% 1px;
+  }
+  .adv-svc-card:hover .adv-link .adv-arr {
+    transform: translateX(4px);
+  }
+  @media (max-width: 860px) {
+    .adv-svc-card {
+      grid-template-columns: 1fr;
+      padding: 14px 14px 20px;
+    }
+    .adv-svc-card .adv-scene {
+      min-height: 170px;
+    }
+    .adv-svc-card__copy {
+      padding: 0 6px;
+    }
+  }
+</style>

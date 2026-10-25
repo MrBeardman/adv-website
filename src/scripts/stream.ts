@@ -55,8 +55,10 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
     const wr = wrap?.getBoundingClientRect();
     const padL = wrap ? parseFloat(getComputedStyle(wrap).paddingLeft) : 16;
     const contentLeft = wr ? wr.left - mr.left + padL : 24;
-    const x = Math.round(contentLeft - Math.min(48, contentLeft * 0.5)) + 0.5;
     const narrow = W < 760;
+    // Desktop: a rail in the left gutter, ~48px off the content. Phones: a hairline at the screen edge,
+    // and the kickers' own squares are the nodes (no marks or branches next to them).
+    const x = narrow ? 5.5 : Math.round(contentLeft - Math.min(48, contentLeft * 0.5)) + 0.5;
     const amp = narrow ? 3 : 14;
     const rel = (r: DOMRect) => ({ top: r.top - mr.top, bottom: r.bottom - mr.top, left: r.left - mr.left, w: r.width });
 
@@ -149,7 +151,7 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
     });
 
     // Node marks on the rail, each with a branch to its kicker and a tick.
-    nodeMarks = nodeYs.map((y, i) => {
+    nodeMarks = (narrow ? [] : nodeYs).map((y, i) => {
       const g = el('g', { class: 'adv-stream__node', transform: `translate(${x},${y})` }) as SVGGElement;
       const branch = Math.max(0, kickerX[i] - x - 8);
       if (branch > 6) {
