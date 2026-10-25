@@ -13,6 +13,7 @@
  */
 import { pick, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
+import automation from '../../i18n/automation.json';
 
 interface Props {
   kind: string;
@@ -20,9 +21,55 @@ interface Props {
 }
 const { kind, lang } = Astro.props;
 const s = pick(home, lang).values.scene;
+const a = pick(automation, lang).uses.scene;
 ---
 
 <div class={`adv-scene adv-scene--${kind}`} data-live aria-hidden="true">
+  {
+    kind === 'routing' && (
+      <div class="sc-route">
+        <i class="sc-route__in" />
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none">
+          <path d="M18 50 H70" />
+          <path d="M70 50 C100 50 100 18 130 18 H150" />
+          <path d="M70 50 H150" />
+          <path d="M70 50 C100 50 100 82 130 82 H150" />
+          <path class="sc-route__run sc-route__run--a" pathLength="100" d="M18 50 H70 C100 50 100 18 130 18 H150" />
+          <path class="sc-route__run sc-route__run--b" pathLength="100" d="M18 50 H70 H150" />
+          <path class="sc-route__run sc-route__run--c" pathLength="100" d="M18 50 H70 C100 50 100 82 130 82 H150" />
+        </svg>
+        <ul>
+          {a.lanes.map((l, i) => (
+            <li style={`--k:${i}`}>
+              <b />
+              {l}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  {
+    kind === 'assistant' && (
+      <div class="sc-chat">
+        <p class="sc-chat__in">
+          <span />
+          <span />
+        </p>
+        <p class="sc-chat__typing">
+          <i />
+          <i />
+          <i />
+        </p>
+        <div class="sc-chat__draft">
+          <small>{a.draft}</small>
+          <span />
+          <span />
+          <em>{a.send}</em>
+        </div>
+      </div>
+    )
+  }
   {
     kind === 'ai-automation' && (
       <>
@@ -89,7 +136,11 @@ const s = pick(home, lang).values.scene;
                 <stop offset="1" stop-color="rgba(124,200,255,0)" />
               </linearGradient>
             </defs>
-            <path class="sc-web__area" d="M0 52 L28 48 L56 50 L84 40 L112 34 L140 26 L168 16 L200 8 L200 60 L0 60Z" fill={`url(#sc-area-${lang})`} />
+            <path
+              class="sc-web__area"
+              d="M0 52 L28 48 L56 50 L84 40 L112 34 L140 26 L168 16 L200 8 L200 60 L0 60Z"
+              fill={`url(#sc-area-${lang})`}
+            />
             <path class="sc-web__line" pathLength="100" d="M0 52 L28 48 L56 50 L84 40 L112 34 L140 26 L168 16 L200 8" />
           </svg>
         </div>
@@ -113,7 +164,7 @@ const s = pick(home, lang).values.scene;
       inset 0 10px 30px rgba(0, 0, 0, 0.35);
     overflow: hidden;
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--adv-muted);
   }
   .adv-scene * {
@@ -184,7 +235,6 @@ const s = pick(home, lang).values.scene;
     80% {
       border-color: var(--adv-accent);
       background: rgba(124, 200, 255, 0.18);
-      box-shadow: 0 0 12px rgba(124, 200, 255, 0.45);
     }
     92%,
     100% {
@@ -282,13 +332,12 @@ const s = pick(home, lang).values.scene;
   }
   .sc-bar--after {
     background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.55));
-    box-shadow: 0 0 14px rgba(124, 200, 255, 0.35);
     animation-name: sc-shrink;
     transform: scaleX(0.28);
   }
   .sc-bars small {
     justify-self: end;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     opacity: 0.8;
   }
   @keyframes sc-shrink {
@@ -371,7 +420,6 @@ const s = pick(home, lang).values.scene;
       border-style: solid;
       border-color: var(--adv-accent);
       background: var(--adv-accent);
-      box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
     }
     92%,
     100% {
@@ -429,7 +477,7 @@ const s = pick(home, lang).values.scene;
     position: absolute;
     top: -2px;
     left: 0;
-    font-size: 0.5625rem;
+    font-size: 0.75rem;
   }
   .sc-web__chart svg {
     position: absolute;
@@ -482,10 +530,238 @@ const s = pick(home, lang).values.scene;
     }
   }
 
+  /* Routing: one input, three lanes, each item lands in its lane in turn */
+  .sc-route {
+    position: absolute;
+    inset: 16px 16px 16px 18px;
+  }
+  .sc-route svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 62%;
+    height: 100%;
+    overflow: visible;
+  }
+  .sc-route path {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1.2;
+    vector-effect: non-scaling-stroke;
+  }
+  .sc-route__run {
+    stroke: var(--adv-accent) !important;
+    stroke-width: 1.6 !important;
+    stroke-dasharray: 18 100;
+    stroke-dashoffset: 18;
+    opacity: 0;
+    animation-name: sc-lane;
+  }
+  .sc-route__run--b {
+    animation-delay: 2.6s;
+  }
+  .sc-route__run--c {
+    animation-delay: 5.2s;
+  }
+  @keyframes sc-lane {
+    0% {
+      stroke-dashoffset: 18;
+      opacity: 1;
+    }
+    22% {
+      stroke-dashoffset: -100;
+      opacity: 1;
+    }
+    23%,
+    100% {
+      opacity: 0;
+    }
+  }
+  .sc-route__in {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    translate: -50% -50%;
+    border-radius: 4px;
+    border: 1px solid var(--adv-accent);
+    background: rgba(124, 200, 255, 0.18);
+  }
+  .sc-route ul {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40%;
+    display: grid;
+    align-content: space-between;
+    margin: 0;
+    padding: 4px 0;
+    list-style: none;
+  }
+  .sc-route li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    animation-name: sc-row;
+    animation-delay: calc(var(--k) * 2.6s + 1.4s);
+  }
+  .sc-route li b {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: inherit;
+    animation-name: sc-tick;
+  }
+
+  /* Assistant: a question, typing, a drafted reply a person sends */
+  .sc-chat {
+    position: absolute;
+    inset: 16px 18px;
+    display: grid;
+    align-content: start;
+    gap: 8px;
+  }
+  .sc-chat p {
+    margin: 0;
+  }
+  .sc-chat__in {
+    justify-self: start;
+    display: grid;
+    gap: 5px;
+    width: 58%;
+    padding: 9px 10px;
+    border-radius: 10px 10px 10px 3px;
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .sc-chat__in span,
+  .sc-chat__draft span {
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .sc-chat__in span + span {
+    width: 70%;
+  }
+  .sc-chat__typing {
+    display: flex;
+    gap: 4px;
+    justify-self: end;
+    padding: 6px 9px;
+    border-radius: 10px;
+    background: rgba(124, 200, 255, 0.08);
+    animation-name: sc-typing;
+  }
+  .sc-chat__typing i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+    animation: sc-dot 900ms ease-in-out infinite alternate;
+  }
+  .sc-chat__typing i:nth-child(2) {
+    animation-delay: 150ms;
+  }
+  .sc-chat__typing i:nth-child(3) {
+    animation-delay: 300ms;
+  }
+  @keyframes sc-dot {
+    to {
+      opacity: 0.25;
+    }
+  }
+  @keyframes sc-typing {
+    0%,
+    10% {
+      opacity: 0;
+    }
+    14%,
+    30% {
+      opacity: 1;
+    }
+    34%,
+    100% {
+      opacity: 0;
+    }
+  }
+  .sc-chat__draft {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    display: grid;
+    gap: 5px;
+    width: 64%;
+    padding: 8px 10px 10px;
+    border-radius: 10px 10px 3px 10px;
+    border: 1px dashed rgba(124, 200, 255, 0.55);
+    background: rgba(124, 200, 255, 0.06);
+    animation-name: sc-draft;
+  }
+  .sc-chat__draft small {
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .sc-chat__draft span + span {
+    width: 60%;
+  }
+  .sc-chat__draft em {
+    justify-self: end;
+    margin-top: 2px;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-style: normal;
+    font-size: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    animation: inherit;
+    animation-name: sc-send;
+  }
+  @keyframes sc-draft {
+    0%,
+    32% {
+      opacity: 0;
+      translate: 0 6px;
+    }
+    38%,
+    88% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    96%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes sc-send {
+    0%,
+    60% {
+      background: transparent;
+      color: var(--adv-muted);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    64%,
+    100% {
+      background: var(--adv-accent);
+      color: #07101e;
+      border-color: var(--adv-accent);
+    }
+  }
+
   /* Reduced motion: the finished frame, still */
   @media (prefers-reduced-motion: reduce) {
     .adv-scene * {
       animation: none !important;
+    }
+    .sc-chat__typing {
+      display: none !important;
+    }
+    .sc-chat__draft em {
+      background: var(--adv-accent);
+      color: #07101e;
     }
     .sc-flow i,
     .sc-rows b {

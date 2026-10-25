@@ -3,6 +3,7 @@
  * The final Ice panel: "Which task would you never do again?" with a two-field form (task + email) that
  * posts to /api/contact. Where the page's stream of light ends ([data-stream-end]).
  */
+import Node from './ui/Node.astro';
 import Arrow from './ui/Arrow.astro';
 import { pick, type Lang } from '../i18n';
 import home from '../i18n/home.json';
@@ -23,7 +24,7 @@ const uid = `cta-${lang}`;
 
 <section class="adv-cta adv-section" aria-labelledby={`${uid}-title`}>
   <div class="adv-wrap">
-    <p class="adv-kicker" data-node={index ? '' : undefined}><i></i>{index && <b>{index}</b>}{t.kicker}</p>
+    <Node panel />
     <div class="adv-cta__panel" data-stream-end data-reveal>
       <div class="adv-cta__copy">
         <h2 id={`${uid}-title`} class="adv-cta__title">{t.title}</h2>
@@ -51,8 +52,14 @@ const uid = `cta-${lang}`;
         </div>
         <div class="adv-field">
           <label for={`${uid}-task`}>{t.task}</label>
-          <textarea id={`${uid}-task`} class="adv-input" name="message" rows="3" required maxlength="5000" placeholder={t.taskPlaceholder}
-          ></textarea>
+          <textarea
+            id={`${uid}-task`}
+            class="adv-input"
+            name="message"
+            rows="3"
+            required
+            maxlength="5000"
+            placeholder={t.taskPlaceholder}></textarea>
         </div>
         <div class="adv-cta__row">
           <div class="adv-field">
@@ -96,7 +103,7 @@ const uid = `cta-${lang}`;
     box-shadow:
       inset 1px 1px 0 rgba(255, 255, 255, 0.7),
       inset -1px -1px 0 rgba(7, 16, 30, 0.15),
-      0 40px 120px -40px rgba(124, 200, 255, 0.45);
+      0 40px 90px -40px rgba(0, 0, 0, 0.8);
     overflow: hidden;
     isolation: isolate;
     transition: box-shadow 900ms var(--adv-ease);
@@ -111,12 +118,24 @@ const uid = `cta-${lang}`;
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
-  .adv-cta__panel.is-reached {
-    box-shadow:
-      inset 1px 1px 0 rgba(255, 255, 255, 0.7),
-      inset -1px -1px 0 rgba(7, 16, 30, 0.15),
-      0 0 0 6px rgba(124, 200, 255, 0.12),
-      0 40px 140px -30px rgba(124, 200, 255, 0.7);
+  /* light behind the panel (a gradient, not a glow shadow); brighter when the stream reaches it */
+  .adv-cta .adv-wrap {
+    position: relative;
+  }
+  .adv-cta .adv-wrap::before {
+    content: '';
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 20%;
+    bottom: -25%;
+    background: radial-gradient(closest-side, rgba(64, 120, 220, 0.35), transparent);
+    opacity: 0.6;
+    pointer-events: none;
+    transition: opacity 900ms var(--adv-ease);
+  }
+  .adv-cta .adv-wrap:has(.is-reached)::before {
+    opacity: 1;
   }
   .adv-cta__title {
     font-size: clamp(2rem, 1.3rem + 2.8vw, 3.75rem);

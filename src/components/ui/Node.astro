@@ -1,0 +1,14 @@
+---
+/**
+ * A section node: the small square in the left gutter on the first line of a section heading (place it as
+ * the heading's first child). On pages with the stream of light the rail runs through every node and the
+ * node lights and ticks when the light reaches it (scripts/stream.ts); elsewhere it lights in view.
+ * In a padded panel, put it as the panel's first child with `panel` (it then sits level with the title).
+ */
+interface Props {
+  panel?: boolean;
+}
+const { panel = false } = Astro.props;
+---
+
+<span class:list={['adv-node', { 'adv-node--panel': panel }]} aria-hidden="true"></span>

@@ -28,7 +28,12 @@ const options = ENABLED_SERVICES.map((sv) => ({
 const f = t.fields;
 ---
 
-<Base lang={lang} title={`${c.nav.contact} · ${c.meta.siteName}`} description={t.line} alternates={both(routes.contact)}>
+<Base
+  lang={lang}
+  title={`${c.nav.contact} · ${c.meta.siteName}`}
+  description={t.line}
+  alternates={both(routes.contact)}
+>
   <PageHead kicker={t.eyebrow} title={t.title} lead={t.line} />
   <section class="adv-contact" aria-label={t.eyebrow}>
     <div class="adv-wrap adv-contact__grid">
@@ -52,17 +57,40 @@ const f = t.fields;
         <div class="adv-contact__row">
           <div class="adv-field">
             <label for="ct-name">{f.name}</label>
-            <input id="ct-name" class="adv-input" name="name" maxlength="120" autocomplete="name" placeholder={f.namePlaceholder} />
+            <input
+              id="ct-name"
+              class="adv-input"
+              name="name"
+              maxlength="120"
+              autocomplete="name"
+              placeholder={f.namePlaceholder}
+            />
           </div>
           <div class="adv-field">
             <label for="ct-company">{f.company}</label>
-            <input id="ct-company" class="adv-input" name="company" maxlength="160" autocomplete="organization" placeholder={f.companyPlaceholder} />
+            <input
+              id="ct-company"
+              class="adv-input"
+              name="company"
+              maxlength="160"
+              autocomplete="organization"
+              placeholder={f.companyPlaceholder}
+            />
           </div>
         </div>
         <div class="adv-contact__row">
           <div class="adv-field">
             <label for="ct-email">{f.email}</label>
-            <input id="ct-email" class="adv-input" type="email" name="email" required maxlength="200" autocomplete="email" placeholder={f.emailPlaceholder} />
+            <input
+              id="ct-email"
+              class="adv-input"
+              type="email"
+              name="email"
+              required
+              maxlength="200"
+              autocomplete="email"
+              placeholder={f.emailPlaceholder}
+            />
           </div>
           <div class="adv-field">
             <label for="ct-phone">{f.phone}</label>
@@ -88,7 +116,13 @@ const f = t.fields;
         </div>
         <div class="adv-field">
           <label for="ct-message">{f.message}</label>
-          <textarea id="ct-message" class="adv-input" name="message" rows="5" maxlength="5000" placeholder={f.messagePlaceholder}></textarea>
+          <textarea
+            id="ct-message"
+            class="adv-input"
+            name="message"
+            rows="5"
+            maxlength="5000"
+            placeholder={f.messagePlaceholder}></textarea>
         </div>
         <div class="adv-contact__submit">
           <button class="adv-btn adv-btn--primary" type="submit">{c.cta.assessment}<Arrow /></button>
@@ -177,7 +211,7 @@ const f = t.fields;
   }
   .adv-contact__aside dt {
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--adv-muted);

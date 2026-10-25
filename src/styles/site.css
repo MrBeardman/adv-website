@@ -35,12 +35,14 @@
   --adv-display: 'Urbanist', 'Segoe UI', system-ui, sans-serif;
   --adv-sans: 'Manrope', 'Segoe UI', system-ui, sans-serif;
   --adv-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
-  /* Optional one-word headline emphasis (Relay-style italic serif). Awaiting Honza's approval:
-     switch with <html data-em="urbanist"> (Urbanist italic) or data-em="off" (plain). */
-  --adv-em-font: 'Instrument Serif', Georgia, serif;
-  --adv-em-style: italic;
-  --adv-em-weight: 400;
-  --adv-em-size: 1.08em;
+  /* One-word headline emphasis (.adv-em). Default: the same face, in Ice. The Relay-style italic serif
+     (Instrument Serif) is one switch away: <html data-em="serif"> in layouts/Base.astro (EM_STYLE).
+     Open decision for Honza (docs/STATUS.md); the impeccable detector flags the italic serif as a trope. */
+  --adv-em-font: inherit;
+  --adv-em-style: normal;
+  --adv-em-weight: inherit;
+  --adv-em-size: 1em;
+  --adv-em-color: var(--adv-accent);
 
   --adv-h1: clamp(2.75rem, 1.6rem + 4.9vw, 5.75rem);
   --adv-h2: clamp(2rem, 1.35rem + 2.6vw, 3.75rem);
@@ -52,8 +54,8 @@
   --adv-r: 12px; /* buttons */
   --adv-r-lg: 22px; /* cards */
   --adv-r-xl: 28px;
-  --adv-shadow-card: inset 1px 1px 0 var(--adv-edge-hi), inset -1px -1px 0 rgba(0, 0, 0, 0.4),
-    0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  --adv-shadow-card:
+    inset 1px 1px 0 var(--adv-edge-hi), inset -1px -1px 0 rgba(0, 0, 0, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
 
   /* Motion: calm and precise, no bounce */
   --adv-ease: cubic-bezier(0.23, 1, 0.32, 1);
@@ -67,16 +69,14 @@
   --adv-header-h: 72px;
   color-scheme: dark;
 }
-:root[data-em='urbanist'] {
-  --adv-em-font: var(--adv-display);
-  --adv-em-weight: 500;
-  --adv-em-size: 1em;
+:root[data-em='serif'] {
+  --adv-em-font: 'Instrument Serif', Georgia, serif;
+  --adv-em-style: italic;
+  --adv-em-weight: 400;
+  --adv-em-size: 1.08em;
 }
 :root[data-em='off'] {
-  --adv-em-font: inherit;
-  --adv-em-style: normal;
-  --adv-em-weight: inherit;
-  --adv-em-size: 1em;
+  --adv-em-color: inherit;
 }
 
 /* ---------- Base ---------- */
@@ -278,7 +278,7 @@ main {
   font-style: var(--adv-em-style);
   font-weight: var(--adv-em-weight);
   font-size: var(--adv-em-size);
-  letter-spacing: -0.01em;
+  color: var(--adv-em-color);
 }
 .adv-head {
   display: flex;
@@ -312,16 +312,6 @@ main {
   height: 7px;
   border-radius: 50%;
   background: var(--adv-accent);
-  box-shadow: 0 0 0 0 rgba(var(--adv-accent-rgb), 0.6);
-  animation: adv-pulse 2.4s var(--adv-ease) infinite;
-}
-@keyframes adv-pulse {
-  70% {
-    box-shadow: 0 0 0 7px rgba(var(--adv-accent-rgb), 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(var(--adv-accent-rgb), 0);
-  }
 }
 
 /* ---------- Buttons ---------- */
@@ -365,7 +355,7 @@ main {
 }
 .adv-btn--primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 32px -12px rgba(var(--adv-accent-rgb), 0.65);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.75);
 }
 .adv-btn--primary:hover::after {
   transform: translateX(120%);
@@ -563,44 +553,54 @@ a.adv-card:hover,
   translate: 0 0;
 }
 
-/* Section kicker = a node on the stream: mono label with a small square that lights and ticks. */
-.adv-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0 0 22px;
-  font-family: var(--adv-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--adv-muted);
-  transition: color 500ms var(--adv-ease);
-}
-.adv-kicker i {
+/* Section node (ui/Node.astro): a small square in the left gutter, on the first line of a section
+ * heading. On pages with the stream of light it sits exactly on the rail and lights + ticks when the
+ * light reaches it; elsewhere it lights when it scrolls into view. Decorative (aria-hidden). */
+:where(h1, h2, h3):has(> .adv-node) {
   position: relative;
+}
+.adv-node {
+  --off: clamp(10px, calc((100vw - var(--adv-max)) / 2 - 8px), 44px);
+  position: absolute;
+  left: calc(-1 * var(--off) - 5.5px);
+  top: 0.5lh;
   width: 11px;
   height: 11px;
-  flex: none;
+  margin-top: -5.5px;
   border-radius: 3px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  background: var(--adv-bg-2);
+  background: var(--adv-bg-2) center / 100% no-repeat;
   transition:
     border-color 500ms var(--adv-ease),
-    background-color 500ms var(--adv-ease),
-    box-shadow 500ms var(--adv-ease);
+    background-color 500ms var(--adv-ease);
 }
-.adv-kicker b {
-  font-weight: 500;
-  color: rgba(var(--adv-accent-rgb), 0.85);
+/* Before a padded panel, as a child of .adv-wrap: level with the panel title */
+.adv-wrap:has(> .adv-node--panel) {
+  position: relative;
 }
-.adv-kicker.is-lit {
-  color: var(--adv-text);
+.adv-node--panel {
+  left: calc(var(--adv-gutter) - var(--off) - 5.5px);
+  top: clamp(52px, 4vw + 30px, 82px);
 }
-.adv-kicker.is-lit i {
+.adv-node.is-lit {
   border-color: var(--adv-accent);
-  background: rgba(var(--adv-accent-rgb), 0.16);
-  box-shadow: 0 0 14px rgba(var(--adv-accent-rgb), 0.45);
+  background-color: #10243a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.2 6.2l1.9 1.9 3.8-4.2' fill='none' stroke='%237cc8ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.adv-node.is-lit::after {
+  /* a soft light behind the lit node (a gradient, not a glow shadow) */
+  content: '';
+  position: absolute;
+  inset: -12px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(var(--adv-accent-rgb), 0.28), transparent);
+}
+/* Small meta line (mono, normal case) used under page titles */
+.adv-meta {
+  font-family: var(--adv-mono);
+  font-size: 0.8125rem;
+  color: var(--adv-muted);
 }
 
 /* ---------- Stream of light (scripts/stream.ts) ---------- */
@@ -765,7 +765,7 @@ a.adv-card:hover,
   outline: none;
   border-color: var(--adv-accent);
   background: rgba(var(--adv-accent-rgb), 0.04);
-  box-shadow: 0 0 0 3px rgba(var(--adv-accent-rgb), 0.18);
+  box-shadow: inset 0 0 0 1px var(--adv-accent);
 }
 textarea.adv-input {
   min-height: 130px;
@@ -843,7 +843,7 @@ textarea.adv-input {
 }
 .adv-facts dt {
   font-family: var(--adv-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--adv-muted);

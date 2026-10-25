@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { LANGS, langInfo, pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
+import { INDEXABLE, EM_STYLE } from '../data/site';
 
 interface Props {
   lang: Lang;
@@ -14,11 +15,18 @@ interface Props {
   alternates: Partial<Record<Lang, string>>;
   ogImage?: string;
   /** Draw the stream of light through this page (needs [data-node] kickers, see scripts/stream.ts). */
-  stream?: boolean;
+  stream?: boolean | 'light';
   noindex?: boolean;
 }
-const { lang, title, description, alternates, ogImage = '/media/cases/kesia/cover.webp', stream = false, noindex = false } =
-  Astro.props;
+const {
+  lang,
+  title,
+  description,
+  alternates,
+  ogImage = '/media/cases/kesia/cover.webp',
+  stream = false,
+  noindex = false,
+} = Astro.props;
 const site = Astro.site!;
 const canonical = new URL(alternates[lang] ?? Astro.url.pathname, site).href;
 const info = langInfo(lang);
@@ -41,7 +49,7 @@ const org = {
 ---
 
 <!doctype html>
-<html lang={info.code} class="no-js">
+<html lang={info.code} class="no-js" data-em={EM_STYLE === 'ice' ? undefined : EM_STYLE}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -51,7 +59,14 @@ const org = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {/* Preview phase: the whole site is noindex until the launch switch in data/site.ts is flipped. */}
+    {
+      !INDEXABLE ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        noindex && <meta name="robots" content="noindex" />
+      )
+    }
     {
       LANGS.filter((l) => alternates[l.code]).map((l) => (
         <link rel="alternate" hreflang={l.code} href={new URL(alternates[l.code]!, site).href} />
@@ -76,8 +91,20 @@ const org = {
     {
       lang === 'cs' && (
         <>
-          <link rel="preload" href="/fonts/urbanist-latin-ext-600-normal.woff2" as="font" type="font/woff2" crossorigin />
-          <link rel="preload" href="/fonts/manrope-latin-ext-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+          <link
+            rel="preload"
+            href="/fonts/urbanist-latin-ext-600-normal.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+          />
+          <link
+            rel="preload"
+            href="/fonts/manrope-latin-ext-400-normal.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+          />
         </>
       )
     }
@@ -96,7 +123,7 @@ const org = {
     <div class="adv-progress" aria-hidden="true"></div>
     <Header lang={lang} alternates={alternates} />
     <main id="content">
-      {stream && <div class="adv-stream" data-stream aria-hidden="true" />}
+      {stream && <div class="adv-stream" data-stream={stream === 'light' ? 'light' : ''} aria-hidden="true" />}
       <slot />
     </main>
     <Footer lang={lang} alternates={alternates} />

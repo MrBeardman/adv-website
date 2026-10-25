@@ -1,0 +1,78 @@
+---
+/**
+ * Automation page: what we automate. Three matte cards, one per thing the service covers (titles are the
+ * approved "covers" from services.json; the one-line bodies are new copy, docs/STATUS.md), each with its
+ * own looping scene: documents read themselves, items routed to the right lane, an AI draft a person sends.
+ */
+import Node from '../ui/Node.astro';
+import Scene from '../ui/Scene.astro';
+import { pick, type Lang } from '../../i18n';
+import automation from '../../i18n/automation.json';
+import services from '../../i18n/services.json';
+
+interface Props {
+  lang: Lang;
+  index?: string;
+}
+const { lang, index } = Astro.props;
+const t = pick(automation, lang).uses;
+const covers = pick(services, lang).capabilities.items.find((i) => i.slug === 'ai-automation')!.covers;
+const i = t.title.lastIndexOf(t.em);
+const [before, after] = [t.title.slice(0, i), t.title.slice(i + t.em.length)];
+---
+
+<section class="adv-uses adv-section" aria-labelledby="adv-uses-title">
+  <div class="adv-wrap">
+    <h2 id="adv-uses-title" class="adv-h2 adv-uses__title" data-reveal>
+      <Node />{before}<em class="adv-em">{t.em}</em>{after}
+    </h2>
+    <ul class="adv-uses__grid">
+      {
+        t.cards.map((c, k) => (
+          <li class="adv-card adv-card--lift adv-uses__card" data-reveal style={`--i:${k}`}>
+            <Scene kind={c.scene} lang={lang} />
+            <h3 class="adv-uses__name">{covers[k]}</h3>
+            <p class="adv-uses__body">{c.body}</p>
+            <span class="adv-rule" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .adv-uses__title {
+    margin-bottom: clamp(36px, 4.5vw, 60px);
+  }
+  .adv-uses__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-uses__card {
+    padding: 14px 14px 24px;
+  }
+  .adv-uses__card .adv-scene {
+    height: 170px;
+    margin-bottom: 8px;
+  }
+  .adv-uses__card > :not(.adv-scene) {
+    margin-inline: 8px;
+  }
+  .adv-uses__name {
+    font-size: var(--adv-h3);
+  }
+  .adv-uses__body {
+    color: var(--adv-muted);
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 900px) {
+    .adv-uses__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

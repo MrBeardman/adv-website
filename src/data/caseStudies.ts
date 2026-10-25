@@ -453,7 +453,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       state: 'live',
     },
   },
-]
+];
 
 const STATUS_RANK: Record<CaseStatus, number> = { published: 0, draft: 1, placeholder: 2 };
 const byRecency = (a: CaseStudy, b: CaseStudy) =>

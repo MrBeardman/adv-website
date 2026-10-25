@@ -3,6 +3,7 @@
  * How we work, as a workflow timeline: call → map → demo → build → support. When it scrolls in, the line
  * draws and each step lights and ticks in turn (the same node language as the hero and the stream).
  */
+import Node from '../ui/Node.astro';
 import { pick, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
 import services from '../../i18n/services.json';
@@ -19,8 +20,7 @@ const title = pick(services, lang).moves.title;
 
 <section class="adv-process adv-section" aria-labelledby="adv-process-title">
   <div class="adv-wrap">
-    <p class="adv-kicker" data-node={index ? '' : undefined}><i></i>{index && <b>{index}</b>}{t.kicker}</p>
-    <h2 id="adv-process-title" class="adv-h2" data-reveal>{title}</h2>
+    <h2 id="adv-process-title" class="adv-h2" data-reveal><Node />{title}</h2>
     <ol class="adv-process__list" data-play>
       {
         t.steps.map((s, i) => (
@@ -78,7 +78,6 @@ const title = pick(services, lang).moves.title;
     border-radius: 4px;
     border: 1px solid var(--adv-accent);
     background: #0f1d2e;
-    box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
   }
   .adv-process__node i {
     position: absolute;
@@ -126,7 +125,6 @@ const title = pick(services, lang).moves.title;
   .js .adv-process__list.is-playing .adv-process__node {
     border-color: var(--adv-accent);
     background: #0f1d2e;
-    box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
   }
   .js .adv-process__list.is-playing .adv-process__node i,
   .js .adv-process__list.is-playing li > :not(.adv-process__node) {

@@ -4,6 +4,8 @@ import Arrow from './ui/Arrow.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import { routes } from '../data/routes';
+import services from '../i18n/services.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
 
 interface Props {
   lang: Lang;
@@ -21,6 +23,14 @@ const links = [
   { href: routes.about(lang), label: t.nav.about },
 ];
 const current = (href: string) => !href.includes('#') && href !== routes.home(lang) && path.startsWith(href);
+// "Služby" opens a menu of the services; automation first, under its nav name ("Automatizace a AI").
+const sv = pick(services, lang);
+const sub = ENABLED_SERVICES.map((s) => ({
+  href: routes.service(lang, s.slug),
+  label: 'nav' in s ? s.nav[lang] : sv.capabilities.items.find((i) => i.slug === s.slug)!.title,
+  body: sv.capabilities.items.find((i) => i.slug === s.slug)!.body,
+  rich: 'rich' in s,
+}));
 ---
 
 <header class="adv-header" data-header>
@@ -31,13 +41,58 @@ const current = (href: string) => !href.includes('#') && href !== routes.home(la
     <nav class="adv-header__nav" aria-label={t.nav.wordmark}>
       <ul>
         {
-          links.map((l) => (
-            <li>
-              <a href={l.href} aria-current={current(l.href) ? 'page' : undefined}>
-                {l.label}
-              </a>
-            </li>
-          ))
+          links.map((l, i) =>
+            i === 0 ? (
+              <li class="adv-header__has-sub" data-sub>
+                <a href={l.href} aria-current={current(l.href) ? 'page' : undefined}>
+                  {l.label}
+                </a>
+                <button
+                  class="adv-header__caret"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="adv-sub"
+                  aria-label={l.label}
+                >
+                  <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                    <path
+                      d="M2 3.5 5 6.5 8 3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <div class="adv-sub" id="adv-sub">
+                  <ul>
+                    {sub.map((s) => (
+                      <li>
+                        <a
+                          href={s.href}
+                          class:list={['adv-sub__item', { 'is-rich': s.rich }]}
+                          aria-current={current(s.href) ? 'page' : undefined}
+                        >
+                          <span class="adv-sub__label">
+                            <i />
+                            {s.label}
+                          </span>
+                          <span class="adv-sub__body">{s.body}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ) : (
+              <li>
+                <a href={l.href} aria-current={current(l.href) ? 'page' : undefined}>
+                  {l.label}
+                </a>
+              </li>
+            ),
+          )
         }
       </ul>
     </nav>
@@ -69,16 +124,27 @@ const current = (href: string) => !href.includes('#') && href !== routes.home(la
     <nav class="adv-wrap" aria-label={t.nav.wordmark}>
       <ul>
         {
-          [{ href: routes.home(lang), label: t.nav.home }, ...links, { href: routes.contact(lang), label: t.nav.contact }].map(
-            (l, i) => (
-              <li style={`--i:${i}`}>
-                <a href={l.href}>
-                  <span class="adv-drawer__n">{String(i + 1).padStart(2, '0')}</span>
-                  {l.label}
-                </a>
-              </li>
-            ),
-          )
+          [
+            { href: routes.home(lang), label: t.nav.home },
+            ...links,
+            { href: routes.contact(lang), label: t.nav.contact },
+          ].map((l, i) => (
+            <li style={`--i:${i}`}>
+              <a href={l.href}>
+                <span class="adv-drawer__n">{String(i + 1).padStart(2, '0')}</span>
+                {l.label}
+              </a>
+              {l.href === routes.services(lang) && (
+                <ul class="adv-drawer__sub">
+                  {sub.map((s) => (
+                    <li>
+                      <a href={s.href}>{s.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
         }
       </ul>
       <div class="adv-drawer__foot">
@@ -169,6 +235,137 @@ const current = (href: string) => !href.includes('#') && href !== routes.home(la
   .adv-header__nav a:hover::after,
   .adv-header__nav a[aria-current='page']::after {
     transform: scaleX(1);
+  }
+  /* Services menu */
+  .adv-header__has-sub {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .adv-header__has-sub > a {
+    padding-right: 4px !important;
+  }
+  .adv-header__has-sub > a::after {
+    right: 4px !important;
+  }
+  .adv-header__caret {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 28px;
+    margin-right: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--adv-muted);
+    cursor: pointer;
+    transition:
+      color var(--adv-fast) var(--adv-ease),
+      transform 300ms var(--adv-ease);
+  }
+  .adv-header__has-sub:hover .adv-header__caret,
+  .adv-header__has-sub.is-open .adv-header__caret {
+    color: var(--adv-text);
+  }
+  .adv-header__has-sub.is-open .adv-header__caret {
+    transform: rotate(180deg);
+  }
+  .adv-sub {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -18px;
+    width: 400px;
+    padding: 8px;
+    border-radius: 18px;
+    background:
+      radial-gradient(120% 70% at 20% 0%, rgba(255, 255, 255, 0.07), transparent 55%),
+      linear-gradient(165deg, rgba(24, 27, 36, 0.97), rgba(11, 12, 17, 0.97));
+    box-shadow: var(--adv-shadow-card);
+    opacity: 0;
+    visibility: hidden;
+    translate: 0 -6px;
+    transition:
+      opacity 250ms var(--adv-ease),
+      translate 250ms var(--adv-ease),
+      visibility 0s linear 250ms;
+  }
+  .adv-sub::before {
+    /* hover bridge between the link and the panel */
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -12px;
+    height: 12px;
+  }
+  .adv-header__has-sub.is-open .adv-sub,
+  .no-js .adv-header__has-sub:hover .adv-sub,
+  .no-js .adv-header__has-sub:focus-within .adv-sub {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    transition:
+      opacity 250ms var(--adv-ease),
+      translate 250ms var(--adv-ease);
+  }
+  .adv-sub ul {
+    display: grid !important;
+    gap: 2px !important;
+  }
+  .adv-header__nav .adv-sub__item {
+    display: grid;
+    gap: 2px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    transition: background-color var(--adv-fast) var(--adv-ease);
+  }
+  .adv-header__nav .adv-sub__item::after {
+    display: none;
+  }
+  .adv-header__nav .adv-sub__item:hover,
+  .adv-header__nav .adv-sub__item[aria-current='page'] {
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .adv-sub__label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--adv-text);
+  }
+  .adv-sub__label i {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .adv-sub__item.is-rich .adv-sub__label i {
+    border-color: var(--adv-accent);
+    background: rgba(124, 200, 255, 0.2);
+  }
+  .adv-sub__body {
+    padding-left: 19px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--adv-muted);
+  }
+  .adv-drawer__sub {
+    display: grid;
+    gap: 2px;
+    margin: -6px 0 14px 34px !important;
+  }
+  .adv-drawer__sub li {
+    border: 0 !important;
+  }
+  .adv-drawer__sub a {
+    display: block !important;
+    padding: 6px 0 !important;
+    font-family: var(--adv-sans) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: var(--adv-muted);
   }
   .adv-header__end {
     display: flex;

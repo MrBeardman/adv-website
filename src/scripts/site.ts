@@ -123,6 +123,38 @@ function initHeader() {
     else if (y < lastY - 4 || y < 480) hd.classList.remove('is-hidden');
     if (Math.abs(y - lastY) > 4) lastY = y;
   });
+  // Services menu: hover intent with a fine pointer, the caret for touch and keyboard, Esc / outside closes.
+  const subLi = hd.querySelector<HTMLElement>('[data-sub]');
+  if (subLi) {
+    const caret = subLi.querySelector<HTMLButtonElement>('.adv-header__caret')!;
+    let timer = 0;
+    const setSub = (open: boolean) => {
+      subLi.classList.toggle('is-open', open);
+      caret.setAttribute('aria-expanded', String(open));
+    };
+    if (finePointer) {
+      subLi.addEventListener('pointerenter', () => {
+        clearTimeout(timer);
+        setSub(true);
+      });
+      subLi.addEventListener('pointerleave', () => {
+        timer = window.setTimeout(() => setSub(false), 200);
+      });
+    }
+    caret.addEventListener('click', () => setSub(!subLi.classList.contains('is-open')));
+    subLi.addEventListener('focusout', (e) => {
+      if (!subLi.contains(e.relatedTarget as Node)) setSub(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && subLi.classList.contains('is-open')) {
+        setSub(false);
+        caret.focus();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!subLi.contains(e.target as Node)) setSub(false);
+    });
+  }
   const burger = hd.querySelector<HTMLButtonElement>('[data-burger]');
   if (!burger) return;
   const set = (open: boolean) => {
@@ -264,8 +296,8 @@ initType();
 initBackground();
 if (document.querySelector('[data-stream]')) initStream({ reduceMotion, onScroll });
 else {
-  // Pages without the stream: a kicker lights when it scrolls into view.
-  const kick = document.querySelectorAll<HTMLElement>('.adv-kicker');
+  // Pages without the stream: a section node lights when it scrolls into view.
+  const kick = document.querySelectorAll<HTMLElement>('.adv-node');
   if (reduceMotion || !('IntersectionObserver' in window)) kick.forEach((k) => k.classList.add('is-lit'));
   else {
     const io = new IntersectionObserver(

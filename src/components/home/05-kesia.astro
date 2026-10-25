@@ -5,6 +5,7 @@
  * two fee bars to scale, six daily updates. Links to the case page.
  * Naming rule: the client is "Kesia" only (docs/BRAND.md).
  */
+import Node from '../ui/Node.astro';
 import Arrow from '../ui/Arrow.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
@@ -15,8 +16,10 @@ import { numberFor } from '../../data/homeNumbers';
 
 interface Props {
   lang: Lang;
+  /** kicker number = node on the stream; omit for a plain kicker */
+  index?: string;
 }
-const { lang } = Astro.props;
+const { lang, index } = Astro.props;
 const t = pick(home, lang).kesia;
 const k = pick(kesia, lang).kesia;
 const c = findCaseStudy('kesia-live-pricing');
@@ -44,14 +47,12 @@ const lastP = pts[pts.length - 1];
   c && (
     <section class="adv-kesia adv-section" aria-labelledby="adv-kesia-title">
       <div class="adv-wrap">
-        <p class="adv-kicker" data-node>
-          <i />
-          <b>05</b>
-          {t.kicker} · Kesia
-        </p>
+        <Node panel />
         <div class="adv-kesia__panel adv-panel" data-reveal>
           <div class="adv-kesia__copy">
-            <h2 id="adv-kesia-title" class="adv-kesia__title">{k.title}</h2>
+            <h2 id="adv-kesia-title" class="adv-kesia__title">
+              {k.title}
+            </h2>
             <p class="adv-lead">{loc(c.outcome, lang)}</p>
             <a class="adv-link" href={routes.case(lang, c.slug)}>
               {link ? loc(link, lang) : k.metaTitle}
@@ -84,7 +85,12 @@ const lastP = pts[pts.length - 1];
           <ul class="adv-kesia__stats">
             <li data-play>
               <p class="adv-kesia__num">
-                <span data-count={hours.target} data-prefix={hours.prefix} data-suffix={hours.suffix} aria-hidden="true">
+                <span
+                  data-count={hours.target}
+                  data-prefix={hours.prefix}
+                  data-suffix={hours.suffix}
+                  aria-hidden="true"
+                >
                   {hours.final}
                 </span>
                 <span class="screen-reader-text">{hours.final}</span>
@@ -109,7 +115,12 @@ const lastP = pts[pts.length - 1];
             </li>
             <li data-play>
               <p class="adv-kesia__num">
-                <span data-count={daily.target} data-prefix={daily.prefix} data-suffix={daily.suffix} aria-hidden="true">
+                <span
+                  data-count={daily.target}
+                  data-prefix={daily.prefix}
+                  data-suffix={daily.suffix}
+                  aria-hidden="true"
+                >
                   {daily.final}
                 </span>
                 <span class="screen-reader-text">{daily.final}</span>
@@ -173,7 +184,7 @@ const lastP = pts[pts.length - 1];
     justify-content: space-between;
     gap: 12px;
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     letter-spacing: 0.04em;
     color: var(--adv-muted);
   }
@@ -188,7 +199,6 @@ const lastP = pts[pts.length - 1];
     height: 6px;
     border-radius: 50%;
     background: var(--adv-accent);
-    animation: adv-pulse 2.4s var(--adv-ease) infinite;
   }
   .adv-kesia__chart svg {
     width: 100%;

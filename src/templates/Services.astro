@@ -45,7 +45,9 @@ const items = ENABLED_SERVICES.map((sv) => ({
               <a class="adv-card adv-svc-card" href={routes.service(lang, it.slug)}>
                 <Scene kind={it.slug} lang={lang} />
                 <div class="adv-svc-card__copy">
-                  <p class="adv-label">{String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</p>
+                  <p class="adv-label">
+                    {String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+                  </p>
                   <h2 class="adv-svc-card__title">{it.copy.title}</h2>
                   <p class="adv-svc-card__long">{it.copy.long}</p>
                   <ul class="adv-chips">
@@ -57,7 +59,9 @@ const items = ENABLED_SERVICES.map((sv) => ({
                   <div class="adv-svc-card__foot">
                     {it.number && (
                       <p class="adv-svc-card__num">
-                        <strong class:list={[{ 'adv-ph': dev && it.number.placeholder }]}>{loc(it.number.value, lang)}</strong>
+                        <strong class:list={[{ 'adv-ph': dev && it.number.placeholder }]}>
+                          {loc(it.number.value, lang)}
+                        </strong>
                         <span>{loc(it.number.label, lang)}</span>
                       </p>
                     )}

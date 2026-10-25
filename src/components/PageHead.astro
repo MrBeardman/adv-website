@@ -22,11 +22,15 @@ const parts = i >= 0 ? [title.slice(0, i), em!, title.slice(i + em!.length)] : [
     <slot name="before" />
     <p class="adv-kicker"><i></i>{kicker}</p>
     <h1 class="adv-pagehead__title" data-lines>
-      <span class="adv-line"
-        ><span>{parts[0]}{parts[1] && <em class="adv-em">{parts[1]}</em>}{parts[2]}</span></span
-      >
+      <span class="adv-line"><span>{parts[0]}{parts[1] && <em class="adv-em">{parts[1]}</em>}{parts[2]}</span></span>
     </h1>
-    {lead && <p class="adv-lead adv-pagehead__lead" data-reveal style="--i:2">{lead}</p>}
+    {
+      lead && (
+        <p class="adv-lead adv-pagehead__lead" data-reveal style="--i:2">
+          {lead}
+        </p>
+      )
+    }
     <slot />
   </div>
 </header>

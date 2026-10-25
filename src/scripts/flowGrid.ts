@@ -22,15 +22,83 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   const MID = (cv.dataset.labels || 'fetch,parse,enrich,approve,sync,notify,route,check').split(',');
   const FIRST = cv.dataset.first || 'trigger';
   const LAST = cv.dataset.last || 'done';
+  // data-flows="off": only the breathing grid and the pointer lens (the calmer homepage hero)
+  const FLOWS = cv.dataset.flows !== 'off';
   const TEMPLATES = [
-    { n: [[0, 0], [3, 0], [6, 1], [9, 1]], e: [[0, 1], [1, 2], [2, 3]] },
-    { n: [[0, 1], [3, 0], [3, 2], [6, 1], [9, 1]], e: [[0, 1], [0, 2], [1, 3], [2, 3], [3, 4]] },
-    { n: [[0, 1], [3, 1], [6, 0], [6, 2], [9, 1]], e: [[0, 1], [1, 2], [1, 3], [2, 4], [3, 4]] },
-    { n: [[0, 0], [3, 0], [3, 2], [6, 2], [9, 1]], e: [[0, 1], [0, 2], [2, 3], [1, 4], [3, 4]] },
+    {
+      n: [
+        [0, 0],
+        [3, 0],
+        [6, 1],
+        [9, 1],
+      ],
+      e: [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+      ],
+    },
+    {
+      n: [
+        [0, 1],
+        [3, 0],
+        [3, 2],
+        [6, 1],
+        [9, 1],
+      ],
+      e: [
+        [0, 1],
+        [0, 2],
+        [1, 3],
+        [2, 3],
+        [3, 4],
+      ],
+    },
+    {
+      n: [
+        [0, 1],
+        [3, 1],
+        [6, 0],
+        [6, 2],
+        [9, 1],
+      ],
+      e: [
+        [0, 1],
+        [1, 2],
+        [1, 3],
+        [2, 4],
+        [3, 4],
+      ],
+    },
+    {
+      n: [
+        [0, 0],
+        [3, 0],
+        [3, 2],
+        [6, 2],
+        [9, 1],
+      ],
+      e: [
+        [0, 1],
+        [0, 2],
+        [2, 3],
+        [1, 4],
+        [3, 4],
+      ],
+    },
   ];
   type Node = { x: number; y: number; d: number; label: string };
   type Edge = { a: number; b: number; pts: number[][]; seg: number[]; len: number };
-  type Flow = { t0: number; nodes: Node[]; edges: Edge[]; box: number[]; R: number; Td: number; Tf: number; rippled: boolean };
+  type Flow = {
+    t0: number;
+    nodes: Node[];
+    edges: Edge[];
+    box: number[];
+    R: number;
+    Td: number;
+    Tf: number;
+    rippled: boolean;
+  };
 
   const css = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const gridRGB = css('--adv-grid-rgb') || '236,238,244';
@@ -38,6 +106,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   const bg2 = css('--adv-bg-2') || '#0e1016';
   let W = 0;
   let H = 0;
+  let base: HTMLCanvasElement | null = null;
   let flows: Flow[] = [];
   let ripples: { x: number; y: number; t0: number }[] = [];
   let avoid: number[][] = []; // in grid cells: [c0, r0, c1, r1]
@@ -51,36 +120,42 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
 
   const measureAvoid = () => {
     const hr = cv.getBoundingClientRect();
-    avoid = [...host.querySelectorAll<HTMLElement>('[data-grid-avoid]')].map((n) => {
+    // In pixels, with a 20px margin: text and the hero window stay clear.
+    avoid = [...host.querySelectorAll<HTMLElement>('[data-grid-avoid] > *')].map((n) => {
       const r = n.getBoundingClientRect();
-      return [
-        Math.floor((r.left - hr.left) / cell) - 1,
-        Math.floor((r.top - hr.top) / cell) - 1,
-        Math.ceil((r.right - hr.left) / cell) + 1,
-        Math.ceil((r.bottom - hr.top) / cell) + 1,
-      ];
+      return [r.left - hr.left - 20, r.top - hr.top - 20, r.right - hr.left + 20, r.bottom - hr.top + 20];
     });
   };
   const overlaps = (a: number[], b: number[]) => !(a[2] < b[0] || a[0] > b[2] || a[3] < b[1] || a[1] > b[3]);
 
   function makeFlow(t0: number): Flow | null {
-    const tp = TEMPLATES[(Math.random() * TEMPLATES.length) | 0];
     const narrow = W < 700;
     const sx = narrow ? 0.5 : 1;
     const cols = Math.floor(W / cell);
     const rows = Math.floor(H / cell);
     const spanC = Math.round(9 * sx);
-    const spanR = 2;
     const maxC = cols - 1 - spanC;
-    const maxR = rows - 1 - spanR;
-    if (maxC < 1 || maxR < 1) return null;
-    for (let k = 0; k < 40; k++) {
+    if (maxC < 1) return null;
+    // Try every template (flatter ones fit tighter gaps) at random grid positions.
+    const order = TEMPLATES.slice().sort(() => Math.random() - 0.5);
+    for (let k = 0; k < 120; k++) {
+      const tp = order[k % order.length];
+      const spanR = Math.max(...tp.n.map(([, r]) => r));
+      const maxR = rows - 1 - spanR;
+      if (maxR < 2) continue;
       const c0 = 1 + ((Math.random() * maxC) | 0);
-      const r0 = 1 + ((Math.random() * maxR) | 0);
-      const box = [c0, r0, c0 + spanC, r0 + spanR + 1]; // +1 row for the labels
+      const r0 = 2 + ((Math.random() * (maxR - 1)) | 0); // row 2+: clear of the header
+      // pixel box of the nodes, plus room for node size and the labels under them
+      const box = [c0 * cell - 14, r0 * cell - 14, (c0 + spanC) * cell + 34, (r0 + spanR) * cell + 30];
+      if (box[3] > H - 8) continue;
       if (avoid.some((a) => overlaps(box, a))) continue;
-      if (flows.some((f) => overlaps([box[0] - 1, box[1] - 1, box[2] + 1, box[3] + 1], f.box))) continue;
-      const nodes: Node[] = tp.n.map(([c, r]) => ({ x: (c0 + Math.round(c * sx)) * cell, y: (r0 + r) * cell, d: 0, label: '' }));
+      if (flows.some((f) => overlaps([box[0] - cell, box[1] - cell, box[2] + cell, box[3] + cell], f.box))) continue;
+      const nodes: Node[] = tp.n.map(([c, r]) => ({
+        x: (c0 + Math.round(c * sx)) * cell,
+        y: (r0 + r) * cell,
+        d: 0,
+        label: '',
+      }));
       for (let i = 0; i < nodes.length; i++)
         tp.e.forEach(([a, b]) => {
           nodes[b].d = Math.max(nodes[b].d, nodes[a].d + 1);
@@ -93,7 +168,18 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
         const A = nodes[a];
         const B = nodes[b];
         const midX = Math.round((A.x + B.x) / 2 / cell) * cell;
-        const pts = A.y === B.y ? [[A.x, A.y], [B.x, B.y]] : [[A.x, A.y], [midX, A.y], [midX, B.y], [B.x, B.y]];
+        const pts =
+          A.y === B.y
+            ? [
+                [A.x, A.y],
+                [B.x, B.y],
+              ]
+            : [
+                [A.x, A.y],
+                [midX, A.y],
+                [midX, B.y],
+                [B.x, B.y],
+              ];
         let len = 0;
         const seg: number[] = [];
         for (let i = 1; i < pts.length; i++) {
@@ -161,12 +247,13 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
         c.lineWidth = 1.2;
         poly(e, 0, h);
         if (kr < 1) {
-          c.shadowColor = `rgba(${accRGB},.9)`;
-          c.shadowBlur = 10;
+          // the travelling pulse: a wide faint stroke under a bright one (cheaper than shadowBlur)
+          c.strokeStyle = `rgba(${accRGB},.22)`;
+          c.lineWidth = 6;
+          poly(e, Math.max(0, h - 30), h);
           c.strokeStyle = `rgba(${accRGB},.95)`;
           c.lineWidth = 1.6;
           poly(e, Math.max(0, h - 26), h);
-          c.shadowBlur = 0;
         }
       }
     });
@@ -198,7 +285,13 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
       if (active && flash < 1) {
         c.strokeStyle = `rgba(${accRGB},${0.6 * (1 - flash)})`;
         c.beginPath();
-        c.roundRect(n.x - sz / 2 - 6 * flash, n.y - sz / 2 - 6 * flash, sz + 12 * flash, sz + 12 * flash, r + 4 * flash);
+        c.roundRect(
+          n.x - sz / 2 - 6 * flash,
+          n.y - sz / 2 - 6 * flash,
+          sz + 12 * flash,
+          sz + 12 * flash,
+          r + 4 * flash,
+        );
         c.stroke();
       }
       if (last && tau >= f.Td) {
@@ -206,7 +299,11 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
         c.strokeStyle = `rgba(${accRGB},1)`;
         c.lineWidth = 1.6;
         c.beginPath();
-        const p = [[n.x - 4, n.y], [n.x - 1, n.y + 3], [n.x + 4.5, n.y - 3.5]];
+        const p = [
+          [n.x - 4, n.y],
+          [n.x - 1, n.y + 3],
+          [n.x + 4.5, n.y - 3.5],
+        ];
         c.moveTo(p[0][0], p[0][1]);
         if (k < 0.4) {
           const q = k / 0.4;
@@ -246,14 +343,15 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   function draw(now: number) {
     const c = ctx!;
     c.clearRect(0, 0, W, H);
+    // the grid itself is pre-rendered once per size (base layer); breathing is only its alpha
     const breath = RM ? 1 : 0.8 + 0.2 * Math.sin(now * 0.55);
-    gridPath();
-    const g = c.createRadialGradient(W * 0.72, H * 0.4, 0, W * 0.72, H * 0.4, Math.max(W, H) * 0.78);
-    g.addColorStop(0, `rgba(${gridRGB},${0.1 * breath})`);
-    g.addColorStop(1, `rgba(${gridRGB},0)`);
-    c.strokeStyle = g;
-    c.lineWidth = 1;
-    c.stroke();
+    if (base) {
+      c.save();
+      c.setTransform(1, 0, 0, 1, 0, 0);
+      c.globalAlpha = breath;
+      c.drawImage(base, 0, 0);
+      c.restore();
+    }
     ripples = ripples.filter((rp) => now - rp.t0 < 2.4);
     ripples.forEach((rp) => {
       const age = now - rp.t0;
@@ -275,7 +373,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
       c.strokeStyle = lg;
       c.stroke();
     }
-    if (!RM && now >= nextAt && flows.length < 2) {
+    if (!RM && FLOWS && now >= nextAt && flows.length < 2) {
       const f = makeFlow(now);
       if (f) flows.push(f);
       nextAt = now + 3.2 + Math.random() * 2.2;
@@ -291,11 +389,32 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
     cv.width = Math.round(W * DPR);
     cv.height = Math.round(H * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    // base layer: the hairline grid with its radial falloff, drawn once
+    base = document.createElement('canvas');
+    base.width = cv.width;
+    base.height = cv.height;
+    const b = base.getContext('2d')!;
+    b.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const g = b.createRadialGradient(W * 0.72, H * 0.4, 0, W * 0.72, H * 0.4, Math.max(W, H) * 0.78);
+    g.addColorStop(0, `rgba(${gridRGB},0.1)`);
+    g.addColorStop(1, `rgba(${gridRGB},0)`);
+    b.beginPath();
+    for (let x = 0; x <= W; x += cell) {
+      b.moveTo(x + 0.5, 0);
+      b.lineTo(x + 0.5, H);
+    }
+    for (let y = 0; y <= H; y += cell) {
+      b.moveTo(0, y + 0.5);
+      b.lineTo(W, y + 0.5);
+    }
+    b.strokeStyle = g;
+    b.lineWidth = 1;
+    b.stroke();
     measureAvoid();
     flows = [];
     ripples = [];
     if (RM) {
-      const f = makeFlow(0);
+      const f = FLOWS ? makeFlow(0) : null;
       if (f) {
         f.t0 = -(f.Td + 0.6);
         f.Tf = 1e9;

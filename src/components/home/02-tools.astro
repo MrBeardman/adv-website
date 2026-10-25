@@ -1,9 +1,11 @@
 ---
 /**
- * Tools strip: the systems we connect, as a slow marquee of names in the mono face.
+ * Tools strip: the systems we connect, as one calm row of names (no marquee: everything readable at once).
+ * When it scrolls in, the names light one after another, like a workflow connecting them, once.
  * TODO (Honza): the list is a placeholder until confirmed (docs/STATUS.md). Names only, no logos:
  * third-party logos need permission and would pull the eye away from ours.
  */
+import Node from '../ui/Node.astro';
 import { pick, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
 
@@ -13,22 +15,31 @@ interface Props {
 const { lang } = Astro.props;
 const t = pick(home, lang).tools;
 // TODO (Honza): confirm the tool list.
-const TOOLS = ['Shoptet', 'Shopify', 'Google Workspace', 'Microsoft 365', 'Pohoda', 'Fakturoid', 'n8n', 'Make', 'OpenAI', 'Claude'];
+const TOOLS = [
+  'Shoptet',
+  'Shopify',
+  'Google Workspace',
+  'Microsoft 365',
+  'Pohoda',
+  'Fakturoid',
+  'n8n',
+  'Make',
+  'OpenAI',
+  'Claude',
+];
 const dev = import.meta.env.DEV;
 ---
 
 <section class="adv-tools" aria-labelledby="adv-tools-title">
-  <div class="adv-wrap adv-tools__head">
-    <p class="adv-kicker" data-node><i></i><b>02</b>{t.kicker}</p>
-    <h2 id="adv-tools-title" class="adv-tools__title" data-reveal>{t.title}</h2>
-    {dev && <p class="adv-todo">TODO: seznam nástrojů je zástupný, potvrdit (jen ve vývojovém buildu).</p>}
-  </div>
-  <div class="adv-tools__rail" data-live>
-    <ul class="adv-tools__track">
-      {TOOLS.map((n) => <li>{n}</li>)}
-    </ul>
-    <ul class="adv-tools__track" aria-hidden="true">
-      {TOOLS.map((n) => <li>{n}</li>)}
+  <div class="adv-wrap">
+    <h2 id="adv-tools-title" class="adv-tools__title" data-reveal><Node />{t.title}</h2>
+    {
+      dev && (
+        <p class="adv-todo adv-tools__todo">TODO: seznam nástrojů je zástupný, potvrdit (jen ve vývojovém buildu).</p>
+      )
+    }
+    <ul class="adv-tools__list" data-play>
+      {TOOLS.map((n, i) => <li style={`--k:${i}`}>{n}</li>)}
     </ul>
   </div>
 </section>
@@ -36,11 +47,7 @@ const dev = import.meta.env.DEV;
 <style is:global>
   .adv-tools {
     position: relative;
-    padding: clamp(40px, 6vw, 80px) 0 clamp(70px, 8vw, 110px);
-  }
-  .adv-tools__head {
-    display: grid;
-    justify-items: start;
+    padding: clamp(40px, 6vw, 80px) 0 clamp(60px, 7vw, 100px);
   }
   .adv-tools__title {
     max-width: 24ch;
@@ -49,62 +56,44 @@ const dev = import.meta.env.DEV;
     letter-spacing: -0.01em;
     color: var(--adv-muted);
   }
-  .adv-tools__head .adv-todo {
+  .adv-tools__todo {
     margin-top: 14px;
+    justify-self: start;
   }
-  .adv-tools__rail {
+  .adv-tools__list {
     display: flex;
-    margin-top: 40px;
-    overflow: clip;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-    border-block: 1px solid var(--adv-line);
-  }
-  .adv-tools__track {
-    display: flex;
-    flex: none;
-    margin: 0;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 36px 0 0;
     padding: 0;
     list-style: none;
-    animation: adv-marquee 48s linear infinite;
+    border-block: 1px solid var(--adv-line);
   }
-  .adv-tools__track li {
+  .adv-tools__list li {
     display: flex;
     align-items: center;
-    gap: 22px;
-    padding: 22px 22px;
+    padding: 18px 22px 18px 0;
     font-family: var(--adv-display);
-    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.375rem);
     font-weight: 600;
     letter-spacing: -0.01em;
-    color: rgba(241, 242, 245, 0.62);
+    color: rgba(241, 242, 245, 0.72);
     white-space: nowrap;
+    transition: color 500ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 90ms);
   }
-  .adv-tools__track li::after {
+  .adv-tools__list li + li::before {
     content: '';
-    width: 6px;
-    height: 6px;
-    margin-left: 22px;
+    width: 5px;
+    height: 5px;
+    margin-right: 22px;
     border-radius: 2px;
-    border: 1px solid rgba(var(--adv-accent-rgb), 0.6);
+    border: 1px solid rgba(var(--adv-accent-rgb), 0.55);
   }
-  @keyframes adv-marquee {
-    to {
-      transform: translateX(-100%);
-    }
+  .js .adv-tools__list.is-armed li {
+    color: rgba(241, 242, 245, 0.28);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .adv-tools__rail {
-      flex-wrap: wrap;
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-    .adv-tools__track {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .adv-tools__track[aria-hidden] {
-      display: none;
-    }
+  .js .adv-tools__list.is-playing li {
+    color: rgba(241, 242, 245, 0.72);
   }
 </style>

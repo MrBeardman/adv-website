@@ -30,10 +30,11 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
   const host = document.querySelector<HTMLElement>('[data-stream]');
   const main = host?.parentElement;
   if (!host || !main) return;
-  const nodesEls = [...main.querySelectorAll<HTMLElement>('[data-node]')];
+  const nodesEls = [...main.querySelectorAll<HTMLElement>('.adv-node')];
   const startEl = main.querySelector<HTMLElement>('[data-stream-start]');
   const endEl = main.querySelector<HTMLElement>('[data-stream-end]');
   if (!nodesEls.length) return;
+  const light = host.dataset.stream === 'light';
 
   let svg: SVGSVGElement | null = null;
   let lit: SVGPathElement[] = [];
@@ -42,44 +43,47 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
   let head: SVGGElement | null = null;
   let samples: { l: number; y: number; x: number }[] = [];
   let nodeYs: number[] = [];
-  let nodeMarks: SVGGElement[] = [];
   let endY = Infinity;
   let mainTop = 0;
+
+  // Layout position relative to <main> from offsets: unlike getBoundingClientRect this ignores the
+  // reveal's translate and the hero window's tilt, so the rail does not depend on animation timing.
+  const box = (el: HTMLElement) => {
+    let x = 0;
+    let y = 0;
+    let n: HTMLElement | null = el;
+    while (n && n !== main) {
+      x += n.offsetLeft;
+      y += n.offsetTop;
+      n = n.offsetParent as HTMLElement | null;
+    }
+    return { left: x, top: y, w: el.offsetWidth, h: el.offsetHeight };
+  };
 
   const build = () => {
     const mr = main.getBoundingClientRect();
     mainTop = mr.top + scrollY;
     const W = main.clientWidth;
     const H = main.scrollHeight;
-    const wrap = main.querySelector<HTMLElement>('.adv-wrap');
-    const wr = wrap?.getBoundingClientRect();
-    const padL = wrap ? parseFloat(getComputedStyle(wrap).paddingLeft) : 16;
-    const contentLeft = wr ? wr.left - mr.left + padL : 24;
     const narrow = W < 760;
-    // Desktop: a rail in the left gutter, ~48px off the content. Phones: a hairline at the screen edge,
-    // and the kickers' own squares are the nodes (no marks or branches next to them).
-    const x = narrow ? 5.5 : Math.round(contentLeft - Math.min(48, contentLeft * 0.5)) + 0.5;
+    // The rail runs through the section nodes (all on one vertical line in the left gutter).
+    const nb = nodesEls.map(box);
+    const x = Math.round(nb[0].left + nb[0].w / 2) + 0.5;
     const amp = narrow ? 3 : 14;
-    const rel = (r: DOMRect) => ({ top: r.top - mr.top, bottom: r.bottom - mr.top, left: r.left - mr.left, w: r.width });
-
-    nodeYs = nodesEls.map((n) => {
-      const r = rel(n.getBoundingClientRect());
-      return Math.round(r.top + (r.bottom - r.top) / 2);
-    });
-    const kickerX = nodesEls.map((n) => rel(n.getBoundingClientRect()).left);
+    nodeYs = nb.map((b) => Math.round(b.top + b.h / 2));
 
     // Polyline of anchor points the filaments pass through.
     let sx = x;
     let sy = Math.max(0, nodeYs[0] - 300);
     if (startEl) {
-      const r = rel(startEl.getBoundingClientRect());
+      const r = box(startEl);
       sx = r.left + Math.min(40, r.w * 0.1);
-      sy = r.bottom - 2;
+      sy = r.top + r.h - 2;
     }
     let ex = x;
     endY = H;
     if (endEl) {
-      const r = rel(endEl.getBoundingClientRect());
+      const r = box(endEl);
       ex = r.left + r.w / 2;
       endY = r.top + 1;
     }
@@ -105,7 +109,14 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
     svg?.remove();
     svg = el('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, class: 'adv-stream__svg' }) as SVGSVGElement;
     const defs = el('defs');
-    const grad = el('linearGradient', { id: 'adv-stream-g', gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 0, y2: H });
+    const grad = el('linearGradient', {
+      id: 'adv-stream-g',
+      gradientUnits: 'userSpaceOnUse',
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: H,
+    });
     [
       [0, 'rgba(124,200,255,0.95)'],
       [0.35, 'rgba(64,104,235,0.9)'],
@@ -118,19 +129,28 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
     defs.append(grad, glow);
     svg.append(defs);
 
-    const strands = narrow
-      ? [{ k: 1, off: 0, w: 1.2, o: 1 }]
-      : [
-          { k: 1, off: 0, w: 1.3, o: 1 },
-          { k: -0.7, off: 3, w: 0.8, o: 0.55 },
-          { k: 1.6, off: -3, w: 0.6, o: 0.35 },
-        ];
+    // data-stream="light" (the calmer homepage): one fine strand at half strength.
+    const strands = light
+      ? [{ k: 0.6, off: 0, w: 1, o: 0.6 }]
+      : narrow
+        ? [{ k: 1, off: 0, w: 1.2, o: 1 }]
+        : [
+            { k: 1, off: 0, w: 1.3, o: 1 },
+            { k: -0.7, off: 3, w: 0.8, o: 0.55 },
+            { k: 1.6, off: -3, w: 0.6, o: 0.35 },
+          ];
     lit = [];
     lens = [];
     strands.forEach((s, i) => {
       const d = filament(s.k, s.off);
       svg!.append(el('path', { d, class: 'adv-stream__base', 'stroke-width': s.w }));
-      const p = el('path', { d, class: 'adv-stream__lit', stroke: 'url(#adv-stream-g)', 'stroke-width': s.w, opacity: s.o }) as SVGPathElement;
+      const p = el('path', {
+        d,
+        class: 'adv-stream__lit',
+        stroke: 'url(#adv-stream-g)',
+        'stroke-width': s.w,
+        opacity: s.o,
+      }) as SVGPathElement;
       svg!.append(p);
       const L = p.getTotalLength();
       p.style.strokeDasharray = `${L} ${L}`;
@@ -150,29 +170,16 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
       }
     });
 
-    // Node marks on the rail, each with a branch to its kicker and a tick.
-    nodeMarks = (narrow ? [] : nodeYs).map((y, i) => {
-      const g = el('g', { class: 'adv-stream__node', transform: `translate(${x},${y})` }) as SVGGElement;
-      const branch = Math.max(0, kickerX[i] - x - 8);
-      if (branch > 6) {
-        const br = el('path', { d: `M6,0 H${branch}`, class: 'adv-stream__branch' });
-        br.style.setProperty('--len', String(branch));
-        g.append(br);
-      }
-      g.append(el('rect', { x: -5.5, y: -5.5, width: 11, height: 11, rx: 3 }));
-      g.append(el('path', { d: 'M-2.6,0.2 L-0.6,2.2 L2.8,-1.8', class: 'adv-stream__tick' }));
-      svg!.append(g);
-      return g;
-    });
-
     if (!reduceMotion) {
       head = el('g', { class: 'adv-stream__head' }) as SVGGElement;
-      head.append(el('circle', { r: 18, fill: 'url(#adv-stream-h)' }), el('circle', { r: 2.4, class: 'adv-stream__dot' }));
+      head.append(
+        el('circle', { r: 18, fill: 'url(#adv-stream-h)' }),
+        el('circle', { r: 2.4, class: 'adv-stream__dot' }),
+      );
       svg.append(head);
     }
     host.append(svg);
     if (reduceMotion) {
-      nodeMarks.forEach((g) => g.classList.add('is-lit'));
       nodesEls.forEach((n) => n.classList.add('is-lit'));
       endEl?.classList.add('is-reached');
     }
@@ -195,9 +202,7 @@ export function initStream({ reduceMotion, onScroll }: Opts) {
       head.style.opacity = frac > 0.002 && frac < 0.999 ? '1' : '0';
     }
     nodeYs.forEach((y, k) => {
-      const on = y <= s.y + 1;
-      nodeMarks[k]?.classList.toggle('is-lit', on);
-      nodesEls[k].classList.toggle('is-lit', on);
+      nodesEls[k].classList.toggle('is-lit', y <= s.y + 1);
     });
     endEl?.classList.toggle('is-reached', frac > 0.995);
   };

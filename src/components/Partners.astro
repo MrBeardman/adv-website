@@ -4,6 +4,7 @@
  * category, name, one line, dated facts, link. Facts nobody has confirmed are TODO boxes in development
  * builds only. Words from i18n/about.json (partners), logos and links from data/partners.ts.
  */
+import Node from './ui/Node.astro';
 import Arrow from './ui/Arrow.astro';
 import { pick, fill, type Lang } from '../i18n';
 import about from '../i18n/about.json';
@@ -28,10 +29,7 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
   <div class="adv-wrap">
     <div class="adv-head">
       <div>
-        <p class="adv-kicker" data-node={index ? '' : undefined}>
-          <i></i>{index && <b>{index}</b>}{kicker}
-        </p>
-        <h2 id="adv-partners-title" class="adv-h2" data-reveal>{t.title}</h2>
+        <h2 id="adv-partners-title" class="adv-h2" data-reveal><Node />{t.title}</h2>
       </div>
       <p class="adv-lead" data-reveal style="--i:1">{t.line}</p>
     </div>
@@ -102,8 +100,7 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
     margin-bottom: 10px;
     border-radius: 14px;
     background:
-      radial-gradient(120% 90% at 30% 0%, #ffffff, transparent 60%),
-      linear-gradient(165deg, #eef1f6, #d9dee8);
+      radial-gradient(120% 90% at 30% 0%, #ffffff, transparent 60%), linear-gradient(165deg, #eef1f6, #d9dee8);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   }
   .adv-partners__plate.is-dark {
@@ -137,7 +134,7 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
     border-radius: 999px;
     border: 1px solid var(--adv-edge);
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--adv-muted);
   }
   .adv-partners__together {

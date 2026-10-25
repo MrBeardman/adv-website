@@ -88,7 +88,9 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
     {
       d.approach && (
         <section class="adv-case__block">
-          <h2 class="adv-label" data-reveal>{t.approach}</h2>
+          <h2 class="adv-label" data-reveal>
+            {t.approach}
+          </h2>
           <ol class="adv-case__steps">
             {d.approach.map((st, i) => (
               <li data-reveal style={`--i:${i}`}>
@@ -107,7 +109,9 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
     {
       d.results && (
         <section class="adv-case__block">
-          <h2 class="adv-label" data-reveal>{t.results}</h2>
+          <h2 class="adv-label" data-reveal>
+            {t.results}
+          </h2>
           <ul class="adv-case__results">
             {d.results.map((r, i) => {
               const plain = /^\d+$/.test(r.value);
@@ -134,7 +138,13 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
       )
     }
 
-    {d.state === 'ongoing-support' && <p class="adv-case__ongoing" data-reveal>{t.ongoing}</p>}
+    {
+      d.state === 'ongoing-support' && (
+        <p class="adv-case__ongoing" data-reveal>
+          {t.ongoing}
+        </p>
+      )
+    }
 
     {
       next && (
@@ -160,7 +170,7 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
     border-radius: 999px;
     border: 1px dashed rgba(255, 196, 120, 0.7);
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: #ffd9a8;
   }
   .adv-case__image img {

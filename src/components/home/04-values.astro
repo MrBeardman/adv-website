@@ -3,6 +3,7 @@
  * Four value cards, one per enabled service, each with its own looping scene (ui/Scene.astro), the
  * approved one-line service body and the service's headline number. Matte finish from the palette study.
  */
+import Node from '../ui/Node.astro';
 import Scene from '../ui/Scene.astro';
 import Arrow from '../ui/Arrow.astro';
 import { pick, loc, type Lang } from '../../i18n';
@@ -14,8 +15,10 @@ import { routes } from '../../data/routes';
 
 interface Props {
   lang: Lang;
+  /** kicker number = node on the stream; omit for a plain kicker */
+  index?: string;
 }
-const { lang } = Astro.props;
+const { lang, index } = Astro.props;
 const t = pick(home, lang).values;
 const caps = pick(services, lang).capabilities.items;
 // Order of the story: automate, optimise, prototype, launch.
@@ -34,8 +37,7 @@ const [before, after] = t.title.split(t.em);
   <div class="adv-wrap">
     <div class="adv-head">
       <div>
-        <p class="adv-kicker" data-node><i></i><b>04</b>{t.kicker}</p>
-        <h2 id="adv-values-title" class="adv-h2" data-reveal>{before}<em class="adv-em">{t.em}</em>{after}</h2>
+        <h2 id="adv-values-title" class="adv-h2" data-reveal><Node />{before}<em class="adv-em">{t.em}</em>{after}</h2>
       </div>
     </div>
     <ul class="adv-values__grid">

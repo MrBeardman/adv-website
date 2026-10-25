@@ -35,12 +35,17 @@ const w = pick(work, lang).case;
 const s = pick(services, lang);
 const k = pick(kesia, lang).kesia;
 const IMG = '/media/cases/kesia';
+const metals: Record<string, string> = k.ticker.metals;
+const stateLabel = (w.state as Record<string, string>)[c.detail!.state];
 const serviceNames = c.services
   .filter((sl) => ENABLED_SERVICES.some((x) => x.slug === sl))
   .map((sl) => s.capabilities.items.find((i) => i.slug === sl)!.title);
 const meta = [loc(c.sector, lang), c.year, ...serviceNames].filter(Boolean).join(' · ');
 const related = (c.related ?? []).map((sl) => findCaseStudy(sl)).filter((x): x is CaseStudy => !!x);
-const nf2 = new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const nf2 = new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
 // Sample values only, labelled as such on the page. Not prices.
 const SAMPLE = [
   { id: 'au', base: 2750, step: 2.6 },
@@ -86,7 +91,7 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
                 <li data-metal={m.id} data-base={m.base} data-step={m.step}>
                   <span class="adv-k__metal">
                     <span class={`adv-k__sym adv-k__sym--${m.id}`}>{m.id.charAt(0).toUpperCase() + m.id.slice(1)}</span>
-                    {(k.ticker.metals as Record<string, string>)[m.id]}
+                    {metals[m.id]}
                   </span>
                   <span class="adv-k__price" data-price>
                     {nf2.format(m.base)}
@@ -108,7 +113,7 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
         <div><dt>{k.facts.client}</dt><dd>{k.facts.clientValue}</dd></div>
         <div><dt>{k.facts.shops}</dt><dd>{k.facts.shopsValue}</dd></div>
         <div><dt>{k.facts.live}</dt><dd>{k.facts.liveValue}</dd></div>
-        <div><dt>{k.facts.status}</dt><dd>{(w.state as Record<string, string>)[c.detail!.state]}</dd></div>
+        <div><dt>{k.facts.status}</dt><dd>{stateLabel}</dd></div>
       </dl>
 
       <!-- Problem -->
@@ -138,11 +143,15 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
         <figure class="adv-k__bars adv-panel" data-play>
           <figcaption class="adv-label">{k.constraint.barsLabel}</figcaption>
           <div class="adv-k__barRow">
-            <div class="adv-k__barHead"><span>{k.constraint.apiLabel}</span><strong>{k.constraint.apiValue}</strong></div>
+            <div class="adv-k__barHead">
+              <span>{k.constraint.apiLabel}</span><strong>{k.constraint.apiValue}</strong>
+            </div>
             <div class="adv-k__track"><i style="--w:1"></i></div>
           </div>
           <div class="adv-k__barRow">
-            <div class="adv-k__barHead"><span>{k.constraint.feedLabel}</span><strong>{k.constraint.feedValue}</strong></div>
+            <div class="adv-k__barHead">
+              <span>{k.constraint.feedLabel}</span><strong>{k.constraint.feedValue}</strong>
+            </div>
             <!-- 90 / 430 of the API route, to scale. -->
             <div class="adv-k__track"><i class="is-feed" style="--w:0.209"></i></div>
           </div>
@@ -184,7 +193,11 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
                   <img
                     src={`${IMG}/${sh.name}-760.webp`}
                     srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp 1308w`}
-                    sizes={sh.wide ? '(min-width: 1240px) 1200px, 100vw' : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'}
+                    sizes={
+                      sh.wide
+                        ? '(min-width: 1240px) 1200px, 100vw'
+                        : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'
+                    }
                     width={sh.w}
                     height={sh.h}
                     alt={sh.cap}
@@ -244,7 +257,13 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
             k.results.items.map((r, i) => (
               <li class="adv-panel" data-reveal style={`--i:${i}`}>
                 <p class="adv-k__resultValue">
-                  <span data-count={r.target} data-prefix={r.prefix} data-suffix={r.suffix} data-delay={i * 120} aria-hidden="true">
+                  <span
+                    data-count={r.target}
+                    data-prefix={r.prefix}
+                    data-suffix={r.suffix}
+                    data-delay={i * 120}
+                    aria-hidden="true"
+                  >
                     {r.final}
                   </span>
                   <span class="screen-reader-text">{r.final}</span>
@@ -500,7 +519,6 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
   }
   .adv-k__track i.is-feed {
     background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.6));
-    box-shadow: 0 0 14px rgba(124, 200, 255, 0.4);
   }
   .js .adv-k__bars.is-armed .adv-k__track i {
     transform: scaleX(0);
@@ -737,11 +755,14 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
   const problem = document.querySelector<HTMLElement>('.adv-k__problem');
   const big = problem?.querySelector<HTMLElement>('[data-count]');
   if (problem && big && !RM) {
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      io.disconnect();
-      countUp(big);
-    }, { threshold: 0.35 });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        countUp(big);
+      },
+      { threshold: 0.35 },
+    );
     io.observe(problem);
   }
 </script>

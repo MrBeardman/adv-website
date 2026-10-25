@@ -8,6 +8,7 @@
  * Hours are rounded to whole hours, money to the nearest 1,000 CZK and shown as "~" (an estimate).
  * TODO (Honza): confirm the three assumptions; they are new copy and listed in docs/STATUS.md.
  */
+import Node from '../ui/Node.astro';
 import Arrow from '../ui/Arrow.astro';
 import { pick, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
@@ -15,8 +16,10 @@ import { routes } from '../../data/routes';
 
 interface Props {
   lang: Lang;
+  /** kicker number = node on the stream; omit for a plain kicker */
+  index?: string;
 }
-const { lang } = Astro.props;
+const { lang, index } = Astro.props;
 const t = pick(home, lang).savings;
 const WEEKS = 46;
 const SHARE = 0.7;
@@ -32,7 +35,7 @@ const cur = lang === 'cs' ? ' Kč' : ' CZK';
 
 <section class="adv-savings adv-section" aria-labelledby="adv-savings-title">
   <div class="adv-wrap">
-    <p class="adv-kicker" data-node><i></i><b>07</b>{t.kicker}</p>
+    <Node panel />
     <div
       class="adv-savings__panel adv-panel"
       data-savings
@@ -163,7 +166,7 @@ const cur = lang === 'cs' ? ' Kč' : ' CZK';
     border: 0;
     background: #fff;
     box-shadow:
-      0 0 0 5px rgba(124, 200, 255, 0.25),
+      0 0 0 5px rgba(255, 255, 255, 0.12),
       0 4px 14px rgba(0, 0, 0, 0.5);
     transition: box-shadow var(--adv-fast) var(--adv-ease);
   }
@@ -174,13 +177,13 @@ const cur = lang === 'cs' ? ' Kč' : ' CZK';
     border: 0;
     background: #fff;
     box-shadow:
-      0 0 0 5px rgba(124, 200, 255, 0.25),
+      0 0 0 5px rgba(255, 255, 255, 0.12),
       0 4px 14px rgba(0, 0, 0, 0.5);
   }
   .adv-range:hover::-webkit-slider-thumb,
   .adv-range:focus-visible::-webkit-slider-thumb {
     box-shadow:
-      0 0 0 8px rgba(124, 200, 255, 0.3),
+      0 0 0 8px rgba(255, 255, 255, 0.16),
       0 4px 14px rgba(0, 0, 0, 0.5);
   }
   .adv-range:focus-visible {
@@ -195,7 +198,7 @@ const cur = lang === 'cs' ? ' Kč' : ' CZK';
     display: flex;
     justify-content: space-between;
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--adv-muted);
   }
   .adv-savings__result {
@@ -231,7 +234,7 @@ const cur = lang === 'cs' ? ' Kč' : ' CZK';
     gap: 12px;
     margin: 0;
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--adv-muted);
   }
   .adv-savings__bars i {
@@ -245,16 +248,13 @@ const cur = lang === 'cs' ? ' Kč' : ' CZK';
   }
   .adv-savings__bars p + p i {
     background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.6));
-    box-shadow: 0 0 14px rgba(124, 200, 255, 0.35);
   }
   .adv-savings__note {
     grid-column: 1 / -1;
     font-size: 0.8125rem;
     color: var(--adv-muted);
-    padding: 12px 14px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--adv-line);
+    padding-top: 14px;
+    border-top: 1px solid var(--adv-line);
   }
   .adv-savings__result .adv-btn {
     justify-self: start;

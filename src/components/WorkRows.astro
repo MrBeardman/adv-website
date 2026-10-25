@@ -40,7 +40,10 @@ const initials = (name: string) =>
       const Tag = linked ? 'a' : 'div';
       return (
         <li data-services={c.services.join(' ')} data-reveal style={`--i:${Math.min(i, 6)}`}>
-          <Tag class:list={['adv-row', { 'adv-row--link': linked }]} href={linked ? routes.case(lang, c.slug) : undefined}>
+          <Tag
+            class:list={['adv-row', { 'adv-row--link': linked }]}
+            href={linked ? routes.case(lang, c.slug) : undefined}
+          >
             <span class="adv-row__thumb">
               {c.image ? (
                 <img src={c.image} alt="" loading="lazy" decoding="async" width="320" height="200" />
@@ -54,7 +57,9 @@ const initials = (name: string) =>
               <span class="adv-row__client">
                 {client}
                 {c.status !== 'published' && (
-                  <span class="adv-row__badge">{c.status === 'draft' ? s.service.badgeDraft : s.service.badgePlaceholder}</span>
+                  <span class="adv-row__badge">
+                    {c.status === 'draft' ? s.service.badgeDraft : s.service.badgePlaceholder}
+                  </span>
                 )}
               </span>
               <span class="adv-row__outcome">{loc(c.outcome, lang)}</span>
@@ -158,7 +163,7 @@ const initials = (name: string) =>
     border-radius: 999px;
     border: 1px dashed rgba(255, 196, 120, 0.7);
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #ffd9a8;
   }
@@ -176,7 +181,7 @@ const initials = (name: string) =>
     border-radius: 999px;
     border: 1px solid var(--adv-edge);
     font-family: var(--adv-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--adv-muted);
   }
   .adv-row__go {

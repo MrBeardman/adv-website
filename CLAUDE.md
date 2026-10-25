@@ -9,8 +9,15 @@ The 2026 website of **ADV Innovations** (Prague; Jan "Honza" Matyáš). Replaces
 Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 (`C:\Data\Work\Jenomics\JenomicsWebsite`, read only), following the `astro-marketing-site` skill.
 
-- Local repo only: `C:\Data\Dev\adv-website`, branch `main`, **no remote**. Never push, never deploy, never
-  create a GitHub repo unless Honza asks. Don't touch `.env` files or credentials.
+- Repo `C:\Data\Dev\adv-website`, branch `main`, remote https://github.com/MrBeardman/adv-website.
+  Hostinger auto-pulls `main`, so **every push goes live on the preview**: push only at verified, presentable
+  milestones, never force-push. Don't touch `.env` files or credentials.
+- **Preview phase = noindex, FLIP AT LAUNCH**: `src/data/site.ts` `INDEXABLE` reads
+  `PUBLIC_SITE_INDEXABLE` (build time). Not "true" → every page `noindex, nofollow`, `robots.txt`
+  (`src/pages/robots.txt.ts`) disallows all. Set `PUBLIC_SITE_INDEXABLE=true` in Hostinger at launch.
+- Page roles (Honza, Oct 2026): the Relay-style rich page is the **Automation & AI service page**
+  (`templates/Automation.astro`, `/sluzby/automatizace/`, `/en/services/automation/`). The homepage is a
+  calmer company overview. Services with `rich: true` in `capabilities.ts` have their own route file.
 - Tools and screenshots: `C:\Data\Dev\adv-website-tools` (`serve.ps1`, `shoot.py`, `commit.ps1`, ...).
 - Honza's preview: `http://127.0.0.1:4400` (`node dist/server/entry.mjs`, HOST/PORT env), restarted by
   `adv-website-tools\serve.ps1 [-Build]`.
@@ -45,6 +52,11 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 - **Graphic design** is hidden: `enabled: false` in `capabilities.ts` (copy kept in `services.json`).
 - New copy goes into `docs/STATUS.md` → "New copy" for Honza's approval.
 - No amber on the site; the accent is Ice. Logo tile colour is one variable (`--adv-logo-tile`).
+- Section nodes, not kickers: no small uppercase label above headings (the impeccable detector bans it).
+  A section's node is `<Node />` as the heading's first child (or `<Node panel />` before a padded panel);
+  the stream rail runs through all `.adv-node`s. No coloured glow shadows (use gradients), no infinite
+  pulsing dots or marquees, body text ≥ 12px. Keep the detector at 0.
+- Headline emphasis: `.adv-em`, style switch `EM_STYLE` in `src/data/site.ts`.
 
 ## Gotchas (from the skill and this build)
 - `[data-reveal]` overrides an element's own transitions: site.ts removes it after the reveal.

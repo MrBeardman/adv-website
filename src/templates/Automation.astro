@@ -1,0 +1,48 @@
+---
+/**
+ * Automation & AI service page (/sluzby/automatizace/, /en/services/automation/): the Relay-style page.
+ * Honza, Oct 2026: this rich page is the automation service, not the company homepage.
+ * One stream of light runs the whole page (scripts/stream.ts); every section after the hero is a node on
+ * it, numbered in its kicker, and it ends in the Ice CTA panel.
+ *
+ *   01 hero + live workflow window + workflow grid    06 numbers band
+ *   02 tools strip                                    07 savings slider
+ *   03 statement (scroll-lit words)                   08 how we work (timeline)
+ *   04 what we automate (three scene cards)           09 selected automation work
+ *   05 Kesia spotlight                                10 Ice CTA panel with a short form
+ */
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/01-hero.astro';
+import Tools from '../components/home/02-tools.astro';
+import Statement from '../components/home/03-statement.astro';
+import Uses from '../components/automation/Uses.astro';
+import Kesia from '../components/home/05-kesia.astro';
+import Numbers from '../components/home/06-numbers.astro';
+import Savings from '../components/home/07-savings.astro';
+import Process from '../components/home/08-process.astro';
+import SelectedWork from '../components/SelectedWork.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, type Lang } from '../i18n';
+import automation from '../i18n/automation.json';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(automation, lang);
+const alternates = { cs: routes.service('cs', 'ai-automation'), en: routes.service('en', 'ai-automation') };
+---
+
+<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={alternates} stream>
+  <Hero lang={lang} pill={t.hero.pill} sub={t.hero.sub} />
+  <Tools lang={lang} />
+  <Statement lang={lang} />
+  <Uses lang={lang} />
+  <Kesia lang={lang} />
+  <Numbers lang={lang} />
+  <Savings lang={lang} />
+  <Process lang={lang} />
+  <SelectedWork lang={lang} service="ai-automation" />
+  <CtaPanel lang={lang} />
+</Base>

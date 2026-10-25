@@ -1,0 +1,50 @@
+---
+/**
+ * Selected work band (homepage, automation page): visible cases as rows, optionally for one service,
+ * with a link to the full (pre-filtered) work index.
+ */
+import Node from './ui/Node.astro';
+import Arrow from './ui/Arrow.astro';
+import WorkRows from './WorkRows.astro';
+import { pick, fill, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import services from '../i18n/services.json';
+import { caseStudiesFor } from '../data/caseStudies';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  index?: string;
+  service?: string;
+  limit?: number;
+}
+const { lang, index, service, limit = 4 } = Astro.props;
+const c = pick(chrome, lang);
+const s = pick(services, lang);
+const items = caseStudiesFor(service).slice(0, limit);
+const serviceTitle = service ? s.capabilities.items.find((i) => i.slug === service)?.title : undefined;
+const allLabel = serviceTitle ? fill(s.service.allWork, { service: serviceTitle }) : c.notFound.work;
+const allHref = service ? `${routes.work(lang)}?service=${service}` : routes.work(lang);
+---
+
+{
+  items.length > 0 && (
+    <section class="adv-selwork adv-section" aria-labelledby={`adv-selwork-${service ?? 'all'}`}>
+      <div class="adv-wrap">
+        <div class="adv-head">
+          <div>
+            <h2 id={`adv-selwork-${service ?? 'all'}`} class="adv-h2" data-reveal>
+              <Node />
+              {s.service.selectedWork}
+            </h2>
+          </div>
+          <a class="adv-link" href={allHref}>
+            {allLabel}
+            <Arrow />
+          </a>
+        </div>
+        <WorkRows lang={lang} items={items} showService={!service} />
+      </div>
+    </section>
+  )
+}

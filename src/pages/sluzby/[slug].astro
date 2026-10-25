@@ -1,9 +1,10 @@
 ---
 import Service from '../../templates/Service.astro';
-import { ENABLED_SERVICES } from '../../data/capabilities';
+import { GENERIC_SERVICES } from '../../data/capabilities';
 
+/* Rich services (automation) have their own route file next to this one. */
 export function getStaticPaths() {
-  return ENABLED_SERVICES.map((s) => ({ params: { slug: s.path.cs }, props: { slug: s.slug } }));
+  return GENERIC_SERVICES.map((s) => ({ params: { slug: s.path.cs }, props: { slug: s.slug } }));
 }
 const { slug } = Astro.props;
 ---

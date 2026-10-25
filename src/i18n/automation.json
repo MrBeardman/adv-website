@@ -1,0 +1,76 @@
+{
+  "cs": {
+    "meta": {
+      "title": "Automatizace a AI · ADV Innovations",
+      "description": "Faktury, objednávky, dotazy a přepisování dat mezi systémy. ADV Innovations staví automatizace a AI asistenty, kteří tu práci udělají za vás. Praha."
+    },
+    "hero": {
+      "pill": "Automatizace a AI",
+      "sub": "Faktury, objednávky, dotazy, přepisování dat mezi systémy. Postavíme automatizace a AI asistenty, kteří tu práci udělají za vás. Člověk rozhoduje tam, kde jde o úsudek."
+    },
+    "uses": {
+      "kicker": "Co automatizujeme",
+      "title": "Kde mizí hodiny.",
+      "em": "hodiny",
+      "cards": [
+        {
+          "scene": "ai-automation",
+          "body": "Faktury, objednávky a smlouvy se přečtou samy: dodavatel, částka a splatnost rovnou do systému."
+        },
+        {
+          "scene": "routing",
+          "body": "Každý e-mail, poptávka nebo doklad dojde ke správnému člověku. Co je nad limit, čeká na schválení."
+        },
+        {
+          "scene": "assistant",
+          "body": "AI asistent připraví první odpověď na dotazy, které se pořád opakují. Odešle ji člověk, ne stroj."
+        }
+      ],
+      "scene": {
+        "lanes": ["Účetní", "Obchod", "Schválení"],
+        "draft": "Návrh odpovědi",
+        "send": "Odeslat"
+      }
+    },
+    "work": {
+      "kicker": "Realizace"
+    }
+  },
+  "en": {
+    "meta": {
+      "title": "Automation & AI · ADV Innovations",
+      "description": "Invoices, orders, enquiries and retyping data between systems. ADV Innovations builds the automations and AI assistants that do that work for you. Prague."
+    },
+    "hero": {
+      "pill": "Automation & AI",
+      "sub": "Invoices, orders, enquiries, retyping data between systems. We build the automations and AI assistants that do that work for you. People decide wherever judgement is needed."
+    },
+    "uses": {
+      "kicker": "What we automate",
+      "title": "Where the hours go.",
+      "em": "hours",
+      "cards": [
+        {
+          "scene": "ai-automation",
+          "body": "Invoices, orders and contracts read themselves: supplier, amount and due date straight into your system."
+        },
+        {
+          "scene": "routing",
+          "body": "Every email, enquiry or document reaches the right person. Anything over a limit waits for approval."
+        },
+        {
+          "scene": "assistant",
+          "body": "An AI assistant drafts the first reply to the questions that keep coming back. A person sends it, not the machine."
+        }
+      ],
+      "scene": {
+        "lanes": ["Accounts", "Sales", "Approval"],
+        "draft": "Draft reply",
+        "send": "Send"
+      }
+    },
+    "work": {
+      "kicker": "Work"
+    }
+  }
+}

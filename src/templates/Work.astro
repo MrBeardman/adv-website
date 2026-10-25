@@ -106,12 +106,18 @@ const filters = ENABLED_SERVICES.filter((sv) => items.some((it) => it.services.i
         li.hidden = !on;
         if (on) {
           shown++;
-          li.animate?.([{ opacity: 0, translate: '0 8px' }, { opacity: 1, translate: '0 0' }], {
-            duration: 350,
-            delay: Math.min(i, 8) * 35,
-            easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
-            fill: 'backwards',
-          });
+          li.animate?.(
+            [
+              { opacity: 0, translate: '0 8px' },
+              { opacity: 1, translate: '0 0' },
+            ],
+            {
+              duration: 350,
+              delay: Math.min(i, 8) * 35,
+              easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+              fill: 'backwards',
+            },
+          );
         }
       });
       empty.hidden = shown > 0;

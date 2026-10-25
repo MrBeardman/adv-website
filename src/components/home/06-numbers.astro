@@ -4,6 +4,7 @@
  * up with a thin drawn chart. Placeholders (invented, see the launch checklist in docs/STATUS.md) get a
  * dashed outline in development builds.
  */
+import Node from '../ui/Node.astro';
 import Arrow from '../ui/Arrow.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
@@ -14,8 +15,10 @@ import { findCaseStudy } from '../../data/caseStudies';
 
 interface Props {
   lang: Lang;
+  /** kicker number = node on the stream; omit for a plain kicker */
+  index?: string;
 }
-const { lang } = Astro.props;
+const { lang, index } = Astro.props;
 const t = pick(home, lang).numbers;
 const dev = import.meta.env.DEV;
 const items = HOME_NUMBERS.filter((n) => ENABLED_SERVICES.some((s) => s.slug === n.slug)).map((n) => ({
@@ -31,8 +34,9 @@ const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1
 
 <section class="adv-numbers adv-section" aria-labelledby="adv-numbers-title">
   <div class="adv-wrap">
-    <p class="adv-kicker" data-node><i></i><b>06</b>{t.kicker}</p>
-    <h2 id="adv-numbers-title" class="adv-h2 adv-numbers__title" data-reveal>{before}<em class="adv-em">{t.em}</em>{after}</h2>
+    <h2 id="adv-numbers-title" class="adv-h2 adv-numbers__title" data-reveal>
+      <Node />{before}<em class="adv-em">{t.em}</em>{after}
+    </h2>
     <ul class="adv-numbers__grid">
       {
         items.map((n, i) => (
@@ -67,7 +71,11 @@ const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1
               )}
               {n.slug === 'websites' && (
                 <svg viewBox="0 0 200 50" preserveAspectRatio="none">
-                  <path class="adv-mini__line" pathLength="100" d="M0 44 L40 42 L80 40 L100 36 L120 28 L150 18 L175 12 L200 6" />
+                  <path
+                    class="adv-mini__line"
+                    pathLength="100"
+                    d="M0 44 L40 42 L80 40 L100 36 L120 28 L150 18 L175 12 L200 6"
+                  />
                 </svg>
               )}
               {n.slug === 'software' && (
@@ -178,7 +186,6 @@ const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1
     background: var(--adv-accent);
   }
   .adv-mini__days i:last-child {
-    box-shadow: 0 0 10px rgba(124, 200, 255, 0.7);
   }
   .js [data-play].is-armed .adv-mini__cols i {
     transform: scaleY(0);

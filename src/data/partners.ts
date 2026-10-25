@@ -22,5 +22,11 @@ export const PARTNERS = [
     logoH: 28,
     url: 'https://www.jenomics.de' as string | null,
   },
-  { id: 'sisu', name: 'Sisu Vision', logo: '/media/partners/sisu-logo-dark.svg', logoH: 38, url: null as string | null }, // TODO: Sisu Vision website
+  {
+    id: 'sisu',
+    name: 'Sisu Vision',
+    logo: '/media/partners/sisu-logo-dark.svg',
+    logoH: 38,
+    url: null as string | null,
+  }, // TODO: Sisu Vision website
 ];

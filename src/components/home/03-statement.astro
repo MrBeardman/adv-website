@@ -1,19 +1,22 @@
 ---
 /** Statement: one sentence lit word by word as it scrolls past ("Most of the work is routine."). */
+import Node from '../ui/Node.astro';
 import { pick, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
 
 interface Props {
   lang: Lang;
+  /** kicker number = node on the stream; omit for a plain kicker */
+  index?: string;
 }
-const { lang } = Astro.props;
+const { lang, index } = Astro.props;
 const t = pick(home, lang).statement;
 ---
 
 <section class="adv-statement adv-section" aria-labelledby="adv-statement-title">
   <div class="adv-wrap">
-    <p class="adv-kicker" data-node><i></i><b>03</b>{t.kicker}</p>
     <h2 id="adv-statement-title" class="adv-statement__text" data-lit>
+      <Node />
       <span class="adv-statement__lead">{t.lead}</span>
       {t.rest}
     </h2>
