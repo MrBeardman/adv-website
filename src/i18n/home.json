@@ -1,5 +1,9 @@
 {
   "cs": {
+    "stack": {
+      "servicePage": "Celá stránka služby",
+      "stackLabel": "Služby ADV jako karty. Táhněte do strany, nebo použijte šipky."
+    },
     "hero": {
       "pill": "První konzultace zdarma",
       "typeWords": ["byznysu.", "času.", "klidu.", "prodejů."],
@@ -107,6 +111,10 @@
     }
   },
   "en": {
+    "stack": {
+      "servicePage": "Full service page",
+      "stackLabel": "ADV's services as cards. Drag sideways, or use the arrows."
+    },
     "hero": {
       "pill": "First consultation free",
       "typeWords": ["business.", "time.", "focus.", "sales."],

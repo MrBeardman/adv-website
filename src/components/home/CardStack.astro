@@ -1,0 +1,771 @@
+---
+/**
+ * Homepage hero: the 3D card stack (Honza, Oct 2026), ported from PersonalPortfolio adv-rebrand "/" and
+ * dressed in the Studio look. Vanilla three.js (scripts/stack/HeroSceneGL.js, the old engine with the
+ * Studio palette and a matte finish) driven by scripts/stack/controller.ts, no React.
+ *
+ * Layers, back to front: breathing workflow grid (2D canvas) · DOM poster stack, which is also the
+ * reduced-motion / no-WebGL state · WebGL canvas · scrim · backdrop (behind an open service) · copy ·
+ * service panels · step arrows.
+ *
+ * Every service's copy is in the DOM: the rotating caption is a real list (opacity picks the visible
+ * one), and each service has a panel section pre-rendered here, opened in place (URL hash) with its
+ * selected work (published cases only in production) and a link to its service page.
+ * Without JS: the caption is a plain list with a link per service to its page; panels stay hidden.
+ */
+import Arrow from '../ui/Arrow.astro';
+import WorkRows from '../WorkRows.astro';
+import { pick, fill, type Lang } from '../../i18n';
+import chrome from '../../i18n/chrome.json';
+import services from '../../i18n/services.json';
+import home from '../../i18n/home.json';
+import { ENABLED_SERVICES, serviceBySlug } from '../../data/capabilities';
+import { caseStudiesFor } from '../../data/caseStudies';
+import { routes } from '../../data/routes';
+import { SHAPES } from '../../scripts/stack/iconShapes.js';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const s = pick(services, lang);
+const h = pick(home, lang).stack;
+const ICON: Record<string, string> = {
+  'ai-automation': 'nodes',
+  'business-optimisation': 'racks',
+  websites: 'globe',
+  software: 'diamondCore',
+};
+const MAX_ROWS = 4;
+const items = ENABLED_SERVICES.map((sv, i) => {
+  const copy = s.capabilities.items.find((x) => x.slug === sv.slug)!;
+  const work = caseStudiesFor(sv.slug);
+  return {
+    i,
+    slug: sv.slug,
+    hash: sv.path[lang],
+    href: routes.service(lang, sv.slug),
+    icon: ICON[sv.slug] ?? 'nodes',
+    title: copy.title,
+    body: copy.body,
+    long: copy.long,
+    covers: copy.covers,
+    work: work.slice(0, MAX_ROWS),
+    more: work.length > MAX_ROWS,
+  };
+});
+const total = items.length;
+type Shape = { d?: string; circle?: number[]; rect?: number[] };
+const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? [];
+// Card data for the WebGL faces (read by controller.ts)
+const cards = items.map((it) => ({ icon: it.icon, title: it.title, covers: it.covers }));
+const isRichAutomation = (slug: string) => {
+  const sv = serviceBySlug(slug);
+  return !!sv && 'rich' in sv;
+};
+---
+
+<section class="adv-stack" data-stack aria-labelledby="adv-stack-title" data-cards={JSON.stringify(cards)}>
+  <canvas class="adv-stack__grid" data-flowgrid data-flows="off" aria-hidden="true"></canvas>
+  <div class="adv-stack__scene" data-stack-scene>
+    <div class="adv-stack__poster" aria-hidden="true">
+      {
+        items.map((it, k) => (
+          <div class="adv-pcard" style={`--k:${k}`}>
+            <svg class="adv-pcard__icon" viewBox="0 0 24 24" fill="none">
+              {shapes(it.icon).map((sh) =>
+                sh.d ? (
+                  <path d={sh.d} />
+                ) : sh.circle ? (
+                  <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+                ) : sh.rect ? (
+                  <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
+                ) : null,
+              )}
+            </svg>
+            <span class="adv-pcard__title">{it.title}</span>
+            <span class="adv-pcard__rule" />
+            <span class="adv-pcard__covers">
+              {it.covers.map((cv) => (
+                <span>{cv}</span>
+              ))}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+    <canvas class="adv-stack__canvas" data-stack-canvas aria-hidden="true"></canvas>
+  </div>
+  <div class="adv-stack__scrim" aria-hidden="true"></div>
+  <div class="adv-stack__backdrop" aria-hidden="true"></div>
+
+  <div class="adv-wrap adv-stack__inner" data-stack-inner>
+    <div class="adv-stack__copy" data-stack-copy>
+      <h1 id="adv-stack-title" class="adv-stack__title" data-lines>
+        <span class="adv-line"><span style="--l:0">{c.hero.headline1}</span></span>
+        <span class="adv-line"><span style="--l:1">{c.hero.headline2}</span></span>
+      </h1>
+      <p class="adv-lead adv-stack__sub" data-reveal style="--i:2">{c.hero.sub}</p>
+
+      <div class="adv-stack__blockArea" data-stack-hold data-reveal style="--i:3">
+        <h2 class="screen-reader-text">{s.capabilities.title}</h2>
+        <ul class="adv-stack__blocks" data-stack-blocks>
+          {
+            items.map((it) => (
+              <li class:list={['adv-stack__block', { 'is-current': it.i === 0 }]} data-i={it.i}>
+                <span class="adv-stack__blockTitle">{it.title}</span>
+                <span class="adv-stack__blockBody">{it.body}</span>
+                <a class="adv-link adv-stack__blockLink" href={it.href} data-open-i={it.i} data-hash={it.hash}>
+                  {s.service.open}
+                  <Arrow />
+                  <span class="screen-reader-text">: {it.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="adv-link adv-stack__open" href={items[0].href} data-stack-open>
+          {s.service.open}
+          <Arrow />
+          <span class="screen-reader-text" data-stack-open-name>: {items[0].title}</span>
+        </a>
+      </div>
+
+      <div class="adv-stack__action" data-reveal style="--i:4">
+        <a class="adv-btn adv-btn--primary" href={routes.contact(lang)}>{c.cta.assessment}<Arrow /></a>
+        <span class="adv-stack__note">{c.hero.ctaNote}</span>
+      </div>
+    </div>
+  </div>
+
+  {
+    items.map((it) => (
+      <section
+        class="adv-spanel"
+        id={`adv-panel-${it.slug}`}
+        data-panel={it.i}
+        aria-labelledby={`adv-panel-${it.slug}-title`}
+        hidden
+      >
+        <div class="adv-wrap adv-spanel__inner">
+          <div class="adv-spanel__top" data-stagger>
+            <span class="adv-meta">{fill(s.service.eyebrow, { n: it.i + 1, total })}</span>
+            <button type="button" class="adv-spanel__close" data-panel-close aria-label={s.service.closeLabel}>
+              {s.service.close}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+          <div class="adv-spanel__grid">
+            <div>
+              <h2 class="adv-spanel__title" id={`adv-panel-${it.slug}-title`} tabindex="-1" data-stagger>
+                {it.title}
+              </h2>
+              <p class="adv-spanel__long" data-stagger>
+                {it.long}
+              </p>
+              <ul class="adv-chips adv-spanel__chips" data-stagger>
+                {it.covers.map((cv) => (
+                  <li>{cv}</li>
+                ))}
+              </ul>
+              <div class="adv-spanel__actions" data-stagger>
+                <a class="adv-btn adv-btn--primary" href={`${routes.contact(lang)}?service=${it.slug}`}>
+                  {c.cta.assessment}
+                  <Arrow />
+                </a>
+                <a class:list={['adv-btn adv-btn--ghost', { 'is-rich': isRichAutomation(it.slug) }]} href={it.href}>
+                  {h.servicePage}
+                  <Arrow />
+                </a>
+              </div>
+            </div>
+            <div class="adv-spanel__work" data-stagger>
+              <p class="adv-meta adv-spanel__label">{s.service.selectedWork}</p>
+              {it.work.length ? (
+                <WorkRows lang={lang} items={it.work} />
+              ) : (
+                <p class="adv-spanel__empty">{s.service.empty}</p>
+              )}
+              {it.more && (
+                <a class="adv-link adv-spanel__all" href={`${routes.work(lang)}?service=${it.slug}`}>
+                  {fill(s.service.allWork, { service: it.title })}
+                  <Arrow />
+                </a>
+              )}
+            </div>
+          </div>
+          <nav class="adv-spanel__siblings" data-stagger aria-label={c.nav.services}>
+            <button
+              type="button"
+              data-panel-step={(it.i - 1 + total) % total}
+              aria-label={fill(s.service.prevLabel, { service: items[(it.i - 1 + total) % total].title })}
+            >
+              <Arrow dir="left" /> {items[(it.i - 1 + total) % total].title}
+            </button>
+            <button
+              type="button"
+              data-panel-step={(it.i + 1) % total}
+              aria-label={fill(s.service.nextLabel, { service: items[(it.i + 1) % total].title })}
+            >
+              {items[(it.i + 1) % total].title} <Arrow />
+            </button>
+          </nav>
+        </div>
+      </section>
+    ))
+  }
+
+  <div class="adv-stack__steps" data-stack-steps role="group" aria-label={h.stackLabel} hidden>
+    <button type="button" class="adv-stack__step" data-stack-prev aria-label={c.hero.prev}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+        ><path
+          d="M14.5 6 8.5 12l6 6"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path></svg
+      >
+    </button>
+    <button type="button" class="adv-stack__step" data-stack-next aria-label={c.hero.next}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+        ><path
+          d="M9.5 6l6 6-6 6"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path></svg
+      >
+    </button>
+  </div>
+  <p class="screen-reader-text" aria-live="polite" data-stack-live></p>
+</section>
+
+<style is:global>
+  .adv-stack {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: calc(var(--adv-header-h) + 24px) 0 64px;
+    overflow: clip;
+  }
+  .adv-stack__grid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-mask-image: radial-gradient(70% 90% at 75% 45%, #000 30%, transparent 80%);
+    mask-image: radial-gradient(70% 90% at 75% 45%, #000 30%, transparent 80%);
+  }
+  .adv-stack__scene {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .adv-stack__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 600ms var(--adv-ease);
+  }
+  .adv-stack.is-converge .adv-stack__canvas {
+    opacity: 1;
+    transition-duration: 200ms;
+  }
+  .adv-stack.is-settle .adv-stack__canvas {
+    opacity: 1;
+  }
+  .adv-stack.is-converge .adv-stack__poster {
+    opacity: 0;
+    transition: opacity 260ms var(--adv-ease);
+  }
+  .adv-stack.is-settle .adv-stack__poster {
+    opacity: 0;
+    transition: opacity 450ms var(--adv-ease) 200ms;
+  }
+
+  /* DOM poster stack: the paint before WebGL, and the reduced-motion / no-WebGL state */
+  .adv-stack__poster {
+    position: absolute;
+    top: 50%;
+    left: 58%;
+    width: 300px;
+    height: 418px;
+    translate: 0 -50%;
+    pointer-events: none;
+  }
+  .adv-pcard {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 30px 28px;
+    border-radius: 22px;
+    background:
+      radial-gradient(120% 60% at 20% 0%, rgba(255, 255, 255, 0.08), transparent 55%),
+      linear-gradient(165deg, #1d2130, #0b0c11 72%);
+    box-shadow:
+      inset 1px 1px 0 rgba(255, 255, 255, 0.24),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.45),
+      0 40px 70px -34px rgba(0, 0, 0, 0.85);
+    transform: perspective(1400px) rotateY(-30deg) rotateX(6deg) translateX(calc(var(--k) * 74px))
+      translateZ(calc(var(--k) * -120px));
+    transform-origin: 0 50%;
+    z-index: calc(10 - var(--k));
+    opacity: calc(1 - var(--k) * 0.18);
+  }
+  /* rear cards: surface only (half-words on their visible strips read as a fault) */
+  .adv-pcard:not(:first-child) > * {
+    visibility: hidden;
+  }
+  .adv-pcard__icon {
+    width: 56px;
+    height: 56px;
+    stroke: var(--adv-accent);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .adv-pcard__title {
+    margin-top: 28px;
+    font-family: var(--adv-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .adv-pcard__rule {
+    height: 1px;
+    background: rgba(124, 200, 255, 0.3);
+  }
+  .adv-pcard__covers {
+    display: grid;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--adv-muted);
+  }
+
+  .adv-stack__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgba(9, 10, 14, 0.92) 0%,
+      rgba(9, 10, 14, 0.72) 26%,
+      rgba(9, 10, 14, 0.3) 46%,
+      transparent 62%
+    );
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 97%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 97%);
+  }
+  .adv-stack__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    background: radial-gradient(70% 60% at 75% 20%, rgba(32, 64, 170, 0.2), transparent 70%), rgba(9, 10, 14, 0.94);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
+    transition:
+      opacity 500ms var(--adv-ease) 400ms,
+      visibility 0s linear 900ms;
+  }
+  .adv-stack[data-open] .adv-stack__backdrop {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 500ms var(--adv-ease) 400ms,
+      visibility 0s;
+  }
+  .adv-stack.is-instant .adv-stack__backdrop {
+    transition: none;
+  }
+
+  .adv-stack__inner {
+    position: relative;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .adv-stack__copy {
+    max-width: 600px;
+    pointer-events: auto;
+    transition:
+      opacity 300ms var(--adv-ease),
+      translate 300ms var(--adv-ease);
+  }
+  .adv-stack[data-open] .adv-stack__inner {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+  }
+  .adv-stack[data-open] .adv-stack__copy {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+  .adv-stack__title {
+    font-size: clamp(2.75rem, 1.6rem + 4.2vw, 5.25rem);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+  .adv-stack__sub {
+    max-width: 44ch;
+    margin: 26px 0 32px;
+  }
+
+  /* Rotating caption: the card at the front */
+  .adv-stack__blockArea {
+    margin-bottom: 36px;
+  }
+  .adv-stack__blocks {
+    position: relative;
+    min-height: 118px;
+    width: min(480px, 100%);
+    margin: 0 0 14px;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-stack__block {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+    border-left: 1px solid rgba(124, 200, 255, 0.4);
+    opacity: 0;
+    translate: 0 8px;
+    transition:
+      opacity 180ms var(--adv-ease),
+      translate 180ms var(--adv-ease);
+  }
+  .adv-stack__block.is-current {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity 300ms var(--adv-ease) 180ms,
+      translate 300ms var(--adv-ease) 180ms;
+  }
+  .adv-stack__blockTitle {
+    font-family: var(--adv-display);
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .adv-stack__blockBody {
+    max-width: 440px;
+    color: var(--adv-muted);
+  }
+  .adv-stack__blockLink {
+    display: none;
+    align-self: flex-start;
+    font-size: 0.875rem;
+  }
+  .adv-stack__open {
+    margin-left: 21px;
+    font-size: 0.875rem;
+  }
+  /* List mode: no JS, reduced motion, no WebGL. Every service listed, each with its own link. */
+  .no-js .adv-stack__blocks,
+  .adv-stack.is-static .adv-stack__blocks {
+    display: grid;
+    gap: 22px;
+    min-height: 0;
+  }
+  .no-js .adv-stack__block,
+  .adv-stack.is-static .adv-stack__block {
+    position: static;
+    opacity: 1;
+    translate: 0 0;
+  }
+  .no-js .adv-stack__blockLink,
+  .adv-stack.is-static .adv-stack__blockLink {
+    display: inline-flex;
+  }
+  .no-js .adv-stack__open,
+  .adv-stack.is-static .adv-stack__open {
+    display: none;
+  }
+  .adv-stack__action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .adv-stack__note {
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+
+  /* Step arrows */
+  .adv-stack__steps {
+    position: absolute;
+    right: var(--adv-gutter);
+    bottom: 40px;
+    z-index: 4;
+    display: flex;
+    gap: 12px;
+  }
+  .adv-stack__steps[hidden],
+  .adv-stack[data-open] .adv-stack__steps {
+    display: none;
+  }
+  .adv-stack__step {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--adv-edge);
+    border-radius: 999px;
+    background: rgba(24, 27, 36, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--adv-muted);
+    cursor: pointer;
+    transition:
+      color var(--adv-fast) var(--adv-ease),
+      border-color var(--adv-fast) var(--adv-ease),
+      transform 150ms var(--adv-ease);
+  }
+  .adv-stack__step:hover {
+    color: var(--adv-text);
+    border-color: var(--adv-edge-hi);
+  }
+  .adv-stack__step:active {
+    transform: scale(0.94);
+    border-color: var(--adv-accent);
+  }
+
+  /* Service panel (one card opened into the hero) */
+  .adv-spanel {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+  }
+  .adv-spanel[hidden] {
+    display: none;
+  }
+  .adv-spanel__inner {
+    display: grid;
+    gap: 40px;
+  }
+  .adv-spanel [data-stagger] {
+    opacity: 0;
+    translate: 0 12px;
+    transition:
+      opacity 400ms var(--adv-ease),
+      translate 400ms var(--adv-ease);
+    transition-delay: calc(var(--s, 0) * 60ms + 250ms);
+  }
+  .adv-spanel.is-in [data-stagger] {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .adv-stack.is-instant .adv-spanel [data-stagger] {
+    transition: none;
+  }
+  .adv-spanel__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .adv-spanel__close {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--adv-edge);
+    border-radius: 999px;
+    background: none;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--adv-muted);
+    cursor: pointer;
+    transition:
+      color var(--adv-fast) var(--adv-ease),
+      border-color var(--adv-fast) var(--adv-ease);
+  }
+  .adv-spanel__close:hover {
+    color: var(--adv-text);
+    border-color: var(--adv-edge-hi);
+  }
+  .adv-spanel__close:active {
+    transform: scale(0.97);
+  }
+  .adv-spanel__grid {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    column-gap: clamp(40px, 7vw, 120px);
+    align-items: start;
+  }
+  .adv-spanel__title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .adv-spanel__title:focus {
+    outline: none;
+  }
+  .adv-spanel__long {
+    max-width: 44ch;
+    margin-top: 20px;
+    color: var(--adv-muted);
+  }
+  .adv-spanel__chips {
+    margin-top: 24px;
+  }
+  .adv-spanel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .adv-spanel__actions .is-rich {
+    border-color: rgba(124, 200, 255, 0.45);
+  }
+  .adv-spanel__work {
+    padding-top: 10px;
+  }
+  .adv-spanel__label {
+    margin-bottom: 14px;
+  }
+  .adv-spanel__empty {
+    padding: 20px 0;
+    border-top: 1px solid var(--adv-line);
+    color: var(--adv-muted);
+    max-width: 44ch;
+  }
+  .adv-spanel__all {
+    margin-top: 18px;
+    font-size: 0.875rem;
+  }
+  .adv-spanel__siblings {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--adv-line);
+  }
+  .adv-spanel__siblings button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--adv-muted);
+    cursor: pointer;
+    text-align: left;
+  }
+  .adv-spanel__siblings button:hover {
+    color: var(--adv-text);
+  }
+  .adv-stack[data-open] {
+    align-items: flex-start;
+    padding-top: calc(var(--adv-header-h) + 48px);
+  }
+
+  /* Narrow: the stack above the type */
+  @media (max-width: 1023px) {
+    .adv-stack {
+      min-height: auto;
+      padding: calc(var(--adv-header-h) + 48px) 0 96px;
+      align-items: flex-start;
+    }
+    .adv-stack__inner {
+      display: grid;
+      grid-template-rows: 300px auto;
+      gap: 40px;
+    }
+    .adv-stack__copy {
+      grid-row: 2;
+      max-width: none;
+    }
+    .adv-stack__poster {
+      top: calc(var(--adv-header-h) + 48px + 150px);
+      left: 50%;
+      width: 190px;
+      height: 264px;
+      translate: -70% -50%;
+    }
+    .adv-pcard {
+      padding: 20px 18px;
+      gap: 10px;
+      transform: perspective(1000px) rotateY(-30deg) rotateX(6deg) translateX(calc(var(--k) * 48px))
+        translateZ(calc(var(--k) * -80px));
+    }
+    .adv-pcard__icon {
+      width: 36px;
+      height: 36px;
+    }
+    .adv-pcard__title {
+      margin-top: 14px;
+      font-size: 1.125rem;
+    }
+    .adv-pcard__covers {
+      font-size: 0.75rem;
+    }
+    .adv-stack__scrim {
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 30%,
+        rgba(9, 10, 14, 0.72) 42%,
+        rgba(9, 10, 14, 0.9) 54%
+      );
+    }
+    .adv-stack__blocks {
+      width: 100%;
+      min-height: 146px;
+    }
+    .adv-stack__steps {
+      bottom: 28px;
+    }
+    .adv-spanel__grid {
+      grid-template-columns: 1fr;
+      row-gap: 48px;
+    }
+  }
+  @media (max-width: 767px) {
+    .adv-stack {
+      padding-top: calc(var(--adv-header-h) + 32px);
+    }
+    .adv-stack__poster {
+      top: calc(var(--adv-header-h) + 32px + 150px);
+    }
+    .adv-spanel__siblings {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+</style>
+
+<script>
+  import { initFlowGrid } from '../../scripts/flowGrid';
+  import { initStack } from '../../scripts/stack/controller';
+  const grid = document.querySelector<HTMLCanvasElement>('.adv-stack__grid');
+  if (grid) initFlowGrid(grid);
+  const root = document.querySelector<HTMLElement>('[data-stack]');
+  if (root) initStack(root);
+</script>

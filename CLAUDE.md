@@ -16,8 +16,11 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   `PUBLIC_SITE_INDEXABLE` (build time). Not "true" → every page `noindex, nofollow`, `robots.txt`
   (`src/pages/robots.txt.ts`) disallows all. Set `PUBLIC_SITE_INDEXABLE=true` in Hostinger at launch.
 - Page roles (Honza, Oct 2026): the Relay-style rich page is the **Automation & AI service page**
-  (`templates/Automation.astro`, `/sluzby/automatizace/`, `/en/services/automation/`). The homepage is a
-  calmer company overview. Services with `rich: true` in `capabilities.ts` have their own route file.
+  (`templates/Automation.astro`, `/sluzby/automatizace/`, `/en/services/automation/`). The **homepage** is the
+  old ADV 3D card stack rebuilt in Astro (`components/home/CardStack.astro`; engine in `scripts/stack/`:
+  `HeroSceneGL.js` ported from PersonalPortfolio with "ADV:" notes, `controller.ts` replaces Hero.jsx).
+  Vanilla three.js + gsap, dynamically imported; no React. Test: `adv-website-tools\stack.py` (drag, swipe,
+  open/close, keys, deep link). Services with `rich: true` in `capabilities.ts` have their own route file.
 - Tools and screenshots: `C:\Data\Dev\adv-website-tools` (`serve.ps1`, `shoot.py`, `commit.ps1`, ...).
 - Honza's preview: `http://127.0.0.1:4400` (`node dist/server/entry.mjs`, HOST/PORT env), restarted by
   `adv-website-tools\serve.ps1 [-Build]`.

@@ -19,14 +19,17 @@
     "@astrojs/node": "^11.1.7",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.3.8",
+    "gsap": "^3.15.0",
     "nodemailer": "^7.0.13",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@fontsource/instrument-serif": "^5.2.0",
     "@fontsource/jetbrains-mono": "^5.2.0",
     "@fontsource/manrope": "^5.2.0",
     "@fontsource/urbanist": "^5.2.0",
+    "@types/three": "^0.183.1",
     "playwright": "^1.64.1",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^0.14.1"

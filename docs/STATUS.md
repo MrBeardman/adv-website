@@ -27,17 +27,24 @@
   service filter (`?service=`), Kesia live pricing case page (ticker, 164 cells, fee bars, price path,
   screenshots, results, footnote), generic case template (dev-only placeholders), About (stats, partners),
   Contact (full form), 404, contact API (honeypot, rate limit, validation, jsonl store, SMTP-less mode).
-- **Homepage** `/` + `/en/`: the calmer company overview (Honza, Oct 2026): hero with ADV as a whole
-  (approved line "Pražská firma pro práci mezi nápadem a fungujícím byznysem.", company sub, the four services
-  as links), breathing grid only (no flows, no window), the four value cards linking to their service pages
-  (automation → the rich page), selected work, partners, Ice CTA panel; a light stream (one fine strand).
+- **Homepage** `/` + `/en/` (Honza, Oct 2026, replaces the calm overview): the old ADV homepage's 3D card
+  stack rebuilt in Astro (vanilla three.js island, `components/home/CardStack.astro` +
+  `scripts/stack/*`, engine ported from PersonalPortfolio `HeroSceneGL.js`) in the Studio look: graphite
+  matte cards with a lit edge and Ice icons, the breathing grid behind, the progressive background.
+  Drag/swipe (direction lock, thresholds, spring back, click still opens, vertical swipe scrolls), arrows,
+  ←/→ keys, first-visit nudge, auto cycle with hold on the caption. Opening a card shows its service panel
+  in the hero (URL hash, e.g. `/#optimalizace-firmy`, back button and Esc close) with selected work and a
+  link to the service page (automation → `/sluzby/automatizace/`). Reduced motion / no WebGL / no JS:
+  a static DOM stack and every service listed with its own link; three.js is never downloaded there.
+  Below the hero: selected work, partners, Ice CTA; faint stream.
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
 - Automation page: hero pill and sub, "Kde mizí hodiny." + the three card bodies, the scene labels
   (Účetní / Obchod / Schválení, Návrh odpovědi / Odeslat), the window texts (file name, node labels,
   log statuses), workflow grid labels, statement ("Většina práce je rutina. ..."), tools heading.
-- Value card titles (Automatizujte rutinu, Optimalizujte firmu, Prototyp vašeho nápadu, Nový web, který prodává).
+- Homepage card stack: "Celá stránka služby" / "Full service page" (panel link); the stack's screen-reader
+  label. (The value cards, `components/home/04-values.astro`, are not used on any page right now.)
 - Typewriter words (byznysu / času / klidu / prodejů; business / time / focus / sales).
 - Numbers band title ("Co se dá změřit."), savings slider texts and its assumptions note, process step 1
   ("Hovor") and 4 ("Stavba") bodies, CTA panel texts ("Který úkol byste už nikdy nedělali?" ...), form

@@ -1,18 +1,13 @@
 ---
 /**
- * Homepage (CS at /, EN at /en/): the calm company-level overview (Honza, Oct 2026). Same palette, finish,
- * background and micro-interactions as the rest, but quieter: no workflow window, only the breathing grid
- * in the hero, and a light stream (one fine strand) through the section nodes.
- *
- *   hero (ADV as a whole, the four services as links)
- *   four value cards → their service pages (automation → the rich page)
- *   selected work · partners · contact (Ice CTA panel)
- *
+ * Homepage (CS at /, EN at /en/), Honza, Oct 2026: the old ADV homepage's 3D card stack, rebuilt in Astro and
+ * dressed in the Studio look (components/home/CardStack.astro). Below it: selected work, partners, contact.
+ * The four value cards are gone here: the stack is the services overview now.
+ * A faint stream of light (one fine strand) runs through the section nodes below the hero.
  * The Relay-style page lives at /sluzby/automatizace/ (templates/Automation.astro).
  */
 import Base from '../layouts/Base.astro';
-import HomeHero from '../components/home/HomeHero.astro';
-import Values from '../components/home/04-values.astro';
+import CardStack from '../components/home/CardStack.astro';
 import SelectedWork from '../components/SelectedWork.astro';
 import Partners from '../components/Partners.astro';
 import CtaPanel from '../components/CtaPanel.astro';
@@ -29,8 +24,7 @@ const t = pick(chrome, lang);
 ---
 
 <Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} stream="light">
-  <HomeHero lang={lang} />
-  <Values lang={lang} />
+  <CardStack lang={lang} />
   {/* Optional brand-moment image: pass src to show it (see ui/BrandMoment.astro). */}
   <BrandMoment />
   <SelectedWork lang={lang} limit={3} />
