@@ -1,0 +1,56 @@
+{
+  "cs": {
+    "workIndex": {
+      "title": "Vybrané projekty.",
+      "sub": "Projekty pro české a německé firmy, podle služby, která za nimi stojí.",
+      "filterAll": "Vše",
+      "filterLabel": "Filtrovat podle služby",
+      "metaTitle": "Realizace · ADV Innovations",
+      "empty": "K této službě zatím nic zveřejněného není."
+    },
+    "case": {
+      "back": "Všechny projekty",
+      "duration": "Délka",
+      "team": "Tým",
+      "services": "Služby",
+      "status": "Stav",
+      "state": {
+        "live": "Spuštěno",
+        "ongoing-support": "Spuštěno, průběžná podpora",
+        "in-progress": "Probíhá"
+      },
+      "situation": "Situace",
+      "approach": "Co jsme udělali",
+      "results": "Výsledky",
+      "ongoing": "Spolupracujeme dál na podpoře a dalších vylepšeních.",
+      "next": "Další projekt"
+    }
+  },
+  "en": {
+    "workIndex": {
+      "title": "Selected work.",
+      "sub": "Projects for Czech and German companies, grouped by the service behind them.",
+      "filterAll": "All",
+      "filterLabel": "Filter by service",
+      "metaTitle": "Work · ADV Innovations",
+      "empty": "Nothing published under this service yet."
+    },
+    "case": {
+      "back": "All work",
+      "duration": "Duration",
+      "team": "Team",
+      "services": "Services",
+      "status": "Status",
+      "state": {
+        "live": "Live",
+        "ongoing-support": "Live, ongoing support",
+        "in-progress": "In progress"
+      },
+      "situation": "The situation",
+      "approach": "What we did",
+      "results": "Results",
+      "ongoing": "We still work together on support and new improvements.",
+      "next": "Next project"
+    }
+  }
+}

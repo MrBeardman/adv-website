@@ -1,0 +1,258 @@
+{
+  "cs": {
+    "kesia": {
+      "metaTitle": "Kesia: živé ceny drahých kovů · ADV Innovations",
+      "title": "Zlato se hýbe každou minutu. Teď i ceny.",
+      "lead": "Kesia prodává investiční zlato, stříbro a platinu přes tři e-shopy v Praze, Brně a Hradci Králové. Ceny musí sledovat světovou cenu kovů, která se mění celý den. Postavili jsme jim cenový dashboard, který to stíhá za ně.",
+      "ticker": {
+        "label": "Burzovní cena, Kč za gram",
+        "note": "Ukázková čísla pro ilustraci, ne živé ceny.",
+        "srNote": "Animované ukázkové burzovní ceny zlata, stříbra a platiny. Jen pro ilustraci, nejde o živé ceny.",
+        "metals": {
+          "au": "Zlato",
+          "ag": "Stříbro",
+          "pt": "Platina"
+        }
+      },
+      "facts": {
+        "client": "Klient",
+        "clientValue": "Kesia",
+        "shops": "Obchody",
+        "shopsValue": "3 e-shopy: Praha, Brno, Hradec Králové",
+        "live": "V provozu od",
+        "liveValue": "Přelomu let 2025 a 2026",
+        "status": "Stav"
+      },
+      "problem": {
+        "title": "164 produktů. Dvě ceny u každého. Každý den ručně.",
+        "body": "Každý produkt má prodejní a výkupní cenu. Jakmile se kov pohnul, někdo otevřel Shoptet a ceny přepsal, produkt po produktu, ve všech třech obchodech. Jedno kolo trvalo dvě a půl až tři hodiny a opakovalo se každý pracovní den. Mezi koly už ceny stejně neodpovídaly trhu.",
+        "counter": "cen přepsaných v každém kole",
+        "gridLabel": "164 produktů, dvě ceny u každého"
+      },
+      "constraint": {
+        "title": "Nejpřímější řešení stálo víc než samotný problém.",
+        "body": "Zapisovat ceny do obchodu přímo z kódu jde v Shoptetu jen přes soukromé API, a to má jen tarif Premium s cenou od 12 000 Kč měsíčně za projekt. Tři obchody na Premiu by vyšly nejméně na 430 000 Kč ročně, ještě než by kdokoli napsal první řádek integrace. Šli jsme proto jinudy: obchody zůstaly na tarifu Profi a ceny do nich chodí jako feed, který Shoptet umí importovat sám.",
+        "apiLabel": "Přes API: 3 × Premium",
+        "apiValue": "430 000+ Kč ročně",
+        "feedLabel": "Přes feed: 3 × Profi",
+        "feedValue": "zhruba 90 000 Kč ročně",
+        "barsLabel": "Roční poplatky Shoptetu za tři obchody"
+      },
+      "built": {
+        "title": "Co jsme postavili.",
+        "body": "Cenový dashboard, který stahuje živé ceny zlata, stříbra a platiny, z koeficientu spočítá prodejní a výkupní cenu každého produktu a hotové ceny předá Shoptetu jako XML feed. Ceny se nastavují hromadně přes skupiny podle kovu, hmotnosti a výrobce, ne u každého produktu zvlášť.",
+        "flowLabel": "Cesta jedné ceny",
+        "flow": [
+          {
+            "title": "Burzovní cena",
+            "body": "Zlato, stříbro a platina, nová hodnota každých 5 minut"
+          },
+          {
+            "title": "13 cenových skupin",
+            "body": "Podle kovu, hmotnosti a výrobce, místo 164 samostatných nastavení"
+          },
+          {
+            "title": "Prodej a výkup",
+            "body": "Dvě ceny u každého produktu a k tomu pět VIP úrovní"
+          },
+          {
+            "title": "XML feed",
+            "body": "Přegeneruje se každých 10 minut"
+          },
+          {
+            "title": "Shoptet",
+            "body": "Feed si načte až 6× denně"
+          }
+        ],
+        "nextNode": {
+          "title": "Shopify",
+          "body": "Další krok: ceny a sériové číslo každého slitku"
+        },
+        "figGroups": "Cenové skupiny: jeden koeficient platí pro všechny odpovídající produkty ve všech třech obchodech.",
+        "figVip": "Karty produktů s prodejními a výkupními modifikátory a pěti VIP úrovněmi.",
+        "figSales": "Přehled prodejů po obchodech: obrat, objednávky a prodané gramy podle kovu.",
+        "masked": "Citlivá čísla jsou na všech snímcích zamaskovaná. Kliknutím snímek otevřete v plné velikosti."
+      },
+      "safety": {
+        "title": "Dá se nechat běžet bez dozoru.",
+        "items": [
+          {
+            "title": "Upozornění na ceny",
+            "body": "E-mail, když výkupní cena produktu klesne pod limit, nebo když se světová cena kovu pohne víc, než je nastaveno, v procentech nebo v korunách za gram."
+          },
+          {
+            "title": "Auditní log",
+            "body": "Každá změna se zapisuje: kdo, kdy, původní a nová hodnota. Zatím přes 700 záznamů."
+          },
+          {
+            "title": "Poslední platná cena",
+            "body": "Když živé ceny nepřijdou, dashboard drží poslední platnou cenu. Shoptet tak nikdy nedostane prázdný feed ani produkt bez ceny."
+          }
+        ],
+        "figAlerts": "Upozornění na pohyb světové ceny u každého kovu, v procentech nebo v Kč za gram.",
+        "figAudit": "Auditní log: každá změna, kdo ji udělal a kdy."
+      },
+      "results": {
+        "title": "Co se změnilo.",
+        "items": [
+          {
+            "prefix": "~",
+            "target": 700,
+            "suffix": "",
+            "final": "~700",
+            "label": "hodin ročního ručního přeceňování odpadlo"
+          },
+          {
+            "prefix": "~",
+            "target": 340000,
+            "suffix": " Kč",
+            "final": "~340 000 Kč",
+            "label": "ročně méně na poplatcích Shoptetu než přes API"
+          },
+          {
+            "prefix": "",
+            "target": 6,
+            "suffix": "×",
+            "final": "6×",
+            "label": "denně se ceny aktualizují samy, místo jednou ručně"
+          }
+        ],
+        "footnote": "Zaokrouhlené odhady. Poplatky podle veřejného ceníku Shoptetu (24. 9. 2026): tři obchody na Premiu, každý od 12 000 Kč měsíčně, oproti třem na tarifu Profi po 2 490 Kč měsíčně. Hodiny podle dřívějšího postupu klienta: 164 produktů, dvě ceny u každého, zhruba 2,5 až 3 hodiny na jedno kolo, každý pracovní den. Dashboard přepočítává ceny každých 10 minut, obchody si feed načítají až 6× denně."
+      },
+      "next": {
+        "title": "Co bude dál.",
+        "body": "Chystáme napojení na Shopify: stejné ceny a k tomu sériové číslo každého slitku, aby i obchod na Shopify prodával ze stejných živých cen."
+      },
+      "related": "Další práce pro Kesii",
+      "cta": "Přepisujete něco každý den ručně? Tam obvykle začínáme."
+    }
+  },
+  "en": {
+    "kesia": {
+      "metaTitle": "Kesia: live precious-metal pricing · ADV Innovations",
+      "title": "Gold moves every minute. Now the prices do too.",
+      "lead": "Kesia sells investment gold, silver and platinum through three e-shops in Prague, Brno and Hradec Králové. Their prices have to follow the world metal price, which moves all day. We built a pricing dashboard that keeps up for them.",
+      "ticker": {
+        "label": "Spot price, Kč per gram",
+        "note": "Sample figures for illustration, not live prices.",
+        "srNote": "Animated sample spot prices for gold, silver and platinum. Illustration only, not live prices.",
+        "metals": {
+          "au": "Gold",
+          "ag": "Silver",
+          "pt": "Platinum"
+        }
+      },
+      "facts": {
+        "client": "Client",
+        "clientValue": "Kesia",
+        "shops": "Shops",
+        "shopsValue": "3 e-shops: Prague, Brno, Hradec Králové",
+        "live": "Live since",
+        "liveValue": "The turn of 2025 and 2026",
+        "status": "Status"
+      },
+      "problem": {
+        "title": "164 products. Two prices each. Every day, by hand.",
+        "body": "Every product has a selling price and a buyback price. When the metal moved, someone opened Shoptet and retyped them, product by product, across three shops. One full pass took two and a half to three hours, and it had to happen every working day. In between, the prices were already out of date.",
+        "counter": "prices retyped in every pass",
+        "gridLabel": "164 products, two prices each"
+      },
+      "constraint": {
+        "title": "The obvious fix cost more than the problem.",
+        "body": "Shoptet only lets code write prices straight into a shop through its private API, and the private API comes only with Premium, priced per project from 12,000 Kč a month. Three shops on Premium would cost at least 430,000 Kč a year before anyone wrote a line of integration. So we went the other way: the shops stay on Profi, and the prices arrive as a feed Shoptet already knows how to import.",
+        "apiLabel": "API route: 3 × Premium",
+        "apiValue": "430,000+ Kč a year",
+        "feedLabel": "Feed route: 3 × Profi",
+        "feedValue": "about 90,000 Kč a year",
+        "barsLabel": "Shoptet fees a year for three shops"
+      },
+      "built": {
+        "title": "What we built.",
+        "body": "A pricing dashboard that pulls live gold, silver and platinum prices, works out every product's selling and buyback price from a coefficient, and hands the finished prices to Shoptet as an XML feed. Products are priced in bulk through groups by metal, weight and manufacturer, not one by one.",
+        "flowLabel": "How a price travels",
+        "flow": [
+          {
+            "title": "Spot price",
+            "body": "Gold, silver and platinum, refreshed every 5 minutes"
+          },
+          {
+            "title": "13 pricing groups",
+            "body": "By metal, weight and manufacturer, instead of 164 separate settings"
+          },
+          {
+            "title": "Sell and buyback",
+            "body": "Two prices per product, plus five VIP tiers"
+          },
+          {
+            "title": "XML feed",
+            "body": "Rebuilt every 10 minutes"
+          },
+          {
+            "title": "Shoptet",
+            "body": "Imports the feed up to 6 times a day"
+          }
+        ],
+        "nextNode": {
+          "title": "Shopify",
+          "body": "Next: prices and a serial number for every bar"
+        },
+        "figGroups": "Pricing groups: one coefficient covers every matching product in all three shops.",
+        "figVip": "Product cards with selling and buyback modifiers and five VIP tiers.",
+        "figSales": "Sales analytics per shop: revenue, orders and grams sold per metal.",
+        "masked": "Sensitive numbers are masked in every screenshot. Select a screenshot to open it full size."
+      },
+      "safety": {
+        "title": "Safe to leave running.",
+        "items": [
+          {
+            "title": "Price alerts",
+            "body": "An e-mail when a product's buyback price drops under a limit, or when a metal's world price moves more than a set percentage or amount per gram."
+          },
+          {
+            "title": "Audit log",
+            "body": "Every change is recorded: who, when, the old value and the new one. Over 700 entries so far."
+          },
+          {
+            "title": "Last good price",
+            "body": "If the live prices fail, the dashboard keeps the last good price. Shoptet never receives an empty or unpriced feed."
+          }
+        ],
+        "figAlerts": "World-price alerts per metal, by percentage or by Kč per gram.",
+        "figAudit": "The audit log: every change, by whom and when."
+      },
+      "results": {
+        "title": "What changed.",
+        "items": [
+          {
+            "prefix": "~",
+            "target": 700,
+            "suffix": "",
+            "final": "~700",
+            "label": "hours a year of manual repricing gone"
+          },
+          {
+            "prefix": "~",
+            "target": 340000,
+            "suffix": " Kč",
+            "final": "~340,000 Kč",
+            "label": "a year less in Shoptet fees than the API route"
+          },
+          {
+            "prefix": "",
+            "target": 6,
+            "suffix": "×",
+            "final": "6×",
+            "label": "a day, prices update by themselves, instead of once by hand"
+          }
+        ],
+        "footnote": "Rounded estimates. Fees from Shoptet's public price list (24 Sep 2026): three shops on Premium from 12,000 Kč a month each, against three on Profi at 2,490 Kč a month each. Hours from the client's previous routine: 164 products, two prices each, about 2.5 to 3 hours a pass, every working day. The dashboard recalculates every 10 minutes; the shops import the feed up to 6 times a day."
+      },
+      "next": {
+        "title": "What's next.",
+        "body": "A Shopify connection is on its way: the same prices, plus a serial number for every single bar, so a Shopify store can sell from the same live pricing."
+      },
+      "related": "Also for Kesia",
+      "cta": "Retyping something every day? That is usually where we start."
+    }
+  }
+}

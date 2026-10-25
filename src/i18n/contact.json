@@ -1,0 +1,60 @@
+{
+  "cs": {
+    "contact": {
+      "eyebrow": "Kontakt",
+      "title": "Co potřebujete posunout?",
+      "line": "Každou zprávu čteme sami a odpovídáme do jednoho pracovního dne. První konzultace je zdarma, rozsah a cena přijdou písemně.",
+      "meta": "Odpověď do jednoho pracovního dne · CZ / EN / DE",
+      "phoneLabel": "Telefon",
+      "emailLabel": "E-mail",
+      "addressLabel": "Kancelář",
+      "fields": {
+        "name": "Jméno",
+        "namePlaceholder": "Vaše jméno",
+        "email": "E-mail",
+        "emailPlaceholder": "vy@firma.cz",
+        "phone": "Telefon (nepovinné)",
+        "phonePlaceholder": "+420 000 000 000",
+        "phoneError": "Tohle nevypadá jako číslo, na které se dá zavolat. Zkontrolujte číslice, nebo pole nechte prázdné.",
+        "company": "Firma",
+        "companyPlaceholder": "Název firmy",
+        "service": "Kde začneme?",
+        "servicePlaceholder": "Zatím nevím",
+        "message": "Zpráva",
+        "messagePlaceholder": "Pár řádků o firmě a o tom, co máte v plánu."
+      },
+      "sending": "Odesíláme",
+      "success": "Děkujeme. Odpovíme do jednoho pracovního dne.",
+      "error": "Zprávu se nepodařilo odeslat. Napište nám přímo na"
+    }
+  },
+  "en": {
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "What are you trying to get done?",
+      "line": "We read every message ourselves and reply within one working day. The first consultation is free, and the scope and price follow in writing.",
+      "meta": "Replies within one working day · CZ / EN / DE",
+      "phoneLabel": "Phone",
+      "emailLabel": "Email",
+      "addressLabel": "Office",
+      "fields": {
+        "name": "Name",
+        "namePlaceholder": "Your name",
+        "email": "Email",
+        "emailPlaceholder": "you@company.com",
+        "phone": "Phone (optional)",
+        "phonePlaceholder": "+420 000 000 000",
+        "phoneError": "That does not look like a number we could dial. Check the digits, or leave it blank.",
+        "company": "Company",
+        "companyPlaceholder": "Company name",
+        "service": "Where should we start?",
+        "servicePlaceholder": "Not sure yet",
+        "message": "Message",
+        "messagePlaceholder": "A few lines about the business and what you have in mind."
+      },
+      "sending": "Sending",
+      "success": "Thank you. We will reply within one working day.",
+      "error": "That did not send. Write to us directly at"
+    }
+  }
+}

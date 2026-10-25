@@ -1,0 +1,110 @@
+{
+  "cs": {
+    "meta": {
+      "title": "ADV Innovations · Automatizace, AI a software pro firmy",
+      "description": "ADV Innovations automatizuje opakovanou práci ve firmách a staví k tomu weby, prototypy a firemní software. Praha.",
+      "siteName": "ADV Innovations"
+    },
+    "brand": {
+      "name": "ADV Innovations",
+      "email": "info@advinnovations.com",
+      "phone": "+420 606 518 658",
+      "phoneHref": "+420606518658",
+      "street": "Rybná 234/20",
+      "city": "Praha",
+      "address": "Rybná 234/20, Praha",
+      "web": "www.advinnovations.com"
+    },
+    "nav": {
+      "wordmark": "ADV Innovations",
+      "home": "Úvod",
+      "work": "Realizace",
+      "services": "Služby",
+      "partners": "Partneři",
+      "about": "O nás",
+      "contact": "Kontakt",
+      "menu": "Otevřít menu",
+      "close": "Zavřít menu",
+      "langSwitch": "Přepnout do angličtiny",
+      "skip": "Přeskočit na obsah"
+    },
+    "footer": {
+      "name": "ADV Innovations",
+      "location": "Rybná 234/20, Praha",
+      "langLabel": "Jazyk",
+      "logoLabel": "ADV Innovations, úvod"
+    },
+    "cta": {
+      "assessment": "Domluvit konzultaci"
+    },
+    "notFound": {
+      "metaTitle": "Stránka nenalezena · ADV Innovations",
+      "title": "Tahle stránka neexistuje.",
+      "body": "Odkaz je možná starý, nebo se stránka přesunula. Všechno, co děláme, najdete z úvodní stránky.",
+      "home": "Zpět na úvod",
+      "work": "Naše realizace"
+    },
+    "hero": {
+      "headline1": "Méně rutiny.",
+      "headline2": "Víc byznysu.",
+      "sub": "Automatizujeme opakovanou práci ve vaší firmě, od dokumentů a dat po schvalování, a stavíme k tomu weby, prototypy a firemní software.",
+      "ctaNote": "První konzultace je zdarma.",
+      "prev": "Předchozí služba",
+      "next": "Další služba"
+    }
+  },
+  "en": {
+    "meta": {
+      "title": "ADV Innovations · Automation, AI and software for business",
+      "description": "ADV Innovations automates the repetitive work in a business and builds the websites, prototypes and business software around it. Prague.",
+      "siteName": "ADV Innovations"
+    },
+    "brand": {
+      "name": "ADV Innovations",
+      "email": "info@advinnovations.com",
+      "phone": "+420 606 518 658",
+      "phoneHref": "+420606518658",
+      "street": "Rybná 234/20",
+      "city": "Prague",
+      "address": "Rybná 234/20, Prague",
+      "web": "www.advinnovations.com"
+    },
+    "nav": {
+      "wordmark": "ADV Innovations",
+      "home": "Home",
+      "work": "Work",
+      "services": "Services",
+      "partners": "Partners",
+      "about": "About",
+      "contact": "Contact",
+      "menu": "Open menu",
+      "close": "Close menu",
+      "langSwitch": "Switch to Czech",
+      "skip": "Skip to content"
+    },
+    "footer": {
+      "name": "ADV Innovations",
+      "location": "Rybná 234/20, Prague",
+      "langLabel": "Language",
+      "logoLabel": "ADV Innovations, home"
+    },
+    "cta": {
+      "assessment": "Book a consultation"
+    },
+    "notFound": {
+      "metaTitle": "Page not found · ADV Innovations",
+      "title": "This page does not exist.",
+      "body": "The link may be old, or the page has moved. Everything we do starts from the home page.",
+      "home": "Back to the home page",
+      "work": "See our work"
+    },
+    "hero": {
+      "sub": "We automate the repetitive work in your business, from documents and data to approvals, and build the websites, prototypes and business software around it.",
+      "ctaNote": "The first consultation is free.",
+      "prev": "Previous service",
+      "next": "Next service",
+      "headline1": "Less routine.",
+      "headline2": "More business."
+    }
+  }
+}

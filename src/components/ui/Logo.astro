@@ -1,0 +1,52 @@
+---
+/**
+ * The ADV Innovations logo, the ONE place the site draws it. Geometry from data/logoPaths.ts, generated
+ * from the brand files (ADV\brand\logo). The A is a cut (evenodd), never filled: it shows what is behind.
+ *
+ * Colour: the tile takes --adv-logo-tile (site.css). Brand guide 1.0 says Signal amber on dark; the site
+ * retired amber, so the tile is Ice for now. One variable, pending Honza's confirmation (docs/STATUS.md).
+ * The wordmark takes --adv-text.
+ *
+ * variant="horizontal" must render at least 120 px wide (brand minimum); below that use "symbol".
+ */
+import { HORIZONTAL_VIEWBOX, SYMBOL_VIEWBOX, TILE, SYMBOL_TILE, WORDMARK, WORDMARK_TRANSFORM } from '../../data/logoPaths';
+
+interface Props {
+  variant?: 'horizontal' | 'symbol';
+  title?: string;
+  decorative?: boolean;
+  class?: string;
+}
+const { variant = 'horizontal', title = 'ADV Innovations', decorative = false, class: cls = '' } = Astro.props;
+const a11y = decorative ? { 'aria-hidden': 'true', focusable: 'false' } : { role: 'img', 'aria-label': title };
+---
+
+{
+  variant === 'symbol' ? (
+    <svg viewBox={SYMBOL_VIEWBOX} class={`adv-logo adv-logo--symbol ${cls}`} {...a11y}>
+      <path class="adv-logo__tile" fill-rule="evenodd" d={SYMBOL_TILE} />
+    </svg>
+  ) : (
+    <svg viewBox={HORIZONTAL_VIEWBOX} class={`adv-logo ${cls}`} {...a11y}>
+      <path class="adv-logo__tile" fill-rule="evenodd" d={TILE} />
+      <g class="adv-logo__word" transform={WORDMARK_TRANSFORM}>
+        {WORDMARK.map((d) => (
+          <path d={d} />
+        ))}
+      </g>
+    </svg>
+  )
+}
+
+<style is:global>
+  .adv-logo {
+    display: block;
+    height: auto;
+  }
+  .adv-logo__tile {
+    fill: var(--adv-logo-tile);
+  }
+  .adv-logo__word {
+    fill: var(--adv-text);
+  }
+</style>

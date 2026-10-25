@@ -1,0 +1,192 @@
+{
+  "cs": {
+    "capabilities": {
+      "title": "Co děláme.",
+      "items": [
+        {
+          "slug": "ai-automation",
+          "title": "AI a automatizace",
+          "body": "Zpracování dokumentů, směrování a asistenti, kteří seberou týmu opakovanou práci.",
+          "covers": [
+            "Zpracování dokumentů",
+            "Směrování",
+            "Asistenti"
+          ],
+          "long": "Práce, která každý týden spolkne hodiny: čtení dokumentů, přepisování dat mezi systémy, odpovídání na stejné dotazy. Automatizujeme ji pomocí zpracování dokumentů, směrování a AI asistentů a člověk dál rozhoduje všude tam, kde jde o úsudek."
+        },
+        {
+          "slug": "business-optimisation",
+          "title": "Optimalizace firmy",
+          "body": "Procesy, interní nástroje a reporting, které nahradí tabulky a zvyk.",
+          "covers": [
+            "Revize procesů",
+            "Interní nástroje",
+            "Reporting"
+          ],
+          "long": "Většina firem běží na tabulkách, sdílených schránkách a jednom člověku, který ví, kde co je. Zmapujeme, jak práce skutečně teče, odstraníme kroky, které nepotřebují člověka, a ze zbytku uděláme nástroje a reporty, se kterými pracuje celý tým."
+        },
+        {
+          "slug": "websites",
+          "title": "Weby",
+          "body": "Rychlé, moderní weby a e-shopy, které odpovídají tomu, co firma skutečně prodává.",
+          "covers": [
+            "Weby",
+            "E-shopy",
+            "Obsah"
+          ],
+          "long": "To, jak firma vypadá a působí online, rozhoduje o tom, kolik si může říct, ještě než někdo zvedne telefon. Weby a e-shopy navržené podle toho, co prodáváte a komu, a postavené tak, aby je zvládl spravovat váš vlastní tým."
+        },
+        {
+          "slug": "software",
+          "title": "Prototypy a firemní software",
+          "body": "Nejdřív proklikatelná ukázka, pak webové aplikace a firemní software za ní.",
+          "covers": [
+            "Prototypy",
+            "Webové aplikace",
+            "Firemní software"
+          ],
+          "long": "Pro tu část provozu, pro kterou žádný produkt na trhu nevznikl. Začínáme prototypem, na který se dá během pár týdnů kliknout, a webovou aplikaci nebo firemní software pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední."
+        },
+        {
+          "slug": "graphic-design",
+          "title": "Grafický design",
+          "body": "Identita, tiskoviny a prezentace, díky kterým značka drží pohromadě.",
+          "covers": [
+            "Identita",
+            "Tiskoviny",
+            "Prezentace"
+          ],
+          "long": "Značka, která vypadá stejně na webu, na vizitce i v obchodní prezentaci. Loga a vizuální identita, tiskoviny a šablony prezentací, se kterými váš tým pracuje dál i bez grafika na telefonu."
+        }
+      ]
+    },
+    "service": {
+      "open": "Detail služby",
+      "eyebrow": "Služba {{n}} z {{total}}",
+      "selectedWork": "Vybrané projekty",
+      "allWork": "Všechny projekty: {{service}}",
+      "close": "Zavřít",
+      "closeLabel": "Zavřít a vrátit se ke všem službám",
+      "prevLabel": "Předchozí služba: {{service}}",
+      "nextLabel": "Další služba: {{service}}",
+      "empty": "Případové studie k této službě připravujeme. Na nedávnou práci se nás zeptejte při konzultaci.",
+      "badgeDraft": "Koncept",
+      "badgePlaceholder": "Zástupný"
+    },
+    "moves": {
+      "title": "Jak projekt probíhá.",
+      "items": [
+        {
+          "num": "01",
+          "title": "Posouzení",
+          "body": "Čas strávený ve firmě dřív, než se cokoli naplánuje: kde mizí hodiny, co se vyplatí automatizovat a jakou to pro vás má hodnotu."
+        },
+        {
+          "num": "02",
+          "title": "Prototyp",
+          "body": "Funkční ukázka brzy, pokud to jde, tak na vašich datech, abyste se rozhodovali nad něčím, na co se dá kliknout, ne nad slajdem."
+        },
+        {
+          "num": "03",
+          "title": "Dodání a dál",
+          "body": "Postavíme to, předáme lidem, kteří s tím budou pracovat, a zůstáváme: podpora a cokoli, co bude firma potřebovat dál."
+        }
+      ]
+    }
+  },
+  "en": {
+    "capabilities": {
+      "title": "What we do.",
+      "items": [
+        {
+          "slug": "ai-automation",
+          "title": "AI and automation",
+          "body": "Document intake, routing and assistants that take the repetitive work off your team.",
+          "covers": [
+            "Document intake",
+            "Routing",
+            "Assistants"
+          ],
+          "long": "The work that eats hours every week: reading documents, copying data between systems, answering the same questions. We automate it with document intake, routing and AI assistants, and keep a person deciding wherever judgement matters."
+        },
+        {
+          "slug": "business-optimisation",
+          "title": "Business optimisation",
+          "body": "Processes, internal tools and reporting that replace spreadsheets and habit.",
+          "covers": [
+            "Process review",
+            "Internal tools",
+            "Reporting"
+          ],
+          "long": "Most companies run on spreadsheets, shared inboxes and one person who knows where everything is. We map how the work actually flows, take out the steps that do not need a person, and turn the rest into tools and reports the whole team can use."
+        },
+        {
+          "slug": "websites",
+          "title": "Websites",
+          "body": "Fast, modern websites and e-shops that match what the business actually sells.",
+          "covers": [
+            "Websites",
+            "E-shops",
+            "Content"
+          ],
+          "long": "How a company looks and reads online decides how much it can charge before anyone picks up the phone. Websites and e-shops planned around what you sell and who you sell to, and built so your own team can run them."
+        },
+        {
+          "slug": "software",
+          "title": "Prototypes and business software",
+          "body": "Clickable demos first, then the web apps and business software behind them.",
+          "covers": [
+            "Prototypes",
+            "Web apps",
+            "Business software"
+          ],
+          "long": "For the part of the operation no product on the market was made for. We start with a prototype you can click within weeks, then build the web app or business software in phases, so the first version is in use before the last one is planned."
+        },
+        {
+          "slug": "graphic-design",
+          "title": "Graphic design",
+          "body": "Identity, print and presentation design that keeps the brand consistent.",
+          "covers": [
+            "Identity",
+            "Print",
+            "Presentations"
+          ],
+          "long": "A brand that looks the same on the website, the business card and the sales deck. Logos and identity systems, print, and presentation templates your team can keep using without a designer on call."
+        }
+      ]
+    },
+    "service": {
+      "open": "See the service",
+      "eyebrow": "Service {{n}} of {{total}}",
+      "selectedWork": "Selected work",
+      "allWork": "All {{service}} work",
+      "close": "Close",
+      "closeLabel": "Close and return to all services",
+      "prevLabel": "Previous service: {{service}}",
+      "nextLabel": "Next service: {{service}}",
+      "empty": "Case studies for this service are being written. Ask us about recent work during the consultation.",
+      "badgeDraft": "Draft",
+      "badgePlaceholder": "Placeholder"
+    },
+    "moves": {
+      "title": "How a project runs.",
+      "items": [
+        {
+          "num": "01",
+          "title": "Assessment",
+          "body": "Time inside the business before anything is scoped: where the hours go, what is worth automating, and what it is worth to you."
+        },
+        {
+          "num": "02",
+          "title": "Prototype",
+          "body": "A working demo early, on your own data where we can, so decisions are made on something you can click rather than a slide."
+        },
+        {
+          "num": "03",
+          "title": "Delivery and after",
+          "body": "We build it, hand it over to the people who use it, and stay on for support and whatever the business needs next."
+        }
+      ]
+    }
+  }
+}

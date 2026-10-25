@@ -1,0 +1,116 @@
+{
+  "cs": {
+    "about": {
+      "title": "Pražská firma pro práci mezi nápadem a fungujícím byznysem.",
+      "p1": "ADV Innovations automatizuje to, co se ve firmách pořád dělá ručně, uklidí procesy kolem toho a postaví weby a software, které k tomu patří.",
+      "p2": "Zaujmeme stanovisko k tomu, co má smysl dělat, ukážeme to brzy jako funkční prototyp a za výsledek ručíme i po spuštění.",
+      "teamTodo": "TODO: sekce tým. Jan Matyáš (Head of Development) a spoluzakladatel (jméno doplnit), s portréty. Zobrazuje se jen ve vývojovém buildu.",
+      "stats": {
+        "years": {
+          "value": "13",
+          "label": "Let zkušeností v IT v týmu"
+        },
+        "projects": {
+          "value": "50",
+          "label": "Dokončených projektů"
+        },
+        "range": {
+          "value": "2–50k",
+          "label": "EUR rozsah projektů"
+        },
+        "markets": {
+          "value": "CZ / DE",
+          "label": "Trhy"
+        }
+      }
+    },
+    "partners": {
+      "title": "Partneři, se kterými dodáváme.",
+      "line": "Partneři, se kterými pracujeme dost dlouho, abychom se za ně zaručili. Jeden kontakt v ADV, za ním ti správní specialisté.",
+      "visit": "Navštívit {{host}}",
+      "togetherLabel": "S ADV",
+      "todoTogether": "TODO: jedna věta o tom, co ADV a {{name}} dělají spolu. Jen ve vývojovém buildu.",
+      "todoLink": "TODO: web {{name}}. Jen ve vývojovém buildu.",
+      "items": [
+        {
+          "id": "alture",
+          "category": "Design & digitální produkty",
+          "line": "Digitální produkty, které zákazníky získávají a udržují.",
+          "facts": []
+        },
+        {
+          "id": "jenomics",
+          "category": "Software & systémy",
+          "line": "IT služby, software a hosting z jedné ruky, pro malé a střední firmy.",
+          "facts": [
+            "Od roku 2001",
+            "Tvůrci SDX"
+          ]
+        },
+        {
+          "id": "sisu",
+          "category": "Realizace",
+          "line": "Velké projekty, dodané bez chaosu.",
+          "facts": []
+        }
+      ]
+    }
+  },
+  "en": {
+    "about": {
+      "title": "A Prague company for the work between an idea and a running business.",
+      "p1": "ADV Innovations automates what is still done by hand, tidies the processes around it, and builds the websites and software that go with it.",
+      "p2": "We take a position on what is worth doing, show it early as a working prototype, and stay accountable for the result after launch.",
+      "teamTodo": "TODO: team section. Jan Matyáš (Head of Development) and co-founder (name to confirm), with portraits. Shown in development builds only.",
+      "stats": {
+        "years": {
+          "value": "13",
+          "label": "Years of IT experience in the team"
+        },
+        "projects": {
+          "value": "50",
+          "label": "Projects delivered"
+        },
+        "range": {
+          "value": "2–50k",
+          "label": "EUR project range"
+        },
+        "markets": {
+          "value": "CZ / DE",
+          "label": "Markets"
+        }
+      }
+    },
+    "partners": {
+      "title": "Partners we deliver with.",
+      "line": "Delivery partners we have worked with long enough to vouch for. One contact at ADV, the right specialists behind it.",
+      "visit": "Visit {{host}}",
+      "togetherLabel": "With ADV",
+      "todoTogether": "TODO: one line on what ADV and {{name}} do together. Development builds only.",
+      "todoLink": "TODO: {{name}} website URL. Development builds only.",
+      "items": [
+        {
+          "id": "alture",
+          "category": "Design & digital products",
+          "line": "The digital products that win and keep customers.",
+          "facts": []
+        },
+        {
+          "id": "jenomics",
+          "category": "Software & systems",
+          "line": "IT services, software and hosting from a single source, for small and mid-sized companies.",
+          "facts": [
+            "Since 2001",
+            "Makers of SDX"
+          ]
+        },
+        {
+          "id": "sisu",
+          "category": "Delivery",
+          "line": "Big projects, delivered without the chaos.",
+          "facts": []
+        }
+      ]
+    }
+  }
+}
