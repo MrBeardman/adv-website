@@ -27,11 +27,11 @@
   service filter (`?service=`), Kesia live pricing case page (ticker, 164 cells, fee bars, price path,
   screenshots, results, footnote), generic case template (dev-only placeholders), About (stats, partners),
   Contact (full form), 404, contact API (honeypot, rate limit, validation, jsonl store, SMTP-less mode).
-- impeccable detector: 0 findings on the automation page (CS + EN, 1280 and 390).
-
-## In progress
-- Homepage `/` + `/en/`: becoming a calmer company overview (short hero about ADV as a whole, four value cards
-  to the services, selected work, partners, contact; no workflow window, light stream).
+- **Homepage** `/` + `/en/`: the calmer company overview (Honza, Oct 2026): hero with ADV as a whole
+  (approved line "Pražská firma pro práci mezi nápadem a fungujícím byznysem.", company sub, the four services
+  as links), breathing grid only (no flows, no window), the four value cards linking to their service pages
+  (automation → the rich page), selected work, partners, Ice CTA panel; a light stream (one fine strand).
+- impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
 - Automation page: hero pill and sub, "Kde mizí hodiny." + the three card bodies, the scene labels
@@ -61,5 +61,7 @@
   (`EM_STYLE` in `src/data/site.ts`: 'ice' | 'serif' | 'off'). The impeccable detector flags the serif.
 - Logo tile on dark: Ice via `--adv-logo-tile` (brand guide 1.0 says Signal amber; amber is retired).
 - Tool list, contact recipient, partner URLs, About stats (above).
+- Naming: the nav says "Automatizace a AI" / "Automation & AI" (as asked); the approved service title in
+  cards, footer and filters is still "AI a automatizace" / "AI and automation". Pick one.
 - Optional extras not built yet: first-visit logo intro (0–100 count folding into the nav logo), mid-page
   logo plate opening into a statement panel, brand-moment image (slot ready: `ui/BrandMoment.astro`).

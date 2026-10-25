@@ -1,11 +1,13 @@
 ---
 /**
- * Head of every inner page: kicker, H1 (optionally one word in the emphasis face), lead, and a slot for
- * extras (back link, chips). A still hairline grid with a navy glow behind it echoes the hero's grid
- * without animating it.
+ * Head of every inner page: H1 with its section node (optionally one word in the emphasis face), a small
+ * meta line under it (`kicker`: e.g. "Služba 1 ze 4", case meta), lead, and a slot for extras (back link,
+ * chips). A still hairline grid with a navy glow behind it echoes the hero's grid without animating it.
  */
+import Node from './ui/Node.astro';
+
 interface Props {
-  kicker: string;
+  kicker?: string;
   title: string;
   /** one word of the title to set in the emphasis face (.adv-em); must occur in the title */
   em?: string;
@@ -20,10 +22,12 @@ const parts = i >= 0 ? [title.slice(0, i), em!, title.slice(i + em!.length)] : [
   <div class="adv-pagehead__grid" aria-hidden="true"></div>
   <div class="adv-wrap adv-pagehead__inner">
     <slot name="before" />
-    <p class="adv-kicker"><i></i>{kicker}</p>
     <h1 class="adv-pagehead__title" data-lines>
-      <span class="adv-line"><span>{parts[0]}{parts[1] && <em class="adv-em">{parts[1]}</em>}{parts[2]}</span></span>
+      <Node /><span class="adv-line"
+        ><span>{parts[0]}{parts[1] && <em class="adv-em">{parts[1]}</em>}{parts[2]}</span></span
+      >
     </h1>
+    {kicker && <p class="adv-meta adv-pagehead__meta">{kicker}</p>}
     {
       lead && (
         <p class="adv-lead adv-pagehead__lead" data-reveal style="--i:2">
@@ -71,6 +75,9 @@ const parts = i >= 0 ? [title.slice(0, i), em!, title.slice(i + em!.length)] : [
     font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.75rem);
     letter-spacing: -0.035em;
     line-height: 1.02;
+  }
+  .adv-pagehead__meta {
+    margin-top: 18px;
   }
   .adv-pagehead__lead {
     max-width: 56ch;

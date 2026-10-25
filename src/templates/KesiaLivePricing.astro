@@ -14,6 +14,7 @@
  */
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/ui/Arrow.astro';
+import Node from '../components/ui/Node.astro';
 import WorkRows from '../components/WorkRows.astro';
 import CtaPanel from '../components/CtaPanel.astro';
 import { pick, loc, type Lang } from '../i18n';
@@ -76,10 +77,10 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
       <div class="adv-wrap adv-k__heroGrid">
         <div class="adv-k__heroCopy">
           <a class="adv-back" href={routes.work(lang)}><Arrow dir="left" />{w.back}</a>
-          <p class="adv-kicker"><i></i>{meta}</p>
           <h1 class="adv-k__title" data-lines>
-            <span class="adv-line"><span>{k.title}</span></span>
+            <Node /><span class="adv-line"><span>{k.title}</span></span>
           </h1>
+          <p class="adv-meta adv-k__meta">{meta}</p>
           <p class="adv-lead" data-reveal style="--i:2">{k.lead}</p>
         </div>
         <div class="adv-k__ticker adv-panel" data-ticker data-reveal style="--i:2">
@@ -338,6 +339,9 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
     margin-bottom: 26px;
     font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
     letter-spacing: -0.035em;
+  }
+  .adv-k__meta {
+    margin: -8px 0 18px;
   }
   .adv-k__ticker {
     display: grid;

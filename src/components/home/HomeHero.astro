@@ -1,0 +1,133 @@
+---
+/**
+ * Homepage hero: calm, company level. ADV as a whole in one approved line (about.title), the company sub,
+ * two CTAs and the four services as quiet links. Behind it only the breathing grid (no flows, no window):
+ * the Relay-style motion lives on the automation page.
+ */
+import Arrow from '../ui/Arrow.astro';
+import { pick, type Lang } from '../../i18n';
+import chrome from '../../i18n/chrome.json';
+import about from '../../i18n/about.json';
+import home from '../../i18n/home.json';
+import services from '../../i18n/services.json';
+import { routes } from '../../data/routes';
+import { ENABLED_SERVICES } from '../../data/capabilities';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const title = pick(about, lang).about.title;
+const pill = pick(home, lang).hero.pill;
+const sv = pick(services, lang);
+// The emphasised word: the last word of the line ("byznysem." / "business.")
+const cut = title.lastIndexOf(' ');
+const lead = title.slice(0, cut + 1);
+const last = title.slice(cut + 1);
+const list = ENABLED_SERVICES.map((s) => ({
+  href: routes.service(lang, s.slug),
+  label: 'nav' in s ? s.nav[lang] : sv.capabilities.items.find((i) => i.slug === s.slug)!.title,
+}));
+---
+
+<section class="adv-hhero" aria-labelledby="adv-hhero-title">
+  <canvas class="adv-hero__grid adv-hhero__grid" data-flowgrid data-flows="off" aria-hidden="true"></canvas>
+  <div class="adv-hhero__glow" aria-hidden="true"></div>
+  <div class="adv-wrap adv-hhero__inner">
+    <p class="adv-pill adv-hhero__pill"><i></i>{pill}</p>
+    <h1 id="adv-hhero-title" class="adv-hhero__title" data-lines>
+      <span class="adv-line"><span>{lead}<em class="adv-em">{last}</em></span></span>
+    </h1>
+    <p class="adv-lead adv-hhero__sub" data-reveal style="--i:2">{c.hero.sub}</p>
+    <div class="adv-hhero__ctas" data-reveal style="--i:3">
+      <a class="adv-btn adv-btn--primary" href={routes.contact(lang)}>{c.cta.assessment}<Arrow /></a>
+      <a class="adv-btn adv-btn--ghost" href={routes.work(lang)}>{c.notFound.work}</a>
+    </div>
+    <nav class="adv-hhero__services" aria-label={c.nav.services} data-reveal style="--i:4">
+      <ul>
+        {
+          list.map((l) => (
+            <li>
+              <a class="adv-link" href={l.href}>
+                {l.label}
+                <Arrow />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<style is:global>
+  .adv-hhero {
+    position: relative;
+    padding: calc(var(--adv-header-h) + clamp(64px, 9vw, 140px)) 0 clamp(64px, 8vw, 110px);
+    overflow: clip;
+  }
+  .adv-hhero__grid {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-mask-image: radial-gradient(70% 90% at 80% 30%, #000 30%, transparent 80%);
+    mask-image: radial-gradient(70% 90% at 80% 30%, #000 30%, transparent 80%);
+  }
+  .adv-hhero__glow {
+    position: absolute;
+    right: -15%;
+    top: -10%;
+    width: 75vw;
+    height: 75vw;
+    max-width: 1000px;
+    max-height: 1000px;
+    background: radial-gradient(closest-side, var(--adv-glow), transparent 70%);
+    pointer-events: none;
+  }
+  .adv-hhero__inner {
+    position: relative;
+  }
+  .adv-hhero__pill {
+    margin-bottom: 28px;
+  }
+  .adv-hhero__title {
+    max-width: 20ch;
+    font-size: clamp(2.125rem, 1.3rem + 2.6vw, 3.5rem);
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+  .adv-hhero__sub {
+    max-width: 52ch;
+    margin-top: 28px;
+  }
+  .adv-hhero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+  .adv-hhero__services ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 32px;
+    margin: clamp(48px, 6vw, 80px) 0 0;
+    padding: 22px 0 0;
+    list-style: none;
+    border-top: 1px solid var(--adv-line);
+  }
+  .adv-hhero__services .adv-link {
+    font-weight: 500;
+    color: var(--adv-muted);
+  }
+  .adv-hhero__services .adv-link:hover {
+    color: var(--adv-text);
+  }
+</style>
+
+<script>
+  import { initFlowGrid } from '../../scripts/flowGrid';
+  const grid = document.querySelector<HTMLCanvasElement>('.adv-hhero [data-flowgrid]');
+  if (grid) initFlowGrid(grid);
+</script>

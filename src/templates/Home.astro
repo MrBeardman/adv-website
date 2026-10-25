@@ -1,23 +1,19 @@
 ---
 /**
- * Homepage (CS at /, EN at /en/). One stream of light runs the whole page (scripts/stream.ts); every
- * section after the hero is a node on it, numbered in its kicker, and it ends in the Ice CTA panel.
+ * Homepage (CS at /, EN at /en/): the calm company-level overview (Honza, Oct 2026). Same palette, finish,
+ * background and micro-interactions as the rest, but quieter: no workflow window, only the breathing grid
+ * in the hero, and a light stream (one fine strand) through the section nodes.
  *
- *   01 hero + live workflow window      06 numbers band
- *   02 tools strip                      07 savings slider
- *   03 statement (scroll-lit words)     08 how we work (timeline)
- *   04 four value cards with scenes     09 partners
- *   05 Kesia spotlight                  10 final Ice CTA panel with a short form
+ *   hero (ADV as a whole, the four services as links)
+ *   four value cards → their service pages (automation → the rich page)
+ *   selected work · partners · contact (Ice CTA panel)
+ *
+ * The Relay-style page lives at /sluzby/automatizace/ (templates/Automation.astro).
  */
 import Base from '../layouts/Base.astro';
-import Hero from '../components/home/01-hero.astro';
-import Tools from '../components/home/02-tools.astro';
-import Statement from '../components/home/03-statement.astro';
+import HomeHero from '../components/home/HomeHero.astro';
 import Values from '../components/home/04-values.astro';
-import Kesia from '../components/home/05-kesia.astro';
-import Numbers from '../components/home/06-numbers.astro';
-import Savings from '../components/home/07-savings.astro';
-import Process from '../components/home/08-process.astro';
+import SelectedWork from '../components/SelectedWork.astro';
 import Partners from '../components/Partners.astro';
 import CtaPanel from '../components/CtaPanel.astro';
 import BrandMoment from '../components/ui/BrandMoment.astro';
@@ -32,17 +28,12 @@ const { lang } = Astro.props;
 const t = pick(chrome, lang);
 ---
 
-<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} stream>
-  <Hero lang={lang} />
-  <Tools lang={lang} />
-  <Statement lang={lang} />
+<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} stream="light">
+  <HomeHero lang={lang} />
+  <Values lang={lang} />
   {/* Optional brand-moment image: pass src to show it (see ui/BrandMoment.astro). */}
   <BrandMoment />
-  <Values lang={lang} />
-  <Kesia lang={lang} />
-  <Numbers lang={lang} />
-  <Savings lang={lang} />
-  <Process lang={lang} index="08" />
-  <Partners lang={lang} index="09" />
-  <CtaPanel lang={lang} index="10" />
+  <SelectedWork lang={lang} limit={3} />
+  <Partners lang={lang} />
+  <CtaPanel lang={lang} />
 </Base>

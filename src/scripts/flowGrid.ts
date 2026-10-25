@@ -448,12 +448,14 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   document.fonts?.ready.then(measureAvoid);
   if (!RM) {
     let last = performance.now();
+    let frame = 0;
     const loop = (nowMs: number) => {
       const dt = Math.min((nowMs - last) / 1000, 0.05);
       last = nowMs;
       if (visible && !document.hidden) {
         T += dt;
-        draw(T);
+        // without flows only the slow breath and the lens move: every second frame is enough
+        if (FLOWS || (frame++ & 1) === 0) draw(T);
       }
       requestAnimationFrame(loop);
     };

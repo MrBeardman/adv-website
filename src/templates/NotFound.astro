@@ -3,6 +3,7 @@
  *  Czech first, the English line under it. */
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/ui/Arrow.astro';
+import Node from '../components/ui/Node.astro';
 import { pick } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import { routes } from '../data/routes';
@@ -15,8 +16,8 @@ const en = pick(chrome, 'en').notFound;
   <section class="adv-404">
     <div class="adv-404__grid" aria-hidden="true"></div>
     <div class="adv-wrap adv-404__inner">
-      <p class="adv-kicker is-lit"><i></i>404</p>
-      <h1 class="adv-404__title" data-lines><span class="adv-line"><span>{cs.title}</span></span></h1>
+      <h1 class="adv-404__title" data-lines><Node /><span class="adv-line"><span>{cs.title}</span></span></h1>
+      <p class="adv-meta adv-404__code">404</p>
       <p class="adv-lead" data-reveal style="--i:2">{cs.body}</p>
       <div class="adv-404__ctas" data-reveal style="--i:3">
         <a class="adv-btn adv-btn--primary" href={routes.home('cs')}>{cs.home}<Arrow /></a>
@@ -55,6 +56,9 @@ const en = pick(chrome, 'en').notFound;
     max-width: 16ch;
     font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.75rem);
     letter-spacing: -0.035em;
+  }
+  .adv-404__code {
+    margin-top: 14px;
   }
   .adv-404 .adv-lead {
     max-width: 50ch;
