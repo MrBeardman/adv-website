@@ -113,6 +113,22 @@ const SAFE_GUTTER_PX = 48;
    Raised to compensate for the lamp going away. */
 const ENV_INTENSITY = 0.85;
 
+/* Ceilings on the light the environment reflects off a card face (linear
+   radiance luminance, before tone mapping). Without them, dragging the front
+   card to the right turned it squarely into the room's brightest panel and the
+   whole face blew out to white. The emissive text and the fresnel rim sit on
+   top of the cap, so the copy stays legible and the edge stays lit. LIT/COAT
+   apply to a face seen head-on; the ceiling opens toward EDGE_MAX at grazing
+   angles, so the bevel and the top-edge sheen keep their highlight. */
+const LIT_MAX = 0.026;
+const COAT_MAX = 0.032;
+const EDGE_MAX = 0.3;
+
+/* Most the front card yaws while dragged (radians, ~7 degrees). The drag
+   offset itself is already rubber-banded; the turn eases into this ceiling so
+   the face never swings fully into the light. */
+const DRAG_TILT_MAX = 0.12;
+
 /* How long a card sits at the front. 7s, up from 4s: each card now carries a
    service someone may want to open, so it has to stay long enough for the
    caption to be read once without racing it. */
@@ -249,6 +265,11 @@ export class HeroSceneGL {
       preserveDrawingBuffer: typeof window !== 'undefined' && !!window.__JM_CAPTURE__,
     });
     this.renderer.setClearColor(0x000000, 0);
+    /* ADV: shader error checking only in dev. In a production build it costs a
+       synchronous getProgramParameter per program, and on Windows (ANGLE/D3D)
+       it prints the HLSL compiler's harmless X4122 precision notes about
+       three's own packing constants (255/256) as console warnings. */
+    this.renderer.debug.checkShaderErrors = !!import.meta.env?.DEV;
     /* 1.6, down from 2.
      *
      * This is the single largest cost in the scene and the least visible one to
@@ -473,6 +494,13 @@ export class HeroSceneGL {
       uRimPower: { value: 3.5 },
       uRimStrength: { value: 0 },
       uRimDir: { value: new THREE.Vector2(-1, 0) },
+      // Ceilings for the reflected light (see advLimit below). The card text
+      // and the rim are emissive and pass through untouched; only what the
+      // environment bounces off the face is capped, so no drag angle can turn
+      // the graphite face into a white slab.
+      uLitMax: { value: LIT_MAX },
+      uCoatMax: { value: COAT_MAX },
+      uEdgeMax: { value: EDGE_MAX },
     };
     material.userData.rim = uniforms;
 
@@ -487,7 +515,40 @@ export class HeroSceneGL {
           uniform float uRimPower;
           uniform float uRimStrength;
           uniform vec2  uRimDir;
+          uniform float uLitMax;
+          uniform float uCoatMax;
+          uniform float uEdgeMax;
+
+          /* Soft ceiling on a radiance term's luminance: linear up to half of
+           * m, then an exponential shoulder that approaches m but never passes
+           * it. Hue is kept (the colour is scaled, not clipped per channel). */
+          vec3 advLimit( vec3 c, float m ) {
+            float l = dot( c, vec3( 0.2126, 0.7152, 0.0722 ) );
+            if ( l <= 1e-5 ) return c;
+            float k = m * 0.5;
+            float t = l <= k ? l : k + ( m - k ) * ( 1.0 - exp( -( l - k ) / ( m - k ) ) );
+            return c * ( t / l );
+          }
         `,
+        )
+        // Reflected light (diffuse + env specular) is capped before the
+        // emissive text/rim is added back on top.
+        // The ceiling opens up toward grazing angles, so the bevel and the
+        // top-edge sheen keep their highlight while a face turned square into
+        // the light stays graphite.
+        .replace(
+          'vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;',
+          /* glsl */ `
+          float advGraze = 1.0 - clamp( dot( normal, normalize( vViewPosition ) ), 0.0, 1.0 );
+          advGraze *= advGraze;
+          float advLitCap = mix( uLitMax, uEdgeMax, advGraze );
+          float advCoatCap = mix( uCoatMax, uEdgeMax, advGraze );
+          vec3 outgoingLight = advLimit( totalDiffuse + totalSpecular, advLitCap ) + totalEmissiveRadiance;
+          `,
+        )
+        .replace(
+          '( clearcoatSpecularDirect + clearcoatSpecularIndirect ) * material.clearcoat',
+          'advLimit( clearcoatSpecularDirect + clearcoatSpecularIndirect, advCoatCap ) * material.clearcoat',
         )
         // emissivemap_fragment sits after normal_fragment_begin, so `normal`
         // and `vViewPosition` are both in scope.
@@ -1161,7 +1222,10 @@ export class HeroSceneGL {
       panel.mesh.position.y += (targetFanY - panel.mesh.position.y) * 0.1;
       if (front && !this.transitioning && !loading) {
         const rot = panel.mesh.rotation;
-        rot.y += (push * 0.32 - rot.y) * followRate;
+        // tanh: the same turn as before for a short pull, easing into
+        // DRAG_TILT_MAX at the ends instead of growing with the offset.
+        const tilt = DRAG_TILT_MAX * Math.tanh((push * 0.32) / DRAG_TILT_MAX);
+        rot.y += (tilt - rot.y) * followRate;
         rot.z += (-push * 0.06 - rot.z) * followRate;
       }
     }

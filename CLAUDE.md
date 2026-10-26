@@ -20,7 +20,18 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   old ADV 3D card stack rebuilt in Astro (`components/home/CardStack.astro`; engine in `scripts/stack/`:
   `HeroSceneGL.js` ported from PersonalPortfolio with "ADV:" notes, `controller.ts` replaces Hero.jsx).
   Vanilla three.js + gsap, dynamically imported; no React. Test: `adv-website-tools\stack.py` (drag, swipe,
-  open/close, keys, deep link). Services with `rich: true` in `capabilities.ts` have their own route file.
+  open/close, keys, deep link, blow-out guard at the extreme drags). Services with `rich: true` in
+  `capabilities.ts` have their own route file.
+- Card faces never blow out: `HeroSceneGL.js` caps the reflected light on a face (`LIT_MAX`, `COAT_MAX`,
+  opening to `EDGE_MAX` at grazing angles; emissive text and rim sit on top) and eases the drag turn into
+  `DRAG_TILT_MAX`. Raising those brings the white-slab bug back; `blowout.py` / `stack.py` measure it.
+- **Homepage hero background** = the "breathing floor" (Honza's pick B from `ADV\inspo\adv-hero-bg.html`):
+  `scripts/heroBg/` (runner `index.ts`, effect `breath.ts`). **All knobs in `scripts/heroBg/tuning.ts`**:
+  `HERO_BG.strength` (1 = approved look), `fps` (30), `baseGrid`, `lens`, `copyDim` (dim behind the copy
+  column, `[data-herobg-dim]`), and `BREATH.period` (9 s/pass), `peak` (.32), `shoulder`, `falloff` (.3),
+  `fill` (.28), `sparkle`, `still` (reduced-motion frame). A second effect (e.g. light runners, pick A) =
+  a new file exporting a `BgEffect` + one line in `EFFECTS` + `HERO_BG.effect`. Test: `bandseq.py`, `fps_bg.py`.
+  The automation page keeps `flowGrid.ts`.
 - Tools and screenshots: `C:\Data\Dev\adv-website-tools` (`serve.ps1`, `shoot.py`, `commit.ps1`, ...).
 - Honza's preview: `http://127.0.0.1:4400` (`node dist/server/entry.mjs`, HOST/PORT env), restarted by
   `adv-website-tools\serve.ps1 [-Build]`.
@@ -43,7 +54,8 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   reveal/lines/lit, forms, shared inner-page bits, reduced motion. `fonts.css`: @font-face.
 - Scripts: `site.ts` (reveal, lines, lit words, header + drawer, live-scene pausing, spotlight, count-ups,
   play-once charts, typewriter, background progress, kickers), `stream.ts` (stream of light),
-  `flowGrid.ts` (hero grid engine from the palette study), `count.ts`, `form.ts`.
+  `flowGrid.ts` (automation hero grid engine from the palette study), `heroBg/` (homepage hero background),
+  `count.ts`, `form.ts`.
 
 ## Rules that matter
 - **Case visibility**: `published` everywhere; `draft` and `placeholder` only in `astro dev`

@@ -1,4 +1,4 @@
-# Status (2026-10-25)
+# Status (2026-10-26)
 
 ## Preview phase: FLIP AT LAUNCH
 - The whole site is **noindex, nofollow** and `robots.txt` disallows everything while it is a preview
@@ -30,7 +30,10 @@
 - **Homepage** `/` + `/en/` (Honza, Oct 2026, replaces the calm overview): the old ADV homepage's 3D card
   stack rebuilt in Astro (vanilla three.js island, `components/home/CardStack.astro` +
   `scripts/stack/*`, engine ported from PersonalPortfolio `HeroSceneGL.js`) in the Studio look: graphite
-  matte cards with a lit edge and Ice icons, the breathing grid behind, the progressive background.
+  matte cards with a lit edge and Ice icons, the progressive background. Behind the stack the "breathing
+  floor" (Oct 26): a slow Ice band crossing the grid bottom-left → top-right every 9 s, dimmed behind the
+  copy, mouse lens on desktop (`scripts/heroBg/`, knobs in `tuning.ts`). Card faces are capped so a drag
+  to the extreme can no longer blow the face out to white (Oct 26 fix).
   Drag/swipe (direction lock, thresholds, spring back, click still opens, vertical swipe scrolls), arrows,
   ←/→ keys, first-visit nudge, auto cycle with hold on the caption. Opening a card shows its service panel
   in the hero (URL hash, e.g. `/#optimalizace-firmy`, back button and Esc close) with selected work and a
