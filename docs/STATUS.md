@@ -32,7 +32,8 @@
   `scripts/stack/*`, engine ported from PersonalPortfolio `HeroSceneGL.js`) in the Studio look: graphite
   matte cards with a lit edge and Ice icons, the progressive background. Behind the stack the "breathing
   floor" (Oct 26): a slow Ice band crossing the grid bottom-left → top-right every 9 s, dimmed behind the
-  copy, mouse lens on desktop (`scripts/heroBg/`, knobs in `tuning.ts`). Card faces are capped so a drag
+  copy, plus thin Ice light runners along the grid lines (no glowing heads), mouse lens on desktop
+  (`scripts/heroBg/`, knobs in `tuning.ts`). Card faces are capped so a drag
   to the extreme can no longer blow the face out to white (Oct 26 fix).
   Drag/swipe (direction lock, thresholds, spring back, click still opens, vertical swipe scrolls), arrows,
   ←/→ keys, first-visit nudge, auto cycle with hold on the caption. Opening a card shows its service panel

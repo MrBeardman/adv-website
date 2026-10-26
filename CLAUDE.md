@@ -25,13 +25,17 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 - Card faces never blow out: `HeroSceneGL.js` caps the reflected light on a face (`LIT_MAX`, `COAT_MAX`,
   opening to `EDGE_MAX` at grazing angles; emissive text and rim sit on top) and eases the drag turn into
   `DRAG_TILT_MAX`. Raising those brings the white-slab bug back; `blowout.py` / `stack.py` measure it.
-- **Homepage hero background** = the "breathing floor" (Honza's pick B from `ADV\inspo\adv-hero-bg.html`):
-  `scripts/heroBg/` (runner `index.ts`, effect `breath.ts`). **All knobs in `scripts/heroBg/tuning.ts`**:
-  `HERO_BG.strength` (1 = approved look), `fps` (30), `baseGrid`, `lens`, `copyDim` (dim behind the copy
-  column, `[data-herobg-dim]`), and `BREATH.period` (9 s/pass), `peak` (.32), `shoulder`, `falloff` (.3),
-  `fill` (.28), `sparkle`, `still` (reduced-motion frame). A second effect (e.g. light runners, pick A) =
-  a new file exporting a `BgEffect` + one line in `EFFECTS` + `HERO_BG.effect`. Test: `bandseq.py`, `fps_bg.py`.
-  The automation page keeps `flowGrid.ts`.
+- **Homepage hero background** = the "breathing floor" + thin "light runners" (Honza's picks B and A from
+  `ADV\inspo\adv-hero-bg.html`, runners as pure lines: no glowing heads or crossings), one canvas, one loop:
+  `scripts/heroBg/` (runner `index.ts`, effects `breath.ts`, `runners.ts`). **All knobs in
+  `scripts/heroBg/tuning.ts`**: `HERO_BG.effects` (draw order; remove one to switch it off), `strength`
+  (1 = approved look), `fps` (60), `baseGrid`, `lens`, `copyDim` (dim behind the copy column,
+  `[data-herobg-dim]`); `BREATH.period` (9 s/pass), `peak` (.32), `shoulder`, `falloff` (.3), `fill` (.28),
+  `sparkle`, `still` (reduced-motion frame); `RUNNERS.count` (6), `mouseRate`, `max`, `width` (1.2 px),
+  `alpha` (.7 at the head), `speed` (140-260 px/s), `tail` (150 px), `turn` (.22 per crossing), `life`
+  (2.5-5 s), `fadeIn`/`fadeOut`, `avoidPad` (no spawns near the copy). Reduced motion: breathing floor still
+  frame, no runners. Another effect = a file exporting a `BgEffect` + one line in `EFFECTS`.
+  Test: `bandseq.py`, `fps_bg.py`. The automation page keeps `flowGrid.ts`.
 - Tools and screenshots: `C:\Data\Dev\adv-website-tools` (`serve.ps1`, `shoot.py`, `commit.ps1`, ...).
 - Honza's preview: `http://127.0.0.1:4400` (`node dist/server/entry.mjs`, HOST/PORT env), restarted by
   `adv-website-tools\serve.ps1 [-Build]`.

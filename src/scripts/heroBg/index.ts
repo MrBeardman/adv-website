@@ -1,6 +1,7 @@
 /**
- * Homepage hero background runner. Draws the 56 px hairline grid and one effect on top of it
- * (HERO_BG.effect in ./tuning.ts), plus a soft lens around a desktop mouse.
+ * Homepage hero background runner. Draws the 56 px hairline grid and the effects on top of it
+ * (HERO_BG.effects in ./tuning.ts, in that order, one canvas, one loop), plus a soft lens around a
+ * desktop mouse.
  *
  * The runner owns everything an effect should not have to think about: DPR (capped at 2), resizing,
  * a frame cap (HERO_BG.fps), pausing while the hero is off screen, the tab is hidden or a service
@@ -9,14 +10,15 @@
  */
 import { HERO_BG } from './tuning';
 import { breath } from './breath';
+import { runners } from './runners';
 import type { BgEffect, BgFrame } from './types';
 
-const EFFECTS: Record<string, BgEffect> = { breath };
+const EFFECTS: Record<string, BgEffect> = { breath, runners };
 
 export function initHeroBg(cv: HTMLCanvasElement) {
   const ctx = cv.getContext('2d');
-  const effect = EFFECTS[HERO_BG.effect];
-  if (!ctx || !effect) return;
+  const effects = HERO_BG.effects.map((n) => EFFECTS[n]).filter(Boolean);
+  if (!ctx || !effects.length) return;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const DPR = Math.min(devicePixelRatio || 1, 2);
   const host = cv.parentElement!;
@@ -31,7 +33,9 @@ export function initHeroBg(cv: HTMLCanvasElement) {
   let base: HTMLCanvasElement | null = null;
   let mx = -1e4;
   let my = -1e4;
-  let T = RM ? effect.stillTime : 0;
+  let T = RM ? (effects.find((e) => e.stillTime != null)?.stillTime ?? 0) : 0;
+  let dt = 0;
+  let avoid: number[] | null = null;
   let onScreen = true;
   let raf = 0;
   let last = 0;
@@ -42,11 +46,14 @@ export function initHeroBg(cv: HTMLCanvasElement) {
    * shadow lands on the column (shadowBlur works in every browser; ctx.filter does not). */
   const measureDim = () => {
     dimMask = null;
+    avoid = null;
     const el = host.querySelector<HTMLElement>('[data-herobg-dim]');
-    if (!el || HERO_BG.copyDim <= 0 || !cv.width) return;
+    if (!el || !cv.width) return;
     const a = el.getBoundingClientRect();
     const r = cv.getBoundingClientRect();
     if (!a.width || !a.height) return;
+    avoid = [a.left - r.left, a.top - r.top, a.right - r.left, a.bottom - r.top];
+    if (HERO_BG.copyDim <= 0) return;
     const pad = 24;
     const m = document.createElement('canvas');
     m.width = cv.width;
@@ -66,7 +73,7 @@ export function initHeroBg(cv: HTMLCanvasElement) {
     dimMask = m;
   };
 
-  const frame = (): BgFrame => ({ ctx, W, H, T, S, cell, grid, accent, ink });
+  const frame = (): BgFrame => ({ ctx, W, H, T, dt, S, cell, grid, accent, ink, mx, my, still: RM, avoid });
 
   function draw() {
     ctx!.clearRect(0, 0, W, H);
@@ -77,7 +84,9 @@ export function initHeroBg(cv: HTMLCanvasElement) {
       ctx!.drawImage(base, 0, 0);
       ctx!.restore();
     }
-    effect.draw(frame());
+    const f = frame();
+    for (const e of effects) e.draw(f);
+    dt = 0; // a repaint outside the loop (resize, fonts) must not advance anything
     // the copy column: punch the feathered dim mask out of everything drawn so far
     if (dimMask) {
       ctx!.save();
@@ -121,8 +130,9 @@ export function initHeroBg(cv: HTMLCanvasElement) {
     b.strokeStyle = `rgba(${ink},${HERO_BG.baseGrid * S})`;
     b.lineWidth = 1;
     b.stroke(grid);
-    effect.resize?.(frame());
     measureDim();
+    const f = frame();
+    for (const e of effects) e.resize?.(f);
     draw(); // resizing clears the canvas: repaint at once, never a blank frame
   }
 
@@ -132,11 +142,12 @@ export function initHeroBg(cv: HTMLCanvasElement) {
     raf = 0;
     if (!running()) return;
     raf = requestAnimationFrame(tick);
-    const dt = (now - last) / 1000;
-    if (dt < 1 / HERO_BG.fps - 0.004) return;
+    const step = (now - last) / 1000;
+    if (step < 1 / HERO_BG.fps - 0.004) return;
     last = now;
     if (host.hasAttribute('data-open')) return; // a service panel covers the hero
-    T += Math.min(dt, 0.1);
+    dt = Math.min(step, 0.1);
+    T += dt;
     draw();
   };
   const wake = () => {
