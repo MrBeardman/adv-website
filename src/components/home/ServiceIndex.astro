@@ -111,7 +111,7 @@ const items = ENABLED_SERVICES.map((sv) => {
   }
   .adv-sidx__row {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 40px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
       'preview preview preview'
       'tab name go'
@@ -129,8 +129,20 @@ const items = ENABLED_SERVICES.map((sv) => {
       translate var(--adv-med) var(--adv-ease),
       box-shadow var(--adv-med) var(--adv-ease);
   }
-  .adv-sidx__row > :not(.adv-sidx__preview) {
-    margin-inline: clamp(8px, 1vw, 14px);
+  /* inner inset for everything below the preview; the tab and the arrow only on their outer side, so their
+     auto columns include it and nothing spills past the card edge */
+  .adv-sidx__row {
+    --in: clamp(8px, 1vw, 14px);
+  }
+  .adv-sidx__body,
+  .adv-sidx__result {
+    margin-inline: var(--in);
+  }
+  .adv-sidx__tab {
+    margin-left: var(--in);
+  }
+  .adv-sidx__go {
+    margin-right: var(--in);
   }
   .adv-sidx__row:hover,
   .adv-sidx__row:focus-visible {

@@ -1,9 +1,10 @@
 /**
  * Homepage hero engine (components/home/HeroFlow.astro), Honza Oct 29 2026 ("like amaze-genius, in our
  * colours"): hundreds of fine lines. On the left they are tangled and scattered (a business today); they
- * pass a ring of light (ADV) and leave as one smooth, slowly twisting ribbon of parallel lines (a business
- * that runs). Pulses of light travel along every line: the data going through. Colour runs violet → cobalt
- * → ice along the stream and across the ribbon; additive blending gives the silk sheen.
+ * pass through the ADV mark in light (the tile and its A, the organiser at work) and leave as a smooth, slowly twisting ribbon of four strands that fans out (a
+ * business that runs). Pulses of light travel along every line: the data going through. Colour runs violet
+ * → cobalt → ice along the stream; after the gate each line keeps a colour of its own and the ribbon is
+ * shaded (folds and the far side dimmer, lines at uneven strength); additive blending gives the silk sheen.
  *
  * Every vertex position is computed in the vertex shader from (line, u) and one time uniform; the CPU only
  * writes a few uniforms per frame. The pointer lifts the ribbon a little near it (fine pointers only).
@@ -21,6 +22,10 @@ const VERT = /* glsl */ `
   varying float vLine;
   varying float vSeed;
   varying float vOrder;
+  varying float vFace;
+  varying float vBand;
+  varying float vDepth;
+  varying float vGate;
 
   void main() {
     float L = 15.0;
@@ -30,12 +35,22 @@ const VERT = /* glsl */ `
     vLine = aLU.x;
     vSeed = aSeed;
 
-    // ordered: a ribbon of parallel lines that twists slowly as it travels
-    float w = 1.25;
-    float across = (aLU.x - 0.5) * w;
-    float twist = x * 0.32 - t * 0.12;
-    float lift = sin(x * 0.42 - t * 0.35) * 0.45;
+    // ordered: a ribbon of near-parallel lines that twists slowly as it travels. It is made of four
+    // strands, each with its own twist and lift, and fans out downstream with every line drifting a
+    // little on its own, so it reads as many threads with folds and depth, not one cable.
+    float down = smoothstep(0.8, 7.0, x);
+    float band = floor(aLU.x * 3.999);
+    float inBand = fract(aLU.x * 3.999) - 0.5;
+    float bandC = (band + 0.5) / 4.0 - 0.5;
+    float w = 1.25 * (1.0 + down * 0.7);
+    float across = (bandC + inBand * 0.25 * (1.0 + down * 1.6)) * w;
+    across += sin(x * 1.1 + aSeed * 40.0 + t * 0.3) * 0.07 * down;
+    float twist = x * 0.32 - t * 0.12 + band * 0.55 * down;
+    float lift = sin(x * 0.42 - t * 0.35 + band * 0.8 * down) * 0.45;
     vec3 ordered = vec3(x, lift + across * cos(twist), across * sin(twist));
+    // facing: a ribbon seen edge-on stacks its lines; dim those folds so the sheet gets shading
+    vFace = mix(0.35, 1.0, abs(cos(twist)));
+    vBand = band;
 
     // tangled: every line wanders on its own
     float s = aSeed * 50.0;
@@ -45,12 +60,14 @@ const VERT = /* glsl */ `
       cos(x * (0.7 + aSeed) + s * 1.3 + t * 0.4) * (0.7 + aSeed)
     );
 
-    // the ring sits at x = 0.6: tangled before it, ordered after it, everything squeezed through it
+    // the gate sits at x = 0.6: tangled before it, ordered after it, everything squeezed through it
     float k = smoothstep(-2.4, 1.6, x);
     vOrder = k;
     vec3 p = mix(tangled, ordered, k);
-    float ring = exp(-pow((x - 0.6) * 1.1, 2.0));
-    p.yz = mix(p.yz, p.yz * 0.32, ring);
+    float squeeze = exp(-pow((x - 0.6) * 1.1, 2.0));
+    vGate = exp(-pow((x - 0.6) * 3.0, 2.0));
+    p.yz = mix(p.yz, p.yz * 0.22, squeeze);
+    vDepth = p.z;
 
     // pointer lifts the ribbon near it
     vec2 d = p.xy - uMouse;
@@ -67,6 +84,10 @@ const FRAG = /* glsl */ `
   varying float vLine;
   varying float vSeed;
   varying float vOrder;
+  varying float vFace;
+  varying float vBand;
+  varying float vDepth;
+  varying float vGate;
 
   void main() {
     vec3 violet = vec3(0.46, 0.27, 0.95);
@@ -76,6 +97,12 @@ const FRAG = /* glsl */ `
     float g = clamp(vU * 1.15 - 0.1 + (vLine - 0.5) * 0.25 * vOrder, 0.0, 1.0);
     vec3 col = mix(violet, cobalt, smoothstep(0.15, 0.55, g));
     col = mix(col, ice, smoothstep(0.52, 0.82, g));
+    // after the gate every line keeps a colour of its own (violet, cobalt, ice, deep navy), mixed by strand
+    // and by line, so the ribbon stays as varied as the tangle
+    vec3 navy = vec3(0.12, 0.2, 0.62);
+    float pick = fract(vSeed * 3.7 + vBand * 0.27);
+    vec3 own = pick < 0.25 ? violet : pick < 0.5 ? cobalt : pick < 0.75 ? ice : navy;
+    col = mix(col, own, 0.6 * vOrder);
 
     // data pulses: short bright dashes travelling along each line
     float ph = fract(vU * 2.2 - uTime * (0.16 + vSeed * 0.08) + vSeed * 7.0);
@@ -83,8 +110,60 @@ const FRAG = /* glsl */ `
 
     // fade in late on the left so the tangle stays clear of the headline
     float edge = smoothstep(0.16, 0.42, vU) * (1.0 - smoothstep(0.9, 1.0, vU));
-    float a = (mix(0.12, 0.26, vOrder) + pulse * 0.9) * edge;
-    gl_FragColor = vec4(col + pulse * 0.6, a);
+    // shading after the gate: folds dimmer (vFace), the far side darker (vDepth), lines at uneven strength
+    float shade = mix(1.0, vFace * (0.6 + 0.4 * smoothstep(-0.9, 0.9, vDepth)) * (0.45 + 0.75 * fract(vSeed * 9.1)), vOrder);
+    // passing the gate: the lines flare, each in its own beat, as they are sorted
+    float flare = vGate * (0.35 + 0.65 * pow(0.5 + 0.5 * sin(uTime * 2.4 + vSeed * 40.0), 6.0));
+    float a = (mix(0.12, 0.2, vOrder) * shade + pulse * 0.9 + flare * 0.5) * edge;
+    gl_FragColor = vec4(col + pulse * 0.6 + flare * 0.5, a);
+  }
+`;
+
+// the ADV symbol in the gate's plane, from the 256-unit logo grid: s maps it to ~2 scene units
+const S = 2.0 / 224;
+const P = (x: number, y: number) => new THREE.Vector3((x - 128) * S, -(y - 136) * S, 0);
+function gateTube(which: 0 | 1) {
+  const path = new THREE.CurvePath<THREE.Vector3>();
+  const line = (a: number[], b: number[]) => path.add(new THREE.LineCurve3(P(a[0], a[1]), P(b[0], b[1])));
+  const arc = (a: number[], c: number[], b: number[]) =>
+    path.add(new THREE.QuadraticBezierCurve3(P(a[0], a[1]), P(c[0], c[1]), P(b[0], b[1])));
+  if (which) {
+    // the tile: 16..240 with 44 corners
+    line([60, 16], [196, 16]);
+    arc([196, 16], [240, 16], [240, 60]);
+    line([240, 60], [240, 196]);
+    arc([240, 196], [240, 240], [196, 240]);
+    line([196, 240], [60, 240]);
+    arc([60, 240], [16, 240], [16, 196]);
+    line([16, 196], [16, 60]);
+    arc([16, 60], [16, 16], [60, 16]);
+  } else {
+    // the A
+    const A = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
+    for (let i = 0; i < A.length - 1; i++) line(A[i], A[i + 1]);
+  }
+  return new THREE.TubeGeometry(path, which ? 320 : 260, 0.0075, 6, false);
+}
+
+const GATE_VERT = /* glsl */ `
+  varying float vT;
+  void main() {
+    vT = uv.x;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const GATE_FRAG = /* glsl */ `
+  precision highp float;
+  uniform float uTime;
+  uniform float uDim;
+  varying float vT;
+  void main() {
+    // a bright point with a soft tail circling the outline, and a slow breath on the whole mark
+    float d = fract(vT - uTime * 0.18);
+    float head = exp(-d * 18.0) + smoothstep(0.985, 1.0, d) * 1.5;
+    float breath = 0.55 + 0.15 * sin(uTime * 1.3);
+    vec3 col = mix(vec3(0.62, 0.8, 1.0), vec3(0.92, 0.97, 1.0), head);
+    gl_FragColor = vec4(col, (breath + head * 1.4) * uDim);
   }
 `;
 
@@ -144,23 +223,30 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   stream.rotation.set(0.12, -0.38, 0.06);
   scene.add(stream);
 
-  // the ring: a fine bright hoop with a fainter echo
-  const ringMat = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(0.72, 0.86, 1),
+  // the gate is the ADV symbol (data/logoPaths.ts SYMBOL_TILE: a rounded tile with the A cut out), drawn
+  // in light: a fine tube along the tile and the A. A bright point circles the outline (we are at work) and
+  // the lines flare as they pass through it.
+  const gateMat = new THREE.ShaderMaterial({
+    vertexShader: GATE_VERT,
+    fragmentShader: GATE_FRAG,
+    uniforms: { uTime: uniforms.uTime, uDim: { value: 1 } },
     transparent: true,
-    opacity: 0.7,
-    blending: THREE.AdditiveBlending,
     depthWrite: false,
+    blending: THREE.AdditiveBlending,
   });
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.007, 8, 200), ringMat);
-  ring.position.set(0.6, 0, 0);
-  ring.rotation.y = Math.PI / 2;
-  const echoMat = ringMat.clone();
-  echoMat.opacity = 0.18;
-  const echo = new THREE.Mesh(new THREE.TorusGeometry(1.16, 0.005, 8, 200), echoMat);
-  echo.position.copy(ring.position);
-  echo.rotation.copy(ring.rotation);
-  stream.add(ring, echo);
+  const gate = new THREE.Group();
+  gate.position.set(0.6, 0, 0);
+  gate.rotation.y = 0.38 + 0.95; // a three-quarter view: the A reads, the lines still pass through it
+  const outline = gateTube(1);
+  const inner = gateTube(0);
+  gate.add(new THREE.Mesh(outline, gateMat), new THREE.Mesh(inner, gateMat));
+  const echoMat = gateMat.clone();
+  echoMat.uniforms = { uTime: uniforms.uTime, uDim: { value: 0.22 } };
+  const echo = new THREE.Mesh(outline, echoMat);
+  echo.scale.setScalar(1.14);
+  echo.position.z = -0.1;
+  gate.add(echo);
+  stream.add(gate);
 
   const resize = () => {
     const w = canvas.clientWidth;
@@ -168,7 +254,7 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // wide screens: the ring sits right of the copy; narrow: centred above it
+    // wide screens: the gate sits right of the copy; narrow: centred above it
     camera.setViewOffset(w, h, w > 900 ? -w * 0.17 : 0, 0, w, h);
     camera.updateProjectionMatrix();
   };
@@ -213,7 +299,6 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     last = now;
     uniforms.uTime.value += dt;
     uniforms.uMouseOn.value += (target - uniforms.uMouseOn.value) * 0.05;
-    ring.rotation.x += dt * 0.12;
     renderer.render(scene, camera);
   };
   const start = () => {

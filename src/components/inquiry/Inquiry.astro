@@ -189,10 +189,16 @@ const uid = `inq-${lang}`;
     gap: clamp(24px, 4vw, 64px);
     align-items: start;
   }
-  /* the steps: one rail with a now-mark */
+  /* the rail builds up as the visitor answers: each done step with its answer, then the step now */
+  /* the rail never sets the section height (contain: size; it stretches to the stage's row): with many
+     answers it scrolls to the latest row (scripts/inquiry.ts) and fades out at the top */
   .adv-inq__rail {
     position: relative;
-    display: grid;
+    align-self: stretch;
+    contain: size;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     gap: 2px;
     margin: 0;
     padding: 0 0 0 22px;
@@ -200,20 +206,41 @@ const uid = `inq-${lang}`;
     font-size: 0.875rem;
     color: var(--adv-muted);
   }
+  .adv-inq__rail.is-full {
+    mask-image: linear-gradient(transparent, #000 56px);
+  }
   .adv-inq__rail::before {
     content: '';
     position: absolute;
     left: 5px;
     top: 10px;
-    bottom: 10px;
+    height: calc(var(--rail-h, 100%) - 20px);
     width: 1px;
     background: var(--adv-line);
   }
   .adv-inq__rail li {
     position: relative;
-    padding: 6px 0;
+    display: grid;
+    gap: 3px;
+    padding: 8px 0;
     line-height: 1.35;
     transition: color 300ms var(--adv-ease);
+  }
+  .adv-inq__rail small {
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .adv-inq__rail li.is-new {
+    animation: adv-inq-row 420ms var(--adv-ease) both;
+  }
+  @keyframes adv-inq-row {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
   }
   .adv-inq__rail li::before {
     content: '';
@@ -230,7 +257,7 @@ const uid = `inq-${lang}`;
       background-color 300ms var(--adv-ease);
   }
   .adv-inq__rail li.is-done {
-    color: var(--adv-text);
+    color: color-mix(in oklab, var(--adv-text) 78%, var(--adv-muted));
   }
   .adv-inq__rail li.is-done::before {
     border-color: var(--adv-accent);
@@ -275,6 +302,13 @@ const uid = `inq-${lang}`;
     font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
     letter-spacing: -0.025em;
     line-height: 1.12;
+  }
+  /* a legend sits outside its fieldset's grid, so the gap below the question is set on the legend */
+  legend.adv-inq__q {
+    margin-bottom: 22px;
+  }
+  legend.adv-inq__q:has(+ .adv-inq__meta) {
+    margin-bottom: 10px;
   }
   .adv-inq__hint {
     font-size: 0.875rem;
@@ -401,7 +435,9 @@ const uid = `inq-${lang}`;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding-top: 6px;
+    margin-top: 10px;
+    padding-top: 22px;
+    border-top: 1px solid var(--adv-line);
   }
   .adv-inq__nav-end {
     display: flex;

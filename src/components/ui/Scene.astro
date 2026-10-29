@@ -138,10 +138,10 @@ const a = pick(automation, lang).uses.scene;
             </defs>
             <path
               class="sc-web__area"
-              d="M0 52 L28 48 L56 50 L84 40 L112 34 L140 26 L168 16 L200 8 L200 60 L0 60Z"
+              d="M0 50 C20 49 34 46 52 47 S80 44 98 38 S130 30 148 24 S182 12 200 9 L200 60 L0 60Z"
               fill={`url(#sc-area-${lang})`}
             />
-            <path class="sc-web__line" pathLength="100" d="M0 52 L28 48 L56 50 L84 40 L112 34 L140 26 L168 16 L200 8" />
+            <path class="sc-web__line" d="M0 50 C20 49 34 46 52 47 S80 44 98 38 S130 30 148 24 S182 12 200 9" />
           </svg>
         </div>
       </div>
@@ -485,17 +485,15 @@ const a = pick(automation, lang).uses.scene;
     width: 100%;
     height: 100%;
     overflow: visible;
+    /* line and area are revealed together, left to right, by one clip */
+    clip-path: inset(-4px 100% -4px 0);
+    animation-name: sc-reveal;
   }
   .sc-web__line {
     fill: none;
     stroke: var(--adv-accent);
     stroke-width: 1.6;
     vector-effect: non-scaling-stroke;
-    stroke-dasharray: 100;
-    animation-name: sc-draw;
-  }
-  .sc-web__area {
-    animation-name: sc-area;
   }
   @keyframes sc-frame {
     0% {
@@ -509,24 +507,14 @@ const a = pick(automation, lang).uses.scene;
       clip-path: inset(0 0 0 100% round 8px);
     }
   }
-  @keyframes sc-draw {
+  @keyframes sc-reveal {
     0%,
-    22% {
-      stroke-dashoffset: 100;
-    }
-    50%,
-    100% {
-      stroke-dashoffset: 0;
-    }
-  }
-  @keyframes sc-area {
-    0%,
-    35% {
-      opacity: 0;
+    20% {
+      clip-path: inset(-4px 100% -4px 0);
     }
     55%,
     100% {
-      opacity: 1;
+      clip-path: inset(-4px 0 -4px 0);
     }
   }
 
@@ -782,8 +770,8 @@ const a = pick(automation, lang).uses.scene;
     .sc-web {
       clip-path: none;
     }
-    .sc-web__line {
-      stroke-dashoffset: 0;
+    .sc-web__chart svg {
+      clip-path: none;
     }
   }
 </style>

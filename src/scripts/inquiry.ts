@@ -2,7 +2,8 @@
  * The per-service inquiry (components/inquiry/Inquiry.astro): a small state machine.
  *   pick a service → its questions one at a time → contact → POST /api/inquiry → the run log.
  * One-choice questions advance on click; many-choice and text questions use Next; optional ones can be
- * skipped. The rail on the left shows every step with a now-mark. Focus moves to each new question.
+ * skipped. The rail on the left builds up as the visitor goes: each answered step with its answer, then the
+ * current one (nothing ahead of it). Focus moves to each new question.
  */
 interface Opt {
   id: string;
@@ -57,18 +58,41 @@ export function initInquiry(root: HTMLElement) {
     return Array.isArray(a) ? a.length > 0 : !!a && String(a).trim().length > 0;
   };
 
+  // the rail: what has been answered so far (with the answer) and the step now; new rows rise in
   function renderRail() {
-    rail.replaceChildren();
-    const items = [service ? D.names[service] : t.pick, ...flow().map((q) => q.title), t.contactStep];
-    items.forEach((label, k) => {
-      const li = document.createElement('li');
-      li.textContent = label;
-      const idx = k - 1; // rail item k ↔ step k-1
-      if (idx < step || (k === 0 && service)) li.classList.add('is-done');
-      if (idx === step) li.classList.add('is-now');
-      if (idx === step) li.setAttribute('aria-current', 'step');
-      rail.append(li);
-    });
+    const before = rail.children.length;
+    const qs = flow();
+    const n = qs.length;
+    const rows: { label: string; note?: string; now?: boolean }[] = [];
+    if (step < 0) rows.push({ label: t.pick, now: true });
+    else {
+      rows.push({ label: D.names[service] });
+      qs.slice(0, Math.min(step, n)).forEach((q) => rows.push({ label: q.title, note: summary(q) }));
+      if (step < n) rows.push({ label: qs[step].title, now: true });
+      else rows.push({ label: t.contactStep, now: step === n });
+    }
+    rail.replaceChildren(
+      ...rows.map((r, k) => {
+        const li = document.createElement('li');
+        li.append(Object.assign(document.createElement('span'), { textContent: r.label }));
+        if (r.note) li.append(Object.assign(document.createElement('small'), { textContent: r.note }));
+        li.classList.add(r.now ? 'is-now' : 'is-done');
+        if (r.now) li.setAttribute('aria-current', 'step');
+        if (k >= before && !reduceMotion) li.classList.add('is-new');
+        return li;
+      }),
+    );
+    // keep the newest row in view; the line runs the length of the rows
+    rail.style.setProperty('--rail-h', `${rail.scrollHeight}px`);
+    rail.classList.toggle('is-full', rail.scrollHeight > rail.clientHeight + 1);
+    rail.scrollTo({ top: rail.scrollHeight, behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+  function summary(q: Q) {
+    const a = answers[q.id];
+    if (!a || (Array.isArray(a) && !a.length)) return t.skipped ?? '—';
+    if (q.kind === 'text') return String(a).trim().slice(0, 48) + (String(a).trim().length > 48 ? '…' : '');
+    const ids = Array.isArray(a) ? a : [a];
+    return ids.map((id) => q.options.find((o) => o.id === id)?.label ?? id).join(', ');
   }
 
   function focusQ(el: HTMLElement) {
@@ -151,8 +175,8 @@ export function initInquiry(root: HTMLElement) {
     return fs;
   }
 
-  // ---- no jumping: the panel is as tall as the tallest step of any service, the rail as tall as the
-  // longest rail; measured off screen at the current width, again whenever the width changes.
+  // ---- no jumping: the panel is as tall as the tallest step of any service, measured off screen at the
+  // current width, again whenever the width changes. The rail grows beside it, never past it.
   const panel = $('[data-inq-panel]');
   function measure() {
     const probe = document.createElement('div');
@@ -184,22 +208,6 @@ export function initInquiry(root: HTMLElement) {
     probe.remove();
     panel.style.setProperty('--inq-h', `${Math.ceil(h)}px`);
 
-    // rail: the longest list of any service
-    const railProbe = rail.cloneNode(false) as HTMLElement;
-    railProbe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none';
-    railProbe.style.width = `${rail.clientWidth}px`;
-    rail.after(railProbe);
-    let rh = 0;
-    for (const svc of Object.keys(D.flows)) {
-      railProbe.replaceChildren(
-        ...[D.names[svc], ...D.flows[svc].map((q) => q.title), t.contactStep].map((l) =>
-          Object.assign(document.createElement('li'), { textContent: l }),
-        ),
-      );
-      rh = Math.max(rh, railProbe.offsetHeight);
-    }
-    railProbe.remove();
-    rail.style.minHeight = rh ? `${Math.ceil(rh)}px` : '';
   }
   let lastW = 0;
   new ResizeObserver(() => {
