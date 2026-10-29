@@ -1,8 +1,8 @@
 /**
  * Homepage hero engine (components/home/HeroFlow.astro), Honza Oct 29 2026 ("like amaze-genius, in our
  * colours"): hundreds of fine lines. On the left they are tangled and scattered (a business today); they
- * pass inside the A of the ADV mark, drawn in light (the organiser at work), and leave as a smooth, slowly twisting ribbon of four strands that fans out (a
- * business that runs). Pulses of light travel along every line: the data going through. Colour runs violet
+ * pass inside the A of the ADV mark, a solid graphite letter (the organiser at work), and leave as a smooth,
+ * slowly twisting ribbon of four strands that fans out (a business that runs). Pulses of light travel along every line: the data going through. Colour runs violet
  * → cobalt → ice along the stream; after the gate each line keeps a colour of its own and the ribbon is
  * shaded (folds and the far side dimmer, lines at uneven strength); additive blending gives the silk sheen.
  *
@@ -126,12 +126,76 @@ const FRAG = /* glsl */ `
 // grid, centred on its opening (between the legs, below the inner apex) so the lines pass inside the A
 const S = 0.012;
 const P = (x: number, y: number) => new THREE.Vector3((x - 128) * S * 1.25, -(y - 204) * S, 0);
+const A_PTS = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
+const A_DEPTH = 0.1;
+// the lit edge: a fine tube along the outline, on the front face
 function gateTube() {
   const path = new THREE.CurvePath<THREE.Vector3>();
-  const A = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
-  for (let i = 0; i < A.length - 1; i++) path.add(new THREE.LineCurve3(P(A[i][0], A[i][1]), P(A[i + 1][0], A[i + 1][1])));
-  return new THREE.TubeGeometry(path, 320, 0.0075, 6, false);
+  const z = A_DEPTH / 2 + 0.014;
+  for (let i = 0; i < A_PTS.length - 1; i++) {
+    const a = P(A_PTS[i][0], A_PTS[i][1]).setZ(z);
+    const b = P(A_PTS[i + 1][0], A_PTS[i + 1][1]).setZ(z);
+    path.add(new THREE.LineCurve3(a, b));
+  }
+  return new THREE.TubeGeometry(path, 320, 0.006, 6, false);
 }
+// the solid letter: the A extruded, with a small bevel
+function gateSolid() {
+  const shape = new THREE.Shape(A_PTS.slice(0, -1).map(([x, y]) => new THREE.Vector2(P(x, y).x, P(x, y).y)));
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth: A_DEPTH,
+    bevelEnabled: true,
+    bevelThickness: 0.012,
+    bevelSize: 0.01,
+    bevelSegments: 3,
+  });
+  geo.translate(0, 0, -A_DEPTH / 2);
+  return geo;
+}
+
+// the A's surface: the graphite of the old cards. Near-black with a cool vertical gradient, a pale-blue lit
+// edge (the bevel and the rim towards the viewer), a faint violet/cobalt tint low down, and a slow sheen
+// that crosses the face now and then.
+const SOLID_VERT = /* glsl */ `
+  varying vec3 vN;
+  varying vec3 vObjN;
+  varying vec3 vP;
+  varying vec3 vView;
+  void main() {
+    vObjN = normal;
+    vN = normalize(normalMatrix * normal);
+    vP = position;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    vView = -mv.xyz;
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+const SOLID_FRAG = /* glsl */ `
+  precision highp float;
+  uniform float uTime;
+  varying vec3 vN;
+  varying vec3 vObjN;
+  varying vec3 vP;
+  varying vec3 vView;
+  void main() {
+    vec3 N = normalize(vN);
+    vec3 V = normalize(vView);
+    float facing = abs(dot(N, V));
+    vec3 deep = vec3(0.039, 0.043, 0.063);
+    vec3 lift = vec3(0.106, 0.118, 0.161);
+    vec3 col = mix(deep, lift, smoothstep(-1.4, 1.6, vP.y + vP.x * 0.4));
+    // a faint light from below, in the page colours
+    col += vec3(0.16, 0.11, 0.42) * 0.12 * smoothstep(0.4, -1.4, vP.y);
+    // the sides and the bevel catch a pale-blue light; so does the rim
+    float side = 1.0 - abs(vObjN.z);
+    vec3 edge = vec3(0.77, 0.84, 1.0);
+    col += edge * (side * 0.22 + pow(1.0 - facing, 3.0) * 0.35);
+    // a slow sheen across the front face
+    float band = (vP.x * 0.7 + vP.y * 0.5) - (fract(uTime * 0.07) * 7.0 - 3.5);
+    col += edge * 0.07 * exp(-band * band * 6.0) * (1.0 - side);
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
 
 const GATE_VERT = /* glsl */ `
   varying float vT;
@@ -211,9 +275,9 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   stream.rotation.set(0.12, -0.38, 0.06);
   scene.add(stream);
 
-  // the gate is the A of the ADV symbol, drawn in light (a fine tube along its outline, a faint echo
-  // behind). The lines are squeezed through its opening, so the A frames them and nothing crosses its
-  // strokes. A bright point circles the outline (we are at work) and the lines flare as they pass.
+  // the gate is the A of the ADV symbol as a solid graphite letter with a lit edge. The lines are squeezed
+  // through its opening; the letter hides whatever passes behind it. A bright point circles the edge (we
+  // are at work) and the lines flare as they pass.
   const gateMat = new THREE.ShaderMaterial({
     vertexShader: GATE_VERT,
     fragmentShader: GATE_FRAG,
@@ -225,14 +289,12 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   const gate = new THREE.Group();
   gate.position.set(0.6, 0, 0);
   gate.rotation.y = 0.38 + 0.8; // a three-quarter view: the A reads, the lines still pass through it
-  const outline = gateTube();
-  gate.add(new THREE.Mesh(outline, gateMat));
-  const echoMat = gateMat.clone();
-  echoMat.uniforms = { uTime: uniforms.uTime, uDim: { value: 0.22 } };
-  const echo = new THREE.Mesh(outline, echoMat);
-  echo.scale.setScalar(1.1);
-  echo.position.z = -0.1;
-  gate.add(echo);
+  // solid and opaque: it writes depth, so the lines behind it are hidden
+  const solid = new THREE.Mesh(
+    gateSolid(),
+    new THREE.ShaderMaterial({ vertexShader: SOLID_VERT, fragmentShader: SOLID_FRAG, uniforms: { uTime: uniforms.uTime } }),
+  );
+  gate.add(solid, new THREE.Mesh(gateTube(), gateMat));
   stream.add(gate);
 
   const resize = () => {
