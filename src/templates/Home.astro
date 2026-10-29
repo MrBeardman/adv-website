@@ -8,6 +8,7 @@
  * The Relay-style page lives at /sluzby/automatizace/ (templates/Automation.astro).
  */
 import Base from '../layouts/Base.astro';
+import HeroFlow from '../components/home/HeroFlow.astro';
 import Workflow from '../components/home/Workflow.astro';
 import ServiceIndex from '../components/home/ServiceIndex.astro';
 import SelectedWork from '../components/SelectedWork.astro';
@@ -29,15 +30,18 @@ const inquiryId = pick(home, lang).workflow.inquiryId;
 ---
 
 <Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} canvas>
-  <Workflow lang={lang} />
+  <HeroFlow lang={lang} />
   <div class="adv-flow">
     <NodeFrame {...n.services} icon="racks" side="left">
       <ServiceIndex lang={lang} />
     </NodeFrame>
-    <NodeFrame {...n.work} icon="exchange" side="right">
+    <NodeFrame {...n.fit} icon="nodes" side="right">
+      <Workflow lang={lang} />
+    </NodeFrame>
+    <NodeFrame {...n.work} icon="exchange" side="left">
       <SelectedWork lang={lang} limit={3} />
     </NodeFrame>
-    <NodeFrame {...n.partners} icon="nodes" side="left">
+    <NodeFrame {...n.partners} icon="shapes" side="right">
       <Partners lang={lang} />
     </NodeFrame>
     <NodeFrame {...n.inquiry} icon="arrowRight" side="full" id={inquiryId} last>

@@ -11,7 +11,6 @@
  * reduced motion: every node, wire and result is shown in its finished state.
  */
 import Arrow from '../ui/Arrow.astro';
-import Play from '../ui/Play.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import chrome from '../../i18n/chrome.json';
 import home from '../../i18n/home.json';
@@ -61,22 +60,11 @@ const branches = ['ai-automation', 'software', 'websites'].map(step).filter((s) 
 const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
 ---
 
-<section class="adv-wf" aria-labelledby="adv-wf-title" data-wf>
+<div class="adv-wf" data-wf>
   <div class="adv-wf__inner">
-    <div class="adv-wf__copy">
-      <h1 id="adv-wf-title" class="adv-wf__title" data-lines>
-        <span class="adv-line"><span>{c.hero.headline1}</span></span>
-        <span class="adv-line"><span>{c.hero.headline2}</span></span>
-      </h1>
-      <p class="adv-lead adv-wf__sub" data-reveal style="--i:2">{c.hero.sub}</p>
-      <div class="adv-wf__ctas" data-reveal style="--i:3">
-        <a class="adv-btn adv-btn--primary" href={'#' + w.inquiryId}><Play />{w.run}</a>
-        <a class="adv-btn adv-btn--ghost" href={routes.work(lang)}>{c.notFound.work}</a>
-      </div>
-      <p class="adv-wf__note" data-reveal style="--i:4">{c.hero.ctaNote}</p>
-    </div>
-
-    <div class="adv-wf__file" data-reveal style="--i:2" data-nf>
+    <h2 class="adv-h2 adv-wf__head">{w.sectionTitle}</h2>
+    <p class="adv-lead adv-wf__lead">{w.sectionLead}</p>
+    <div class="adv-wf__file">
       <p class="adv-wf__stamp">{w.stamp}</p>
       <svg class="adv-wf__wires" data-wf-wires aria-hidden="true"></svg>
       <ol class="adv-wf__graph" aria-label={w.graphLabel}>
@@ -169,10 +157,9 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
           </div>
         </li>
       </ol>
-      <span class="adv-nf__port adv-nf__port--out" data-nf-out aria-hidden="true"></span>
     </div>
   </div>
-</section>
+</div>
 
 <script>
   import { initWorkflow } from '../../scripts/workflow';
@@ -182,52 +169,23 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
 <style is:global>
   .adv-wf {
     position: relative;
-    padding-top: calc(var(--adv-header-h) + clamp(28px, 4vw, 56px));
-    padding-bottom: clamp(56px, 7vw, 96px);
+    padding: clamp(36px, 4.5vw, 72px) clamp(20px, 3.4vw, 56px);
   }
   .adv-wf__inner {
-    width: 100%;
-    max-width: calc(var(--adv-max) + 2 * var(--adv-gutter));
-    margin-inline: auto;
-    padding-inline: var(--adv-gutter);
     display: grid;
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.6fr);
-    gap: clamp(32px, 4vw, 64px);
-    align-items: center;
+    gap: 18px;
   }
-  .adv-wf__title {
-    font-size: clamp(2.5rem, 1.4rem + 2.9vw, 4.125rem);
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 0.98;
-  }
-  .adv-wf__title .adv-line {
-    white-space: nowrap;
-  }
-  .adv-wf__sub {
-    margin-top: 26px;
-    max-width: 44ch;
-  }
-  .adv-wf__ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 34px;
-  }
-  .adv-wf__note {
-    margin-top: 14px;
-    font-size: 0.875rem;
-    color: var(--adv-muted);
+  .adv-wf__lead {
+    max-width: 52ch;
+    margin-bottom: clamp(16px, 2vw, 28px);
   }
 
   /* ---- the open file: a navy board with a steel-foil edge, a spine on the left ---- */
   .adv-wf__file {
     position: relative;
     padding: 64px clamp(22px, 2.6vw, 40px) clamp(26px, 3vw, 40px) clamp(40px, 4vw, 60px);
-    border-radius: 8px var(--adv-r-xl) var(--adv-r-xl) 8px;
-    background:
-      var(--adv-weave), radial-gradient(90% 70% at 20% 0%, rgba(120, 160, 255, 0.12), transparent 60%),
-      linear-gradient(160deg, #13296c, #0b1a4c 58%, #081338);
+    border-radius: 8px var(--adv-r-lg) var(--adv-r-lg) 8px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.12));
     box-shadow:
       inset 0 1px 0 var(--adv-edge-hi),
       inset 0 0 0 1px var(--adv-edge),
@@ -240,7 +198,7 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
     inset: 0 auto 0 0;
     width: clamp(16px, 1.6vw, 24px);
     border-radius: 8px 0 0 8px;
-    background: linear-gradient(90deg, #050d2a, #0d1f59 80%, rgba(201, 209, 222, 0.18) 100%);
+    background: linear-gradient(90deg, #050608, #12141c 80%, rgba(196, 214, 255, 0.16) 100%);
   }
   .adv-wf__stamp {
     position: absolute;
@@ -250,7 +208,7 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
     font-size: 0.75rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #8f9dc0;
+    color: #7f879b;
   }
   .adv-wf__wires {
     position: absolute;
@@ -351,8 +309,8 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
     color: var(--adv-text);
     text-decoration: none;
     background:
-      radial-gradient(160px circle at var(--mx) var(--my), rgba(84, 128, 255, 0.18), transparent 70%),
-      linear-gradient(165deg, #1a3584, #0e2160 75%);
+      radial-gradient(160px circle at var(--mx) var(--my), rgba(110, 130, 255, 0.16), transparent 70%),
+      linear-gradient(165deg, #232736, #11131b 75%);
     box-shadow:
       inset 0 1px 0 var(--adv-edge-hi),
       inset 0 0 0 1px var(--adv-edge),
@@ -435,8 +393,9 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
     padding: 20px 18px 18px;
     border-radius: 16px;
     background:
-      radial-gradient(120% 80% at 30% 0%, rgba(124, 200, 255, 0.12), transparent 60%),
-      linear-gradient(165deg, #1f3e96, #11286e 70%);
+      radial-gradient(120% 80% at 30% 0%, rgba(124, 200, 255, 0.16), transparent 60%),
+      radial-gradient(90% 90% at 100% 100%, rgba(110, 64, 230, 0.28), transparent 60%),
+      linear-gradient(165deg, #1c2a5e, #0e1430 70%);
     box-shadow:
       inset 0 1px 0 rgba(230, 236, 246, 0.6),
       inset 0 0 0 1px rgba(201, 209, 222, 0.24),

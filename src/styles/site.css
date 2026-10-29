@@ -1,42 +1,50 @@
 /*
  * ADV Innovations design system: tokens, base, shared components, motion.
- * World "The Client File" (Honza, Oct 2026 redesign): navy linen bookcloth as the ground, file boards
- * with a steel-foil lit edge, cool paper index cards for anything the visitor fills in, Ice only for
- * live states (the moving packet, focus). Direction contract: .impeccable/surfaces/.
+ * World "Graphite canvas" (Honza, Oct 29 2026): a near-black canvas lit by large, soft, multicolour light
+ * (brand navy, violet, cobalt, a touch of ice) on several depths so the page never reads flat; graphite
+ * matte cards with a lit edge (the 3D service cards Honza liked); white primary pills; Ice only for live
+ * states. The page is an automation workflow: sections are wired nodes (ui/NodeFrame.astro).
+ * References: Raycast / Linear / Framer DESIGN.md (awesome-design-md), Quantum Flux, Crypton.
  * Section CSS lives in each section component; class prefix there is "adv-".
  */
 
 :root {
-  /* Client File palette: deep navy cloth, file boards, steel foil, paper */
-  --adv-bg: #07102e;
-  --adv-bg-2: #0a1640;
-  --adv-surface-1: #142c72; /* file board, lit side */
-  --adv-surface-2: #0a1845; /* file board, shade side */
-  --adv-edge: rgba(201, 209, 222, 0.14);
-  --adv-edge-hi: rgba(201, 209, 222, 0.42); /* steel foil */
-  --adv-line: rgba(201, 209, 222, 0.1);
-  --adv-text: #eaeef6;
-  --adv-muted: #a6b3d0;
-  --adv-glow: rgba(40, 84, 210, 0.32); /* navy light behind key areas */
-  --adv-spot: rgba(84, 128, 255, 0.2); /* card hover spotlight */
-  --adv-grid-rgb: 201, 209, 222;
-  --adv-foil: #c9d1de;
-  --adv-paper: #eef1f6;
-  --adv-paper-2: #dde2ec;
-  --adv-ink: #0b1a4a; /* navy ink on paper */
-  --adv-ink-muted: #4f5e82;
+  /* Graphite canvas */
+  --adv-bg: #06070b;
+  --adv-bg-2: #0c0e14;
+  --adv-surface-1: #1b1e29; /* card, lit side */
+  --adv-surface-2: #0a0b10; /* card, shade side */
+  --adv-edge: rgba(255, 255, 255, 0.08);
+  --adv-edge-hi: rgba(196, 214, 255, 0.3); /* the lit edge */
+  --adv-line: rgba(255, 255, 255, 0.06);
+  --adv-text: #f2f3f6;
+  --adv-muted: #9aa1b3;
+  --adv-glow: rgba(40, 84, 210, 0.3);
+  --adv-spot: rgba(96, 120, 255, 0.16); /* card hover spotlight */
+  --adv-grid-rgb: 236, 238, 244;
+  --adv-foil: #c4d0e8; /* icon and wire metal */
+  --adv-paper: #f4f5f8; /* primary pill */
+  --adv-paper-2: #dfe3ec;
+  --adv-ink: #0a0b10; /* text on the pill */
+  --adv-ink-muted: #4a5066;
 
-  /* Live state: Ice. Only the moving packet, live marks and focus; primary actions are paper. */
+  /* the light: brand navy leads, violet and cobalt deepen it, ice is the brightest point */
+  --adv-l-navy: 9, 46, 131;
+  --adv-l-cobalt: 38, 92, 255;
+  --adv-l-violet: 110, 64, 230;
+  --adv-l-ice: 124, 200, 255;
+
+  /* Live state: Ice. Only the moving light, live marks and focus. */
   --adv-accent: #7cc8ff;
   --adv-accent-rgb: 124, 200, 255;
   --adv-on-accent: #07101e;
   /* Logo tile on dark. ONE variable; Ice until Honza confirms the brand-guide update (docs/STATUS.md). */
   --adv-logo-tile: var(--adv-accent);
 
-  /* Background light on the cloth (navy family only) */
-  --adv-mesh-navy: 36, 76, 200;
-  --adv-mesh-slate: 22, 44, 112;
-  --adv-mesh-ink: 4, 9, 28;
+  /* kept for older section code */
+  --adv-mesh-navy: 38, 92, 255;
+  --adv-mesh-slate: 9, 46, 131;
+  --adv-mesh-ink: 6, 7, 11;
 
   /* Type */
   --adv-display: 'Urbanist', 'Segoe UI', system-ui, sans-serif;
@@ -62,12 +70,12 @@
   --adv-r-lg: 22px; /* cards */
   --adv-r-xl: 28px;
   --adv-shadow-card:
-    inset 0 1px 0 var(--adv-edge-hi), inset 0 0 0 1px var(--adv-edge), inset 0 -1px 0 rgba(0, 0, 0, 0.45),
-    0 28px 60px -28px rgba(1, 4, 16, 0.85);
-  /* the cloth weave: two crossed hairline rhythms, used on the page ground and on file covers */
-  --adv-weave:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 3px);
+    inset 1px 1px 0 var(--adv-edge-hi), inset -1px -1px 0 rgba(0, 0, 0, 0.5), 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  /* the card material: graphite with a faint cool sheen from the top left */
+  --adv-card-bg:
+    radial-gradient(120% 70% at 15% 0%, rgba(170, 190, 255, 0.08), transparent 55%),
+    linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2) 72%);
+  --adv-weave: linear-gradient(transparent, transparent);
 
   /* Motion: calm and precise, no bounce */
   --adv-ease: cubic-bezier(0.23, 1, 0.32, 1);
@@ -218,11 +226,11 @@ main {
   z-index: 1;
 }
 
-/* ---------- Background: progressive dark mesh + grain ----------
- * Fixed layers behind everything. site.ts writes --p (0 at the top of the page, 1 at the bottom);
- * the three moods cross-fade with it (cool navy/Ice at the top, deeper in the middle, a little warmer
- * and lighter near the final CTA) while the blobs drift. Only opacity and transform change, so it is
- * compositor work; on phones it is the same cheap layers. Without JS, --p stays 0 (the hero mood). */
+/* ---------- Background: multicolour light in depth + grain ----------
+ * Fixed layers behind everything, so the page never reads flat: three depths of large soft light
+ * (far, mid, near) that move at different rates with scroll (site.ts writes --p, 0 at the top, 1 at the
+ * bottom) and drift slowly on their own. Navy leads; violet, cobalt and ice deepen it. Only transform and
+ * opacity change (compositor work). Without JS --p stays 0; reduced motion stops the drift. */
 .adv-bg {
   --p: 0;
   position: fixed;
@@ -230,51 +238,54 @@ main {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: radial-gradient(130% 100% at 30% 10%, #0f2262 0%, #0a1846 45%, #050c26 100%);
-}
-.adv-bg::before {
-  /* the bookcloth weave over the whole page */
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--adv-weave);
-  opacity: 0.9;
+  background: var(--adv-bg);
 }
 .adv-bg__mood {
   position: absolute;
-  inset: -10%;
-  will-change: opacity, transform;
+  inset: -20%;
+  will-change: transform;
 }
 .adv-bg__mood--top {
-  opacity: clamp(0, calc(1 - var(--p) * 2.4), 1);
-  transform: translate3d(calc(var(--p) * -6vw), calc(var(--p) * -8vh), 0);
+  /* far: the big brand-navy field and a violet volume */
+  transform: translate3d(0, calc(var(--p) * -12vh), 0);
+  animation: adv-drift-a 38s ease-in-out infinite alternate;
   background:
-    radial-gradient(38% 60% at 78% 72%, rgba(var(--adv-mesh-navy), 0.58), transparent 70%),
-    radial-gradient(22% 30% at 70% 58%, rgba(var(--adv-accent-rgb), 0.07), transparent 70%),
-    radial-gradient(45% 55% at 12% 18%, rgba(var(--adv-mesh-slate), 0.5), transparent 72%),
-    radial-gradient(60% 50% at 40% 100%, rgba(var(--adv-mesh-ink), 0.8), transparent 70%);
+    radial-gradient(42% 46% at 72% 30%, rgba(var(--adv-l-navy), 0.95), transparent 70%),
+    radial-gradient(34% 40% at 88% 58%, rgba(var(--adv-l-violet), 0.42), transparent 70%),
+    radial-gradient(40% 44% at 14% 72%, rgba(var(--adv-l-navy), 0.6), transparent 72%),
+    radial-gradient(30% 34% at 40% 112%, rgba(var(--adv-l-violet), 0.35), transparent 70%);
 }
 .adv-bg__mood--mid {
-  opacity: clamp(0, calc(1 - abs(var(--p) - 0.5) * 2.6), 1);
-  transform: translate3d(calc((var(--p) - 0.5) * 10vw), 0, 0);
+  /* mid: cobalt light that travels further with scroll */
+  transform: translate3d(0, calc(var(--p) * -34vh), 0);
+  animation: adv-drift-b 46s ease-in-out infinite alternate;
   background:
-    radial-gradient(40% 55% at 22% 40%, rgba(var(--adv-mesh-navy), 0.34), transparent 70%),
-    radial-gradient(50% 60% at 85% 20%, rgba(var(--adv-mesh-slate), 0.45), transparent 72%),
-    radial-gradient(55% 50% at 60% 90%, rgba(var(--adv-mesh-ink), 0.9), transparent 72%);
+    radial-gradient(24% 26% at 64% 40%, rgba(var(--adv-l-cobalt), 0.38), transparent 70%),
+    radial-gradient(22% 26% at 22% 96%, rgba(var(--adv-l-cobalt), 0.3), transparent 70%),
+    radial-gradient(20% 22% at 84% 132%, rgba(var(--adv-l-violet), 0.34), transparent 70%);
 }
 .adv-bg__mood--end {
-  opacity: clamp(0, calc((var(--p) - 0.55) * 2.4), 1);
-  transform: translate3d(0, calc((1 - var(--p)) * 8vh), 0);
+  /* near: the brightest points, small, moving most */
+  transform: translate3d(0, calc(var(--p) * -60vh), 0);
+  animation: adv-drift-c 30s ease-in-out infinite alternate;
   background:
-    radial-gradient(45% 50% at 50% 78%, rgba(var(--adv-mesh-navy), 0.45), transparent 70%),
-    radial-gradient(30% 35% at 52% 70%, rgba(var(--adv-accent-rgb), 0.06), transparent 70%),
-    radial-gradient(40% 45% at 18% 30%, rgba(var(--adv-mesh-slate), 0.5), transparent 72%),
-    radial-gradient(35% 40% at 88% 40%, rgba(var(--adv-mesh-ink), 0.6), transparent 72%);
+    radial-gradient(10% 12% at 70% 34%, rgba(var(--adv-l-ice), 0.16), transparent 70%),
+    radial-gradient(12% 14% at 30% 120%, rgba(var(--adv-l-ice), 0.12), transparent 70%),
+    radial-gradient(9% 10% at 78% 170%, rgba(var(--adv-l-ice), 0.12), transparent 70%);
 }
-@supports not (opacity: abs(1)) {
-  /* older engines without abs(): keep the middle mood quietly on */
-  .adv-bg__mood--mid {
-    opacity: 0.6;
+@keyframes adv-drift-a {
+  to {
+    translate: -3vw 2vh;
+  }
+}
+@keyframes adv-drift-b {
+  to {
+    translate: 4vw -3vh;
+  }
+}
+@keyframes adv-drift-c {
+  to {
+    translate: -2vw -4vh;
   }
 }
 .adv-bg__grain {
@@ -287,7 +298,7 @@ main {
 .adv-bg__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(1, 4, 18, 0.6) 100%);
+  background: radial-gradient(120% 90% at 50% 40%, transparent 50%, rgba(0, 0, 0, 0.65) 100%);
 }
 
 /* ---------- Type helpers ---------- */
@@ -357,7 +368,7 @@ main {
   gap: 10px;
   min-height: 50px;
   padding: 13px 22px;
-  border-radius: var(--adv-r);
+  border-radius: 999px;
   border: 1px solid transparent;
   font-family: var(--adv-sans);
   font-size: 0.9375rem;
@@ -622,7 +633,7 @@ a.adv-card:hover,
 }
 .adv-node.is-lit {
   border-color: var(--adv-accent);
-  background-color: #12306e;
+  background-color: #10243a;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.2 6.2l1.9 1.9 3.8-4.2' fill='none' stroke='%237cc8ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 .adv-node.is-lit::after {
@@ -703,7 +714,7 @@ a.adv-card:hover,
 }
 .adv-stream__node.is-lit rect {
   stroke: var(--adv-accent);
-  fill: #12306e;
+  fill: #10243a;
 }
 .adv-stream__node.is-lit .adv-stream__tick,
 .adv-stream__node.is-lit .adv-stream__branch {
@@ -950,7 +961,7 @@ textarea.adv-input {
 }
 .adv-canvas__wire {
   fill: none;
-  stroke: rgba(201, 209, 222, 0.22);
+  stroke: rgba(196, 214, 255, 0.18);
   stroke-width: 1.4;
 }
 .adv-canvas__lit {
@@ -976,13 +987,11 @@ textarea.adv-input {
 .adv-nf {
   position: relative;
   border-radius: var(--adv-r-lg);
-  background:
-    var(--adv-weave), radial-gradient(80% 50% at 15% 0%, rgba(120, 160, 255, 0.1), transparent 60%),
-    linear-gradient(170deg, #11276a, #0a1845 55%, #081236);
+  background: var(--adv-card-bg);
   box-shadow:
-    inset 0 1px 0 var(--adv-edge-hi),
-    inset 0 0 0 1px var(--adv-edge),
-    0 40px 90px -40px rgba(1, 4, 16, 0.95);
+    inset 1px 1px 0 var(--adv-edge-hi),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.5),
+    0 50px 100px -40px rgba(0, 0, 0, 0.9);
 }
 @media (min-width: 1000px) {
   .adv-nf--left {
@@ -999,7 +1008,7 @@ textarea.adv-input {
   padding: 12px clamp(16px, 2vw, 22px);
   border-bottom: 1px solid var(--adv-line);
   border-radius: var(--adv-r-lg) var(--adv-r-lg) 0 0;
-  background: linear-gradient(180deg, rgba(201, 209, 222, 0.07), rgba(201, 209, 222, 0.02));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01));
 }
 .adv-nf__type {
   display: grid;
@@ -1078,7 +1087,7 @@ textarea.adv-input {
 .adv-nf.is-done .adv-nf__port--in,
 .no-js .adv-nf__port--in {
   border-color: var(--adv-accent);
-  background: #12306e;
+  background: #10243a;
 }
 /* the section inside a node: no outer padding of its own, no gutter square (the node is the node) */
 .adv-nf__body > .adv-section {

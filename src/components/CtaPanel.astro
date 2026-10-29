@@ -88,7 +88,7 @@ const uid = `cta-${lang}`;
     padding-bottom: clamp(90px, 10vw, 150px);
   }
   .adv-cta__panel {
-    --ink: #0b1a4a; /* the final index card: paper with navy ink (Client File world) */
+    --ink: var(--adv-text); /* the final node: graphite lit by the brand light (graphite canvas world) */
     position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -97,12 +97,13 @@ const uid = `cta-${lang}`;
     border-radius: var(--adv-r-xl);
     color: var(--ink);
     background:
-      radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
-      radial-gradient(70% 90% at 0% 100%, rgba(40, 84, 210, 0.1), transparent 60%),
-      linear-gradient(160deg, #f2f4f8, #e3e8f0 60%, #d6dce8);
+      radial-gradient(70% 110% at 100% 0%, rgba(var(--adv-l-cobalt), 0.45), transparent 60%),
+      radial-gradient(60% 90% at 70% 100%, rgba(var(--adv-l-violet), 0.4), transparent 62%),
+      radial-gradient(50% 70% at 0% 0%, rgba(var(--adv-l-navy), 0.7), transparent 65%),
+      linear-gradient(165deg, #181b26, #0a0b10 75%);
     box-shadow:
-      inset 1px 1px 0 rgba(255, 255, 255, 0.7),
-      inset -1px -1px 0 rgba(11, 26, 74, 0.15),
+      inset 1px 1px 0 var(--adv-edge-hi),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.5),
       0 40px 90px -40px rgba(0, 0, 0, 0.8);
     overflow: hidden;
     isolation: isolate;
@@ -114,8 +115,8 @@ const uid = `cta-${lang}`;
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.18;
-    mix-blend-mode: multiply;
+    opacity: 0.1;
+    mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
   /* light behind the panel (a gradient, not a glow shadow); brighter when the stream reaches it */
@@ -146,7 +147,7 @@ const uid = `cta-${lang}`;
     margin-top: 20px;
     max-width: 40ch;
     font-size: var(--adv-lead);
-    color: rgba(11, 26, 74, 0.78);
+    color: rgba(242, 243, 246, 0.78);
   }
   .adv-cta__call {
     display: flex;
@@ -154,7 +155,7 @@ const uid = `cta-${lang}`;
     gap: 6px 12px;
     margin-top: 28px;
     font-size: 0.9375rem;
-    color: rgba(11, 26, 74, 0.7);
+    color: rgba(242, 243, 246, 0.7);
   }
   .adv-cta__call a {
     font-weight: 700;
@@ -168,23 +169,23 @@ const uid = `cta-${lang}`;
     gap: 16px;
   }
   .adv-cta__form .adv-field label {
-    color: rgba(11, 26, 74, 0.7);
+    color: rgba(242, 243, 246, 0.7);
   }
   .adv-cta__form .adv-input {
     color: var(--ink);
-    background: rgba(255, 255, 255, 0.42);
-    border-color: rgba(11, 26, 74, 0.18);
+    background: rgba(0, 0, 0, 0.28);
+    border-color: rgba(242, 243, 246, 0.18);
   }
   .adv-cta__form .adv-input::placeholder {
-    color: rgba(11, 26, 74, 0.5);
+    color: rgba(242, 243, 246, 0.5);
   }
   .adv-cta__form .adv-input:hover {
-    border-color: rgba(11, 26, 74, 0.4);
+    border-color: rgba(242, 243, 246, 0.4);
   }
   .adv-cta__form .adv-input:focus {
     border-color: var(--ink);
-    background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 0 3px rgba(11, 26, 74, 0.14);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px rgba(242, 243, 246, 0.14);
   }
   .adv-cta__form :focus-visible {
     outline-color: var(--ink);
@@ -197,11 +198,11 @@ const uid = `cta-${lang}`;
   }
   .adv-cta__submit {
     background: var(--ink);
-    color: var(--adv-paper);
+    color: var(--adv-ink);
   }
   .adv-cta__submit:hover {
     transform: translateY(-1px);
-    box-shadow: 0 14px 30px -14px rgba(11, 26, 74, 0.8);
+    box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.8);
   }
   .adv-cta__form .adv-form-status[data-state='ok'],
   .adv-cta__form .adv-form-status[data-state='error'] {

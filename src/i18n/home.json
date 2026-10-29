@@ -153,7 +153,9 @@
       "example": "Příklad z praxe",
       "placeholder": "Ilustrační číslo",
       "run": "Spustit poptávku",
-      "inquiryId": "poptavka"
+      "inquiryId": "poptavka",
+      "sectionTitle": "Jak to do sebe zapadá.",
+      "sectionLead": "Začínáme u procesů. Pak automatizujeme rutinu, postavíme nástroje, na kterých firma běží, a web, přes který k vám chodí zákazníci."
     },
     "canvas": {
       "services": {
@@ -179,6 +181,12 @@
         "kind": "Spouštěč",
         "wait": "Čeká",
         "done": "Připraveno"
+      },
+      "fit": {
+        "name": "Jak to zapadá",
+        "kind": "Workflow",
+        "wait": "Čeká",
+        "done": "Běží"
       }
     }
   },
@@ -336,7 +344,9 @@
       "example": "From a real project",
       "placeholder": "Illustrative figure",
       "run": "Start an inquiry",
-      "inquiryId": "inquiry"
+      "inquiryId": "inquiry",
+      "sectionTitle": "How it fits together.",
+      "sectionLead": "We start with the processes. Then we automate the routine, build the tools the business runs on, and the website customers come through."
     },
     "canvas": {
       "services": {
@@ -362,6 +372,12 @@
         "kind": "Trigger",
         "wait": "Waiting",
         "done": "Ready"
+      },
+      "fit": {
+        "name": "How it fits",
+        "kind": "Workflow",
+        "wait": "Waiting",
+        "done": "Running"
       }
     }
   }
