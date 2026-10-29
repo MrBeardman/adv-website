@@ -459,8 +459,9 @@ main {
 }
 
 /* ---------- Matte card (palette study, the finish Honza picked) ----------
- * Soft gradient, faint top sheen, inset lit edge, deep soft shadow. On hover: a navy spotlight follows
- * the pointer (--mx/--my from site.ts), an Ice hairline lights the edge near it, the divider grows. */
+ * Soft gradient, faint top sheen, inset lit edge, deep soft shadow. On hover: the page light follows the
+ * pointer (--mx/--my from site.ts; cobalt, violet trailing), the edge picks up the gradient, the divider
+ * grows. Same hint as .adv-lit (Honza, Oct 29 2026). */
 .adv-card {
   --mx: 50%;
   --my: 0%;
@@ -490,7 +491,10 @@ main {
   z-index: -1;
   opacity: 0;
   transition: opacity 350ms var(--adv-ease);
-  background: radial-gradient(300px circle at var(--mx) var(--my), var(--adv-spot), transparent 65%);
+  background:
+    radial-gradient(260px circle at var(--mx) var(--my), rgba(var(--adv-l-cobalt), 0.2), transparent 65%),
+    radial-gradient(380px circle at calc(var(--mx) + 140px) calc(var(--my) + 90px), rgba(var(--adv-l-violet), 0.14), transparent 70%),
+    radial-gradient(300px circle at calc(var(--mx) - 160px) calc(var(--my) + 40px), rgba(var(--adv-l-navy), 0.35), transparent 70%);
 }
 .adv-card::after {
   content: '';
@@ -501,7 +505,7 @@ main {
   opacity: 0;
   pointer-events: none;
   transition: opacity 350ms var(--adv-ease);
-  background: radial-gradient(200px circle at var(--mx) var(--my), rgba(var(--adv-accent-rgb), 0.6), transparent 60%);
+  background: linear-gradient(115deg, rgba(var(--adv-l-ice), 0.55), rgba(var(--adv-l-cobalt), 0.35) 40%, rgba(var(--adv-l-violet), 0.5));
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
