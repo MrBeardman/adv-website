@@ -151,7 +151,35 @@
         "Rychlejší start nových nástrojů"
       ],
       "example": "Příklad z praxe",
-      "placeholder": "Ilustrační číslo"
+      "placeholder": "Ilustrační číslo",
+      "run": "Spustit poptávku",
+      "inquiryId": "poptavka"
+    },
+    "canvas": {
+      "services": {
+        "name": "Služby",
+        "kind": "Akce",
+        "wait": "Čeká",
+        "done": "Hotovo"
+      },
+      "work": {
+        "name": "Realizace",
+        "kind": "Historie běhů",
+        "wait": "Čeká",
+        "done": "Úspěch"
+      },
+      "partners": {
+        "name": "Partneři",
+        "kind": "Integrace",
+        "wait": "Čeká",
+        "done": "Připojeno"
+      },
+      "inquiry": {
+        "name": "Nová poptávka",
+        "kind": "Spouštěč",
+        "wait": "Čeká",
+        "done": "Připraveno"
+      }
     }
   },
   "en": {
@@ -306,7 +334,35 @@
         "New tools live sooner"
       ],
       "example": "From a real project",
-      "placeholder": "Illustrative figure"
+      "placeholder": "Illustrative figure",
+      "run": "Start an inquiry",
+      "inquiryId": "inquiry"
+    },
+    "canvas": {
+      "services": {
+        "name": "Services",
+        "kind": "Actions",
+        "wait": "Waiting",
+        "done": "Done"
+      },
+      "work": {
+        "name": "Work",
+        "kind": "Run history",
+        "wait": "Waiting",
+        "done": "Success"
+      },
+      "partners": {
+        "name": "Partners",
+        "kind": "Integrations",
+        "wait": "Waiting",
+        "done": "Connected"
+      },
+      "inquiry": {
+        "name": "New inquiry",
+        "kind": "Trigger",
+        "wait": "Waiting",
+        "done": "Ready"
+      }
     }
   }
 }

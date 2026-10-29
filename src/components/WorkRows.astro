@@ -71,6 +71,12 @@ const initials = (name: string) =>
                 </span>
               )}
             </span>
+            {c.status === 'published' && (
+              <span class="adv-row__run">
+                <i />
+                {s.service.runOk}
+              </span>
+            )}
             {linked && (
               <span class="adv-row__go">
                 <Arrow dir="up" size={18} />
@@ -84,6 +90,26 @@ const initials = (name: string) =>
 </ul>
 
 <style is:global>
+  /* canvas world: each case is a finished run in the log */
+  .adv-row__run {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 200, 255, 0.35);
+    background: rgba(124, 200, 255, 0.06);
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+    white-space: nowrap;
+  }
+  .adv-row__run i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+  }
   .adv-rows {
     display: grid;
     margin: 0;
@@ -100,7 +126,7 @@ const initials = (name: string) =>
   .adv-row {
     position: relative;
     display: grid;
-    grid-template-columns: 168px minmax(0, 1fr) auto;
+    grid-template-columns: 168px minmax(0, 1fr) auto auto;
     align-items: center;
     gap: 28px;
     padding: 22px 12px;
@@ -211,6 +237,10 @@ const initials = (name: string) =>
     }
     .adv-row__go {
       display: none;
+    }
+    .adv-row__run {
+      grid-column: 2;
+      justify-self: start;
     }
     .adv-row__client {
       font-size: 1.125rem;

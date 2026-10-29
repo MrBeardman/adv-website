@@ -26,7 +26,9 @@
       "menu": "Otevřít menu",
       "close": "Zavřít menu",
       "langSwitch": "Přepnout do angličtiny",
-      "skip": "Přeskočit na obsah"
+      "skip": "Přeskočit na obsah",
+      "run": "Spustit poptávku",
+      "live": "Workflow aktivní"
     },
     "footer": {
       "name": "ADV Innovations",
@@ -80,7 +82,9 @@
       "menu": "Open menu",
       "close": "Close menu",
       "langSwitch": "Switch to Czech",
-      "skip": "Skip to content"
+      "skip": "Skip to content",
+      "run": "Start an inquiry",
+      "live": "Workflow active"
     },
     "footer": {
       "name": "ADV Innovations",

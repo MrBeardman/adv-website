@@ -931,3 +931,163 @@ textarea.adv-input {
     display: none;
   }
 }
+
+/* ---------- The page as a workflow canvas (ui/NodeFrame.astro + scripts/canvas.ts) ----------
+ * Sections are nodes: a bar like a node in automation software (type icon, name, kind, status), the
+ * section as the body, ports top and bottom. One foil wire runs from node to node; the light follows
+ * scroll and switches each node's status from waiting to done. */
+.adv-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: clip;
+}
+.adv-canvas__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+.adv-canvas__wire {
+  fill: none;
+  stroke: rgba(201, 209, 222, 0.22);
+  stroke-width: 1.4;
+}
+.adv-canvas__lit {
+  fill: none;
+  stroke: var(--adv-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.adv-canvas__packet {
+  fill: #e6f5ff;
+  transition: opacity 200ms linear;
+}
+.adv-flow {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(72px, 9vw, 128px);
+  width: 100%;
+  max-width: calc(var(--adv-max) + 2 * var(--adv-gutter));
+  margin-inline: auto;
+  padding: 0 var(--adv-gutter) clamp(80px, 9vw, 140px);
+}
+.adv-nf {
+  position: relative;
+  border-radius: var(--adv-r-lg);
+  background:
+    var(--adv-weave), radial-gradient(80% 50% at 15% 0%, rgba(120, 160, 255, 0.1), transparent 60%),
+    linear-gradient(170deg, #11276a, #0a1845 55%, #081236);
+  box-shadow:
+    inset 0 1px 0 var(--adv-edge-hi),
+    inset 0 0 0 1px var(--adv-edge),
+    0 40px 90px -40px rgba(1, 4, 16, 0.95);
+}
+@media (min-width: 1000px) {
+  .adv-nf--left {
+    margin-right: 6%;
+  }
+  .adv-nf--right {
+    margin-left: 6%;
+  }
+}
+.adv-nf__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px clamp(16px, 2vw, 22px);
+  border-bottom: 1px solid var(--adv-line);
+  border-radius: var(--adv-r-lg) var(--adv-r-lg) 0 0;
+  background: linear-gradient(180deg, rgba(201, 209, 222, 0.07), rgba(201, 209, 222, 0.02));
+}
+.adv-nf__type {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
+  box-shadow: inset 0 1px 0 #fff;
+}
+.adv-nf__type svg {
+  width: 17px;
+  height: 17px;
+  stroke: var(--adv-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.adv-nf__name {
+  font-family: var(--adv-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.adv-nf__kind {
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--adv-edge);
+  font-family: var(--adv-mono);
+  font-size: 0.75rem;
+  color: var(--adv-muted);
+}
+.adv-nf__status {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--adv-mono);
+  font-size: 0.75rem;
+  color: var(--adv-accent);
+  transition: color 300ms var(--adv-ease);
+}
+.adv-nf__status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--adv-accent);
+  background: var(--adv-accent);
+  transition:
+    background-color 300ms var(--adv-ease),
+    border-color 300ms var(--adv-ease);
+}
+.js .is-canvas .adv-nf:not(.is-done) .adv-nf__status {
+  color: var(--adv-muted);
+}
+.js .is-canvas .adv-nf:not(.is-done) .adv-nf__status i {
+  background: transparent;
+  border-color: rgba(201, 209, 222, 0.45);
+}
+.adv-nf__port {
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--adv-foil);
+  background: var(--adv-bg-2);
+}
+.adv-nf__port--in {
+  top: -7px;
+}
+.adv-nf__port--out {
+  bottom: -7px;
+}
+.adv-nf.is-done .adv-nf__port--in,
+.no-js .adv-nf__port--in {
+  border-color: var(--adv-accent);
+  background: #12306e;
+}
+/* the section inside a node: no outer padding of its own, no gutter square (the node is the node) */
+.adv-nf__body > .adv-section {
+  padding-block: clamp(36px, 4.5vw, 72px);
+}
+.adv-nf__body .adv-wrap {
+  max-width: none;
+  padding-inline: clamp(20px, 3.4vw, 56px);
+}
+.adv-nf .adv-node {
+  display: none;
+}

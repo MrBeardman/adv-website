@@ -1,0 +1,11 @@
+---
+/** The run mark on actions that start something (canvas world): a small play triangle. */
+interface Props {
+  size?: number;
+}
+const { size = 12 } = Astro.props;
+---
+
+<svg class="adv-play" width={size} height={size} viewBox="0 0 12 12" aria-hidden="true">
+  <path d="M3.2 1.9v8.2a.6.6 0 0 0 .9.5l6.6-4.1a.6.6 0 0 0 0-1L4.1 1.4a.6.6 0 0 0-.9.5Z" fill="currentColor"></path>
+</svg>

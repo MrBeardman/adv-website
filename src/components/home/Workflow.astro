@@ -11,6 +11,7 @@
  * reduced motion: every node, wire and result is shown in its finished state.
  */
 import Arrow from '../ui/Arrow.astro';
+import Play from '../ui/Play.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import chrome from '../../i18n/chrome.json';
 import home from '../../i18n/home.json';
@@ -69,13 +70,13 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
       </h1>
       <p class="adv-lead adv-wf__sub" data-reveal style="--i:2">{c.hero.sub}</p>
       <div class="adv-wf__ctas" data-reveal style="--i:3">
-        <a class="adv-btn adv-btn--primary" href={routes.contact(lang)}>{c.cta.assessment}<Arrow /></a>
+        <a class="adv-btn adv-btn--primary" href={'#' + w.inquiryId}><Play />{w.run}</a>
         <a class="adv-btn adv-btn--ghost" href={routes.work(lang)}>{c.notFound.work}</a>
       </div>
       <p class="adv-wf__note" data-reveal style="--i:4">{c.hero.ctaNote}</p>
     </div>
 
-    <div class="adv-wf__file" data-reveal style="--i:2">
+    <div class="adv-wf__file" data-reveal style="--i:2" data-nf>
       <p class="adv-wf__stamp">{w.stamp}</p>
       <svg class="adv-wf__wires" data-wf-wires aria-hidden="true"></svg>
       <ol class="adv-wf__graph" aria-label={w.graphLabel}>
@@ -168,6 +169,7 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
           </div>
         </li>
       </ol>
+      <span class="adv-nf__port adv-nf__port--out" data-nf-out aria-hidden="true"></span>
     </div>
   </div>
 </section>

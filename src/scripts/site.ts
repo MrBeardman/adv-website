@@ -4,6 +4,7 @@
  * prefers-reduced-motion the movement is dropped (see site.css) and every scene shows its final state.
  */
 import { initStream } from './stream';
+import { initCanvas } from './canvas';
 import { countUp } from './count';
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -295,6 +296,7 @@ initPlay();
 initType();
 initBackground();
 if (document.querySelector('[data-stream]')) initStream({ reduceMotion, onScroll });
+if (document.querySelector('[data-canvas]')) initCanvas({ reduceMotion, onScroll });
 else {
   // Pages without the stream: a section node lights when it scrolls into view.
   const kick = document.querySelectorAll<HTMLElement>('.adv-node');

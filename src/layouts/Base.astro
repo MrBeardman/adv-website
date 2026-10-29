@@ -16,6 +16,8 @@ interface Props {
   ogImage?: string;
   /** Draw the stream of light through this page (needs [data-node] kickers, see scripts/stream.ts). */
   stream?: boolean | 'light';
+  /** The page is a workflow canvas: sections in ui/NodeFrame.astro, wired by scripts/canvas.ts. */
+  canvas?: boolean;
   noindex?: boolean;
 }
 const {
@@ -25,6 +27,7 @@ const {
   alternates,
   ogImage = '/media/cases/kesia/cover.webp',
   stream = false,
+  canvas = false,
   noindex = false,
 } = Astro.props;
 const site = Astro.site!;
@@ -111,7 +114,7 @@ const org = {
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
     <slot name="head" />
   </head>
-  <body>
+  <body class:list={[{ 'is-canvas': canvas }]}>
     <a class="skip-link screen-reader-text" href="#content">{t.nav.skip}</a>
     <div class="adv-bg" aria-hidden="true">
       <div class="adv-bg__mood adv-bg__mood--top"></div>
@@ -123,6 +126,7 @@ const org = {
     <div class="adv-progress" aria-hidden="true"></div>
     <Header lang={lang} alternates={alternates} />
     <main id="content">
+      {canvas && <div class="adv-canvas" data-canvas aria-hidden="true" />}
       {stream && <div class="adv-stream" data-stream={stream === 'light' ? 'light' : ''} aria-hidden="true" />}
       <slot />
     </main>

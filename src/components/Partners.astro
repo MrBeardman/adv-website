@@ -19,6 +19,7 @@ interface Props {
 const { lang, index } = Astro.props;
 const t = pick(about, lang).partners;
 const kicker = pick(home, lang).partners.kicker;
+const connected = pick(home, lang).canvas.partners.done;
 const byId = Object.fromEntries(t.items.map((c) => [c.id, c]));
 const dev = import.meta.env.DEV;
 const host = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -41,6 +42,10 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
           return (
             <li class="adv-card adv-card--lift adv-partners__card" data-reveal style={`--i:${i}`}>
               <div class:list={['adv-partners__plate', { 'is-dark': (p as { plate?: string }).plate === 'dark' }]}>
+                <span class="adv-partners__conn">
+                  <i />
+                  {connected}
+                </span>
                 <img src={p.logo} alt={p.name} style={`height:${p.logoH}px`} loading="lazy" decoding="async" />
               </div>
               <p class="adv-label">{c.category}</p>
@@ -79,6 +84,30 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
 </section>
 
 <style is:global>
+  /* canvas world: a partner is a connected integration */
+  .adv-partners__plate {
+    position: relative;
+  }
+  .adv-partners__conn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(7, 16, 46, 0.82);
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .adv-partners__conn i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+  }
   .adv-partners__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

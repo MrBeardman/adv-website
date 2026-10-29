@@ -44,6 +44,7 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **Redesign canvas (Oct 29)**: node bars (`home.json` → `canvas`: Služby/Akce, Realizace/Historie běhů, Partneři/Integrace, Nová poptávka/Spouštěč; Čeká/Hotovo/Úspěch/Připojeno/Připraveno), header "Workflow aktivní" and "Spustit poptávku" (`chrome.json` nav.live, nav.run), case run status "Úspěch" (`services.json` service.runOk).
 - **Redesign (branch `redesign`, Oct 29) workflow hero** (`home.json` → `workflow`): file stamp ("Spis 0001 · Jak to u vás poběží"), "Vaše firma dnes" + its three pains, "Firma, která běží" + its four results, "Otevřít". Node results reuse `homeNumbers.ts` (1 200 h and 14 dní are still placeholders).
 - Automation page: hero pill and sub, "Kde mizí hodiny." + the three card bodies, the scene labels
   (Účetní / Obchod / Schválení, Návrh odpovědi / Odeslat), the window texts (file name, node labels,

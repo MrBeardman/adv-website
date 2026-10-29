@@ -1,6 +1,7 @@
 ---
 import Logo from './ui/Logo.astro';
 import Arrow from './ui/Arrow.astro';
+import Play from './ui/Play.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import { routes } from '../data/routes';
@@ -38,6 +39,7 @@ const sub = ENABLED_SERVICES.map((s) => ({
     <a class="adv-header__logo" href={routes.home(lang)} aria-label={t.footer.logoLabel}>
       <Logo decorative />
     </a>
+    <span class="adv-header__live" aria-hidden="true"><i></i>{t.nav.live}</span>
     <nav class="adv-header__nav" aria-label={t.nav.wordmark}>
       <ul>
         {
@@ -103,8 +105,8 @@ const sub = ENABLED_SERVICES.map((s) => ({
         <span aria-hidden="true" class:list={[{ on: lang === 'en' }]}>EN</span>
       </a>
       <a class="adv-btn adv-btn--primary adv-btn--sm adv-header__cta" href={routes.contact(lang)}>
-        {t.nav.contact}
-        <Arrow />
+        <Play />
+        {t.nav.run}
       </a>
       <button
         class="adv-header__burger"
@@ -157,6 +159,30 @@ const sub = ENABLED_SERVICES.map((s) => ({
 </header>
 
 <style is:global>
+  /* app chrome (canvas world): a quiet 'workflow active' mark next to the logo */
+  .adv-header__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 18px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--adv-edge);
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+  .adv-header__live i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+  }
+  @media (max-width: 1180px) {
+    .adv-header__live {
+      display: none;
+    }
+  }
   .adv-header {
     position: fixed;
     inset: 0 0 auto 0;

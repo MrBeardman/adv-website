@@ -2,7 +2,9 @@
 /**
  * Homepage (CS at /, EN at /en/), Honza, Oct 2026 redesign "The Client File": the open client file with the
  * business as one automation workflow (components/home/Workflow.astro); every step links to its service.
- * Below it: selected work, partners, contact. The 3D card stack (CardStack.astro) is no longer used here.
+ * Below it the page is the workflow itself (Honza: "the website is the automation"): every section is a node
+ * (ui/NodeFrame.astro) wired to the next one, the light following scroll (scripts/canvas.ts). The 3D card
+ * stack (CardStack.astro) is no longer used here.
  * The Relay-style page lives at /sluzby/automatizace/ (templates/Automation.astro).
  */
 import Base from '../layouts/Base.astro';
@@ -11,9 +13,10 @@ import ServiceIndex from '../components/home/ServiceIndex.astro';
 import SelectedWork from '../components/SelectedWork.astro';
 import Partners from '../components/Partners.astro';
 import CtaPanel from '../components/CtaPanel.astro';
-import BrandMoment from '../components/ui/BrandMoment.astro';
+import NodeFrame from '../components/ui/NodeFrame.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
+import home from '../i18n/home.json';
 import { both, routes } from '../data/routes';
 
 interface Props {
@@ -21,14 +24,24 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = pick(chrome, lang);
+const n = pick(home, lang).canvas;
+const inquiryId = pick(home, lang).workflow.inquiryId;
 ---
 
-<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} stream="light">
+<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} canvas>
   <Workflow lang={lang} />
-  <ServiceIndex lang={lang} />
-  {/* Optional brand-moment image: pass src to show it (see ui/BrandMoment.astro). */}
-  <BrandMoment />
-  <SelectedWork lang={lang} limit={3} />
-  <Partners lang={lang} />
-  <CtaPanel lang={lang} />
+  <div class="adv-flow">
+    <NodeFrame {...n.services} icon="racks" side="left">
+      <ServiceIndex lang={lang} />
+    </NodeFrame>
+    <NodeFrame {...n.work} icon="exchange" side="right">
+      <SelectedWork lang={lang} limit={3} />
+    </NodeFrame>
+    <NodeFrame {...n.partners} icon="nodes" side="left">
+      <Partners lang={lang} />
+    </NodeFrame>
+    <NodeFrame {...n.inquiry} icon="arrowRight" side="full" id={inquiryId} last>
+      <CtaPanel lang={lang} />
+    </NodeFrame>
+  </div>
 </Base>

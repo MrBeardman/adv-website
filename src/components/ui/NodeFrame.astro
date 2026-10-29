@@ -1,0 +1,58 @@
+---
+/**
+ * A section as a node on the page's workflow canvas (Honza, Oct 2026: "the website itself is the
+ * automation"). A header bar like a node in automation software (type icon, node name, kind, a status
+ * that turns from waiting to done when the page's wire reaches it), then the section itself as the body.
+ * Ports top and bottom; scripts/canvas.ts draws the wire from one node's output to the next one's input
+ * and runs the light down it with scroll. Without JS every node shows done.
+ *
+ * `side` shifts the node left or right on wide screens so the wire curves between them like a canvas.
+ */
+import { SHAPES } from '../../scripts/stack/iconShapes.js';
+
+interface Props {
+  /** node name in the bar, e.g. "Služby" */
+  name: string;
+  /** what kind of node, e.g. "Akce" / "Action" */
+  kind: string;
+  /** status texts: before the wire arrives, after */
+  wait: string;
+  done: string;
+  icon?: string;
+  side?: 'left' | 'right' | 'full';
+  id?: string;
+  first?: boolean;
+  last?: boolean;
+}
+const { name, kind, wait, done, icon = 'nodes', side = 'full', id, first = false, last = false } = Astro.props;
+type Shape = { d?: string; circle?: number[]; rect?: number[] };
+const shapes = (SHAPES as Record<string, Shape[]>)[icon] ?? [];
+---
+
+<div class:list={['adv-nf', `adv-nf--${side}`]} id={id} data-nf>
+  {!first && <span class="adv-nf__port adv-nf__port--in" data-nf-in aria-hidden="true" />}
+  <div class="adv-nf__bar" aria-hidden="true">
+    <span class="adv-nf__type">
+      <svg viewBox="0 0 24 24" fill="none">
+        {
+          shapes.map((sh) =>
+            sh.d ? (
+              <path d={sh.d} />
+            ) : sh.circle ? (
+              <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+            ) : sh.rect ? (
+              <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
+            ) : null,
+          )
+        }
+      </svg>
+    </span>
+    <span class="adv-nf__name">{name}</span>
+    <span class="adv-nf__kind">{kind}</span>
+    <span class="adv-nf__status" data-wait={wait} data-done={done}><i></i><span>{done}</span></span>
+  </div>
+  <div class="adv-nf__body">
+    <slot />
+  </div>
+  {!last && <span class="adv-nf__port adv-nf__port--out" data-nf-out aria-hidden="true" />}
+</div>
