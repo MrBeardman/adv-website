@@ -223,7 +223,7 @@ const sub = ENABLED_SERVICES.map((s) => ({
   }
   .adv-header__logo {
     display: block;
-    width: 132px;
+    width: clamp(150px, 11vw, 172px);
     flex: none;
     border-radius: 6px;
   }
@@ -560,7 +560,7 @@ const sub = ENABLED_SERVICES.map((s) => ({
   }
   @media (max-width: 420px) {
     .adv-header__logo {
-      width: 120px;
+      width: 140px;
     }
   }
 </style>
