@@ -4,24 +4,22 @@
  * and the services pages. Each loops every 8 s while on screen ([data-live] pauses it off screen) and
  * holds a clean final frame under reduced motion.
  *
- *   ai-automation          a three-step workflow ticks: a pulse runs, items get checked one by one
- *   business-optimisation  hours bar shrinking: "before" stays, "after" shrinks
- *   software               a wireframe assembles into a UI
- *   websites               a browser frame draws, then a bookings sparkline rises
+ *   ai-automation, business-optimisation, software, websites   small product demos (ui/Demo.astro)
+ *   routing, assistant                                          the automation page's use cases
  *
  * Labels only, no numbers: these are illustrations, not claims.
  */
 import { pick, type Lang } from '../../i18n';
-import home from '../../i18n/home.json';
 import automation from '../../i18n/automation.json';
+import Demo from './Demo.astro';
 
 interface Props {
   kind: string;
   lang: Lang;
 }
 const { kind, lang } = Astro.props;
-const s = pick(home, lang).values.scene;
 const a = pick(automation, lang).uses.scene;
+const DEMOS = ['ai-automation', 'business-optimisation', 'software', 'websites'];
 ---
 
 <div class={`adv-scene adv-scene--${kind}`} data-live aria-hidden="true">
@@ -70,83 +68,7 @@ const a = pick(automation, lang).uses.scene;
       </div>
     )
   }
-  {
-    kind === 'ai-automation' && (
-      <>
-        <div class="sc-flow">
-          <i />
-          <span />
-          <i />
-          <span />
-          <i />
-        </div>
-        <ul class="sc-rows">
-          {s.rows.map((r, i) => (
-            <li style={`--k:${i}`}>
-              <b />
-              {r}
-            </li>
-          ))}
-        </ul>
-      </>
-    )
-  }
-  {
-    kind === 'business-optimisation' && (
-      <div class="sc-bars">
-        <p>
-          <span>{s.before}</span>
-          <em class="sc-bar sc-bar--before" />
-        </p>
-        <p>
-          <span>{s.after}</span>
-          <em class="sc-bar sc-bar--after" />
-        </p>
-        <small>{s.unit}</small>
-      </div>
-    )
-  }
-  {
-    kind === 'software' && (
-      <div class="sc-ui">
-        <div class="sc-ui__top" />
-        <div class="sc-ui__side" />
-        <div class="sc-ui__a" />
-        <div class="sc-ui__b" />
-        <div class="sc-ui__btn" />
-      </div>
-    )
-  }
-  {
-    kind === 'websites' && (
-      <div class="sc-web">
-        <div class="sc-web__bar">
-          <i />
-          <i />
-          <i />
-          <span />
-        </div>
-        <div class="sc-web__hero" />
-        <div class="sc-web__chart">
-          <small>{s.bookings}</small>
-          <svg viewBox="0 0 200 60" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id={`sc-area-${lang}`} x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0" stop-color="rgba(124,200,255,0.35)" />
-                <stop offset="1" stop-color="rgba(124,200,255,0)" />
-              </linearGradient>
-            </defs>
-            <path
-              class="sc-web__area"
-              d="M0 50 C20 49 34 46 52 47 S80 44 98 38 S130 30 148 24 S182 12 200 9 L200 60 L0 60Z"
-              fill={`url(#sc-area-${lang})`}
-            />
-            <path class="sc-web__line" d="M0 50 C20 49 34 46 52 47 S80 44 98 38 S130 30 148 24 S182 12 200 9" />
-          </svg>
-        </div>
-      </div>
-    )
-  }
+  {DEMOS.includes(kind) && <Demo kind={kind} lang={lang} />}
 </div>
 
 <style is:global>
@@ -173,105 +95,6 @@ const a = pick(automation, lang).uses.scene;
     animation-timing-function: var(--adv-ease);
   }
 
-  /* AI and automation */
-  .sc-flow {
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    top: 26px;
-    display: flex;
-    align-items: center;
-  }
-  .sc-flow i {
-    width: 14px;
-    height: 14px;
-    flex: none;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    background: #0c0e14;
-    animation-name: sc-node;
-  }
-  .sc-flow i:nth-of-type(2) {
-    animation-delay: 0.7s;
-  }
-  .sc-flow i:nth-of-type(3) {
-    animation-delay: 1.4s;
-  }
-  .sc-flow span {
-    position: relative;
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.16);
-    overflow: hidden;
-  }
-  .sc-flow span::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, var(--adv-accent) 70%, transparent);
-    translate: -100% 0;
-    animation: sc-run var(--d) var(--adv-ease-io) infinite;
-  }
-  .sc-flow span:nth-of-type(2)::after {
-    animation-delay: 0.7s;
-  }
-  @keyframes sc-run {
-    0% {
-      translate: -100% 0;
-    }
-    10%,
-    100% {
-      translate: 100% 0;
-    }
-  }
-  @keyframes sc-node {
-    0%,
-    4% {
-      border-color: rgba(255, 255, 255, 0.35);
-      background: #0c0e14;
-      box-shadow: none;
-    }
-    8%,
-    80% {
-      border-color: var(--adv-accent);
-      background: rgba(124, 200, 255, 0.18);
-    }
-    92%,
-    100% {
-      border-color: rgba(255, 255, 255, 0.35);
-      background: #0c0e14;
-      box-shadow: none;
-    }
-  }
-  .sc-rows {
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    bottom: 14px;
-    display: grid;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .sc-rows li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.03);
-    animation-name: sc-row;
-    animation-delay: calc(2s + var(--k) * 0.6s);
-  }
-  .sc-rows b {
-    width: 10px;
-    height: 10px;
-    border-radius: 3px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    animation: inherit;
-    animation-name: sc-tick;
-  }
   @keyframes sc-row {
     0%,
     2% {
@@ -303,218 +126,6 @@ const a = pick(automation, lang).uses.scene;
     100% {
       border-color: rgba(255, 255, 255, 0.3);
       background-color: transparent;
-    }
-  }
-
-  /* Business optimisation: hours bar shrinking */
-  .sc-bars {
-    position: absolute;
-    inset: 22px 18px 16px;
-    display: grid;
-    align-content: center;
-    gap: 14px;
-  }
-  .sc-bars p {
-    display: grid;
-    grid-template-columns: 52px 1fr;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-  }
-  .sc-bar {
-    display: block;
-    height: 12px;
-    border-radius: 4px;
-    transform-origin: left;
-  }
-  .sc-bar--before {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
-  }
-  .sc-bar--after {
-    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.55));
-    animation-name: sc-shrink;
-    transform: scaleX(0.28);
-  }
-  .sc-bars small {
-    justify-self: end;
-    font-size: 0.75rem;
-    opacity: 0.8;
-  }
-  @keyframes sc-shrink {
-    0%,
-    12% {
-      transform: scaleX(1);
-    }
-    42%,
-    84% {
-      transform: scaleX(0.28);
-    }
-    100% {
-      transform: scaleX(1);
-    }
-  }
-
-  /* Prototype: wireframe assembles into UI */
-  .sc-ui {
-    position: absolute;
-    inset: 18px 22px;
-    display: grid;
-    grid-template-columns: 26% 1fr 1fr;
-    grid-template-rows: 18px 1fr 22px;
-    gap: 8px;
-  }
-  .sc-ui > div {
-    border-radius: 5px;
-    border: 1px dashed rgba(255, 255, 255, 0.28);
-    animation-name: sc-solid;
-  }
-  .sc-ui__top {
-    grid-column: 1 / -1;
-  }
-  .sc-ui__side {
-    grid-row: 2 / 4;
-    animation-delay: 0.35s;
-  }
-  .sc-ui__a {
-    animation-delay: 0.7s;
-  }
-  .sc-ui__b {
-    animation-delay: 1.05s;
-  }
-  .sc-ui__btn {
-    grid-column: 3;
-    justify-self: end;
-    width: 70%;
-    animation-name: sc-btn !important;
-    animation-delay: 1.4s;
-  }
-  @keyframes sc-solid {
-    0%,
-    10% {
-      border-style: dashed;
-      border-color: rgba(255, 255, 255, 0.28);
-      background: transparent;
-    }
-    16%,
-    84% {
-      border-style: solid;
-      border-color: rgba(255, 255, 255, 0.1);
-      background: linear-gradient(165deg, #1d2130, #10121a);
-    }
-    92%,
-    100% {
-      border-style: dashed;
-      border-color: rgba(255, 255, 255, 0.28);
-      background: transparent;
-    }
-  }
-  @keyframes sc-btn {
-    0%,
-    10% {
-      border-style: dashed;
-      border-color: rgba(255, 255, 255, 0.28);
-      background: transparent;
-    }
-    16%,
-    84% {
-      border-style: solid;
-      border-color: var(--adv-accent);
-      background: var(--adv-accent);
-    }
-    92%,
-    100% {
-      border-style: dashed;
-      border-color: rgba(255, 255, 255, 0.28);
-      background: transparent;
-    }
-  }
-
-  /* Website: browser frame + bookings sparkline */
-  .sc-web {
-    position: absolute;
-    inset: 14px 18px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    clip-path: inset(0 100% 0 0 round 8px);
-    animation-name: sc-frame;
-  }
-  .sc-web__bar {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    height: 16px;
-    padding: 0 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .sc-web__bar i {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
-  }
-  .sc-web__bar span {
-    flex: 1;
-    height: 6px;
-    margin-left: 8px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.06);
-  }
-  .sc-web__hero {
-    height: 22px;
-    margin: 8px 10px 0;
-    width: 55%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
-  }
-  .sc-web__chart {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 8px;
-    height: 58px;
-  }
-  .sc-web__chart small {
-    position: absolute;
-    top: -2px;
-    left: 0;
-    font-size: 0.75rem;
-  }
-  .sc-web__chart svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    /* line and area are revealed together, left to right, by one clip */
-    clip-path: inset(-4px 100% -4px 0);
-    animation-name: sc-reveal;
-  }
-  .sc-web__line {
-    fill: none;
-    stroke: var(--adv-accent);
-    stroke-width: 1.6;
-    vector-effect: non-scaling-stroke;
-  }
-  @keyframes sc-frame {
-    0% {
-      clip-path: inset(0 100% 0 0 round 8px);
-    }
-    12%,
-    88% {
-      clip-path: inset(0 0 0 0 round 8px);
-    }
-    100% {
-      clip-path: inset(0 0 0 100% round 8px);
-    }
-  }
-  @keyframes sc-reveal {
-    0%,
-    20% {
-      clip-path: inset(-4px 100% -4px 0);
-    }
-    55%,
-    100% {
-      clip-path: inset(-4px 0 -4px 0);
     }
   }
 
@@ -750,28 +361,6 @@ const a = pick(automation, lang).uses.scene;
     .sc-chat__draft em {
       background: var(--adv-accent);
       color: #07101e;
-    }
-    .sc-flow i,
-    .sc-rows b {
-      border-color: var(--adv-accent);
-      background-color: rgba(124, 200, 255, 0.18);
-    }
-    .sc-flow span::after {
-      display: none;
-    }
-    .sc-ui > div {
-      border-style: solid;
-      border-color: rgba(255, 255, 255, 0.1);
-      background: linear-gradient(165deg, #1d2130, #10121a);
-    }
-    .sc-ui__btn {
-      background: var(--adv-accent) !important;
-    }
-    .sc-web {
-      clip-path: none;
-    }
-    .sc-web__chart svg {
-      clip-path: none;
     }
   }
 </style>

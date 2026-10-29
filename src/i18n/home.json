@@ -71,7 +71,41 @@
         "before": "Před",
         "after": "Po",
         "unit": "hodin týdně",
-        "bookings": "Rezervace"
+        "bookings": "Rezervace",
+        "demo": {
+          "inbox": "Příchozí",
+          "lanes": [
+            "Účetnictví",
+            "Sklad",
+            "Podpora"
+          ],
+          "files": [
+            "faktura.pdf",
+            "objednavka.xlsx",
+            "dotaz.eml"
+          ],
+          "sorted": "Vše roztříděno",
+          "process": "Schválení faktury",
+          "automate": "Automatizovat",
+          "steps": [
+            "Excel",
+            "E-mail",
+            "Tisk",
+            "Podpis",
+            "Archiv"
+          ],
+          "auto": "Automaticky",
+          "url": "vasefirma.cz",
+          "cta": "Rezervovat",
+          "booked": "Nová rezervace",
+          "columns": [
+            "Nové",
+            "Řeší se",
+            "Hotovo"
+          ],
+          "card": "Zakázka",
+          "saved": "Uloženo"
+        }
       }
     },
     "kesia": {
@@ -262,7 +296,41 @@
         "before": "Before",
         "after": "After",
         "unit": "hours a week",
-        "bookings": "Bookings"
+        "bookings": "Bookings",
+        "demo": {
+          "inbox": "Incoming",
+          "lanes": [
+            "Accounting",
+            "Warehouse",
+            "Support"
+          ],
+          "files": [
+            "invoice.pdf",
+            "order.xlsx",
+            "enquiry.eml"
+          ],
+          "sorted": "All sorted",
+          "process": "Invoice approval",
+          "automate": "Automate",
+          "steps": [
+            "Excel",
+            "Email",
+            "Print",
+            "Sign",
+            "Archive"
+          ],
+          "auto": "Automatic",
+          "url": "yourcompany.com",
+          "cta": "Book now",
+          "booked": "New booking",
+          "columns": [
+            "New",
+            "In progress",
+            "Done"
+          ],
+          "card": "Job",
+          "saved": "Saved"
+        }
       }
     },
     "kesia": {

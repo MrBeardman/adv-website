@@ -59,6 +59,12 @@
   ("Hovor") and 4 ("Stavba") bodies, CTA panel texts ("Který úkol byste už nikdy nedělali?" ...), form
   API messages, Kesia chart label.
 
+- **Service demos** (`i18n/home.json` → `values.scene.demo`, shown in ui/Demo.astro): labels only, no
+  numbers. CS: Příchozí; Účetnictví / Sklad / Podpora; faktura.pdf, objednavka.xlsx, dotaz.eml; Vše roztříděno;
+  Schválení faktury; Automatizovat; Excel / E-mail / Tisk / Podpis / Archiv; Automaticky; vasefirma.cz;
+  Rezervovat; Nová rezervace; Nové / Řeší se / Hotovo; Zakázka; Uloženo. EN equivalents alongside.
+- **Header CTA** is now a split pill: "Spustit poptávku" (homepage inquiry flow) | "Kontakt" (contact page).
+
 ## Launch checklist
 - [ ] Replace placeholder numbers in `src/data/homeNumbers.ts`: AI **1,200 h** and Software **14 days**
       (`placeholder: true`, dashed outline in dev builds).
