@@ -44,6 +44,7 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **Redesign (branch `redesign`, Oct 29) workflow hero** (`home.json` → `workflow`): file stamp ("Spis 0001 · Jak to u vás poběží"), "Vaše firma dnes" + its three pains, "Firma, která běží" + its four results, "Otevřít". Node results reuse `homeNumbers.ts` (1 200 h and 14 dní are still placeholders).
 - Automation page: hero pill and sub, "Kde mizí hodiny." + the three card bodies, the scene labels
   (Účetní / Obchod / Schválení, Návrh odpovědi / Odeslat), the window texts (file name, node labels,
   log statuses), workflow grid labels, statement ("Většina práce je rutina. ..."), tools heading.

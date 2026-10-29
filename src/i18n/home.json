@@ -6,7 +6,12 @@
     },
     "hero": {
       "pill": "První konzultace zdarma",
-      "typeWords": ["byznysu.", "času.", "klidu.", "prodejů."],
+      "typeWords": [
+        "byznysu.",
+        "času.",
+        "klidu.",
+        "prodejů."
+      ],
       "ctaWork": "Prohlédnout realizace",
       "window": {
         "file": "faktury-schvalovani.flow",
@@ -58,7 +63,11 @@
         "websites": "Nový web, který prodává"
       },
       "scene": {
-        "rows": ["Faktura", "Objednávka", "Dotaz"],
+        "rows": [
+          "Faktura",
+          "Objednávka",
+          "Dotaz"
+        ],
         "before": "Před",
         "after": "Po",
         "unit": "hodin týdně",
@@ -90,11 +99,26 @@
     "process": {
       "kicker": "Postup",
       "steps": [
-        { "title": "Hovor", "body": "Půlhodina o tom, kde ve firmě mizí čas. Zdarma a bez závazků." },
-        { "title": "Mapování", "body": "Čas strávený ve firmě dřív, než se cokoli naplánuje: kde mizí hodiny, co se vyplatí automatizovat a jakou to pro vás má hodnotu." },
-        { "title": "Demo", "body": "Funkční ukázka brzy, pokud to jde, tak na vašich datech, abyste se rozhodovali nad něčím, na co se dá kliknout, ne nad slajdem." },
-        { "title": "Stavba", "body": "Stavíme po etapách, takže první část se používá dřív, než se plánuje ta poslední." },
-        { "title": "Podpora", "body": "Předáme to lidem, kteří s tím budou pracovat, a zůstáváme: podpora a cokoli, co bude firma potřebovat dál." }
+        {
+          "title": "Hovor",
+          "body": "Půlhodina o tom, kde ve firmě mizí čas. Zdarma a bez závazků."
+        },
+        {
+          "title": "Mapování",
+          "body": "Čas strávený ve firmě dřív, než se cokoli naplánuje: kde mizí hodiny, co se vyplatí automatizovat a jakou to pro vás má hodnotu."
+        },
+        {
+          "title": "Demo",
+          "body": "Funkční ukázka brzy, pokud to jde, tak na vašich datech, abyste se rozhodovali nad něčím, na co se dá kliknout, ne nad slajdem."
+        },
+        {
+          "title": "Stavba",
+          "body": "Stavíme po etapách, takže první část se používá dřív, než se plánuje ta poslední."
+        },
+        {
+          "title": "Podpora",
+          "body": "Předáme to lidem, kteří s tím budou pracovat, a zůstáváme: podpora a cokoli, co bude firma potřebovat dál."
+        }
       ]
     },
     "partners": {
@@ -108,6 +132,26 @@
       "taskPlaceholder": "Třeba: každé pondělí přepisujeme objednávky z e-mailu do Pohody.",
       "submit": "Odeslat",
       "or": "Nebo rovnou zavolejte"
+    },
+    "workflow": {
+      "stamp": "Spis 0001 · Jak to u vás poběží",
+      "graphLabel": "Jak spolu naše služby pracují: od dnešního stavu firmy k firmě, která běží",
+      "inTitle": "Vaše firma dnes",
+      "inItems": [
+        "Přepisování dat ručně",
+        "Schvalování e-mailem",
+        "Tabulky a zvyk"
+      ],
+      "open": "Otevřít",
+      "outTitle": "Firma, která běží",
+      "outItems": [
+        "Čas zpět pro tým",
+        "Nižší provozní náklady",
+        "Víc poptávek a zákazníků",
+        "Rychlejší start nových nástrojů"
+      ],
+      "example": "Příklad z praxe",
+      "placeholder": "Ilustrační číslo"
     }
   },
   "en": {
@@ -117,7 +161,12 @@
     },
     "hero": {
       "pill": "First consultation free",
-      "typeWords": ["business.", "time.", "focus.", "sales."],
+      "typeWords": [
+        "business.",
+        "time.",
+        "focus.",
+        "sales."
+      ],
       "ctaWork": "See our work",
       "window": {
         "file": "invoice-approval.flow",
@@ -169,7 +218,11 @@
         "websites": "Launch a brand-new website"
       },
       "scene": {
-        "rows": ["Invoice", "Order", "Enquiry"],
+        "rows": [
+          "Invoice",
+          "Order",
+          "Enquiry"
+        ],
         "before": "Before",
         "after": "After",
         "unit": "hours a week",
@@ -201,11 +254,26 @@
     "process": {
       "kicker": "Process",
       "steps": [
-        { "title": "Call", "body": "Half an hour on where the time goes in your business. Free, no strings attached." },
-        { "title": "Map", "body": "Time inside the business before anything is scoped: where the hours go, what is worth automating, and what it is worth to you." },
-        { "title": "Demo", "body": "A working demo early, on your own data where we can, so decisions are made on something you can click rather than a slide." },
-        { "title": "Build", "body": "We build in stages, so the first part is in use before the last one is planned." },
-        { "title": "Support", "body": "We hand it over to the people who use it, and stay on for support and whatever the business needs next." }
+        {
+          "title": "Call",
+          "body": "Half an hour on where the time goes in your business. Free, no strings attached."
+        },
+        {
+          "title": "Map",
+          "body": "Time inside the business before anything is scoped: where the hours go, what is worth automating, and what it is worth to you."
+        },
+        {
+          "title": "Demo",
+          "body": "A working demo early, on your own data where we can, so decisions are made on something you can click rather than a slide."
+        },
+        {
+          "title": "Build",
+          "body": "We build in stages, so the first part is in use before the last one is planned."
+        },
+        {
+          "title": "Support",
+          "body": "We hand it over to the people who use it, and stay on for support and whatever the business needs next."
+        }
       ]
     },
     "partners": {
@@ -219,6 +287,26 @@
       "taskPlaceholder": "For example: every Monday we retype orders from email into our accounting system.",
       "submit": "Send",
       "or": "Or just call"
+    },
+    "workflow": {
+      "stamp": "File 0001 · How your business will run",
+      "graphLabel": "How our services work together: from your company today to a business that runs",
+      "inTitle": "Your company today",
+      "inItems": [
+        "Retyping data by hand",
+        "Approvals by email",
+        "Spreadsheets and habit"
+      ],
+      "open": "Open",
+      "outTitle": "A running business",
+      "outItems": [
+        "Time back for the team",
+        "Lower running costs",
+        "More inquiries and customers",
+        "New tools live sooner"
+      ],
+      "example": "From a real project",
+      "placeholder": "Illustrative figure"
     }
   }
 }

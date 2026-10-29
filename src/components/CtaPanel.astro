@@ -88,7 +88,7 @@ const uid = `cta-${lang}`;
     padding-bottom: clamp(90px, 10vw, 150px);
   }
   .adv-cta__panel {
-    --ink: #07101e;
+    --ink: #0b1a4a; /* the final index card: paper with navy ink (Client File world) */
     position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -97,12 +97,12 @@ const uid = `cta-${lang}`;
     border-radius: var(--adv-r-xl);
     color: var(--ink);
     background:
-      radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
-      radial-gradient(70% 90% at 0% 100%, rgba(32, 64, 170, 0.35), transparent 60%),
-      linear-gradient(135deg, #9ad6ff, #7cc8ff 45%, #63b4f2);
+      radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.7), transparent 55%),
+      radial-gradient(70% 90% at 0% 100%, rgba(40, 84, 210, 0.1), transparent 60%),
+      linear-gradient(160deg, #f2f4f8, #e3e8f0 60%, #d6dce8);
     box-shadow:
       inset 1px 1px 0 rgba(255, 255, 255, 0.7),
-      inset -1px -1px 0 rgba(7, 16, 30, 0.15),
+      inset -1px -1px 0 rgba(11, 26, 74, 0.15),
       0 40px 90px -40px rgba(0, 0, 0, 0.8);
     overflow: hidden;
     isolation: isolate;
@@ -146,7 +146,7 @@ const uid = `cta-${lang}`;
     margin-top: 20px;
     max-width: 40ch;
     font-size: var(--adv-lead);
-    color: rgba(7, 16, 30, 0.78);
+    color: rgba(11, 26, 74, 0.78);
   }
   .adv-cta__call {
     display: flex;
@@ -154,7 +154,7 @@ const uid = `cta-${lang}`;
     gap: 6px 12px;
     margin-top: 28px;
     font-size: 0.9375rem;
-    color: rgba(7, 16, 30, 0.7);
+    color: rgba(11, 26, 74, 0.7);
   }
   .adv-cta__call a {
     font-weight: 700;
@@ -168,23 +168,23 @@ const uid = `cta-${lang}`;
     gap: 16px;
   }
   .adv-cta__form .adv-field label {
-    color: rgba(7, 16, 30, 0.7);
+    color: rgba(11, 26, 74, 0.7);
   }
   .adv-cta__form .adv-input {
     color: var(--ink);
     background: rgba(255, 255, 255, 0.42);
-    border-color: rgba(7, 16, 30, 0.18);
+    border-color: rgba(11, 26, 74, 0.18);
   }
   .adv-cta__form .adv-input::placeholder {
-    color: rgba(7, 16, 30, 0.5);
+    color: rgba(11, 26, 74, 0.5);
   }
   .adv-cta__form .adv-input:hover {
-    border-color: rgba(7, 16, 30, 0.4);
+    border-color: rgba(11, 26, 74, 0.4);
   }
   .adv-cta__form .adv-input:focus {
     border-color: var(--ink);
     background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 0 3px rgba(7, 16, 30, 0.14);
+    box-shadow: 0 0 0 3px rgba(11, 26, 74, 0.14);
   }
   .adv-cta__form :focus-visible {
     outline-color: var(--ink);
@@ -197,11 +197,11 @@ const uid = `cta-${lang}`;
   }
   .adv-cta__submit {
     background: var(--ink);
-    color: var(--adv-accent);
+    color: var(--adv-paper);
   }
   .adv-cta__submit:hover {
     transform: translateY(-1px);
-    box-shadow: 0 14px 30px -14px rgba(7, 16, 30, 0.8);
+    box-shadow: 0 14px 30px -14px rgba(11, 26, 74, 0.8);
   }
   .adv-cta__form .adv-form-status[data-state='ok'],
   .adv-cta__form .adv-form-status[data-state='error'] {

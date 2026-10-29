@@ -1,0 +1,536 @@
+---
+/**
+ * Homepage hero (Honza, Oct 2026 redesign, "The Client File" + workflow): the open client file, and inside
+ * it the business as one automation workflow. Your company today → Business optimisation → three parallel
+ * steps (AI and automation, prototypes and software, websites) → a running business. Every step is a link
+ * to its service page; each one drops its real result as a byproduct slip (homeNumbers.ts, placeholders
+ * flagged). Replaces the 3D card stack (visitors did not know the cards were clickable).
+ *
+ * The wires and the travelling light are drawn by scripts/workflow.ts from the rendered node positions,
+ * so the same markup works as a 4-column graph on desktop and a vertical one on phones. Without JS or with
+ * reduced motion: every node, wire and result is shown in its finished state.
+ */
+import Arrow from '../ui/Arrow.astro';
+import { pick, loc, type Lang } from '../../i18n';
+import chrome from '../../i18n/chrome.json';
+import home from '../../i18n/home.json';
+import services from '../../i18n/services.json';
+import { routes } from '../../data/routes';
+import { serviceBySlug } from '../../data/capabilities';
+import { HOME_NUMBERS } from '../../data/homeNumbers';
+import { SHAPES } from '../../scripts/stack/iconShapes.js';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const w = pick(home, lang).workflow;
+const sv = pick(services, lang);
+const DEV = import.meta.env.DEV;
+
+const ICON: Record<string, string> = {
+  'ai-automation': 'nodes',
+  'business-optimisation': 'racks',
+  websites: 'globe',
+  software: 'diamondCore',
+};
+type Shape = { d?: string; circle?: number[]; rect?: number[] };
+const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? [];
+
+const step = (slug: string) => {
+  const meta = serviceBySlug(slug);
+  const copy = sv.capabilities.items.find((i) => i.slug === slug)!;
+  const n = HOME_NUMBERS.find((x) => x.slug === slug);
+  return {
+    slug,
+    enabled: !!meta?.enabled,
+    href: routes.service(lang, slug),
+    title: meta && 'nav' in meta ? meta.nav[lang] : copy.title,
+    icon: ICON[slug] ?? 'nodes',
+    yieldValue: n ? loc(n.value, lang) : '',
+    yieldLabel: n ? loc(n.short, lang) : '',
+    placeholder: !!n?.placeholder,
+  };
+};
+// Order is the story: look at the processes first, then the three ways we change them.
+const first = step('business-optimisation');
+const branches = ['ai-automation', 'software', 'websites'].map(step).filter((s) => s.enabled);
+// Placeholders (invented figures) show like the others; dev builds outline them (.adv-ph), launch checklist.
+const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
+---
+
+<section class="adv-wf" aria-labelledby="adv-wf-title" data-wf>
+  <div class="adv-wf__inner">
+    <div class="adv-wf__copy">
+      <h1 id="adv-wf-title" class="adv-wf__title" data-lines>
+        <span class="adv-line"><span>{c.hero.headline1}</span></span>
+        <span class="adv-line"><span>{c.hero.headline2}</span></span>
+      </h1>
+      <p class="adv-lead adv-wf__sub" data-reveal style="--i:2">{c.hero.sub}</p>
+      <div class="adv-wf__ctas" data-reveal style="--i:3">
+        <a class="adv-btn adv-btn--primary" href={routes.contact(lang)}>{c.cta.assessment}<Arrow /></a>
+        <a class="adv-btn adv-btn--ghost" href={routes.work(lang)}>{c.notFound.work}</a>
+      </div>
+      <p class="adv-wf__note" data-reveal style="--i:4">{c.hero.ctaNote}</p>
+    </div>
+
+    <div class="adv-wf__file" data-reveal style="--i:2">
+      <p class="adv-wf__stamp">{w.stamp}</p>
+      <svg class="adv-wf__wires" data-wf-wires aria-hidden="true"></svg>
+      <ol class="adv-wf__graph" aria-label={w.graphLabel}>
+        <li class="adv-wf__cell adv-wf__cell--in">
+          <div class="adv-wf__slip" data-wf-node="in">
+            <p class="adv-wf__slip-title">{w.inTitle}</p>
+            <ul>{w.inItems.map((it) => <li>{it}</li>)}</ul>
+          </div>
+        </li>
+        <li class="adv-wf__cell adv-wf__cell--first">
+          <a class="adv-wf__node" href={first.href} data-wf-node={first.slug} data-wf-from="in">
+            <span class="adv-wf__tab">
+              <svg class="adv-wf__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                {
+                  shapes(first.icon).map((sh) =>
+                    sh.d ? (
+                      <path d={sh.d} />
+                    ) : sh.circle ? (
+                      <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+                    ) : sh.rect ? (
+                      <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
+                    ) : null,
+                  )
+                }
+              </svg>
+              <span class="adv-wf__check" aria-hidden="true"></span>
+            </span>
+            <span class="adv-wf__name">{first.title}</span>
+            <span class="adv-wf__yield">
+              {showValue(first) && <b class:list={{ 'adv-ph': DEV && first.placeholder }}>{first.yieldValue}</b>}
+              <span>{first.yieldLabel}</span>
+            </span>
+            <span class="adv-wf__open">{w.open}<Arrow /></span>
+          </a>
+        </li>
+        <li class="adv-wf__cell adv-wf__cell--branches">
+          <ol class="adv-wf__branches">
+            {
+              branches.map((b) => (
+                <li>
+                  <a class="adv-wf__node" href={b.href} data-wf-node={b.slug} data-wf-from={first.slug}>
+                    <span class="adv-wf__tab">
+                      <svg class="adv-wf__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        {shapes(b.icon).map((sh) =>
+                          sh.d ? (
+                            <path d={sh.d} />
+                          ) : sh.circle ? (
+                            <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+                          ) : sh.rect ? (
+                            <rect
+                              x={sh.rect[0]}
+                              y={sh.rect[1]}
+                              width={sh.rect[2]}
+                              height={sh.rect[3]}
+                              rx={sh.rect[4]}
+                            />
+                          ) : null,
+                        )}
+                      </svg>
+                      <span class="adv-wf__check" aria-hidden="true" />
+                    </span>
+                    <span class="adv-wf__name">{b.title}</span>
+                    <span class="adv-wf__yield">
+                      {showValue(b) && <b class:list={{ 'adv-ph': DEV && b.placeholder }}>{b.yieldValue}</b>}
+                      <span>{b.yieldLabel}</span>
+                    </span>
+                    <span class="adv-wf__open">
+                      {w.open}
+                      <Arrow />
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </li>
+        <li class="adv-wf__cell adv-wf__cell--out">
+          <div class="adv-wf__out" data-wf-node="out" data-wf-from={branches.map((b) => b.slug).join(' ')}>
+            <p class="adv-wf__out-title">{w.outTitle}</p>
+            <ul>
+              {
+                w.outItems.map((it, k) => (
+                  <li style={`--k:${k}`}>
+                    <span class="adv-wf__tick" aria-hidden="true" />
+                    {it}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initWorkflow } from '../../scripts/workflow';
+  document.querySelectorAll<HTMLElement>('[data-wf]').forEach(initWorkflow);
+</script>
+
+<style is:global>
+  .adv-wf {
+    position: relative;
+    padding-top: calc(var(--adv-header-h) + clamp(28px, 4vw, 56px));
+    padding-bottom: clamp(56px, 7vw, 96px);
+  }
+  .adv-wf__inner {
+    width: 100%;
+    max-width: calc(var(--adv-max) + 2 * var(--adv-gutter));
+    margin-inline: auto;
+    padding-inline: var(--adv-gutter);
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.6fr);
+    gap: clamp(32px, 4vw, 64px);
+    align-items: center;
+  }
+  .adv-wf__title {
+    font-size: clamp(2.5rem, 1.4rem + 2.9vw, 4.125rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+  }
+  .adv-wf__title .adv-line {
+    white-space: nowrap;
+  }
+  .adv-wf__sub {
+    margin-top: 26px;
+    max-width: 44ch;
+  }
+  .adv-wf__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 34px;
+  }
+  .adv-wf__note {
+    margin-top: 14px;
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+
+  /* ---- the open file: a navy board with a steel-foil edge, a spine on the left ---- */
+  .adv-wf__file {
+    position: relative;
+    padding: 64px clamp(22px, 2.6vw, 40px) clamp(26px, 3vw, 40px) clamp(40px, 4vw, 60px);
+    border-radius: 8px var(--adv-r-xl) var(--adv-r-xl) 8px;
+    background:
+      var(--adv-weave), radial-gradient(90% 70% at 20% 0%, rgba(120, 160, 255, 0.12), transparent 60%),
+      linear-gradient(160deg, #13296c, #0b1a4c 58%, #081338);
+    box-shadow:
+      inset 0 1px 0 var(--adv-edge-hi),
+      inset 0 0 0 1px var(--adv-edge),
+      0 50px 100px -40px rgba(1, 4, 16, 0.95);
+  }
+  .adv-wf__file::before {
+    /* the spine */
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: clamp(16px, 1.6vw, 24px);
+    border-radius: 8px 0 0 8px;
+    background: linear-gradient(90deg, #050d2a, #0d1f59 80%, rgba(201, 209, 222, 0.18) 100%);
+  }
+  .adv-wf__stamp {
+    position: absolute;
+    top: 24px;
+    left: clamp(40px, 4vw, 60px);
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8f9dc0;
+  }
+  .adv-wf__wires {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .adv-wf__wire {
+    fill: none;
+    stroke: rgba(201, 209, 222, 0.26);
+    stroke-width: 1.2;
+    transition: stroke 300ms var(--adv-ease);
+  }
+  .adv-wf__wire.is-hot {
+    stroke: rgba(201, 209, 222, 0.7);
+  }
+  .adv-wf__trail {
+    fill: none;
+    stroke: var(--adv-accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .adv-wf__packet {
+    fill: #e6f5ff;
+  }
+
+  /* ---- the graph: 4 columns (today → optimisation → three branches → running business) ---- */
+  .adv-wf__graph,
+  .adv-wf__branches,
+  .adv-wf__slip ul,
+  .adv-wf__out ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .adv-wf__graph {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.05fr);
+    column-gap: clamp(28px, 3.2vw, 52px);
+    align-items: center;
+  }
+  .adv-wf__branches {
+    display: grid;
+    gap: 14px;
+  }
+
+  /* paper slip: what the visitor brings */
+  .adv-wf__slip {
+    padding: 16px 16px 14px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
+    color: var(--adv-ink);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 16px 30px -14px rgba(1, 4, 16, 0.9);
+    rotate: -1.2deg;
+  }
+  .adv-wf__slip-title {
+    font-family: var(--adv-display);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.15;
+  }
+  .adv-wf__slip ul {
+    margin-top: 10px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: var(--adv-ink-muted);
+  }
+  .adv-wf__slip li {
+    position: relative;
+    padding-left: 14px;
+  }
+  .adv-wf__slip li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 1.5px;
+    background: currentColor;
+  }
+
+  /* a step: a file divider with its tab, a link to the service */
+  .adv-wf__node {
+    --mx: 50%;
+    --my: 0%;
+    position: relative;
+    display: grid;
+    gap: 8px;
+    padding: 14px 14px 13px;
+    border-radius: 4px 14px 14px 14px;
+    color: var(--adv-text);
+    text-decoration: none;
+    background:
+      radial-gradient(160px circle at var(--mx) var(--my), rgba(84, 128, 255, 0.18), transparent 70%),
+      linear-gradient(165deg, #1a3584, #0e2160 75%);
+    box-shadow:
+      inset 0 1px 0 var(--adv-edge-hi),
+      inset 0 0 0 1px var(--adv-edge),
+      0 18px 34px -18px rgba(1, 4, 16, 0.95);
+    transition:
+      translate var(--adv-med) var(--adv-ease),
+      box-shadow var(--adv-med) var(--adv-ease);
+  }
+  .adv-wf__node:hover,
+  .adv-wf__node:focus-visible {
+    translate: 0 -3px;
+    box-shadow:
+      inset 0 1px 0 rgba(230, 236, 246, 0.75),
+      inset 0 0 0 1px rgba(201, 209, 222, 0.32),
+      0 24px 40px -18px rgba(1, 4, 16, 0.95);
+  }
+  .adv-wf__tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .adv-wf__icon {
+    width: 22px;
+    height: 22px;
+    stroke: var(--adv-foil);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .adv-wf__check {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1px solid rgba(201, 209, 222, 0.3);
+    background: center / 100% no-repeat;
+    transition:
+      border-color 400ms var(--adv-ease),
+      background-color 400ms var(--adv-ease);
+  }
+  .adv-wf__name {
+    font-family: var(--adv-display);
+    font-weight: 600;
+    font-size: clamp(0.9375rem, 0.82rem + 0.3vw, 1.0625rem);
+    line-height: 1.15;
+  }
+  .adv-wf__yield {
+    display: grid;
+    gap: 1px;
+    padding-top: 8px;
+    border-top: 1px solid var(--adv-line);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: var(--adv-muted);
+  }
+  .adv-wf__yield b {
+    font-family: var(--adv-mono);
+    font-weight: 500;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--adv-text);
+    width: max-content;
+  }
+  .adv-wf__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--adv-foil);
+  }
+  .adv-wf__open .adv-arr {
+    transition: translate 250ms var(--adv-ease);
+  }
+  .adv-wf__node:hover .adv-wf__open .adv-arr {
+    translate: 3px 0;
+  }
+
+  /* the end of the flow: the running business */
+  .adv-wf__out {
+    padding: 20px 18px 18px;
+    border-radius: 16px;
+    background:
+      radial-gradient(120% 80% at 30% 0%, rgba(124, 200, 255, 0.12), transparent 60%),
+      linear-gradient(165deg, #1f3e96, #11286e 70%);
+    box-shadow:
+      inset 0 1px 0 rgba(230, 236, 246, 0.6),
+      inset 0 0 0 1px rgba(201, 209, 222, 0.24),
+      0 30px 50px -24px rgba(1, 4, 16, 0.95);
+  }
+  .adv-wf__out-title {
+    font-family: var(--adv-display);
+    font-weight: 700;
+    font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .adv-wf__out ul {
+    margin-top: 14px;
+    display: grid;
+    gap: 9px;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+  .adv-wf__out li {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+  }
+  .adv-wf__tick {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    margin-top: 1px;
+    border-radius: 4px;
+    border: 1px solid var(--adv-accent);
+    background: rgba(124, 200, 255, 0.14) center / 100% no-repeat;
+  }
+
+  /* finished state (default, no JS, reduced motion): every step done, every result ticked */
+  .adv-wf__check,
+  .adv-wf__tick,
+  [data-wf-node].is-done .adv-wf__check {
+    border-color: var(--adv-accent);
+    background-color: rgba(124, 200, 255, 0.14);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.2 6.2l1.9 1.9 3.8-4.2' fill='none' stroke='%237cc8ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  /* running (JS + motion): steps wait, light up when the packet arrives */
+  .adv-wf.is-running [data-wf-node]:not(.is-done) .adv-wf__check {
+    border-color: rgba(201, 209, 222, 0.3);
+    background-color: transparent;
+    background-image: none;
+  }
+  .adv-wf.is-running [data-wf-node]:not(.is-done) .adv-wf__yield b {
+    color: var(--adv-muted);
+  }
+  .adv-wf.is-running .adv-wf__yield b {
+    transition: color 500ms var(--adv-ease);
+  }
+  .adv-wf.is-running .adv-wf__out:not(.is-done) .adv-wf__tick {
+    border-color: rgba(201, 209, 222, 0.3);
+    background-color: transparent;
+    background-image: none;
+  }
+  .adv-wf.is-running .adv-wf__out .adv-wf__tick {
+    transition:
+      border-color 300ms var(--adv-ease) calc(var(--k) * 140ms),
+      background-color 300ms var(--adv-ease) calc(var(--k) * 140ms);
+  }
+  .adv-wf.is-running .adv-wf__out {
+    transition: box-shadow 600ms var(--adv-ease);
+  }
+  .adv-wf.is-running .adv-wf__out.is-done {
+    box-shadow:
+      inset 0 1px 0 rgba(230, 236, 246, 0.8),
+      inset 0 0 0 1px rgba(124, 200, 255, 0.45),
+      0 30px 50px -24px rgba(1, 4, 16, 0.95);
+  }
+
+  /* ---- narrower screens: copy above, the file below; phones: the graph runs top to bottom ---- */
+  @media (max-width: 1100px) {
+    .adv-wf__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 760px) {
+    .adv-wf__file {
+      padding: 58px 16px 18px 30px;
+    }
+    .adv-wf__stamp {
+      left: 30px;
+    }
+    .adv-wf__graph {
+      grid-template-columns: 1fr;
+      row-gap: 30px;
+    }
+    .adv-wf__slip {
+      rotate: 0deg;
+    }
+    .adv-wf__branches {
+      gap: 12px;
+    }
+  }
+</style>

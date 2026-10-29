@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Direction: Cobalt Crystal</title>
+<style>
+  html,body{margin:0;width:1440px;height:900px;overflow:hidden;background:#030716;font-family:"Manrope","Segoe UI",sans-serif;color:#eef2fa}
+  .room{position:absolute;inset:0;background:
+    radial-gradient(60% 70% at 62% 46%,rgba(30,79,216,.38),rgba(10,42,138,.12) 45%,transparent 70%),
+    radial-gradient(40% 40% at 80% 90%,rgba(124,200,255,.08),transparent 70%),
+    linear-gradient(180deg,#040a1f,#02050f)}
+  nav{position:absolute;top:34px;left:80px;right:80px;display:flex;justify-content:space-between;font-size:15px;color:#a9b5d0}
+  nav .logo{font:600 17px "Urbanist",sans-serif;color:#eef2fa}
+  nav .links{display:flex;gap:36px}
+  /* one cut-cobalt slab, centre stage: facets at 75deg, the logo's cut */
+  .slab{position:absolute;left:470px;top:110px;width:500px;height:640px;border-radius:28px;transform:perspective(1600px) rotateY(-14deg) rotateX(4deg);
+    background:
+      linear-gradient(75deg,transparent 0 38%,rgba(255,255,255,.22) 38.4%,transparent 39% 61%,rgba(255,255,255,.10) 61.3%,transparent 62%),
+      linear-gradient(165deg,#2a62ff 0%,#123aa8 30%,#0a2a8a 55%,#061a5c 80%,#0b2f9c 100%);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(160,190,255,.35),inset -30px -40px 80px rgba(2,8,30,.7),0 60px 120px rgba(4,20,90,.6)}
+  .slab::after{content:"";position:absolute;inset:40px;border-radius:18px;border:1px solid rgba(190,210,255,.18)}
+  .cut{position:absolute;left:640px;top:330px;width:160px;height:190px;
+    clip-path:polygon(50% 0,100% 100%,72% 100%,50% 45%,28% 100%,0 100%);
+    background:linear-gradient(75deg,#bcd2ff,#5d86ff 50%,#1a43c0)}
+  h1{position:absolute;left:80px;top:610px;margin:0;font:700 96px/0.98 "Urbanist",sans-serif;letter-spacing:-.035em;mix-blend-mode:normal}
+  .lede{position:absolute;left:1030px;top:300px;width:330px;font-size:19px;line-height:1.6;color:#a9b5d0}
+  .cta{position:absolute;left:1030px;top:470px;display:flex;gap:14px}
+  .btn{padding:15px 22px;border-radius:12px;font-weight:700;font-size:16px}
+  .btn.p{background:#eef2fa;color:#061a5c}
+  .btn.s{border:1px solid rgba(190,210,255,.35);color:#eef2fa}
+  .services{position:absolute;left:0;right:0;bottom:0;height:86px;display:flex;border-top:1px solid rgba(160,190,255,.14)}
+  .services span{flex:1;padding:30px 80px;font:600 18px "Urbanist",sans-serif;color:#cdd7ee;border-right:1px solid rgba(160,190,255,.10)}
+</style>
+</head>
+<body>
+<div class="room"></div>
+<nav><span class="logo">ADV Innovations</span><span class="links"><span>Services</span><span>Work</span><span>About</span></span><span>CS / EN</span></nav>
+<div class="slab"></div>
+<div class="cut"></div>
+<h1>Less routine.<br>More business.</h1>
+<p class="lede">We automate the repetitive work in your company and build the websites and software around it.</p>
+<div class="cta"><span class="btn p">Start an inquiry</span><span class="btn s">See our work</span></div>
+<div class="services"><span>Automation &amp; AI</span><span>Business optimisation</span><span>Websites</span><span>Prototypes &amp; software</span></div>
+</body>
+</html>

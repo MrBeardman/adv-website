@@ -103,7 +103,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   const css = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const gridRGB = css('--adv-grid-rgb') || '236,238,244';
   const accRGB = css('--adv-accent-rgb') || '124,200,255';
-  const bg2 = css('--adv-bg-2') || '#0e1016';
+  const bg2 = css('--adv-bg-2') || '#0a1640';
   let W = 0;
   let H = 0;
   let base: HTMLCanvasElement | null = null;

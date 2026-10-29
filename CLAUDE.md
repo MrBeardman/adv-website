@@ -10,6 +10,7 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 (`C:\Data\Work\Jenomics\JenomicsWebsite`, read only), following the `astro-marketing-site` skill.
 
 - Repo `C:\Data\Dev\adv-website`, branch `main`, remote https://github.com/MrBeardman/adv-website.
+  Hostinger preview URL: **https://tan-jellyfish-775816.hostingersite.com/** (temporary domain).
   Hostinger auto-pulls `main`, so **every push goes live on the preview**: push only at verified, presentable
   milestones, never force-push. Don't touch `.env` files or credentials.
 - **Preview phase = noindex, FLIP AT LAUNCH**: `src/data/site.ts` `INDEXABLE` reads

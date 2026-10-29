@@ -1,0 +1,222 @@
+---
+/**
+ * Homepage services (Honza, Oct 2026 redesign): the four services as file dividers, one per row, each a
+ * plain link to its service page with what it covers and its one checkable result (homeNumbers.ts).
+ * Sits right under the workflow hero, which shows how the services fit together; this is the index.
+ */
+import Arrow from '../ui/Arrow.astro';
+import Node from '../ui/Node.astro';
+import { pick, loc, type Lang } from '../../i18n';
+import services from '../../i18n/services.json';
+import { ENABLED_SERVICES } from '../../data/capabilities';
+import { numberFor } from '../../data/homeNumbers';
+import { routes } from '../../data/routes';
+import { SHAPES } from '../../scripts/stack/iconShapes.js';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = pick(services, lang);
+const DEV = import.meta.env.DEV;
+const ICON: Record<string, string> = {
+  'ai-automation': 'nodes',
+  'business-optimisation': 'racks',
+  websites: 'globe',
+  software: 'diamondCore',
+};
+type Shape = { d?: string; circle?: number[]; rect?: number[] };
+const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? [];
+const items = ENABLED_SERVICES.map((sv) => {
+  const copy = s.capabilities.items.find((i) => i.slug === sv.slug)!;
+  return {
+    href: routes.service(lang, sv.slug),
+    title: copy.title,
+    body: copy.body,
+    covers: copy.covers,
+    icon: ICON[sv.slug] ?? 'nodes',
+    number: numberFor(sv.slug),
+  };
+});
+---
+
+<section class="adv-section adv-sidx" aria-labelledby="adv-sidx-title">
+  <div class="adv-wrap">
+    <h2 id="adv-sidx-title" class="adv-h2 adv-sidx__title" data-reveal><Node />{s.capabilities.title}</h2>
+    <ul class="adv-sidx__list">
+      {
+        items.map((it, k) => (
+          <li data-reveal style={`--i:${k}`}>
+            <a class="adv-sidx__row" href={it.href}>
+              <span class="adv-sidx__tab">
+                <svg class="adv-sidx__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  {shapes(it.icon).map((sh) =>
+                    sh.d ? (
+                      <path d={sh.d} />
+                    ) : sh.circle ? (
+                      <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+                    ) : sh.rect ? (
+                      <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
+                    ) : null,
+                  )}
+                </svg>
+              </span>
+              <span class="adv-sidx__name">{it.title}</span>
+              <span class="adv-sidx__body">
+                {it.body}
+                <span class="adv-sidx__covers">{it.covers.join(' · ')}</span>
+              </span>
+              {it.number && (
+                <span class="adv-sidx__result">
+                  <b class:list={{ 'adv-ph': DEV && it.number.placeholder }}>{loc(it.number.value, lang)}</b>
+                  <span>{loc(it.number.short, lang)}</span>
+                </span>
+              )}
+              <span class="adv-sidx__go" aria-hidden="true">
+                <Arrow size={18} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .adv-sidx__title {
+    margin-bottom: clamp(32px, 4vw, 56px);
+  }
+  .adv-sidx__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+  /* a file divider: navy board, foil top edge, the tab carrying the icon */
+  .adv-sidx__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1.6fr) minmax(0, 0.8fr) 40px;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 36px);
+    padding: clamp(20px, 2.2vw, 28px) clamp(20px, 2.4vw, 32px);
+    border-radius: 6px var(--adv-r-lg) var(--adv-r-lg) var(--adv-r-lg);
+    color: var(--adv-text);
+    text-decoration: none;
+    background: var(--adv-weave), linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2) 75%);
+    box-shadow: var(--adv-shadow-card);
+    transition:
+      translate var(--adv-med) var(--adv-ease),
+      box-shadow var(--adv-med) var(--adv-ease);
+  }
+  .adv-sidx__row:hover,
+  .adv-sidx__row:focus-visible {
+    translate: 6px 0;
+    box-shadow:
+      inset 0 1px 0 rgba(230, 236, 246, 0.7),
+      inset 0 0 0 1px rgba(201, 209, 222, 0.28),
+      0 28px 60px -28px rgba(1, 4, 16, 0.85);
+  }
+  .adv-sidx__tab {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
+    box-shadow: inset 0 1px 0 #fff;
+  }
+  .adv-sidx__icon {
+    width: 26px;
+    height: 26px;
+    stroke: var(--adv-ink);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .adv-sidx__name {
+    font-family: var(--adv-display);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+  }
+  .adv-sidx__body {
+    display: grid;
+    gap: 8px;
+    color: var(--adv-muted);
+    line-height: 1.5;
+  }
+  .adv-sidx__covers {
+    font-size: 0.8125rem;
+    color: #8f9dc0;
+  }
+  .adv-sidx__result {
+    display: grid;
+    gap: 2px;
+    padding-left: clamp(16px, 2vw, 28px);
+    border-left: 1px solid var(--adv-line);
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-sidx__result b {
+    width: max-content;
+    font-family: var(--adv-mono);
+    font-weight: 500;
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+    font-variant-numeric: tabular-nums;
+    color: var(--adv-text);
+  }
+  .adv-sidx__go {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--adv-edge);
+    color: var(--adv-foil);
+    transition:
+      border-color var(--adv-fast) var(--adv-ease),
+      color var(--adv-fast) var(--adv-ease);
+  }
+  .adv-sidx__row:hover .adv-sidx__go {
+    border-color: var(--adv-edge-hi);
+    color: var(--adv-text);
+  }
+  .adv-sidx__row:hover .adv-arr {
+    translate: 2px 0;
+  }
+  .adv-sidx__go .adv-arr {
+    transition: translate 250ms var(--adv-ease);
+  }
+  @media (max-width: 900px) {
+    .adv-sidx__row {
+      grid-template-columns: 48px minmax(0, 1fr) 40px;
+      grid-template-areas: 'tab name go' 'body body body' 'result result result';
+      row-gap: 14px;
+    }
+    .adv-sidx__tab {
+      grid-area: tab;
+      width: 48px;
+      height: 48px;
+    }
+    .adv-sidx__name {
+      grid-area: name;
+    }
+    .adv-sidx__go {
+      grid-area: go;
+    }
+    .adv-sidx__body {
+      grid-area: body;
+    }
+    .adv-sidx__result {
+      grid-area: result;
+      padding-left: 0;
+      padding-top: 12px;
+      border-left: 0;
+      border-top: 1px solid var(--adv-line);
+    }
+  }
+</style>

@@ -1,13 +1,13 @@
 ---
 /**
- * Homepage (CS at /, EN at /en/), Honza, Oct 2026: the old ADV homepage's 3D card stack, rebuilt in Astro and
- * dressed in the Studio look (components/home/CardStack.astro). Below it: selected work, partners, contact.
- * The four value cards are gone here: the stack is the services overview now.
- * A faint stream of light (one fine strand) runs through the section nodes below the hero.
+ * Homepage (CS at /, EN at /en/), Honza, Oct 2026 redesign "The Client File": the open client file with the
+ * business as one automation workflow (components/home/Workflow.astro); every step links to its service.
+ * Below it: selected work, partners, contact. The 3D card stack (CardStack.astro) is no longer used here.
  * The Relay-style page lives at /sluzby/automatizace/ (templates/Automation.astro).
  */
 import Base from '../layouts/Base.astro';
-import CardStack from '../components/home/CardStack.astro';
+import Workflow from '../components/home/Workflow.astro';
+import ServiceIndex from '../components/home/ServiceIndex.astro';
 import SelectedWork from '../components/SelectedWork.astro';
 import Partners from '../components/Partners.astro';
 import CtaPanel from '../components/CtaPanel.astro';
@@ -24,7 +24,8 @@ const t = pick(chrome, lang);
 ---
 
 <Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} stream="light">
-  <CardStack lang={lang} />
+  <Workflow lang={lang} />
+  <ServiceIndex lang={lang} />
   {/* Optional brand-moment image: pass src to show it (see ui/BrandMoment.astro). */}
   <BrandMoment />
   <SelectedWork lang={lang} limit={3} />

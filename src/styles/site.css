@@ -1,35 +1,42 @@
 /*
- * ADV Innovations 2026 design system: tokens, base, shared components, motion.
- * Palette "Studio" (graphite base, navy light) + accent Ice, locked by Honza (docs/BRAND.md).
+ * ADV Innovations design system: tokens, base, shared components, motion.
+ * World "The Client File" (Honza, Oct 2026 redesign): navy linen bookcloth as the ground, file boards
+ * with a steel-foil lit edge, cool paper index cards for anything the visitor fills in, Ice only for
+ * live states (the moving packet, focus). Direction contract: .impeccable/surfaces/.
  * Section CSS lives in each section component; class prefix there is "adv-".
  */
 
 :root {
-  /* Studio palette */
-  --adv-bg: #090a0e;
-  --adv-bg-2: #0e1016;
-  --adv-surface-1: #181b24;
-  --adv-surface-2: #0b0c11;
-  --adv-edge: rgba(255, 255, 255, 0.09);
-  --adv-edge-hi: rgba(255, 255, 255, 0.26);
-  --adv-line: rgba(255, 255, 255, 0.055);
-  --adv-text: #f1f2f5;
-  --adv-muted: #9298a8;
-  --adv-glow: rgba(32, 64, 170, 0.3); /* navy light behind key areas */
-  --adv-spot: rgba(64, 104, 235, 0.22); /* card hover spotlight */
-  --adv-grid-rgb: 236, 238, 244;
+  /* Client File palette: deep navy cloth, file boards, steel foil, paper */
+  --adv-bg: #07102e;
+  --adv-bg-2: #0a1640;
+  --adv-surface-1: #142c72; /* file board, lit side */
+  --adv-surface-2: #0a1845; /* file board, shade side */
+  --adv-edge: rgba(201, 209, 222, 0.14);
+  --adv-edge-hi: rgba(201, 209, 222, 0.42); /* steel foil */
+  --adv-line: rgba(201, 209, 222, 0.1);
+  --adv-text: #eaeef6;
+  --adv-muted: #a6b3d0;
+  --adv-glow: rgba(40, 84, 210, 0.32); /* navy light behind key areas */
+  --adv-spot: rgba(84, 128, 255, 0.2); /* card hover spotlight */
+  --adv-grid-rgb: 201, 209, 222;
+  --adv-foil: #c9d1de;
+  --adv-paper: #eef1f6;
+  --adv-paper-2: #dde2ec;
+  --adv-ink: #0b1a4a; /* navy ink on paper */
+  --adv-ink-muted: #4f5e82;
 
-  /* Accent: Ice. Amber is retired on the site (Honza: it read as construction machinery). */
+  /* Live state: Ice. Only the moving packet, live marks and focus; primary actions are paper. */
   --adv-accent: #7cc8ff;
   --adv-accent-rgb: 124, 200, 255;
   --adv-on-accent: #07101e;
   /* Logo tile on dark. ONE variable; Ice until Honza confirms the brand-guide update (docs/STATUS.md). */
   --adv-logo-tile: var(--adv-accent);
 
-  /* Background mesh (Honza's reference: #0b0c10, #1b1f2b, #2b3245, #181a20, #1f3fae + a touch of Ice) */
-  --adv-mesh-navy: 31, 63, 174;
-  --adv-mesh-slate: 43, 50, 69;
-  --adv-mesh-ink: 27, 31, 43;
+  /* Background light on the cloth (navy family only) */
+  --adv-mesh-navy: 36, 76, 200;
+  --adv-mesh-slate: 22, 44, 112;
+  --adv-mesh-ink: 4, 9, 28;
 
   /* Type */
   --adv-display: 'Urbanist', 'Segoe UI', system-ui, sans-serif;
@@ -55,7 +62,12 @@
   --adv-r-lg: 22px; /* cards */
   --adv-r-xl: 28px;
   --adv-shadow-card:
-    inset 1px 1px 0 var(--adv-edge-hi), inset -1px -1px 0 rgba(0, 0, 0, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+    inset 0 1px 0 var(--adv-edge-hi), inset 0 0 0 1px var(--adv-edge), inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    0 28px 60px -28px rgba(1, 4, 16, 0.85);
+  /* the cloth weave: two crossed hairline rhythms, used on the page ground and on file covers */
+  --adv-weave:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 3px);
 
   /* Motion: calm and precise, no bounce */
   --adv-ease: cubic-bezier(0.23, 1, 0.32, 1);
@@ -64,7 +76,7 @@
   --adv-med: 450ms;
   --adv-slow: 900ms;
 
-  --adv-max: 1200px;
+  --adv-max: 1280px;
   --adv-gutter: clamp(16px, 4vw, 40px);
   --adv-header-h: 72px;
   color-scheme: dark;
@@ -152,6 +164,20 @@ select {
   background: rgba(var(--adv-accent-rgb), 0.28);
   color: #fff;
 }
+html {
+  scrollbar-color: #2a4291 var(--adv-bg);
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--adv-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #22397f;
+  border: 3px solid var(--adv-bg);
+  border-radius: 8px;
+}
 .screen-reader-text {
   border: 0;
   clip-path: inset(50%);
@@ -204,7 +230,15 @@ main {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: #0b0c10;
+  background: radial-gradient(130% 100% at 30% 10%, #0f2262 0%, #0a1846 45%, #050c26 100%);
+}
+.adv-bg::before {
+  /* the bookcloth weave over the whole page */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--adv-weave);
+  opacity: 0.9;
 }
 .adv-bg__mood {
   position: absolute;
@@ -232,10 +266,10 @@ main {
   opacity: clamp(0, calc((var(--p) - 0.55) * 2.4), 1);
   transform: translate3d(0, calc((1 - var(--p)) * 8vh), 0);
   background:
-    radial-gradient(45% 50% at 50% 78%, rgba(var(--adv-mesh-navy), 0.5), transparent 70%),
-    radial-gradient(30% 35% at 52% 70%, rgba(var(--adv-accent-rgb), 0.08), transparent 70%),
-    radial-gradient(40% 45% at 18% 30%, rgba(58, 54, 72, 0.55), transparent 72%),
-    radial-gradient(35% 40% at 88% 40%, rgba(64, 60, 78, 0.4), transparent 72%);
+    radial-gradient(45% 50% at 50% 78%, rgba(var(--adv-mesh-navy), 0.45), transparent 70%),
+    radial-gradient(30% 35% at 52% 70%, rgba(var(--adv-accent-rgb), 0.06), transparent 70%),
+    radial-gradient(40% 45% at 18% 30%, rgba(var(--adv-mesh-slate), 0.5), transparent 72%),
+    radial-gradient(35% 40% at 88% 40%, rgba(var(--adv-mesh-ink), 0.6), transparent 72%);
 }
 @supports not (opacity: abs(1)) {
   /* older engines without abs(): keep the middle mood quietly on */
@@ -246,14 +280,14 @@ main {
 .adv-bg__grain {
   position: absolute;
   inset: 0;
-  opacity: 0.11;
+  opacity: 0.07;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
 }
 .adv-bg__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(1, 4, 18, 0.6) 100%);
 }
 
 /* ---------- Type helpers ---------- */
@@ -341,8 +375,12 @@ main {
     background-color var(--adv-fast) var(--adv-ease);
 }
 .adv-btn--primary {
-  background: var(--adv-accent);
-  color: var(--adv-on-accent);
+  /* a paper index card: the visitor's own action is always paper on navy */
+  background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
+  color: var(--adv-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 24px -12px rgba(1, 4, 16, 0.9);
 }
 .adv-btn--primary::after {
   /* light sweep */
@@ -584,7 +622,7 @@ a.adv-card:hover,
 }
 .adv-node.is-lit {
   border-color: var(--adv-accent);
-  background-color: #10243a;
+  background-color: #12306e;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.2 6.2l1.9 1.9 3.8-4.2' fill='none' stroke='%237cc8ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 .adv-node.is-lit::after {
@@ -665,7 +703,7 @@ a.adv-card:hover,
 }
 .adv-stream__node.is-lit rect {
   stroke: var(--adv-accent);
-  fill: #0f1d2e;
+  fill: #12306e;
 }
 .adv-stream__node.is-lit .adv-stream__tick,
 .adv-stream__node.is-lit .adv-stream__branch {
