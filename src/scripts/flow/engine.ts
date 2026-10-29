@@ -7,7 +7,8 @@
  * shaded (folds and the far side dimmer, lines at uneven strength); additive blending gives the silk sheen.
  *
  * Every vertex position is computed in the vertex shader from (line, u) and one time uniform; the CPU only
- * writes a few uniforms per frame. The pointer lifts the ribbon a little near it (fine pointers only).
+ * writes a few uniforms per frame. A moving pointer draws nearby lines gently towards it, like a weak
+ * magnet; when it rests or leaves, they ease back into shape (fine pointers only).
  * Pauses off screen and in a hidden tab; reduced motion renders one still frame.
  */
 import * as THREE from 'three';
@@ -69,9 +70,9 @@ const VERT = /* glsl */ `
     p.yz = mix(p.yz, p.yz * 0.22, squeeze);
     vDepth = p.z;
 
-    // pointer lifts the ribbon near it
-    vec2 d = p.xy - uMouse;
-    p.y += uMouseOn * 0.3 * exp(-dot(d, d) * 1.2);
+    // a weak magnet: lines near the pointer lean a little towards it
+    vec2 d = uMouse - p.xy;
+    p.xy += d * (uMouseOn * 0.18 * exp(-dot(d, d) * 1.4));
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
@@ -270,6 +271,8 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   const ray = new THREE.Raycaster();
   const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const hit = new THREE.Vector3();
+  // the magnet follows the pointer with lag and fades while the pointer rests, so the lines return
+  const aim = new THREE.Vector2(99, 99);
   let target = 0;
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     addEventListener(
@@ -281,7 +284,7 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
         ray.setFromCamera(ndc, camera);
         if (ray.ray.intersectPlane(plane, hit)) {
           stream.worldToLocal(hit);
-          uniforms.uMouse.value.set(hit.x, hit.y);
+          aim.set(hit.x, hit.y);
           target = 1;
         }
       },
@@ -298,7 +301,11 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     uniforms.uTime.value += dt;
-    uniforms.uMouseOn.value += (target - uniforms.uMouseOn.value) * 0.05;
+    const m = uniforms.uMouse.value;
+    if (m.x > 50) m.copy(aim);
+    else m.lerp(aim, 1 - Math.exp(-dt * 4));
+    target *= Math.exp(-dt * 0.9);
+    uniforms.uMouseOn.value += (target - uniforms.uMouseOn.value) * (1 - Math.exp(-dt * 3));
     renderer.render(scene, camera);
   };
   const start = () => {
