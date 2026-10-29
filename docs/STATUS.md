@@ -70,6 +70,12 @@
 - [ ] Domain in `astro.config.mjs` (`site`), then 301s from the old React URLs (`src/data/routes.ts`),
       e.g. `/services/ai-automation` → `/sluzby/automatizace/`.
 - [ ] Privacy note / page for the form.
+- [ ] **Inquiry n8n workflow** "ADV Website - Inquiry Intake" (https://vmi3112391.contaboserver.net/workflow/9ytultcdcrouxu2D,
+      created inactive Oct 29): (1) give the webhook its own Header Auth credential, header name `X-ADV-Key`
+      (n8n auto-assigned the content queue's "Queue API Key"); (2) put the Telegram chat ID for inquiries in the
+      four Telegram nodes; (3) activate; (4) in Hostinger set `N8N_INQUIRY_URL` =
+      https://vmi3112391.contaboserver.net/webhook/adv-inquiry and `N8N_INQUIRY_KEY` = the same secret.
+      Stores into the n8n data table `adv_inquiries`; the site keeps its own copy in data/submissions either way.
 - [ ] **Flip the preview switch**: `PUBLIC_SITE_INDEXABLE=true`.
 
 ## Open decisions (Honza)
