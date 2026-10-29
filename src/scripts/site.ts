@@ -192,10 +192,10 @@ function initLive() {
   });
 }
 
-// 6. Card spotlight: the pointer position inside each matte card, as --mx/--my.
+// 6. Card spotlight: the pointer position inside each matte card and each .adv-lit card, as --mx/--my.
 function initSpotlight() {
   if (!finePointer) return;
-  document.querySelectorAll<HTMLElement>('.adv-card').forEach((c) =>
+  document.querySelectorAll<HTMLElement>('.adv-card, .adv-lit').forEach((c) =>
     c.addEventListener('pointermove', (e) => {
       const r = c.getBoundingClientRect();
       c.style.setProperty('--mx', `${e.clientX - r.left}px`);

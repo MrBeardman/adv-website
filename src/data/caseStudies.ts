@@ -52,7 +52,8 @@ export const CASE_STUDIES: CaseStudy[] = [
   /* ── Real projects ─────────────────────────────────────────────────────── */
   {
     slug: 'kesia-praha',
-    status: 'published',
+    // Hidden for now (Honza, Oct 29 2026): the e-shops are being redesigned. Back with 'published'.
+    status: 'draft',
     client: { en: 'Kesia Praha' },
     sector: { en: 'Retail', cs: 'Maloobchod' },
     year: null,

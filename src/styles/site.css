@@ -1100,3 +1100,62 @@ textarea.adv-input {
 .adv-nf .adv-node {
   display: none;
 }
+
+/* ---------- A hint of the page light in inner cards (.adv-lit) ----------
+ * Honza, Oct 29 2026: the multicolour background, but only as a hint, and classy. At rest a card carries
+ * a faint wash of the page light in one corner; on hover the light follows the pointer (--mx/--my from
+ * site.ts: cobalt at the pointer, violet trailing it) and the edge picks up the gradient. */
+.adv-lit {
+  --mx: 70%;
+  --my: 0%;
+  position: relative;
+  isolation: isolate;
+}
+.adv-lit::before,
+.adv-lit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity 500ms var(--adv-ease);
+}
+.adv-lit::before {
+  z-index: -1;
+  opacity: 0.35;
+  background:
+    radial-gradient(240px circle at var(--mx) var(--my), rgba(var(--adv-l-cobalt), 0.2), transparent 65%),
+    radial-gradient(
+      380px circle at calc(var(--mx) + 140px) calc(var(--my) + 90px),
+      rgba(var(--adv-l-violet), 0.14),
+      transparent 70%
+    ),
+    radial-gradient(
+      300px circle at calc(var(--mx) - 160px) calc(var(--my) + 40px),
+      rgba(var(--adv-l-navy), 0.35),
+      transparent 70%
+    );
+}
+.adv-lit::after {
+  padding: 1px;
+  opacity: 0;
+  background: linear-gradient(
+    115deg,
+    rgba(var(--adv-l-ice), 0.55),
+    rgba(var(--adv-l-cobalt), 0.35) 40%,
+    rgba(var(--adv-l-violet), 0.5)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.adv-lit:hover::before,
+.adv-lit:focus-visible::before {
+  opacity: 1;
+}
+.adv-lit:hover::after,
+.adv-lit:focus-visible::after {
+  opacity: 0.85;
+}

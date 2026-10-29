@@ -1,11 +1,13 @@
 ---
 /**
- * Homepage services (Honza, Oct 2026 redesign): the four services as file dividers, one per row, each a
- * plain link to its service page with what it covers and its one checkable result (homeNumbers.ts).
- * Sits right under the workflow hero, which shows how the services fit together; this is the index.
+ * Homepage services (Honza, Oct 29 2026): the four services as a 2×2 grid of cards, each a link to its
+ * service page. Every card opens with a small live UI preview of the work (ui/Scene.astro, in an app
+ * window) like a product screenshot, then what it covers and its one checkable result (homeNumbers.ts).
+ * The page light shows through on hover (.adv-lit).
  */
 import Arrow from '../ui/Arrow.astro';
 import Node from '../ui/Node.astro';
+import Scene from '../ui/Scene.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import services from '../../i18n/services.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
@@ -30,6 +32,7 @@ const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? []
 const items = ENABLED_SERVICES.map((sv) => {
   const copy = s.capabilities.items.find((i) => i.slug === sv.slug)!;
   return {
+    slug: sv.slug,
     href: routes.service(lang, sv.slug),
     title: copy.title,
     body: copy.body,
@@ -47,7 +50,15 @@ const items = ENABLED_SERVICES.map((sv) => {
       {
         items.map((it, k) => (
           <li data-reveal style={`--i:${k}`}>
-            <a class="adv-sidx__row" href={it.href}>
+            <a class="adv-sidx__row adv-lit" href={it.href}>
+              <span class="adv-sidx__preview" aria-hidden="true">
+                <span class="adv-sidx__dots">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <Scene kind={it.slug} lang={lang} />
+              </span>
               <span class="adv-sidx__tab">
                 <svg class="adv-sidx__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   {shapes(it.icon).map((sh) =>
@@ -92,58 +103,100 @@ const items = ENABLED_SERVICES.map((sv) => {
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 22px);
   }
-  /* a file divider: navy board, foil top edge, the tab carrying the icon */
-  .adv-sidx__row {
-    position: relative;
+  .adv-sidx__list > li {
     display: grid;
-    grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1.6fr) minmax(0, 0.8fr) 40px;
+  }
+  .adv-sidx__row {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 40px;
+    grid-template-areas:
+      'preview preview preview'
+      'tab name go'
+      'body body body'
+      'result result result';
     align-items: center;
-    gap: clamp(16px, 2.4vw, 36px);
-    padding: clamp(20px, 2.2vw, 28px) clamp(20px, 2.4vw, 32px);
-    border-radius: 6px var(--adv-r-lg) var(--adv-r-lg) var(--adv-r-lg);
+    gap: 16px 16px;
+    padding: 12px 12px clamp(20px, 2vw, 26px);
+    border-radius: var(--adv-r-lg);
     color: var(--adv-text);
     text-decoration: none;
-    background: var(--adv-weave), linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2) 75%);
+    background: var(--adv-card-bg);
     box-shadow: var(--adv-shadow-card);
     transition:
       translate var(--adv-med) var(--adv-ease),
       box-shadow var(--adv-med) var(--adv-ease);
   }
+  .adv-sidx__row > :not(.adv-sidx__preview) {
+    margin-inline: clamp(8px, 1vw, 14px);
+  }
   .adv-sidx__row:hover,
   .adv-sidx__row:focus-visible {
-    translate: 6px 0;
-    box-shadow:
-      inset 0 1px 0 rgba(230, 236, 246, 0.7),
-      inset 0 0 0 1px rgba(201, 209, 222, 0.28),
-      0 28px 60px -28px rgba(1, 4, 16, 0.85);
+    translate: 0 -4px;
+  }
+  /* the live preview: a small app window */
+  .adv-sidx__preview {
+    grid-area: preview;
+    position: relative;
+    display: block;
+    height: clamp(170px, 15vw, 210px);
+    padding-top: 26px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.2));
+    box-shadow: inset 0 0 0 1px var(--adv-edge);
+  }
+  .adv-sidx__preview .adv-scene {
+    position: absolute;
+    inset: 26px 0 0;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .adv-sidx__dots {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    display: flex;
+    gap: 5px;
+  }
+  .adv-sidx__dots i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
   }
   .adv-sidx__tab {
+    grid-area: tab;
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
     box-shadow: inset 0 1px 0 #fff;
   }
   .adv-sidx__icon {
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     stroke: var(--adv-ink);
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .adv-sidx__name {
+    grid-area: name;
     font-family: var(--adv-display);
     font-weight: 700;
-    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem);
     letter-spacing: -0.025em;
     line-height: 1.08;
   }
   .adv-sidx__body {
+    grid-area: body;
     display: grid;
     gap: 8px;
     color: var(--adv-muted);
@@ -151,25 +204,27 @@ const items = ENABLED_SERVICES.map((sv) => {
   }
   .adv-sidx__covers {
     font-size: 0.8125rem;
-    color: #8f9dc0;
+    color: #7f879b;
   }
   .adv-sidx__result {
-    display: grid;
-    gap: 2px;
-    padding-left: clamp(16px, 2vw, 28px);
-    border-left: 1px solid var(--adv-line);
+    grid-area: result;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--adv-line);
     font-size: 0.8125rem;
     color: var(--adv-muted);
   }
   .adv-sidx__result b {
-    width: max-content;
     font-family: var(--adv-mono);
     font-weight: 500;
-    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
     font-variant-numeric: tabular-nums;
     color: var(--adv-text);
   }
   .adv-sidx__go {
+    grid-area: go;
     display: grid;
     place-items: center;
     width: 40px;
@@ -185,38 +240,15 @@ const items = ENABLED_SERVICES.map((sv) => {
     border-color: var(--adv-edge-hi);
     color: var(--adv-text);
   }
-  .adv-sidx__row:hover .adv-arr {
-    translate: 2px 0;
-  }
   .adv-sidx__go .adv-arr {
     transition: translate 250ms var(--adv-ease);
   }
-  @media (max-width: 900px) {
-    .adv-sidx__row {
-      grid-template-columns: 48px minmax(0, 1fr) 40px;
-      grid-template-areas: 'tab name go' 'body body body' 'result result result';
-      row-gap: 14px;
-    }
-    .adv-sidx__tab {
-      grid-area: tab;
-      width: 48px;
-      height: 48px;
-    }
-    .adv-sidx__name {
-      grid-area: name;
-    }
-    .adv-sidx__go {
-      grid-area: go;
-    }
-    .adv-sidx__body {
-      grid-area: body;
-    }
-    .adv-sidx__result {
-      grid-area: result;
-      padding-left: 0;
-      padding-top: 12px;
-      border-left: 0;
-      border-top: 1px solid var(--adv-line);
+  .adv-sidx__row:hover .adv-arr {
+    translate: 2px 0;
+  }
+  @media (max-width: 860px) {
+    .adv-sidx__list {
+      grid-template-columns: 1fr;
     }
   }
 </style>

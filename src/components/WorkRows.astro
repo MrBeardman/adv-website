@@ -41,7 +41,7 @@ const initials = (name: string) =>
       return (
         <li data-services={c.services.join(' ')} data-reveal style={`--i:${Math.min(i, 6)}`}>
           <Tag
-            class:list={['adv-row', { 'adv-row--link': linked }]}
+            class:list={['adv-row', { 'adv-row--link adv-lit': linked }]}
             href={linked ? routes.case(lang, c.slug) : undefined}
           >
             <span class="adv-row__thumb">
