@@ -1,0 +1,479 @@
+---
+/**
+ * The per-service inquiry (Honza, Oct 29 2026): pick a service, answer its expert questions a few clicks
+ * at a time (data/inquiry.ts), leave a contact, and watch the inquiry run: received → sorted → priority →
+ * handed to the team. Posts JSON to /api/inquiry, which stores it and forwards it to the n8n workflow.
+ *
+ * The questions render in the browser (scripts/inquiry.ts) from the JSON below. Without JS a short note
+ * with the email address stands in. `service` preselects a flow (service pages, ?service= on the URL).
+ */
+import { pick, loc, type Lang } from '../../i18n';
+import copy from '../../i18n/inquiry.json';
+import chrome from '../../i18n/chrome.json';
+import services from '../../i18n/services.json';
+import { ENABLED_SERVICES } from '../../data/capabilities';
+import { FLOWS } from '../../data/inquiry';
+import { SHAPES } from '../../scripts/stack/iconShapes.js';
+
+interface Props {
+  lang: Lang;
+  service?: string;
+  /** heading level / text: off when the surrounding section already has a title */
+  heading?: boolean;
+}
+const { lang, service = '', heading = true } = Astro.props;
+const t = pick(copy, lang);
+const c = pick(chrome, lang);
+const sv = pick(services, lang);
+const ICON: Record<string, string> = {
+  'ai-automation': 'nodes',
+  'business-optimisation': 'racks',
+  websites: 'globe',
+  software: 'diamondCore',
+};
+type Shape = { d?: string; circle?: number[]; rect?: number[] };
+const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? [];
+const list = ENABLED_SERVICES.filter((s) => FLOWS[s.slug]).map((s) => ({
+  slug: s.slug,
+  title: sv.capabilities.items.find((i) => i.slug === s.slug)!.title,
+  icon: ICON[s.slug] ?? 'nodes',
+}));
+// Flows for the browser, already in this language.
+const flows = Object.fromEntries(
+  list.map((s) => [
+    s.slug,
+    FLOWS[s.slug].map((q) => ({
+      id: q.id,
+      kind: q.kind,
+      optional: !!q.optional,
+      title: loc(q.title, lang),
+      hint: q.hint ? loc(q.hint, lang) : '',
+      options: (q.options ?? []).map((op) => ({ id: op.id, label: loc(op.label, lang) })),
+    })),
+  ]),
+);
+const names = Object.fromEntries(list.map((s) => [s.slug, s.title]));
+const uid = `inq-${lang}`;
+---
+
+<div class="adv-inq" data-inq data-lang={lang} data-preset={service}>
+  {
+    heading && (
+      <div class="adv-inq__head">
+        <h2 class="adv-h2">{t.title}</h2>
+        <p class="adv-lead">{t.lead}</p>
+      </div>
+    )
+  }
+
+  <div class="adv-inq__body">
+    <ol class="adv-inq__rail" data-inq-rail aria-label={t.steps}></ol>
+
+    <div class="adv-inq__stage">
+      {/* step 0: the service */}
+      <fieldset class="adv-inq__step" data-inq-pick>
+        <legend class="adv-inq__q">{t.pick}</legend>
+        <div class="adv-inq__services">
+          {
+            list.map((s) => (
+              <button type="button" class="adv-inq__svc adv-lit" data-inq-service={s.slug}>
+                <span class="adv-inq__svc-icon">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    {shapes(s.icon).map((sh) =>
+                      sh.d ? (
+                        <path d={sh.d} />
+                      ) : sh.circle ? (
+                        <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+                      ) : sh.rect ? (
+                        <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
+                      ) : null,
+                    )}
+                  </svg>
+                </span>
+                {s.title}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      {/* steps 1..n: rendered by the script */}
+      <div class="adv-inq__step" data-inq-question hidden></div>
+
+      {/* last step: contact */}
+      <form class="adv-inq__step adv-inq__contact" data-inq-contact hidden novalidate>
+        <p class="adv-inq__q">{t.contactTitle}</p>
+        <div class="adv-hp" aria-hidden="true">
+          <label for={`${uid}-web`}>Website</label>
+          <input id={`${uid}-web`} type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="adv-inq__grid">
+          <div class="adv-field">
+            <label for={`${uid}-name`}>{t.name}</label>
+            <input id={`${uid}-name`} class="adv-input" name="name" autocomplete="name" maxlength="120" />
+          </div>
+          <div class="adv-field">
+            <label for={`${uid}-company`}>{t.company}</label>
+            <input id={`${uid}-company`} class="adv-input" name="company" autocomplete="organization" maxlength="160" />
+          </div>
+          <div class="adv-field">
+            <label for={`${uid}-email`}>{t.email}</label>
+            <input
+              id={`${uid}-email`}
+              class="adv-input"
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              maxlength="200"
+            />
+          </div>
+          <div class="adv-field">
+            <label for={`${uid}-phone`}>{t.phone}</label>
+            <input id={`${uid}-phone`} class="adv-input" type="tel" name="phone" autocomplete="tel" maxlength="40" />
+            <span class="adv-inq__hint">{t.phoneHint}</span>
+          </div>
+        </div>
+        <p class="adv-inq__privacy">{t.privacy}</p>
+        <p class="adv-form-status" data-inq-status role="status"></p>
+      </form>
+
+      {/* the run, after sending */}
+      <div class="adv-inq__step adv-inq__run" data-inq-run hidden aria-live="polite">
+        <p class="adv-inq__q">{t.runTitle}</p>
+        <ol class="adv-inq__log" data-inq-log></ol>
+      </div>
+
+      <div class="adv-inq__nav" data-inq-nav hidden>
+        <button type="button" class="adv-btn adv-btn--ghost adv-btn--sm" data-inq-back>{t.back}</button>
+        <span class="adv-inq__nav-end">
+          <button type="button" class="adv-inq__skip" data-inq-skip hidden>{t.skip}</button>
+          <button type="button" class="adv-btn adv-btn--primary" data-inq-next>{t.next}</button>
+        </span>
+      </div>
+      <noscript>
+        <p class="adv-inq__noscript">
+          {t.noscript}
+          <a href={`mailto:${c.brand.email}`}>{c.brand.email}</a>
+        </p>
+      </noscript>
+    </div>
+  </div>
+
+  <script type="application/json" data-inq-data set:html={JSON.stringify({ flows, names, t, mail: c.brand.email })} />
+</div>
+
+<script>
+  import { initInquiry } from '../../scripts/inquiry';
+  document.querySelectorAll<HTMLElement>('[data-inq]').forEach(initInquiry);
+</script>
+
+<style is:global>
+  .adv-inq__head {
+    display: grid;
+    gap: 16px;
+    max-width: 60ch;
+    margin-bottom: clamp(28px, 3.5vw, 48px);
+  }
+  .adv-inq__body {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: start;
+  }
+  /* the steps: one rail with a now-mark */
+  .adv-inq__rail {
+    position: relative;
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0 0 0 22px;
+    list-style: none;
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .adv-inq__rail::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: var(--adv-line);
+  }
+  .adv-inq__rail li {
+    position: relative;
+    padding: 6px 0;
+    line-height: 1.35;
+    transition: color 300ms var(--adv-ease);
+  }
+  .adv-inq__rail li::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 0.85em;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: var(--adv-bg-2);
+    transition:
+      border-color 300ms var(--adv-ease),
+      background-color 300ms var(--adv-ease);
+  }
+  .adv-inq__rail li.is-done {
+    color: var(--adv-text);
+  }
+  .adv-inq__rail li.is-done::before {
+    border-color: var(--adv-accent);
+    background: rgba(var(--adv-accent-rgb), 0.35);
+  }
+  .adv-inq__rail li.is-now {
+    color: var(--adv-text);
+    font-weight: 600;
+  }
+  .adv-inq__rail li.is-now::before {
+    border-color: var(--adv-accent);
+    background: var(--adv-accent);
+  }
+  .adv-inq__stage {
+    display: grid;
+    gap: 22px;
+    min-height: 320px;
+  }
+  .adv-inq__step {
+    display: grid;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .adv-inq__step[hidden] {
+    display: none;
+  }
+  .adv-inq__q {
+    padding: 0;
+    font-family: var(--adv-display);
+    font-weight: 700;
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+  }
+  .adv-inq__hint {
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .adv-inq__services,
+  .adv-inq__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  /* a choice: a small graphite card; chosen = lit edge + check */
+  .adv-inq__svc,
+  .adv-inq__opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 58px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 14px;
+    text-align: left;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--adv-text);
+    background: var(--adv-card-bg);
+    box-shadow: var(--adv-shadow-card);
+    cursor: pointer;
+    transition:
+      translate var(--adv-fast) var(--adv-ease),
+      box-shadow 300ms var(--adv-ease);
+  }
+  .adv-inq__svc {
+    min-height: 76px;
+    font-family: var(--adv-display);
+    font-size: 1.0625rem;
+  }
+  .adv-inq__svc:hover,
+  .adv-inq__opt:hover {
+    translate: 0 -2px;
+  }
+  .adv-inq__svc:active,
+  .adv-inq__opt:active {
+    translate: 0 0;
+    scale: 0.99;
+  }
+  .adv-inq__svc-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
+  }
+  .adv-inq__svc-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--adv-ink);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .adv-inq__opt i {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: center / 100% no-repeat;
+    transition:
+      border-color 200ms var(--adv-ease),
+      background-color 200ms var(--adv-ease);
+  }
+  .adv-inq__opt[data-kind='one'] i {
+    border-radius: 50%;
+  }
+  .adv-inq__opt[aria-pressed='true'] {
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--adv-accent-rgb), 0.7),
+      0 20px 40px -24px rgba(0, 0, 0, 0.8);
+  }
+  .adv-inq__opt[aria-pressed='true'] i {
+    border-color: var(--adv-accent);
+    background-color: rgba(var(--adv-accent-rgb), 0.18);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.2 6.2l1.9 1.9 3.8-4.2' fill='none' stroke='%237cc8ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .adv-inq__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-inq__chosen {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .adv-inq__change {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--adv-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .adv-inq__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .adv-inq__privacy {
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-inq__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 6px;
+  }
+  .adv-inq__nav[hidden] {
+    display: none;
+  }
+  .adv-inq__nav-end {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .adv-inq__skip {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--adv-muted);
+    cursor: pointer;
+  }
+  .adv-inq__skip:hover {
+    color: var(--adv-text);
+  }
+  /* the run log */
+  .adv-inq__log {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-inq__log li {
+    display: grid;
+    grid-template-columns: 22px auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--adv-card-bg);
+    box-shadow: var(--adv-shadow-card);
+    opacity: 0;
+    translate: 0 8px;
+    transition:
+      opacity 500ms var(--adv-ease),
+      translate 500ms var(--adv-ease);
+  }
+  .adv-inq__log li.is-in {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .adv-inq__log li i {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 1px solid var(--adv-accent);
+    background: rgba(var(--adv-accent-rgb), 0.18) center / 100% no-repeat
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.2 6.2l1.9 1.9 3.8-4.2' fill='none' stroke='%237cc8ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .adv-inq__log b {
+    font-family: var(--adv-mono);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-inq__log span {
+    font-weight: 600;
+  }
+  .adv-inq__noscript a {
+    color: var(--adv-text);
+  }
+  @media (max-width: 860px) {
+    .adv-inq__body {
+      grid-template-columns: 1fr;
+    }
+    .adv-inq__rail {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-inq__services,
+    .adv-inq__options,
+    .adv-inq__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .adv-inq__log li {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+</style>

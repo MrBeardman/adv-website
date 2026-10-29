@@ -493,8 +493,16 @@ main {
   transition: opacity 350ms var(--adv-ease);
   background:
     radial-gradient(260px circle at var(--mx) var(--my), rgba(var(--adv-l-cobalt), 0.2), transparent 65%),
-    radial-gradient(380px circle at calc(var(--mx) + 140px) calc(var(--my) + 90px), rgba(var(--adv-l-violet), 0.14), transparent 70%),
-    radial-gradient(300px circle at calc(var(--mx) - 160px) calc(var(--my) + 40px), rgba(var(--adv-l-navy), 0.35), transparent 70%);
+    radial-gradient(
+      380px circle at calc(var(--mx) + 140px) calc(var(--my) + 90px),
+      rgba(var(--adv-l-violet), 0.14),
+      transparent 70%
+    ),
+    radial-gradient(
+      300px circle at calc(var(--mx) - 160px) calc(var(--my) + 40px),
+      rgba(var(--adv-l-navy), 0.35),
+      transparent 70%
+    );
 }
 .adv-card::after {
   content: '';
@@ -505,7 +513,12 @@ main {
   opacity: 0;
   pointer-events: none;
   transition: opacity 350ms var(--adv-ease);
-  background: linear-gradient(115deg, rgba(var(--adv-l-ice), 0.55), rgba(var(--adv-l-cobalt), 0.35) 40%, rgba(var(--adv-l-violet), 0.5));
+  background: linear-gradient(
+    115deg,
+    rgba(var(--adv-l-ice), 0.55),
+    rgba(var(--adv-l-cobalt), 0.35) 40%,
+    rgba(var(--adv-l-violet), 0.5)
+  );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);

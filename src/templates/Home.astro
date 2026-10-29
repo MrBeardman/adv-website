@@ -13,7 +13,7 @@ import Workflow from '../components/home/Workflow.astro';
 import ServiceIndex from '../components/home/ServiceIndex.astro';
 import Showcase from '../components/home/Showcase.astro';
 import Partners from '../components/Partners.astro';
-import CtaPanel from '../components/CtaPanel.astro';
+import Inquiry from '../components/inquiry/Inquiry.astro';
 import NodeFrame from '../components/ui/NodeFrame.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
@@ -45,7 +45,11 @@ const inquiryId = pick(home, lang).workflow.inquiryId;
       <Partners lang={lang} />
     </NodeFrame>
     <NodeFrame {...n.inquiry} icon="arrowRight" side="full" id={inquiryId} last>
-      <CtaPanel lang={lang} />
+      <div class="adv-section adv-home-inq">
+        <div class="adv-wrap">
+          <Inquiry lang={lang} />
+        </div>
+      </div>
     </NodeFrame>
   </div>
 </Base>
