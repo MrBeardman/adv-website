@@ -128,17 +128,6 @@ const S = 0.012;
 const P = (x: number, y: number) => new THREE.Vector3((x - 128) * S * 1.25, -(y - 204) * S, 0);
 const A_PTS = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
 const A_DEPTH = 0.1;
-// the lit edge: a fine tube along the outline, on the front face
-function gateTube() {
-  const path = new THREE.CurvePath<THREE.Vector3>();
-  const z = A_DEPTH / 2 + 0.014;
-  for (let i = 0; i < A_PTS.length - 1; i++) {
-    const a = P(A_PTS[i][0], A_PTS[i][1]).setZ(z);
-    const b = P(A_PTS[i + 1][0], A_PTS[i + 1][1]).setZ(z);
-    path.add(new THREE.LineCurve3(a, b));
-  }
-  return new THREE.TubeGeometry(path, 320, 0.006, 6, false);
-}
 // the solid letter: the A extruded, with a small bevel
 function gateSolid() {
   const shape = new THREE.Shape(A_PTS.slice(0, -1).map(([x, y]) => new THREE.Vector2(P(x, y).x, P(x, y).y)));
@@ -194,28 +183,6 @@ const SOLID_FRAG = /* glsl */ `
     float band = (vP.x * 0.7 + vP.y * 0.5) - (fract(uTime * 0.07) * 7.0 - 3.5);
     col += edge * 0.07 * exp(-band * band * 6.0) * (1.0 - side);
     gl_FragColor = vec4(col, 1.0);
-  }
-`;
-
-const GATE_VERT = /* glsl */ `
-  varying float vT;
-  void main() {
-    vT = uv.x;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-const GATE_FRAG = /* glsl */ `
-  precision highp float;
-  uniform float uTime;
-  uniform float uDim;
-  varying float vT;
-  void main() {
-    // a bright point with a soft tail circling the outline, and a slow breath on the whole mark
-    float d = fract(vT - uTime * 0.18);
-    float head = exp(-d * 18.0) + smoothstep(0.985, 1.0, d) * 1.5;
-    float breath = 0.55 + 0.15 * sin(uTime * 1.3);
-    vec3 col = mix(vec3(0.62, 0.8, 1.0), vec3(0.92, 0.97, 1.0), head);
-    gl_FragColor = vec4(col, (breath + head * 1.4) * uDim);
   }
 `;
 
@@ -275,17 +242,8 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   stream.rotation.set(0.12, -0.38, 0.06);
   scene.add(stream);
 
-  // the gate is the A of the ADV symbol as a solid graphite letter with a lit edge. The lines are squeezed
-  // through its opening; the letter hides whatever passes behind it. A bright point circles the edge (we
-  // are at work) and the lines flare as they pass.
-  const gateMat = new THREE.ShaderMaterial({
-    vertexShader: GATE_VERT,
-    fragmentShader: GATE_FRAG,
-    uniforms: { uTime: uniforms.uTime, uDim: { value: 1 } },
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
+  // the gate is the A of the ADV symbol as a solid graphite letter. The lines are squeezed through its
+  // opening; the letter hides whatever passes behind it. The lines flare as they pass.
   const gate = new THREE.Group();
   gate.position.set(0.6, 0, 0);
   gate.rotation.y = 0.38 + 0.8; // a three-quarter view: the A reads, the lines still pass through it
@@ -294,7 +252,7 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     gateSolid(),
     new THREE.ShaderMaterial({ vertexShader: SOLID_VERT, fragmentShader: SOLID_FRAG, uniforms: { uTime: uniforms.uTime } }),
   );
-  gate.add(solid, new THREE.Mesh(gateTube(), gateMat));
+  gate.add(solid);
   stream.add(gate);
 
   const resize = () => {
