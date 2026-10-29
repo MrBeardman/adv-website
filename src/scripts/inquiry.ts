@@ -83,7 +83,8 @@ export function initInquiry(root: HTMLElement) {
       }),
     );
     // keep the newest row in view; the line runs the length of the rows
-    rail.style.setProperty('--rail-h', `${rail.scrollHeight}px`);
+    const last = rail.lastElementChild as HTMLElement | null;
+    rail.style.setProperty('--rail-h', last ? `${last.offsetTop + last.offsetHeight}px` : '0px');
     rail.classList.toggle('is-full', rail.scrollHeight > rail.clientHeight + 1);
     rail.scrollTo({ top: rail.scrollHeight, behavior: reduceMotion ? 'auto' : 'smooth' });
   }

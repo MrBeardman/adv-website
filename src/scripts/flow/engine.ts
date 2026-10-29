@@ -1,7 +1,7 @@
 /**
  * Homepage hero engine (components/home/HeroFlow.astro), Honza Oct 29 2026 ("like amaze-genius, in our
  * colours"): hundreds of fine lines. On the left they are tangled and scattered (a business today); they
- * pass through the ADV mark in light (the tile and its A, the organiser at work) and leave as a smooth, slowly twisting ribbon of four strands that fans out (a
+ * pass inside the A of the ADV mark, drawn in light (the organiser at work), and leave as a smooth, slowly twisting ribbon of four strands that fans out (a
  * business that runs). Pulses of light travel along every line: the data going through. Colour runs violet
  * → cobalt → ice along the stream; after the gate each line keeps a colour of its own and the ribbon is
  * shaded (folds and the far side dimmer, lines at uneven strength); additive blending gives the silk sheen.
@@ -65,9 +65,11 @@ const VERT = /* glsl */ `
     float k = smoothstep(-2.4, 1.6, x);
     vOrder = k;
     vec3 p = mix(tangled, ordered, k);
-    float squeeze = exp(-pow((x - 0.6) * 1.1, 2.0));
+    float squeeze = exp(-pow((x - 0.6) * 0.85, 2.0));
     vGate = exp(-pow((x - 0.6) * 3.0, 2.0));
-    p.yz = mix(p.yz, p.yz * 0.22, squeeze);
+    // through the A's opening: narrow across (z, the A's width), taller up and down (y)
+    p.y = mix(p.y, p.y * 0.12, squeeze);
+    p.z = mix(p.z, p.z * 0.05, squeeze);
     vDepth = p.z;
 
     // a weak magnet: lines near the pointer lean a little towards it
@@ -120,30 +122,15 @@ const FRAG = /* glsl */ `
   }
 `;
 
-// the ADV symbol in the gate's plane, from the 256-unit logo grid: s maps it to ~2 scene units
-const S = 2.0 / 224;
-const P = (x: number, y: number) => new THREE.Vector3((x - 128) * S, -(y - 136) * S, 0);
-function gateTube(which: 0 | 1) {
+// the A of the ADV symbol (data/logoPaths.ts SYMBOL_TILE) in the gate's plane, from the 256-unit logo
+// grid, centred on its opening (between the legs, below the inner apex) so the lines pass inside the A
+const S = 0.012;
+const P = (x: number, y: number) => new THREE.Vector3((x - 128) * S * 1.25, -(y - 204) * S, 0);
+function gateTube() {
   const path = new THREE.CurvePath<THREE.Vector3>();
-  const line = (a: number[], b: number[]) => path.add(new THREE.LineCurve3(P(a[0], a[1]), P(b[0], b[1])));
-  const arc = (a: number[], c: number[], b: number[]) =>
-    path.add(new THREE.QuadraticBezierCurve3(P(a[0], a[1]), P(c[0], c[1]), P(b[0], b[1])));
-  if (which) {
-    // the tile: 16..240 with 44 corners
-    line([60, 16], [196, 16]);
-    arc([196, 16], [240, 16], [240, 60]);
-    line([240, 60], [240, 196]);
-    arc([240, 196], [240, 240], [196, 240]);
-    line([196, 240], [60, 240]);
-    arc([60, 240], [16, 240], [16, 196]);
-    line([16, 196], [16, 60]);
-    arc([16, 60], [16, 16], [60, 16]);
-  } else {
-    // the A
-    const A = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
-    for (let i = 0; i < A.length - 1; i++) line(A[i], A[i + 1]);
-  }
-  return new THREE.TubeGeometry(path, which ? 320 : 260, 0.0075, 6, false);
+  const A = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
+  for (let i = 0; i < A.length - 1; i++) path.add(new THREE.LineCurve3(P(A[i][0], A[i][1]), P(A[i + 1][0], A[i + 1][1])));
+  return new THREE.TubeGeometry(path, 320, 0.0075, 6, false);
 }
 
 const GATE_VERT = /* glsl */ `
@@ -224,9 +211,9 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   stream.rotation.set(0.12, -0.38, 0.06);
   scene.add(stream);
 
-  // the gate is the ADV symbol (data/logoPaths.ts SYMBOL_TILE: a rounded tile with the A cut out), drawn
-  // in light: a fine tube along the tile and the A. A bright point circles the outline (we are at work) and
-  // the lines flare as they pass through it.
+  // the gate is the A of the ADV symbol, drawn in light (a fine tube along its outline, a faint echo
+  // behind). The lines are squeezed through its opening, so the A frames them and nothing crosses its
+  // strokes. A bright point circles the outline (we are at work) and the lines flare as they pass.
   const gateMat = new THREE.ShaderMaterial({
     vertexShader: GATE_VERT,
     fragmentShader: GATE_FRAG,
@@ -237,14 +224,13 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   });
   const gate = new THREE.Group();
   gate.position.set(0.6, 0, 0);
-  gate.rotation.y = 0.38 + 0.95; // a three-quarter view: the A reads, the lines still pass through it
-  const outline = gateTube(1);
-  const inner = gateTube(0);
-  gate.add(new THREE.Mesh(outline, gateMat), new THREE.Mesh(inner, gateMat));
+  gate.rotation.y = 0.38 + 0.8; // a three-quarter view: the A reads, the lines still pass through it
+  const outline = gateTube();
+  gate.add(new THREE.Mesh(outline, gateMat));
   const echoMat = gateMat.clone();
   echoMat.uniforms = { uTime: uniforms.uTime, uDim: { value: 0.22 } };
   const echo = new THREE.Mesh(outline, echoMat);
-  echo.scale.setScalar(1.14);
+  echo.scale.setScalar(1.1);
   echo.position.z = -0.1;
   gate.add(echo);
   stream.add(gate);
