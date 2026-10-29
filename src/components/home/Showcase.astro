@@ -1,0 +1,126 @@
+---
+/**
+ * Homepage selected work (Honza, Oct 29 2026): big device mockups with no backdrop, one case per row,
+ * alternating sides; the case text beside it with its run status and the link. Cases that have no flat
+ * screenshots yet (`screens` in caseStudies.ts) follow as plain rows.
+ */
+import Arrow from '../ui/Arrow.astro';
+import Devices from '../ui/Devices.astro';
+import WorkRows from '../WorkRows.astro';
+import { pick, loc, type Lang } from '../../i18n';
+import chrome from '../../i18n/chrome.json';
+import services from '../../i18n/services.json';
+import { caseStudiesFor } from '../../data/caseStudies';
+import { ENABLED_SERVICES } from '../../data/capabilities';
+import { routes } from '../../data/routes';
+
+interface Props {
+  lang: Lang;
+  limit?: number;
+}
+const { lang, limit = 3 } = Astro.props;
+const c = pick(chrome, lang);
+const s = pick(services, lang);
+const all = caseStudiesFor().slice(0, limit);
+const big = all.filter((x) => x.screens);
+const rest = all.filter((x) => !x.screens);
+const serviceName = (slug: string) =>
+  ENABLED_SERVICES.some((x) => x.slug === slug) ? s.capabilities.items.find((i) => i.slug === slug)?.title : undefined;
+---
+
+<section class="adv-section adv-show" aria-labelledby="adv-show-title">
+  <div class="adv-wrap">
+    <div class="adv-head">
+      <h2 id="adv-show-title" class="adv-h2">{s.service.selectedWork}</h2>
+      <a class="adv-link" href={routes.work(lang)}>{c.notFound.work}<Arrow /></a>
+    </div>
+    <ul class="adv-show__list">
+      {
+        big.map((cs, k) => {
+          const href = cs.detail ? routes.case(lang, cs.slug) : undefined;
+          const tags = [loc(cs.sector, lang), cs.year, ...cs.services.map(serviceName)].filter(Boolean);
+          return (
+            <li class:list={['adv-show__item', { 'is-flip': k % 2 === 1 }]}>
+              <div class="adv-show__media">
+                <Devices
+                  desktop={cs.screens!.desktop}
+                  mobile={cs.screens!.mobile}
+                  float={cs.screens!.float}
+                  alt={loc(cs.client, lang)}
+                  side={k % 2 === 1 ? 'left' : 'right'}
+                />
+              </div>
+              <div class="adv-show__copy">
+                <span class="adv-row__run">
+                  <i />
+                  {s.service.runOk}
+                </span>
+                <h3 class="adv-show__client">{loc(cs.client, lang)}</h3>
+                <p class="adv-show__outcome">{loc(cs.outcome, lang)}</p>
+                <p class="adv-show__tags">{tags.join(' · ')}</p>
+                {href && (
+                  <a class="adv-link" href={href}>
+                    {s.service.readCase}
+                    <Arrow />
+                  </a>
+                )}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+    {rest.length > 0 && <WorkRows lang={lang} items={rest} showService />}
+  </div>
+</section>
+
+<style is:global>
+  .adv-show__list {
+    list-style: none;
+    margin: 0 0 clamp(24px, 4vw, 48px);
+    padding: 0;
+    display: grid;
+    gap: clamp(40px, 6vw, 96px);
+  }
+  .adv-show__item {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(24px, 4vw, 64px);
+  }
+  .adv-show__item.is-flip {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
+  }
+  .adv-show__item.is-flip .adv-show__media {
+    order: 2;
+  }
+  .adv-show__copy {
+    display: grid;
+    justify-items: start;
+    gap: 14px;
+  }
+  .adv-show__client {
+    font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .adv-show__outcome {
+    max-width: 36ch;
+    font-size: var(--adv-lead);
+    line-height: 1.5;
+    color: var(--adv-muted);
+  }
+  .adv-show__tags {
+    font-size: 0.8125rem;
+    color: #7f879b;
+  }
+  @media (max-width: 900px) {
+    .adv-show__item,
+    .adv-show__item.is-flip {
+      grid-template-columns: 1fr;
+    }
+    .adv-show__item.is-flip .adv-show__media {
+      order: 0;
+    }
+  }
+</style>

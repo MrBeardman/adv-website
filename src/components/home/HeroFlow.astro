@@ -81,6 +81,21 @@ const w = pick(home, lang).workflow;
   .adv-hf__inner {
     position: relative;
   }
+  .adv-hf::before {
+    /* keep the copy column calm over the stream */
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(60% 70% at 18% 52%, rgba(6, 7, 11, 0.7), transparent 70%);
+  }
+  .adv-hf__canvas {
+    z-index: 0;
+  }
+  .adv-hf__inner {
+    z-index: 2;
+  }
   .adv-hf__title {
     max-width: 12ch;
     font-size: clamp(3rem, 1.4rem + 5vw, 6rem);

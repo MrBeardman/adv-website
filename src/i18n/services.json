@@ -72,7 +72,8 @@
       "empty": "Případové studie k této službě připravujeme. Na nedávnou práci se nás zeptejte při konzultaci.",
       "badgeDraft": "Koncept",
       "badgePlaceholder": "Zástupný",
-      "runOk": "Úspěch"
+      "runOk": "Úspěch",
+      "readCase": "Přečíst případovou studii"
     },
     "moves": {
       "title": "Jak projekt probíhá.",
@@ -168,7 +169,8 @@
       "empty": "Case studies for this service are being written. Ask us about recent work during the consultation.",
       "badgeDraft": "Draft",
       "badgePlaceholder": "Placeholder",
-      "runOk": "Success"
+      "runOk": "Success",
+      "readCase": "Read the case study"
     },
     "moves": {
       "title": "How a project runs.",

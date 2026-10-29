@@ -1,0 +1,186 @@
+---
+/**
+ * Device mockups drawn in code, no backdrop (Honza, Oct 29 2026: "big mockups, no background, just a
+ * notebook or tablet"): a graphite laptop with the case's screen, and in front of it either a phone or a
+ * second app window. Slight 3D tilt; the page's own light sits behind it. Screens come from
+ * caseStudies.ts `screens` (flat screenshots, never photos of devices).
+ */
+interface Props {
+  desktop: string;
+  mobile?: string;
+  float?: string;
+  alt?: string;
+  /** which side the phone / window sits on */
+  side?: 'left' | 'right';
+}
+const { desktop, mobile, float, alt = '', side = 'right' } = Astro.props;
+---
+
+<figure class:list={['adv-dev', `adv-dev--${side}`]}>
+  <div class="adv-dev__laptop">
+    <div class="adv-dev__lid">
+      <div class="adv-dev__screen">
+        <img src={desktop} alt={alt} loading="lazy" decoding="async" width="1600" height="1000" />
+      </div>
+    </div>
+    <div class="adv-dev__base" aria-hidden="true"></div>
+  </div>
+  {
+    mobile && (
+      <div class="adv-dev__phone" aria-hidden="true">
+        <div class="adv-dev__phone-screen">
+          <img src={mobile} alt="" loading="lazy" decoding="async" width="780" height="1688" />
+        </div>
+      </div>
+    )
+  }
+  {
+    float && !mobile && (
+      <div class="adv-dev__window" aria-hidden="true">
+        <span class="adv-dev__dots">
+          <i />
+          <i />
+          <i />
+        </span>
+        <img src={float} alt="" loading="lazy" decoding="async" />
+      </div>
+    )
+  }
+</figure>
+
+<style is:global>
+  .adv-dev {
+    position: relative;
+    margin: 0;
+    padding: 4% 8% 9% 2%;
+    perspective: 2200px;
+  }
+  .adv-dev--left {
+    padding: 4% 2% 9% 8%;
+  }
+  .adv-dev__laptop {
+    position: relative;
+    transform: rotateY(-9deg) rotateX(5deg);
+    transform-style: flat;
+  }
+  .adv-dev--left .adv-dev__laptop {
+    transform: rotateY(9deg) rotateX(5deg);
+  }
+  .adv-dev__lid {
+    padding: 2.1% 2.1% 2.6%;
+    border-radius: 18px 18px 6px 6px;
+    background: linear-gradient(160deg, #2a2e3a, #121419 60%, #0b0c10);
+    box-shadow:
+      inset 1px 1px 0 rgba(196, 214, 255, 0.35),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.6),
+      0 60px 90px -40px rgba(0, 0, 0, 0.9);
+  }
+  .adv-dev__screen {
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 16 / 10;
+    background: #000;
+  }
+  .adv-dev__screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .adv-dev__base {
+    position: relative;
+    height: clamp(10px, 1.4vw, 18px);
+    margin: 0 -6%;
+    border-radius: 2px 2px 22px 22px;
+    background: linear-gradient(180deg, #3a3f4d 0%, #1b1e26 45%, #0b0c10 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(196, 214, 255, 0.45),
+      0 30px 40px -20px rgba(0, 0, 0, 0.9);
+  }
+  .adv-dev__base::before {
+    /* the notch where the lid opens */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 16%;
+    height: 40%;
+    translate: -50% 0;
+    border-radius: 0 0 10px 10px;
+    background: rgba(0, 0, 0, 0.45);
+  }
+  .adv-dev__phone {
+    position: absolute;
+    right: 0;
+    bottom: 3%;
+    width: 21%;
+    padding: 1.1%;
+    border-radius: 26px;
+    background: linear-gradient(160deg, #2c303c, #0d0e12 70%);
+    box-shadow:
+      inset 1px 1px 0 rgba(196, 214, 255, 0.4),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.6),
+      0 40px 60px -24px rgba(0, 0, 0, 0.95);
+    transform: rotateY(-14deg) rotateX(4deg);
+  }
+  .adv-dev--left .adv-dev__phone {
+    right: auto;
+    left: 0;
+    transform: rotateY(14deg) rotateX(4deg);
+  }
+  .adv-dev__phone-screen {
+    overflow: hidden;
+    border-radius: 20px;
+    aspect-ratio: 9 / 19.5;
+    background: #000;
+  }
+  .adv-dev__phone-screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .adv-dev__window {
+    position: absolute;
+    right: 0;
+    bottom: 2%;
+    width: 46%;
+    padding: 26px 8px 8px;
+    border-radius: 14px;
+    background: linear-gradient(160deg, #232633, #0e1016 70%);
+    box-shadow:
+      inset 1px 1px 0 rgba(196, 214, 255, 0.35),
+      0 40px 70px -24px rgba(0, 0, 0, 0.95);
+    transform: rotateY(-12deg) rotateX(4deg);
+  }
+  .adv-dev--left .adv-dev__window {
+    right: auto;
+    left: 0;
+    transform: rotateY(12deg) rotateX(4deg);
+  }
+  .adv-dev__window img {
+    width: 100%;
+    border-radius: 7px;
+  }
+  .adv-dev__dots {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    display: flex;
+    gap: 5px;
+  }
+  .adv-dev__dots i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  @media (max-width: 760px) {
+    .adv-dev__phone {
+      border-radius: 16px;
+    }
+    .adv-dev__phone-screen {
+      border-radius: 12px;
+    }
+  }
+</style>

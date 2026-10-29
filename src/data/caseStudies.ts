@@ -37,6 +37,9 @@ export interface CaseStudy {
   services: string[];
   outcome: Localized;
   image?: string;
+  /** Flat screenshots for the device mockups (ui/Devices.astro): a laptop screen (16:10), optionally a
+   *  phone screen or a second app window floating in front. Cases without them show as plain rows. */
+  screens?: { desktop: string; mobile?: string; float?: string };
   related?: string[];
   detail?: CaseDetail;
 }
@@ -84,6 +87,10 @@ export const CASE_STUDIES: CaseStudy[] = [
       cs: 'Živé ceny zlata, stříbra a platiny ve třech e-shopech, bez každodenního ručního přepisování.',
     },
     image: '/media/cases/kesia/cover.webp',
+    screens: {
+      desktop: '/media/cases/kesia/01-pricing-groups.webp',
+      float: '/media/cases/kesia/03-sales-analytics-760.webp',
+    },
     related: ['kesia-praha'],
     detail: { layout: 'kesia-live-pricing', state: 'ongoing-support' },
   },
@@ -99,6 +106,8 @@ export const CASE_STUDIES: CaseStudy[] = [
       cs: 'Rezervace se do dvou měsíců od relaunche zdvojnásobily.',
     },
     image: '/media/cases/studio-1.webp',
+    // live site, captured Oct 29 2026
+    screens: { desktop: '/media/cases/studio/desktop.webp', mobile: '/media/cases/studio/mobile.webp' },
   },
   {
     slug: 'laser-arena-praha',

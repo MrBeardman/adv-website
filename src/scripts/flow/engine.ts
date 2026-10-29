@@ -1,80 +1,90 @@
 /**
- * Homepage hero engine (components/home/HeroFlow.astro): one particle stream that enters from the left
- * turbulent and scattered (a business today), passes a ring of light (what we do), and leaves to the right
- * as smooth, ordered ribbons (a business that runs). Colour runs violet → navy → ice along the stream.
+ * Homepage hero engine (components/home/HeroFlow.astro), Honza Oct 29 2026 ("like amaze-genius, in our
+ * colours"): hundreds of fine lines. On the left they are tangled and scattered (a business today); they
+ * pass a ring of light (ADV) and leave as one smooth, slowly twisting ribbon of parallel lines (a business
+ * that runs). Pulses of light travel along every line: the data going through. Colour runs violet → cobalt
+ * → ice along the stream and across the ribbon; additive blending gives the silk sheen.
  *
- * All motion is computed in the vertex shader from per-particle constants and one time uniform; the CPU
- * writes three uniforms per frame. The pointer bends the stream a little near it (fine pointers only).
+ * Every vertex position is computed in the vertex shader from (line, u) and one time uniform; the CPU only
+ * writes a few uniforms per frame. The pointer lifts the ribbon a little near it (fine pointers only).
  * Pauses off screen and in a hidden tab; reduced motion renders one still frame.
  */
 import * as THREE from 'three';
 
 const VERT = /* glsl */ `
   uniform float uTime;
-  uniform vec2 uMouse;      // in stream space, x/y
+  uniform vec2 uMouse;
   uniform float uMouseOn;
-  uniform float uPixel;
-  attribute vec4 aSeed;     // lane, phase, depth, jitter
-  varying float vT;         // 0 left .. 1 right
-  varying float vAlpha;
-
-  float hash(float n) { return fract(sin(n) * 43758.5453); }
+  attribute vec2 aLU;       // line (0..1), position along it (0..1)
+  attribute float aSeed;    // per line
+  varying float vU;
+  varying float vLine;
+  varying float vSeed;
+  varying float vOrder;
 
   void main() {
-    float L = 16.0;
-    float speed = mix(0.55, 0.9, aSeed.w);
-    float x = mod(aSeed.y * L + uTime * speed, L) - L * 0.5;
-    vT = clamp((x + L * 0.5) / L, 0.0, 1.0);
+    float L = 15.0;
+    float x = (aLU.y - 0.5) * L;
+    float t = uTime;
+    vU = aLU.y;
+    vLine = aLU.x;
+    vSeed = aSeed;
 
-    // ordered side: a few smooth ribbons, gently waving
-    float lane = floor(aSeed.x * 7.0);
-    float laneY = (lane - 3.0) * 0.24 + (aSeed.x * 7.0 - lane - 0.5) * 0.05;
-    float wave = sin(x * 0.55 + uTime * 0.35 + lane * 0.6) * 0.22;
-    vec3 ordered = vec3(x, laneY + wave, (aSeed.z - 0.5) * 0.35);
+    // ordered: a ribbon of parallel lines that twists slowly as it travels
+    float w = 1.25;
+    float across = (aLU.x - 0.5) * w;
+    float twist = x * 0.32 - t * 0.12;
+    float lift = sin(x * 0.42 - t * 0.35) * 0.45;
+    vec3 ordered = vec3(x, lift + across * cos(twist), across * sin(twist));
 
-    // turbulent side: scattered, swirling
-    float s = aSeed.x * 91.7 + aSeed.z * 13.1;
-    float r = 0.6 + 1.6 * hash(s);
-    float a = hash(s + 3.0) * 6.2831 + uTime * (0.25 + hash(s + 5.0) * 0.5) + x * 0.4;
-    vec3 chaos = vec3(x, sin(a) * r * 0.9, cos(a) * r);
+    // tangled: every line wanders on its own
+    float s = aSeed * 50.0;
+    vec3 tangled = vec3(
+      x,
+      sin(x * (0.9 + aSeed * 0.8) + s + t * 0.5) * (0.8 + aSeed * 1.2) + sin(x * 2.3 + s * 1.7 + t) * 0.25,
+      cos(x * (0.7 + aSeed) + s * 1.3 + t * 0.4) * (0.7 + aSeed)
+    );
 
-    // the ring sits at x = 0.8; chaos before it, order after it
-    float k = smoothstep(-1.2, 1.4, x);
-    vec3 p = mix(chaos, ordered, k);
-    // squeeze through the ring
-    float ring = exp(-pow((x - 0.8) * 1.6, 2.0));
-    p.yz *= 1.0 - ring * 0.55;
+    // the ring sits at x = 0.6: tangled before it, ordered after it, everything squeezed through it
+    float k = smoothstep(-2.4, 1.6, x);
+    vOrder = k;
+    vec3 p = mix(tangled, ordered, k);
+    float ring = exp(-pow((x - 0.6) * 1.1, 2.0));
+    p.yz = mix(p.yz, p.yz * 0.32, ring);
 
-    // pointer bends the stream near it
+    // pointer lifts the ribbon near it
     vec2 d = p.xy - uMouse;
-    float m = uMouseOn * exp(-dot(d, d) * 1.6);
-    p.y += m * 0.35 * sign(d.y + 0.0001);
+    p.y += uMouseOn * 0.3 * exp(-dot(d, d) * 1.2);
 
-    vec4 mv = modelViewMatrix * vec4(p, 1.0);
-    gl_Position = projectionMatrix * mv;
-    float size = mix(1.4, 2.6, hash(s + 9.0)) * (1.0 + ring * 1.2);
-    gl_PointSize = size * uPixel * (11.0 / -mv.z);
-    // fade at both ends of the stream
-    vAlpha = smoothstep(0.0, 0.12, vT) * (1.0 - smoothstep(0.9, 1.0, vT)) * mix(0.55, 1.0, k);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
 `;
 
 const FRAG = /* glsl */ `
-  precision mediump float;
-  varying float vT;
-  varying float vAlpha;
+  precision highp float;
+  uniform float uTime;
+  varying float vU;
+  varying float vLine;
+  varying float vSeed;
+  varying float vOrder;
+
   void main() {
-    vec2 c = gl_PointCoord - 0.5;
-    float d = length(c);
-    if (d > 0.5) discard;
-    float soft = smoothstep(0.5, 0.0, d);
-    soft *= soft * 1.4;
-    vec3 violet = vec3(0.43, 0.25, 0.90);
-    vec3 navy = vec3(0.15, 0.36, 1.0);
-    vec3 ice = vec3(0.70, 0.88, 1.0);
-    vec3 col = mix(violet, navy, smoothstep(0.1, 0.5, vT));
-    col = mix(col, ice, smoothstep(0.5, 0.85, vT));
-    gl_FragColor = vec4(col, soft * vAlpha);
+    vec3 violet = vec3(0.46, 0.27, 0.95);
+    vec3 cobalt = vec3(0.16, 0.38, 1.0);
+    vec3 ice = vec3(0.62, 0.86, 1.0);
+    // along the stream, and a little across the ribbon so its edges read as silk
+    float g = clamp(vU * 1.15 - 0.1 + (vLine - 0.5) * 0.25 * vOrder, 0.0, 1.0);
+    vec3 col = mix(violet, cobalt, smoothstep(0.15, 0.55, g));
+    col = mix(col, ice, smoothstep(0.52, 0.82, g));
+
+    // data pulses: short bright dashes travelling along each line
+    float ph = fract(vU * 2.2 - uTime * (0.16 + vSeed * 0.08) + vSeed * 7.0);
+    float pulse = smoothstep(0.035, 0.0, abs(ph - 0.5)) * (0.4 + vOrder);
+
+    // fade in late on the left so the tangle stays clear of the headline
+    float edge = smoothstep(0.16, 0.42, vU) * (1.0 - smoothstep(0.9, 1.0, vU));
+    float a = (mix(0.12, 0.26, vOrder) + pulse * 0.9) * edge;
+    gl_FragColor = vec4(col + pulse * 0.6, a);
   }
 `;
 
@@ -82,29 +92,45 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
-    antialias: false,
+    antialias: true,
     powerPreference: 'high-performance',
   });
-  const dpr = Math.min(devicePixelRatio, 1.5);
+  const dpr = Math.min(devicePixelRatio, 1.75);
   renderer.setPixelRatio(dpr);
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 50);
-  camera.position.set(0.6, 0.35, 7.2);
-  camera.lookAt(0.9, 0, 0);
+  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
+  camera.position.set(0.4, 0.5, 8.2);
+  camera.lookAt(0.8, 0, 0);
 
-  const n = opts.count;
-  const seeds = new Float32Array(n * 4);
-  for (let i = 0; i < n * 4; i++) seeds[i] = Math.random();
+  // lines × points per line, as line segments
+  const lines = Math.max(60, Math.round(opts.count / 100));
+  const per = 200;
+  const verts = lines * (per - 1) * 2;
+  const lu = new Float32Array(verts * 2);
+  const seed = new Float32Array(verts);
+  let v = 0;
+  for (let l = 0; l < lines; l++) {
+    const ln = l / (lines - 1);
+    const sd = Math.random();
+    for (let i = 0; i < per - 1; i++) {
+      for (const j of [i, i + 1]) {
+        lu[v * 2] = ln;
+        lu[v * 2 + 1] = j / (per - 1);
+        seed[v] = sd;
+        v++;
+      }
+    }
+  }
   const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
-  geo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 4));
-  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 20);
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(verts * 3), 3));
+  geo.setAttribute('aLU', new THREE.BufferAttribute(lu, 2));
+  geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 30);
   const uniforms = {
-    uTime: { value: 8 },
+    uTime: { value: 6 },
     uMouse: { value: new THREE.Vector2(99, 99) },
     uMouseOn: { value: 0 },
-    uPixel: { value: dpr },
   };
   const mat = new THREE.ShaderMaterial({
     vertexShader: VERT,
@@ -114,27 +140,27 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     depthWrite: false,
     blending: THREE.AdditiveBlending,
   });
-  const points = new THREE.Points(geo, mat);
-  points.rotation.set(0.18, -0.32, 0.04);
-  scene.add(points);
+  const stream = new THREE.LineSegments(geo, mat);
+  stream.rotation.set(0.12, -0.38, 0.06);
+  scene.add(stream);
 
-  // the ring of light the stream passes through
-  const ringGeo = new THREE.TorusGeometry(1.0, 0.006, 8, 160);
+  // the ring: a fine bright hoop with a fainter echo
   const ringMat = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(0.62, 0.8, 1),
+    color: new THREE.Color(0.72, 0.86, 1),
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.7,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   });
-  const ring = new THREE.Mesh(ringGeo, ringMat);
-  ring.position.set(0.8, 0, 0);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.007, 8, 200), ringMat);
+  ring.position.set(0.6, 0, 0);
   ring.rotation.y = Math.PI / 2;
-  const ring2 = ring.clone();
-  ring2.scale.setScalar(1.18);
-  (ring2.material as THREE.MeshBasicMaterial) = ringMat.clone();
-  (ring2.material as THREE.MeshBasicMaterial).opacity = 0.18;
-  points.add(ring, ring2);
+  const echoMat = ringMat.clone();
+  echoMat.opacity = 0.18;
+  const echo = new THREE.Mesh(new THREE.TorusGeometry(1.16, 0.005, 8, 200), echoMat);
+  echo.position.copy(ring.position);
+  echo.rotation.copy(ring.rotation);
+  stream.add(ring, echo);
 
   const resize = () => {
     const w = canvas.clientWidth;
@@ -142,8 +168,8 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // keep the ring in the right part of wide screens, centred on narrow ones
-    camera.setViewOffset(w, h, w > 900 ? -w * 0.16 : 0, 0, w, h);
+    // wide screens: the ring sits right of the copy; narrow: centred above it
+    camera.setViewOffset(w, h, w > 900 ? -w * 0.17 : 0, 0, w, h);
     camera.updateProjectionMatrix();
   };
   resize();
@@ -154,7 +180,6 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     return;
   }
 
-  // pointer → stream space (approximate: project onto the z = 0 plane of the stream)
   const ndc = new THREE.Vector2();
   const ray = new THREE.Raycaster();
   const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
@@ -169,7 +194,7 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
         ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
         ray.setFromCamera(ndc, camera);
         if (ray.ray.intersectPlane(plane, hit)) {
-          points.worldToLocal(hit);
+          stream.worldToLocal(hit);
           uniforms.uMouse.value.set(hit.x, hit.y);
           target = 1;
         }
@@ -187,8 +212,8 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     uniforms.uTime.value += dt;
-    uniforms.uMouseOn.value += (target - uniforms.uMouseOn.value) * 0.06;
-    ring.rotation.x += dt * 0.15;
+    uniforms.uMouseOn.value += (target - uniforms.uMouseOn.value) * 0.05;
+    ring.rotation.x += dt * 0.12;
     renderer.render(scene, camera);
   };
   const start = () => {

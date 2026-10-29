@@ -11,7 +11,7 @@ import Base from '../layouts/Base.astro';
 import HeroFlow from '../components/home/HeroFlow.astro';
 import Workflow from '../components/home/Workflow.astro';
 import ServiceIndex from '../components/home/ServiceIndex.astro';
-import SelectedWork from '../components/SelectedWork.astro';
+import Showcase from '../components/home/Showcase.astro';
 import Partners from '../components/Partners.astro';
 import CtaPanel from '../components/CtaPanel.astro';
 import NodeFrame from '../components/ui/NodeFrame.astro';
@@ -39,7 +39,7 @@ const inquiryId = pick(home, lang).workflow.inquiryId;
       <Workflow lang={lang} />
     </NodeFrame>
     <NodeFrame {...n.work} icon="exchange" side="left">
-      <SelectedWork lang={lang} limit={3} />
+      <Showcase lang={lang} limit={3} />
     </NodeFrame>
     <NodeFrame {...n.partners} icon="shapes" side="right">
       <Partners lang={lang} />

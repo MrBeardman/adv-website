@@ -40,16 +40,22 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
           const c = byId[p.id] ?? { category: '', line: '', facts: [] as string[] };
           const together = (c as { together?: string }).together;
           return (
-            <li class="adv-card adv-card--lift adv-partners__card" data-reveal style={`--i:${i}`}>
-              <div class:list={['adv-partners__plate', { 'is-dark': (p as { plate?: string }).plate === 'dark' }]}>
-                <span class="adv-partners__conn">
-                  <i />
-                  {connected}
-                </span>
-                <img src={p.logo} alt={p.name} style={`height:${p.logoH}px`} loading="lazy" decoding="async" />
+            <li class="adv-partners__card" data-reveal style={`--i:${i}`}>
+              <div class="adv-partners__logo">
+                <img
+                  src={p.logo}
+                  alt={p.name}
+                  style={`height:${Math.round(p.logoH * 1.35)}px`}
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
-              <p class="adv-label">{c.category}</p>
-              <h3 class="adv-partners__name">{p.name}</h3>
+              <span class="adv-partners__conn">
+                <i />
+                {connected}
+              </span>
+              <h3 class="screen-reader-text">{p.name}</h3>
+              <p class="adv-partners__cat">{c.category}</p>
               <p class="adv-partners__line">{c.line}</p>
               {c.facts.length > 0 && (
                 <ul class="adv-partners__facts">
@@ -66,7 +72,6 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
               ) : (
                 dev && <p class="adv-todo">{fill(t.todoTogether, { name: p.name })}</p>
               )}
-              <span class="adv-rule" />
               {p.url ? (
                 <a class="adv-link adv-partners__link" href={p.url} target="_blank" rel="noopener noreferrer">
                   {fill(t.visit, { host: host(p.url) })}
@@ -84,20 +89,43 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
 </section>
 
 <style is:global>
-  /* canvas world: a partner is a connected integration */
-  .adv-partners__plate {
-    position: relative;
+  /* Partners as freestanding logos (Honza, Oct 29 2026): white logos straight on the page, no plates or
+     cards; a connected integration in the canvas world. */
+  .adv-partners__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-partners__card {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 12px;
+    padding: 8px clamp(20px, 3vw, 44px) 8px 0;
+  }
+  .adv-partners__card + .adv-partners__card {
+    padding-left: clamp(20px, 3vw, 44px);
+    border-left: 1px solid var(--adv-line);
+  }
+  .adv-partners__logo {
+    display: flex;
+    align-items: center;
+    height: 72px;
+    margin-bottom: 6px;
+  }
+  .adv-partners__logo img {
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
   }
   .adv-partners__conn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 4px 9px;
-    border-radius: 999px;
-    background: rgba(6, 7, 11, 0.82);
     font-family: var(--adv-mono);
     font-size: 0.75rem;
     color: var(--adv-accent);
@@ -108,45 +136,13 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
     border-radius: 50%;
     background: var(--adv-accent);
   }
-  .adv-partners__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .adv-partners__card {
-    padding: 14px 14px 24px;
-  }
-  .adv-partners__card > :not(.adv-partners__plate) {
-    margin-inline: 10px;
-  }
-  .adv-partners__plate {
-    display: grid;
-    place-items: center;
-    height: 132px;
-    margin-bottom: 10px;
-    border-radius: 14px;
-    background:
-      radial-gradient(120% 90% at 30% 0%, #ffffff, transparent 60%), linear-gradient(165deg, #eef1f6, #d9dee8);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  }
-  .adv-partners__plate.is-dark {
-    background:
-      radial-gradient(120% 90% at 30% 0%, rgba(124, 200, 255, 0.12), transparent 60%),
-      linear-gradient(165deg, #1c2030, #0d0f15);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  }
-  .adv-partners__plate img {
-    width: auto;
-    max-width: 70%;
-    object-fit: contain;
-  }
-  .adv-partners__name {
-    font-size: var(--adv-h3);
+  .adv-partners__cat {
+    font-family: var(--adv-display);
+    font-weight: 600;
+    font-size: 1.125rem;
   }
   .adv-partners__line {
+    max-width: 32ch;
     color: var(--adv-muted);
     font-size: 0.9375rem;
   }
@@ -172,12 +168,17 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
     font-size: 0.9375rem;
   }
   .adv-partners__link {
-    align-self: flex-start;
     font-size: 0.875rem;
   }
   @media (max-width: 900px) {
     .adv-partners__grid {
       grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .adv-partners__card,
+    .adv-partners__card + .adv-partners__card {
+      padding: 0;
+      border-left: 0;
     }
   }
 </style>

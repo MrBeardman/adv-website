@@ -65,7 +65,6 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
     <h2 class="adv-h2 adv-wf__head">{w.sectionTitle}</h2>
     <p class="adv-lead adv-wf__lead">{w.sectionLead}</p>
     <div class="adv-wf__file">
-      <p class="adv-wf__stamp">{w.stamp}</p>
       <svg class="adv-wf__wires" data-wf-wires aria-hidden="true"></svg>
       <ol class="adv-wf__graph" aria-label={w.graphLabel}>
         <li class="adv-wf__cell adv-wf__cell--in">
@@ -181,34 +180,10 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
   }
 
   /* ---- the open file: a navy board with a steel-foil edge, a spine on the left ---- */
+  /* the graph stands on its own in the node: no inner panel (Honza, Oct 29 2026) */
   .adv-wf__file {
     position: relative;
-    padding: 64px clamp(22px, 2.6vw, 40px) clamp(26px, 3vw, 40px) clamp(40px, 4vw, 60px);
-    border-radius: 8px var(--adv-r-lg) var(--adv-r-lg) 8px;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.12));
-    box-shadow:
-      inset 0 1px 0 var(--adv-edge-hi),
-      inset 0 0 0 1px var(--adv-edge),
-      0 50px 100px -40px rgba(1, 4, 16, 0.95);
-  }
-  .adv-wf__file::before {
-    /* the spine */
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: clamp(16px, 1.6vw, 24px);
-    border-radius: 8px 0 0 8px;
-    background: linear-gradient(90deg, #050608, #12141c 80%, rgba(196, 214, 255, 0.16) 100%);
-  }
-  .adv-wf__stamp {
-    position: absolute;
-    top: 24px;
-    left: clamp(40px, 4vw, 60px);
-    font-family: var(--adv-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #7f879b;
+    padding: clamp(8px, 1vw, 16px) 0 0 clamp(14px, 1.6vw, 22px);
   }
   .adv-wf__wires {
     position: absolute;
@@ -478,10 +453,7 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
   }
   @media (max-width: 760px) {
     .adv-wf__file {
-      padding: 58px 16px 18px 30px;
-    }
-    .adv-wf__stamp {
-      left: 30px;
+      padding: 0 0 0 22px;
     }
     .adv-wf__graph {
       grid-template-columns: 1fr;
