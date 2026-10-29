@@ -79,7 +79,10 @@ export function initInquiry(root: HTMLElement) {
   }
 
   function renderQuestion(q: Q) {
-    qEl.replaceChildren();
+    qEl.replaceChildren(buildQuestion(q, service));
+  }
+
+  function buildQuestion(q: Q, svc: string) {
     const fs = document.createElement('fieldset');
     fs.className = 'adv-inq__step';
     fs.style.display = 'grid';
@@ -87,7 +90,7 @@ export function initInquiry(root: HTMLElement) {
     meta.className = 'adv-inq__meta';
     const chosen = document.createElement('span');
     chosen.className = 'adv-inq__chosen';
-    chosen.textContent = D.names[service];
+    chosen.textContent = D.names[svc];
     const change = document.createElement('button');
     change.type = 'button';
     change.className = 'adv-inq__change';
@@ -118,6 +121,7 @@ export function initInquiry(root: HTMLElement) {
     } else {
       const grid = document.createElement('div');
       grid.className = 'adv-inq__options';
+      grid.dataset.kind = q.kind;
       q.options.forEach((op) => {
         const b = document.createElement('button');
         b.type = 'button';
@@ -144,13 +148,71 @@ export function initInquiry(root: HTMLElement) {
       });
       fs.append(grid);
     }
-    qEl.append(fs);
+    return fs;
   }
+
+  // ---- no jumping: the panel is as tall as the tallest step of any service, the rail as tall as the
+  // longest rail; measured off screen at the current width, again whenever the width changes.
+  const panel = $('[data-inq-panel]');
+  function measure() {
+    const probe = document.createElement('div');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:absolute;inset:0 0 auto 0;visibility:hidden;pointer-events:none';
+    panel.append(probe);
+    const tallest = (els: HTMLElement[]) =>
+      els.reduce((m, el) => {
+        probe.replaceChildren(el);
+        return Math.max(m, el.offsetHeight);
+      }, 0);
+    const copies = [pickEl, contact, runEl].map((el) => {
+      const c = el.cloneNode(true) as HTMLElement;
+      c.hidden = false;
+      c.removeAttribute('data-inq-pick');
+      c.removeAttribute('data-inq-contact');
+      c.removeAttribute('data-inq-run');
+      c.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+      return c;
+    });
+    // the run with its four rows
+    const runCopy = copies[2];
+    const ol = runCopy.querySelector('ol');
+    if (ol)
+      for (let i = 0; i < 4; i++)
+        ol.append(Object.assign(document.createElement('li'), { innerHTML: '<i></i><b>—</b><span>—</span>' }));
+    const questions = Object.keys(D.flows).flatMap((svc) => D.flows[svc].map((q) => buildQuestion(q, svc)));
+    const h = tallest([...copies, ...questions]);
+    probe.remove();
+    panel.style.setProperty('--inq-h', `${Math.ceil(h)}px`);
+
+    // rail: the longest list of any service
+    const railProbe = rail.cloneNode(false) as HTMLElement;
+    railProbe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none';
+    railProbe.style.width = `${rail.clientWidth}px`;
+    rail.after(railProbe);
+    let rh = 0;
+    for (const svc of Object.keys(D.flows)) {
+      railProbe.replaceChildren(
+        ...[D.names[svc], ...D.flows[svc].map((q) => q.title), t.contactStep].map((l) =>
+          Object.assign(document.createElement('li'), { textContent: l }),
+        ),
+      );
+      rh = Math.max(rh, railProbe.offsetHeight);
+    }
+    railProbe.remove();
+    rail.style.minHeight = rh ? `${Math.ceil(rh)}px` : '';
+  }
+  let lastW = 0;
+  new ResizeObserver(() => {
+    if (panel.clientWidth === lastW) return;
+    lastW = panel.clientWidth;
+    measure();
+  }).observe(panel);
+  document.fonts?.ready.then(measure);
 
   function sync() {
     const n = flow().length;
-    nav.hidden = step < 0 || step > n;
-    back.hidden = step < 0;
+    nav.classList.toggle('is-off', step < 0 || step > n);
+    back.style.visibility = step < 0 ? 'hidden' : '';
     if (step >= 0 && step < n) {
       const q = flow()[step];
       next.hidden = q.kind === 'one' && !answered(q);
@@ -165,7 +227,36 @@ export function initInquiry(root: HTMLElement) {
     }
   }
 
+  // cross-fade: the current step fades out (with a slight lift), the next one fades in (with a slight
+  // rise); the panel keeps its height throughout, so nothing around it moves.
+  let busy: Promise<void> = Promise.resolve();
   function go(to: number) {
+    busy = busy.then(() => swap(to));
+  }
+  async function swap(to: number) {
+    const cur = [pickEl, qEl, contact, runEl].find((el) => !el.hidden);
+    if (cur && !reduceMotion) {
+      await cur.animate(
+        [
+          { opacity: 1, transform: 'none' },
+          { opacity: 0, transform: 'translateY(-6px)' },
+        ],
+        { duration: 160, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' },
+      ).finished;
+      cur.getAnimations().forEach((a) => a.cancel());
+    }
+    show(to);
+    const next = [pickEl, qEl, contact, runEl].find((el) => !el.hidden);
+    if (next && !reduceMotion)
+      next.animate(
+        [
+          { opacity: 0, transform: 'translateY(8px)' },
+          { opacity: 1, transform: 'none' },
+        ],
+        { duration: 320, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' },
+      );
+  }
+  function show(to: number) {
     const n = flow().length;
     step = Math.max(-1, Math.min(to, n + 1));
     pickEl.hidden = step !== -1;
@@ -257,8 +348,8 @@ export function initInquiry(root: HTMLElement) {
 
   if (preset) {
     service = preset;
-    go(0);
+    show(0);
     // a preset from the URL should not steal focus on load
     (document.activeElement as HTMLElement | null)?.blur();
-  } else go(-1);
+  } else show(-1);
 }

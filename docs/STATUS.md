@@ -70,7 +70,10 @@
 - [ ] Domain in `astro.config.mjs` (`site`), then 301s from the old React URLs (`src/data/routes.ts`),
       e.g. `/services/ai-automation` → `/sluzby/automatizace/`.
 - [ ] Privacy note / page for the form.
-- [ ] **Inquiry n8n workflow** "ADV Website - Inquiry Intake" (https://vmi3112391.contaboserver.net/workflow/9ytultcdcrouxu2D,
+- [ ] **Inquiry n8n workflow**: own `X-ADV-Key` credential set, Telegram group -5295592546 set, workflow active
+      (Oct 29). Test run stored row 1 in `adv_inquiries` ("TEST (Claude), ignore": delete it) but Telegram said
+      "chat not found": **add the bot behind n8n's "Telegram account" credential to the group**. Then set
+      `N8N_INQUIRY_URL` / `N8N_INQUIRY_KEY` in Hostinger. Original steps: "ADV Website - Inquiry Intake" (https://vmi3112391.contaboserver.net/workflow/9ytultcdcrouxu2D,
       created inactive Oct 29): (1) give the webhook its own Header Auth credential, header name `X-ADV-Key`
       (n8n auto-assigned the content queue's "Queue API Key"); (2) put the Telegram chat ID for inquiries in the
       four Telegram nodes; (3) activate; (4) in Hostinger set `N8N_INQUIRY_URL` =

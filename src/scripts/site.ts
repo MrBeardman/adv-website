@@ -249,6 +249,20 @@ function initType() {
   document.querySelectorAll<HTMLElement>('[data-type]').forEach((el) => {
     const words: string[] = JSON.parse(el.dataset.words || '[]');
     if (reduceMotion || words.length < 2) return;
+    // No jumping: the word keeps the width of the longest one, so the headline never re-wraps mid-cycle.
+    const reserve = () => {
+      const probe = el.cloneNode() as HTMLElement;
+      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;display:inline-block';
+      el.after(probe);
+      const w = Math.max(...words.map((x) => ((probe.textContent = x), probe.getBoundingClientRect().width)));
+      probe.remove();
+      el.style.display = 'inline-block';
+      el.style.minWidth = `${Math.ceil(w)}px`;
+      el.style.textAlign = 'left';
+    };
+    reserve();
+    document.fonts?.ready.then(reserve);
+    addEventListener('resize', reserve, { passive: true });
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     let visible = true;
     new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(el);

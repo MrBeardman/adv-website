@@ -70,81 +70,89 @@ const uid = `inq-${lang}`;
     <ol class="adv-inq__rail" data-inq-rail aria-label={t.steps}></ol>
 
     <div class="adv-inq__stage">
-      {/* step 0: the service */}
-      <fieldset class="adv-inq__step" data-inq-pick>
-        <legend class="adv-inq__q">{t.pick}</legend>
-        <div class="adv-inq__services">
-          {
-            list.map((s) => (
-              <button type="button" class="adv-inq__svc adv-lit" data-inq-service={s.slug}>
-                <span class="adv-inq__svc-icon">
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    {shapes(s.icon).map((sh) =>
-                      sh.d ? (
-                        <path d={sh.d} />
-                      ) : sh.circle ? (
-                        <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
-                      ) : sh.rect ? (
-                        <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
-                      ) : null,
-                    )}
-                  </svg>
-                </span>
-                {s.title}
-              </button>
-            ))
-          }
-        </div>
-      </fieldset>
+      <div class="adv-inq__panel" data-inq-panel>
+        {/* step 0: the service */}
+        <fieldset class="adv-inq__step" data-inq-pick>
+          <legend class="adv-inq__q">{t.pick}</legend>
+          <div class="adv-inq__services">
+            {
+              list.map((s) => (
+                <button type="button" class="adv-inq__svc adv-lit" data-inq-service={s.slug}>
+                  <span class="adv-inq__svc-icon">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      {shapes(s.icon).map((sh) =>
+                        sh.d ? (
+                          <path d={sh.d} />
+                        ) : sh.circle ? (
+                          <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
+                        ) : sh.rect ? (
+                          <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
+                        ) : null,
+                      )}
+                    </svg>
+                  </span>
+                  {s.title}
+                </button>
+              ))
+            }
+          </div>
+        </fieldset>
 
-      {/* steps 1..n: rendered by the script */}
-      <div class="adv-inq__step" data-inq-question hidden></div>
+        {/* steps 1..n: rendered by the script */}
+        <div class="adv-inq__step" data-inq-question hidden></div>
 
-      {/* last step: contact */}
-      <form class="adv-inq__step adv-inq__contact" data-inq-contact hidden novalidate>
-        <p class="adv-inq__q">{t.contactTitle}</p>
-        <div class="adv-hp" aria-hidden="true">
-          <label for={`${uid}-web`}>Website</label>
-          <input id={`${uid}-web`} type="text" name="website_hp" tabindex="-1" autocomplete="off" />
-        </div>
-        <div class="adv-inq__grid">
-          <div class="adv-field">
-            <label for={`${uid}-name`}>{t.name}</label>
-            <input id={`${uid}-name`} class="adv-input" name="name" autocomplete="name" maxlength="120" />
+        {/* last step: contact */}
+        <form class="adv-inq__step adv-inq__contact" data-inq-contact hidden novalidate>
+          <p class="adv-inq__q">{t.contactTitle}</p>
+          <div class="adv-hp" aria-hidden="true">
+            <label for={`${uid}-web`}>Website</label>
+            <input id={`${uid}-web`} type="text" name="website_hp" tabindex="-1" autocomplete="off" />
           </div>
-          <div class="adv-field">
-            <label for={`${uid}-company`}>{t.company}</label>
-            <input id={`${uid}-company`} class="adv-input" name="company" autocomplete="organization" maxlength="160" />
+          <div class="adv-inq__grid">
+            <div class="adv-field">
+              <label for={`${uid}-name`}>{t.name}</label>
+              <input id={`${uid}-name`} class="adv-input" name="name" autocomplete="name" maxlength="120" />
+            </div>
+            <div class="adv-field">
+              <label for={`${uid}-company`}>{t.company}</label>
+              <input
+                id={`${uid}-company`}
+                class="adv-input"
+                name="company"
+                autocomplete="organization"
+                maxlength="160"
+              />
+            </div>
+            <div class="adv-field">
+              <label for={`${uid}-email`}>{t.email}</label>
+              <input
+                id={`${uid}-email`}
+                class="adv-input"
+                type="email"
+                name="email"
+                required
+                autocomplete="email"
+                maxlength="200"
+              />
+            </div>
+            <div class="adv-field">
+              <label for={`${uid}-phone`}>{t.phone}</label>
+              <input id={`${uid}-phone`} class="adv-input" type="tel" name="phone" autocomplete="tel" maxlength="40" />
+              <span class="adv-inq__hint">{t.phoneHint}</span>
+            </div>
           </div>
-          <div class="adv-field">
-            <label for={`${uid}-email`}>{t.email}</label>
-            <input
-              id={`${uid}-email`}
-              class="adv-input"
-              type="email"
-              name="email"
-              required
-              autocomplete="email"
-              maxlength="200"
-            />
-          </div>
-          <div class="adv-field">
-            <label for={`${uid}-phone`}>{t.phone}</label>
-            <input id={`${uid}-phone`} class="adv-input" type="tel" name="phone" autocomplete="tel" maxlength="40" />
-            <span class="adv-inq__hint">{t.phoneHint}</span>
-          </div>
-        </div>
-        <p class="adv-inq__privacy">{t.privacy}</p>
-        <p class="adv-form-status" data-inq-status role="status"></p>
-      </form>
+          <p class="adv-inq__privacy">{t.privacy}</p>
+          <p class="adv-form-status" data-inq-status role="status"></p>
+        </form>
 
-      {/* the run, after sending */}
-      <div class="adv-inq__step adv-inq__run" data-inq-run hidden aria-live="polite">
-        <p class="adv-inq__q">{t.runTitle}</p>
-        <ol class="adv-inq__log" data-inq-log></ol>
+        {/* the run, after sending */}
+        <div class="adv-inq__step adv-inq__run" data-inq-run hidden aria-live="polite">
+          <p class="adv-inq__q">{t.runTitle}</p>
+          <ol class="adv-inq__log" data-inq-log></ol>
+        </div>
       </div>
 
-      <div class="adv-inq__nav" data-inq-nav hidden>
+      <div class="adv-inq__nav" data-inq-nav>
         <button type="button" class="adv-btn adv-btn--ghost adv-btn--sm" data-inq-back>{t.back}</button>
         <span class="adv-inq__nav-end">
           <button type="button" class="adv-inq__skip" data-inq-skip hidden>{t.skip}</button>
@@ -239,7 +247,15 @@ const uid = `inq-${lang}`;
   .adv-inq__stage {
     display: grid;
     gap: 22px;
-    min-height: 320px;
+  }
+  /* the steps share one panel, as tall as the tallest step of any service (scripts/inquiry.ts measures
+     them), so changing a question never moves the page; steps cross-fade inside it */
+  .adv-inq__panel {
+    position: relative;
+    min-height: var(--inq-h, 0px);
+  }
+  .adv-inq__nav.is-off {
+    visibility: hidden;
   }
   .adv-inq__step {
     display: grid;
@@ -387,9 +403,6 @@ const uid = `inq-${lang}`;
     gap: 12px;
     padding-top: 6px;
   }
-  .adv-inq__nav[hidden] {
-    display: none;
-  }
   .adv-inq__nav-end {
     display: flex;
     align-items: center;
@@ -468,6 +481,17 @@ const uid = `inq-${lang}`;
     .adv-inq__options,
     .adv-inq__grid {
       grid-template-columns: 1fr;
+    }
+    /* many-choice lists are short labels: two columns keep the tallest step (and so the panel) low */
+    .adv-inq__options[data-kind='many'] {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .adv-inq__options[data-kind='many'] .adv-inq__opt {
+      min-height: 52px;
+      padding: 10px 12px;
+      gap: 10px;
+      font-size: 0.875rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {

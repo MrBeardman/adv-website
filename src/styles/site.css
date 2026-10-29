@@ -801,6 +801,8 @@ a.adv-card:hover,
 .adv-field {
   display: grid;
   gap: 8px;
+  /* fields in a row stay even: a hint under one field never stretches its neighbour */
+  align-content: start;
 }
 .adv-field label {
   font-family: var(--adv-mono);
@@ -812,6 +814,7 @@ a.adv-card:hover,
 .adv-input {
   width: 100%;
   min-height: 50px;
+  height: 50px;
   padding: 12px 14px;
   border-radius: var(--adv-r);
   border: 1px solid var(--adv-edge);
@@ -834,6 +837,7 @@ a.adv-card:hover,
   box-shadow: inset 0 0 0 1px var(--adv-accent);
 }
 textarea.adv-input {
+  height: auto;
   min-height: 130px;
   resize: vertical;
 }
@@ -845,7 +849,8 @@ textarea.adv-input {
   overflow: hidden;
 }
 .adv-form-status {
-  min-height: 1.5em;
+  /* room for a two-line message, so an error never pushes the page down */
+  min-height: 3.2em;
   font-size: 0.9375rem;
 }
 .adv-form-status[data-state='ok'] {
