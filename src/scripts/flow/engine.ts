@@ -142,9 +142,9 @@ function gateSolid() {
   return geo;
 }
 
-// the A's surface: the graphite of the old cards. Near-black with a cool vertical gradient, a pale-blue lit
-// edge (the bevel and the rim towards the viewer), a faint violet/cobalt tint low down, and a slow sheen
-// that crosses the face now and then.
+// the A's surface: the graphite of the cards, lit by the page. Near-black with a cool gradient; a cobalt
+// wash from below and a violet one from above (the page light); the data passing through its opening lights
+// the inner legs ice-blue; edges and rim catch a pale light that runs ice → violet; a slow sheen crosses it.
 const SOLID_VERT = /* glsl */ `
   varying vec3 vN;
   varying vec3 vObjN;
@@ -170,18 +170,28 @@ const SOLID_FRAG = /* glsl */ `
     vec3 N = normalize(vN);
     vec3 V = normalize(vView);
     float facing = abs(dot(N, V));
-    vec3 deep = vec3(0.039, 0.043, 0.063);
-    vec3 lift = vec3(0.106, 0.118, 0.161);
-    vec3 col = mix(deep, lift, smoothstep(-1.4, 1.6, vP.y + vP.x * 0.4));
-    // a faint light from below, in the page colours
-    col += vec3(0.16, 0.11, 0.42) * 0.12 * smoothstep(0.4, -1.4, vP.y);
-    // the sides and the bevel catch a pale-blue light; so does the rim
-    float side = 1.0 - abs(vObjN.z);
+    vec3 navy = vec3(9.0, 46.0, 131.0) / 255.0;
+    vec3 cobalt = vec3(38.0, 92.0, 255.0) / 255.0;
+    vec3 violet = vec3(110.0, 64.0, 230.0) / 255.0;
+    vec3 ice = vec3(124.0, 200.0, 255.0) / 255.0;
     vec3 edge = vec3(0.77, 0.84, 1.0);
-    col += edge * (side * 0.22 + pow(1.0 - facing, 3.0) * 0.35);
-    // a slow sheen across the front face
+
+    // graphite base, a touch lighter towards the top
+    vec3 col = mix(vec3(0.035, 0.04, 0.06), vec3(0.1, 0.11, 0.16), smoothstep(-1.4, 1.8, vP.y));
+    // the page light: cobalt and navy from below left, violet from the top right
+    col += cobalt * 0.22 * exp(-dot(vP.xy - vec2(-0.9, -1.0), vP.xy - vec2(-0.9, -1.0)) * 0.9);
+    col += navy * 0.35 * smoothstep(0.6, -1.2, vP.y);
+    col += violet * 0.2 * exp(-dot(vP.xy - vec2(0.9, 1.6), vP.xy - vec2(0.9, 1.6)) * 0.7);
+    // the data in the opening lights the letter from inside
+    float data = exp(-dot(vP.xy, vP.xy) * 1.6) * (0.85 + 0.15 * sin(uTime * 2.0));
+    col += ice * 0.32 * data;
+    // edges and rim: pale light running ice → violet down the letter
+    float side = 1.0 - abs(vObjN.z);
+    vec3 rimCol = mix(violet * 1.3, edge, smoothstep(-1.4, 1.4, vP.y));
+    col += rimCol * (side * 0.3 + pow(1.0 - facing, 2.5) * 0.5);
+    // a slow sheen across the face
     float band = (vP.x * 0.7 + vP.y * 0.5) - (fract(uTime * 0.07) * 7.0 - 3.5);
-    col += edge * 0.07 * exp(-band * band * 6.0) * (1.0 - side);
+    col += edge * 0.12 * exp(-band * band * 5.0) * (1.0 - side);
     gl_FragColor = vec4(col, 1.0);
   }
 `;
