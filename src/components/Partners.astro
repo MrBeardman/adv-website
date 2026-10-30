@@ -94,6 +94,7 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
   .adv-partners__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 22px);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -103,11 +104,12 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
     align-content: start;
     justify-items: start;
     gap: 12px;
-    padding: 8px clamp(20px, 3vw, 44px) 8px 0;
-  }
-  .adv-partners__card + .adv-partners__card {
-    padding-left: clamp(20px, 3vw, 44px);
-    border-left: 1px solid var(--adv-line);
+    padding: clamp(20px, 2.4vw, 32px);
+    border-radius: var(--adv-r-lg);
+    background: var(--adv-glass-bg);
+    -webkit-backdrop-filter: var(--adv-glass-blur);
+    backdrop-filter: var(--adv-glass-blur);
+    box-shadow: var(--adv-glass-shadow);
   }
   .adv-partners__logo {
     display: flex;
@@ -173,12 +175,7 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
   @media (max-width: 900px) {
     .adv-partners__grid {
       grid-template-columns: 1fr;
-      gap: 36px;
-    }
-    .adv-partners__card,
-    .adv-partners__card + .adv-partners__card {
-      padding: 0;
-      border-left: 0;
+      gap: 14px;
     }
   }
 </style>

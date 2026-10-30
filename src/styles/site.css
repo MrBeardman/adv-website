@@ -76,6 +76,13 @@
     radial-gradient(120% 70% at 15% 0%, rgba(170, 190, 255, 0.08), transparent 55%),
     linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2) 72%);
   --adv-weave: linear-gradient(transparent, transparent);
+  /* lab/frameless: frosted glass card over the drifting lines */
+  --adv-glass-bg:
+    radial-gradient(120% 70% at 15% 0%, rgba(170, 190, 255, 0.07), transparent 55%),
+    linear-gradient(165deg, rgba(27, 30, 41, 0.62), rgba(10, 11, 16, 0.74) 72%);
+  --adv-glass-blur: blur(22px) saturate(1.35);
+  --adv-glass-shadow:
+    inset 1px 1px 0 var(--adv-edge-hi), inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 40px 80px -40px rgba(0, 0, 0, 0.85);
 
   /* Motion: calm and precise, no bounce */
   --adv-ease: cubic-bezier(0.23, 1, 0.32, 1);
@@ -244,6 +251,9 @@ main {
   position: absolute;
   inset: -20%;
   will-change: transform;
+  /* the lights below the box are clipped at its edge; fade the edge so it never shows as a band */
+  -webkit-mask-image: linear-gradient(#000 70%, transparent);
+  mask-image: linear-gradient(#000 70%, transparent);
 }
 .adv-bg__mood--top {
   /* far: the big brand-navy field and a violet volume */
@@ -1000,37 +1010,23 @@ textarea.adv-input {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: clamp(72px, 9vw, 128px);
+  gap: clamp(112px, 12vw, 190px);
   width: 100%;
   max-width: calc(var(--adv-max) + 2 * var(--adv-gutter));
   margin-inline: auto;
-  padding: 0 var(--adv-gutter) clamp(80px, 9vw, 140px);
+  padding: clamp(24px, 4vw, 64px) var(--adv-gutter) clamp(96px, 10vw, 160px);
 }
+/* lab/frameless (Honza, Oct 30 2026): no node boxes. The page light and the drifting lines
+   (scripts/flow/drift.ts) are the background; each section is its name, its heading and its cards,
+   and the cards are frosted glass over the lines. */
 .adv-nf {
   position: relative;
-  border-radius: var(--adv-r-lg);
-  background: var(--adv-card-bg);
-  box-shadow:
-    inset 1px 1px 0 var(--adv-edge-hi),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.5),
-    0 50px 100px -40px rgba(0, 0, 0, 0.9);
 }
-@media (min-width: 1000px) {
-  .adv-nf--left {
-    margin-right: 6%;
-  }
-  .adv-nf--right {
-    margin-left: 6%;
-  }
-}
-.adv-nf__bar {
+.adv-nf__eyebrow {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px clamp(16px, 2vw, 22px);
-  border-bottom: 1px solid var(--adv-line);
-  border-radius: var(--adv-r-lg) var(--adv-r-lg) 0 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01));
+  margin: 0 0 clamp(18px, 2vw, 26px);
 }
 .adv-nf__type {
   display: grid;
@@ -1053,74 +1049,46 @@ textarea.adv-input {
   font-family: var(--adv-display);
   font-weight: 600;
   font-size: 0.9375rem;
-}
-.adv-nf__kind {
-  padding: 3px 9px;
-  border-radius: 6px;
-  border: 1px solid var(--adv-edge);
-  font-family: var(--adv-mono);
-  font-size: 0.75rem;
-  color: var(--adv-muted);
-}
-.adv-nf__status {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--adv-mono);
-  font-size: 0.75rem;
-  color: var(--adv-accent);
-  transition: color 300ms var(--adv-ease);
-}
-.adv-nf__status i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--adv-accent);
-  background: var(--adv-accent);
-  transition:
-    background-color 300ms var(--adv-ease),
-    border-color 300ms var(--adv-ease);
-}
-.js .is-canvas .adv-nf:not(.is-done) .adv-nf__status {
-  color: var(--adv-muted);
-}
-.js .is-canvas .adv-nf:not(.is-done) .adv-nf__status i {
-  background: transparent;
-  border-color: rgba(201, 209, 222, 0.45);
+  color: var(--adv-text);
 }
 .adv-nf__port {
-  position: absolute;
-  left: 50%;
-  z-index: 2;
-  width: 14px;
-  height: 14px;
-  margin-left: -7px;
-  border-radius: 50%;
-  border: 1.5px solid var(--adv-foil);
-  background: var(--adv-bg-2);
+  display: none;
 }
-.adv-nf__port--in {
-  top: -7px;
-}
-.adv-nf__port--out {
-  bottom: -7px;
-}
-.adv-nf.is-done .adv-nf__port--in,
-.no-js .adv-nf__port--in {
-  border-color: var(--adv-accent);
-  background: #10243a;
-}
-/* the section inside a node: no outer padding of its own, no gutter square (the node is the node) */
-.adv-nf__body > .adv-section {
-  padding-block: clamp(36px, 4.5vw, 72px);
+/* the section inside a node: no padding of its own, full width of the page column */
+.adv-nf__body > .adv-section,
+.adv-nf__body > .adv-wf {
+  padding: 0;
 }
 .adv-nf__body .adv-wrap {
   max-width: none;
-  padding-inline: clamp(20px, 3.4vw, 56px);
+  padding-inline: 0;
 }
 .adv-nf .adv-node {
   display: none;
+}
+
+/* ---------- Frosted glass cards (lab/frameless) ----------
+ * Readable over the lines: a dark tint that hides most of what is behind, a strong blur that turns the
+ * rest into soft colour, a lit top edge. Never fully see-through, never solid. */
+.adv-glass {
+  background: var(--adv-glass-bg);
+  -webkit-backdrop-filter: var(--adv-glass-blur);
+  backdrop-filter: var(--adv-glass-blur);
+  box-shadow: var(--adv-glass-shadow);
+}
+/* the drifting lines behind the page: fixed, under the content, faded in once the hero scrolls away */
+.adv-drift {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1200ms var(--adv-ease);
+}
+.adv-drift.is-on {
+  opacity: 1;
 }
 
 /* ---------- A hint of the page light in inner cards (.adv-lit) ----------

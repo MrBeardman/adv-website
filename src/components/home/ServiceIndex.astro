@@ -123,8 +123,10 @@ const items = ENABLED_SERVICES.map((sv) => {
     border-radius: var(--adv-r-lg);
     color: var(--adv-text);
     text-decoration: none;
-    background: var(--adv-card-bg);
-    box-shadow: var(--adv-shadow-card);
+    background: var(--adv-glass-bg);
+    -webkit-backdrop-filter: var(--adv-glass-blur);
+    backdrop-filter: var(--adv-glass-blur);
+    box-shadow: var(--adv-glass-shadow);
     transition:
       translate var(--adv-med) var(--adv-ease),
       box-shadow var(--adv-med) var(--adv-ease);

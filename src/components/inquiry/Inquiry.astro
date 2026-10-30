@@ -184,6 +184,12 @@ const uid = `inq-${lang}`;
     margin-bottom: clamp(28px, 3.5vw, 48px);
   }
   .adv-inq__body {
+    padding: clamp(20px, 3vw, 44px);
+    border-radius: var(--adv-r-xl);
+    background: var(--adv-glass-bg);
+    -webkit-backdrop-filter: var(--adv-glass-blur);
+    backdrop-filter: var(--adv-glass-blur);
+    box-shadow: var(--adv-glass-shadow);
     display: grid;
     grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
     gap: clamp(24px, 4vw, 64px);
@@ -334,8 +340,8 @@ const uid = `inq-${lang}`;
     font-weight: 600;
     line-height: 1.3;
     color: var(--adv-text);
-    background: var(--adv-card-bg);
-    box-shadow: var(--adv-shadow-card);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: inset 1px 1px 0 rgba(196, 214, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     cursor: pointer;
     transition:
       translate var(--adv-fast) var(--adv-ease),
@@ -472,8 +478,8 @@ const uid = `inq-${lang}`;
     gap: 12px;
     padding: 14px 16px;
     border-radius: 12px;
-    background: var(--adv-card-bg);
-    box-shadow: var(--adv-shadow-card);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: inset 1px 1px 0 rgba(196, 214, 255, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     opacity: 0;
     translate: 0 8px;
     transition:
