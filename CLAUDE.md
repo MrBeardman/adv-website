@@ -1,6 +1,8 @@
 # CLAUDE.md: adv-website
 
-Handover for Claude Code agents. Read this first, then `README.md`, `docs/BRAND.md`, `docs/STATUS.md`.
+Handover for Claude Code agents. **Start with `docs/HANDOFF.md`** (current design direction, how we publish,
+open items; it supersedes the homepage and stream notes below), then this file, `README.md`, `docs/BRAND.md`,
+`docs/STATUS.md`.
 
 ## What this is
 The 2026 website of **ADV Innovations** (Prague; Jan "Honza" Matyáš). Replaces the React site in
