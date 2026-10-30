@@ -18,6 +18,7 @@ import path from 'node:path';
 import { FLOWS, classify } from '../../data/inquiry';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { loc } from '../../i18n';
+import { forwardToN8n } from '../../lib/n8n';
 
 export const prerender = false;
 
@@ -112,23 +113,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return json({ ok: false }, 500);
   }
 
-  // forward to n8n (short timeout; the visitor's answer never waits on a slow workflow)
-  const url = env('N8N_INQUIRY_URL');
-  let routed = false;
-  if (url) {
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-ADV-Key': env('N8N_INQUIRY_KEY') ?? '' },
-        body: JSON.stringify(entry),
-        signal: AbortSignal.timeout(4000),
-      });
-      routed = res.ok;
-      if (!res.ok) console.error('[inquiry] n8n answered', res.status);
-    } catch (e) {
-      console.error('[inquiry] n8n unreachable', e);
-    }
-    await appendFile(file, JSON.stringify({ at: entry.at, n8n: routed ? 'ok' : 'failed' }) + '\n').catch(() => {});
-  }
-  return json({ ok: true, classified, routed });
+  // forward to n8n (lib/n8n.ts: short timeout, the visitor's answer never waits on a slow workflow)
+  const { routed, why } = await forwardToN8n(entry);
+  await appendFile(file, JSON.stringify({ at: entry.at, n8n: why }) + '\n').catch(() => {});
+  return json({ ok: true, classified, routed, why });
 };

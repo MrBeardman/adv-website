@@ -14,6 +14,8 @@
  *   MAIL_FROM_NAME   sender name
  *   MAIL_TO          recipients, comma separated. TODO (Honza): the recipient address is still open.
  *   SUBMISSIONS_DIR  default ./data/submissions (outside the public folder, git-ignored)
+ *   N8N_INQUIRY_URL / N8N_INQUIRY_KEY  the n8n intake (lib/n8n.ts): every stored message also goes there
+ *                    (kind "contact"), which posts it to the team's Telegram group.
  */
 import type { APIRoute } from 'astro';
 import { mkdir, appendFile } from 'node:fs/promises';
@@ -21,6 +23,7 @@ import path from 'node:path';
 import nodemailer from 'nodemailer';
 import messages from '../../i18n/form.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
+import { forwardToN8n } from '../../lib/n8n';
 
 export const prerender = false;
 
@@ -105,6 +108,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
   const note = (extra: Record<string, string>) =>
     appendFile(file, JSON.stringify({ at: entry.at, ...extra }) + '\n').catch(() => {});
+
+  // to n8n → Telegram, before any mail (lib/n8n.ts, short timeout)
+  const { why } = await forwardToN8n({ ...entry, kind: 'contact' });
+  await note({ n8n: why });
 
   const host = env('SMTP_HOST');
   if (!host) {
