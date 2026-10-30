@@ -13,8 +13,8 @@ import chrome from '../../i18n/chrome.json';
 import services from '../../i18n/services.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { FLOWS } from '../../data/inquiry';
-import { SHAPES } from '../../scripts/stack/iconShapes.js';
 import Arrow from '../ui/Arrow.astro';
+import ServiceIcon from '../ui/ServiceIcon.astro';
 
 interface Props {
   lang: Lang;
@@ -26,19 +26,10 @@ const { lang, service = '', heading = true } = Astro.props;
 const t = pick(copy, lang);
 const c = pick(chrome, lang);
 const sv = pick(services, lang);
-const ICON: Record<string, string> = {
-  'ai-automation': 'nodes',
-  'business-optimisation': 'racks',
-  websites: 'globe',
-  software: 'diamondCore',
-};
-type Shape = { d?: string; circle?: number[]; rect?: number[] };
-const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? [];
 const list = ENABLED_SERVICES.filter((s) => FLOWS[s.slug]).map((s) => ({
   slug: s.slug,
   title: sv.capabilities.items.find((i) => i.slug === s.slug)!.title,
   covers: sv.capabilities.items.find((i) => i.slug === s.slug)!.covers,
-  icon: ICON[s.slug] ?? 'nodes',
 }));
 // Flows for the browser, already in this language.
 const flows = Object.fromEntries(
@@ -80,19 +71,7 @@ const uid = `inq-${lang}`;
             {
               list.map((s) => (
                 <button type="button" class="adv-inq__svc adv-lit" data-inq-service={s.slug}>
-                  <span class="adv-inq__svc-icon">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      {shapes(s.icon).map((sh) =>
-                        sh.d ? (
-                          <path d={sh.d} />
-                        ) : sh.circle ? (
-                          <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
-                        ) : sh.rect ? (
-                          <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
-                        ) : null,
-                      )}
-                    </svg>
-                  </span>
+                  <ServiceIcon slug={s.slug} tone="fade" />
                   <span class="adv-inq__svc-text">
                     <span class="adv-inq__svc-name">{s.title}</span>
                     <span class="adv-inq__svc-covers">{s.covers.join(' · ')}</span>

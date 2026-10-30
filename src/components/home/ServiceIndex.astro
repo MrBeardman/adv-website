@@ -21,8 +21,6 @@ interface Props {
 const { lang } = Astro.props;
 const s = pick(services, lang);
 const DEV = import.meta.env.DEV;
-// lab/frameless: two tiles in the cobalt → violet fade, two in paper, set diagonally so they can be compared
-const FADE = new Set(['ai-automation', 'software']);
 const items = ENABLED_SERVICES.map((sv) => {
   const copy = s.capabilities.items.find((i) => i.slug === sv.slug)!;
   return {
@@ -53,7 +51,7 @@ const items = ENABLED_SERVICES.map((sv) => {
                 <Scene kind={it.slug} lang={lang} />
               </span>
               <span class="adv-sidx__tab">
-                <ServiceIcon slug={it.slug} tone={FADE.has(it.slug) ? 'fade' : 'solid'} />
+                <ServiceIcon slug={it.slug} tone="fade" />
               </span>
               <span class="adv-sidx__name">{it.title}</span>
               <span class="adv-sidx__body">

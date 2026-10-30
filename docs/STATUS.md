@@ -44,6 +44,10 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **Service pages (Oct 30)** (`src/i18n/serviceDeep.json`, CS + EN, used by `templates/Service.astro` for Weby,
+  Optimalizace firmy, Prototypy a software): section labels (Jak začínáme, Kde to uniká, Co stavíme, Realizace,
+  Poptávka), per service "how we start" (title, lead, 3 steps), "where it leaks" (title, lead, 6 problems with what
+  they cost and what we do), "what we build" (6 items), inquiry heading "Popište nám, co řešíte." + lead. No numbers.
 - **Hero sub (Oct 30, lab/frameless, chosen by Honza)** (`chrome.json` hero.sub): CS "Jeden propojený systém pro vaši
   firmu: automatizace, software na míru, prototypy a weby, které prodávají." EN "One connected system for your business:
   automation, custom software, prototypes and websites that sell."

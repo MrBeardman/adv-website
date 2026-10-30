@@ -1,0 +1,536 @@
+{
+  "cs": {
+    "labels": {
+      "discover": "Jak začínáme",
+      "problems": "Kde to uniká",
+      "build": "Co stavíme",
+      "work": "Realizace",
+      "inquiry": "Poptávka",
+      "fix": "Co s tím uděláme"
+    },
+    "inquiryTitle": "Popište nám, co řešíte.",
+    "inquiryLead": "Pár otázek k této službě, odpověď do jednoho pracovního dne. První konzultace je zdarma.",
+    "websites": {
+      "discover": {
+        "title": "Nejdřív pochopíme, jak u vás vzniká zákazník.",
+        "lead": "Web není leták. Je to místo, kde se z návštěvníka stává poptávka, rezervace nebo objednávka. Než cokoli navrhneme, zjistíme, jak to u vás funguje dnes.",
+        "steps": [
+          {
+            "title": "Projdeme cestu zákazníka",
+            "body": "Odkud k vám lidé chodí, co na webu hledají a kde odcházejí. Ze statistik, ne z dojmu."
+          },
+          {
+            "title": "Poznáme váš obchod",
+            "body": "Co vám nejvíc vydělává, na co se zákazníci nejčastěji ptají a co se dnes řeší po telefonu."
+          },
+          {
+            "title": "Ukážeme, kde to uniká",
+            "body": "Konkrétní místa, kde web ztrácí poptávky a peníze, seřazená podle toho, kolik vás stojí."
+          }
+        ]
+      },
+      "problems": {
+        "title": "Kde web tiše přichází o zákazníky.",
+        "lead": "Většinu z toho na první pohled nevidíte. Web vypadá dobře, jen poptávky nechodí.",
+        "items": [
+          {
+            "title": "Na mobilu se načítá dlouho",
+            "cost": "Většina lidí přijde z telefonu. Než se stránka načte, část z nich je pryč.",
+            "fix": "Rychlý web postavený na výkon, ne šablona s desítkami pluginů."
+          },
+          {
+            "title": "Poptávky končí v e-mailu",
+            "cost": "Formulář přijde do schránky, kterou nikdo nehlídá, a odpověď dorazí za dva dny.",
+            "fix": "Poptávka hned u správného člověka, s upozorněním a přehledem, co je vyřízené."
+          },
+          {
+            "title": "Rezervace jen po telefonu",
+            "cost": "Kdo volá mimo pracovní dobu, nedovolá se a objedná se jinde.",
+            "fix": "Online rezervace napojené na váš kalendář, s připomínkami pro zákazníky."
+          },
+          {
+            "title": "Nevíte, odkud zákazníci chodí",
+            "cost": "Bez měření nevíte, která reklama nebo stránka vydělává a která jen stojí peníze.",
+            "fix": "Měření od první návštěvy po zaplacenou objednávku."
+          },
+          {
+            "title": "Google vás nenajde",
+            "cost": "Lidé hledají přesně to, co nabízíte, ale na prvních místech vidí konkurenci.",
+            "fix": "Struktura, texty a technické SEO podle toho, co lidé opravdu hledají."
+          },
+          {
+            "title": "Nákup se nedokončí",
+            "cost": "Složitá pokladna, překvapivé poštovné nebo chybějící platba, a košík zůstane opuštěný.",
+            "fix": "Jednoduchý nákup, jasné ceny a napojení na sklad, platby a dopravu."
+          }
+        ]
+      },
+      "build": {
+        "title": "Co pro vás postavíme.",
+        "items": [
+          {
+            "title": "Firemní web",
+            "body": "Který vysvětlí, co děláte, a dovede návštěvníka k poptávce."
+          },
+          {
+            "title": "E-shop",
+            "body": "Napojený na sklad, platby, dopravu a účetnictví."
+          },
+          {
+            "title": "Rezervační systém",
+            "body": "Termíny, platby předem a připomínky bez telefonování."
+          },
+          {
+            "title": "Kampaňové stránky",
+            "body": "Pro reklamu a nové produkty, s měřením výsledků."
+          },
+          {
+            "title": "Klientská zóna",
+            "body": "Kde zákazníci najdou své objednávky, faktury a dokumenty."
+          },
+          {
+            "title": "Napojení na vaše systémy",
+            "body": "Poptávky rovnou do CRM, objednávky do skladu a účetnictví."
+          }
+        ]
+      }
+    },
+    "business-optimisation": {
+      "discover": {
+        "title": "Nejdřív zjistíme, kam ve firmě mizí čas a peníze.",
+        "lead": "Nepřicházíme s hotovým řešením. Nejdřív se podíváme, jak práce opravdu probíhá, a teprve pak navrhneme, co zjednodušit, co propojit a co zautomatizovat.",
+        "steps": [
+          {
+            "title": "Mluvíme s lidmi, kteří práci dělají",
+            "body": "Ne jen s vedením. Nejvíc se dozvíme od těch, kdo každý den přepisují, schvalují a dohledávají."
+          },
+          {
+            "title": "Zmapujeme procesy a data",
+            "body": "Kudy tečou objednávky, faktury a informace, kde se zdvojují a kde čekají."
+          },
+          {
+            "title": "Seřadíme, co se vyplatí nejdřív",
+            "body": "Podle toho, kolik času a peněz to stojí a jak rychle se to dá změnit."
+          }
+        ]
+      },
+      "problems": {
+        "title": "Co firmu brzdí, i když to nikdo nehlásí.",
+        "lead": "Tyhle věci se dějí potichu a lidé je berou jako normální. Dohromady ale stojí víc, než by kdo čekal.",
+        "items": [
+          {
+            "title": "Stejná data na pěti místech",
+            "cost": "Objednávka je v e-mailu, v tabulce i v účetnictví a každá verze je trochu jiná.",
+            "fix": "Jeden zdroj pravdy, ze kterého berou všechny systémy."
+          },
+          {
+            "title": "Postup zná jen jeden člověk",
+            "cost": "Když onemocní nebo odejde, práce stojí a nikdo neví, jak dál.",
+            "fix": "Sepsaný a z velké části automatický postup."
+          },
+          {
+            "title": "Reporty se skládají ručně",
+            "cost": "Vedení čeká na čísla týden a rozhoduje podle starých dat.",
+            "fix": "Přehledy, které se aktualizují samy."
+          },
+          {
+            "title": "Schvalování přes e-mail",
+            "cost": "Faktury a žádosti čekají ve schránkách a nikdo neví, kde co je.",
+            "fix": "Schvalování s jasným stavem, termíny a připomínkami."
+          },
+          {
+            "title": "Platíte za nástroje, které nepotřebujete",
+            "cost": "Licence a tarify, které firma přerostla nebo nikdy nevyužila naplno.",
+            "fix": "Revize nástrojů a levnější cesta ke stejnému výsledku."
+          },
+          {
+            "title": "Chyby a práce dvakrát",
+            "cost": "Ruční přepisování znamená překlepy, reklamace a opravy.",
+            "fix": "Přenos dat mezi systémy bez ručního zásahu, s kontrolami."
+          }
+        ]
+      },
+      "build": {
+        "title": "Co pro vás uděláme.",
+        "items": [
+          {
+            "title": "Revize procesů",
+            "body": "Mapa toho, jak práce probíhá, a seznam změn seřazený podle přínosu."
+          },
+          {
+            "title": "Interní nástroje",
+            "body": "Jednoduché aplikace místo tabulek, které nikdo nechce udržovat."
+          },
+          {
+            "title": "Reporting a přehledy",
+            "body": "Čísla pro vedení, která jsou aktuální a dá se jim věřit."
+          },
+          {
+            "title": "Napojení systémů",
+            "body": "E-shop, sklad, účetnictví a CRM, které si data předávají samy."
+          },
+          {
+            "title": "Schvalovací toky",
+            "body": "Faktury, nákupy a žádosti s jasným stavem a odpovědností."
+          },
+          {
+            "title": "Úspora na nástrojích",
+            "body": "Levnější tarify a náhrady tam, kde platíte za víc, než potřebujete."
+          }
+        ]
+      }
+    },
+    "software": {
+      "discover": {
+        "title": "Nejdřív pochopíme práci, kterou má software ulehčit.",
+        "lead": "Dobrý firemní software nevzniká z dlouhého zadání, ale z toho, jak lidé opravdu pracují. Proto začínáme u nich a rychle stavíme něco, co se dá vyzkoušet.",
+        "steps": [
+          {
+            "title": "Sedneme si s uživateli",
+            "body": "Projdeme jejich den, nástroje, které používají, a místa, kde si pomáhají tabulkami."
+          },
+          {
+            "title": "Postavíme funkční prototyp",
+            "body": "Během pár týdnů máte v ruce první verzi, ideálně nad vašimi daty."
+          },
+          {
+            "title": "Rozhodujeme na skutečné věci",
+            "body": "O dalších funkcích se rozhoduje podle toho, co se osvědčilo, ne podle odhadů na papíře."
+          }
+        ]
+      },
+      "problems": {
+        "title": "Proč firemní software často nefunguje.",
+        "lead": "Většina neúspěšných projektů nepadne na technice, ale na tom, že řeší jiný problém, než má firma.",
+        "items": [
+          {
+            "title": "Hotový systém nesedí na váš provoz",
+            "cost": "Firma se přizpůsobuje softwaru a lidé si bokem vedou tabulky.",
+            "fix": "Software postavený podle toho, jak u vás práce opravdu probíhá."
+          },
+          {
+            "title": "Zadání se píše měsíce",
+            "cost": "Než se začne stavět, polovina požadavků už neplatí.",
+            "fix": "Funkční prototyp, na kterém se rozhoduje za pár týdnů."
+          },
+          {
+            "title": "Starý systém, na který se bojíte sáhnout",
+            "cost": "Nikdo neví, jak přesně funguje, a každá změna je riziko.",
+            "fix": "Postupná náhrada po částech, bez velkého třesku."
+          },
+          {
+            "title": "Zákazníci volají kvůli informacím",
+            "cost": "Stav objednávky, faktura nebo termín, a pokaždé to někdo dohledává.",
+            "fix": "Klientský portál, kde si to najdou sami."
+          },
+          {
+            "title": "Data, ze kterých nic nevyčtete",
+            "cost": "Údaje existují, ale v podobě, ze které se nedá rozhodovat.",
+            "fix": "Přehledy nad vašimi daty, přesně pro vaše otázky."
+          },
+          {
+            "title": "Projekt, který nemá konec",
+            "cost": "Rozpočet roste a první verze pořád není venku.",
+            "fix": "Stavíme po etapách, první část se používá dřív, než se plánuje poslední."
+          }
+        ]
+      },
+      "build": {
+        "title": "Co pro vás postavíme.",
+        "items": [
+          {
+            "title": "Interní nástroje",
+            "body": "Aplikace pro tým místo tabulek a e-mailů."
+          },
+          {
+            "title": "Klientské a partnerské portály",
+            "body": "Objednávky, dokumenty a stav zakázek na jednom místě."
+          },
+          {
+            "title": "Rezervace a plánování",
+            "body": "Kapacity, směny, termíny a zdroje bez kolizí."
+          },
+          {
+            "title": "Přehledy a dashboardy",
+            "body": "Data z vašich systémů v podobě, ze které se rozhoduje."
+          },
+          {
+            "title": "Nové produkty",
+            "body": "Od prototypu po SaaS, který můžete prodávat dál."
+          },
+          {
+            "title": "Náhrada starého systému",
+            "body": "Po částech, bez výpadku provozu."
+          }
+        ]
+      }
+    }
+  },
+  "en": {
+    "labels": {
+      "discover": "How we start",
+      "problems": "Where it leaks",
+      "build": "What we build",
+      "work": "Work",
+      "inquiry": "Inquiry",
+      "fix": "What we do about it"
+    },
+    "inquiryTitle": "Tell us what you are dealing with.",
+    "inquiryLead": "A few questions about this service, an answer within one working day. The first consultation is free.",
+    "websites": {
+      "discover": {
+        "title": "First we learn how a customer is made at your company.",
+        "lead": "A website is not a flyer. It is where a visitor becomes an inquiry, a booking or an order. Before we design anything, we find out how that works for you today.",
+        "steps": [
+          {
+            "title": "We walk the customer journey",
+            "body": "Where people come from, what they look for and where they leave. From the data, not from impressions."
+          },
+          {
+            "title": "We learn your business",
+            "body": "What earns you the most, what customers ask most often and what still happens over the phone."
+          },
+          {
+            "title": "We show where it leaks",
+            "body": "The specific places where the site loses inquiries and money, ranked by what they cost you."
+          }
+        ]
+      },
+      "problems": {
+        "title": "Where a website quietly loses customers.",
+        "lead": "Most of it is invisible at first glance. The site looks fine, the inquiries just do not come.",
+        "items": [
+          {
+            "title": "It loads slowly on a phone",
+            "cost": "Most people arrive on a phone. By the time the page loads, some of them are gone.",
+            "fix": "A fast site built for performance, not a template with dozens of plugins."
+          },
+          {
+            "title": "Inquiries end up in an inbox",
+            "cost": "The form lands in a mailbox nobody watches and the answer comes two days later.",
+            "fix": "Every inquiry goes straight to the right person, with an alert and a clear status."
+          },
+          {
+            "title": "Bookings only by phone",
+            "cost": "Whoever calls after hours cannot get through and books elsewhere.",
+            "fix": "Online booking connected to your calendar, with reminders for customers."
+          },
+          {
+            "title": "You do not know where customers come from",
+            "cost": "Without measurement you cannot tell which ad or page earns money and which only costs it.",
+            "fix": "Measurement from the first visit to the paid order."
+          },
+          {
+            "title": "Google does not find you",
+            "cost": "People search for exactly what you offer but see your competitors first.",
+            "fix": "Structure, copy and technical SEO built around what people actually search for."
+          },
+          {
+            "title": "Purchases are not finished",
+            "cost": "A complicated checkout, surprise shipping or a missing payment option, and the cart is abandoned.",
+            "fix": "A simple checkout, clear prices and connections to stock, payments and delivery."
+          }
+        ]
+      },
+      "build": {
+        "title": "What we build for you.",
+        "items": [
+          {
+            "title": "Company website",
+            "body": "That explains what you do and leads the visitor to an inquiry."
+          },
+          {
+            "title": "E-shop",
+            "body": "Connected to stock, payments, delivery and accounting."
+          },
+          {
+            "title": "Booking system",
+            "body": "Slots, prepayments and reminders without phone calls."
+          },
+          {
+            "title": "Campaign pages",
+            "body": "For ads and new products, with results you can measure."
+          },
+          {
+            "title": "Client area",
+            "body": "Where customers find their orders, invoices and documents."
+          },
+          {
+            "title": "Connections to your systems",
+            "body": "Inquiries straight into the CRM, orders into stock and accounting."
+          }
+        ]
+      }
+    },
+    "business-optimisation": {
+      "discover": {
+        "title": "First we find out where time and money disappear.",
+        "lead": "We do not arrive with a ready-made solution. First we look at how the work really happens, and only then propose what to simplify, connect and automate.",
+        "steps": [
+          {
+            "title": "We talk to the people who do the work",
+            "body": "Not only to management. We learn most from those who retype, approve and look things up every day."
+          },
+          {
+            "title": "We map processes and data",
+            "body": "Where orders, invoices and information flow, where they are duplicated and where they wait."
+          },
+          {
+            "title": "We rank what pays off first",
+            "body": "By how much time and money it costs and how quickly it can change."
+          }
+        ]
+      },
+      "problems": {
+        "title": "What slows a company down, even if nobody reports it.",
+        "lead": "These things happen quietly and people take them as normal. Together they cost more than anyone expects.",
+        "items": [
+          {
+            "title": "The same data in five places",
+            "cost": "An order sits in an email, a spreadsheet and the accounts, and every version is slightly different.",
+            "fix": "One source of truth that every system reads from."
+          },
+          {
+            "title": "Only one person knows the process",
+            "cost": "When they are ill or leave, the work stops and nobody knows how to continue.",
+            "fix": "A written and largely automatic process."
+          },
+          {
+            "title": "Reports are put together by hand",
+            "cost": "Management waits a week for figures and decides on old data.",
+            "fix": "Overviews that update themselves."
+          },
+          {
+            "title": "Approvals over email",
+            "cost": "Invoices and requests wait in inboxes and nobody knows where anything is.",
+            "fix": "Approvals with a clear status, deadlines and reminders."
+          },
+          {
+            "title": "Paying for tools you do not need",
+            "cost": "Licences and plans the company outgrew or never fully used.",
+            "fix": "A tool review and a cheaper route to the same result."
+          },
+          {
+            "title": "Errors and work done twice",
+            "cost": "Retyping by hand means typos, complaints and corrections.",
+            "fix": "Data moving between systems without manual steps, with checks."
+          }
+        ]
+      },
+      "build": {
+        "title": "What we do for you.",
+        "items": [
+          {
+            "title": "Process review",
+            "body": "A map of how the work happens and a list of changes ranked by benefit."
+          },
+          {
+            "title": "Internal tools",
+            "body": "Simple apps instead of spreadsheets nobody wants to maintain."
+          },
+          {
+            "title": "Reporting and overviews",
+            "body": "Numbers for management that are current and can be trusted."
+          },
+          {
+            "title": "Connected systems",
+            "body": "E-shop, stock, accounting and CRM passing data on by themselves."
+          },
+          {
+            "title": "Approval flows",
+            "body": "Invoices, purchases and requests with a clear status and owner."
+          },
+          {
+            "title": "Savings on tools",
+            "body": "Cheaper plans and replacements where you pay for more than you need."
+          }
+        ]
+      }
+    },
+    "software": {
+      "discover": {
+        "title": "First we understand the work the software should make easier.",
+        "lead": "Good business software does not come from a long specification, it comes from how people really work. So we start with them and quickly build something you can try.",
+        "steps": [
+          {
+            "title": "We sit down with the users",
+            "body": "We go through their day, the tools they use and where they help themselves with spreadsheets."
+          },
+          {
+            "title": "We build a working prototype",
+            "body": "Within a few weeks you have a first version in your hands, ideally on your own data."
+          },
+          {
+            "title": "We decide on something real",
+            "body": "Further features are decided by what has proven itself, not by estimates on paper."
+          }
+        ]
+      },
+      "problems": {
+        "title": "Why business software often does not work.",
+        "lead": "Most failed projects do not fail on technology, they fail because they solve a different problem than the company has.",
+        "items": [
+          {
+            "title": "Off-the-shelf does not fit how you work",
+            "cost": "The company adapts to the software and people keep spreadsheets on the side.",
+            "fix": "Software built around how the work really happens at your company."
+          },
+          {
+            "title": "The specification takes months",
+            "cost": "By the time building starts, half of the requirements no longer apply.",
+            "fix": "A working prototype to decide on within a few weeks."
+          },
+          {
+            "title": "An old system nobody dares to touch",
+            "cost": "Nobody knows exactly how it works and every change is a risk.",
+            "fix": "A gradual replacement, part by part, without a big bang."
+          },
+          {
+            "title": "Customers call for information",
+            "cost": "Order status, an invoice or a date, and every time someone has to look it up.",
+            "fix": "A client portal where they find it themselves."
+          },
+          {
+            "title": "Data you cannot read anything from",
+            "cost": "The data exists, but not in a form you can make decisions with.",
+            "fix": "Overviews on your data, built for your questions."
+          },
+          {
+            "title": "A project with no end",
+            "cost": "The budget grows and the first version is still not out.",
+            "fix": "We build in phases; the first part is in use before the last one is planned."
+          }
+        ]
+      },
+      "build": {
+        "title": "What we build for you.",
+        "items": [
+          {
+            "title": "Internal tools",
+            "body": "Apps for the team instead of spreadsheets and emails."
+          },
+          {
+            "title": "Client and partner portals",
+            "body": "Orders, documents and job status in one place."
+          },
+          {
+            "title": "Booking and scheduling",
+            "body": "Capacity, shifts, dates and resources without clashes."
+          },
+          {
+            "title": "Overviews and dashboards",
+            "body": "Data from your systems in a form you can decide with."
+          },
+          {
+            "title": "New products",
+            "body": "From prototype to a SaaS you can sell on."
+          },
+          {
+            "title": "Replacing an old system",
+            "body": "Part by part, without stopping operations."
+          }
+        ]
+      }
+    }
+  }
+}

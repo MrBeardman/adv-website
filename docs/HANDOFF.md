@@ -51,7 +51,7 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
   loose (Honza: "random spaces around" felt chaotic).
 - **Service icons** (`components/ui/ServiceIcon.astro`): drawn on a 32 grid, each animates when its card is
   hovered (AI: data runs down the branches; optimisation: sliders line up; web: page builds, cursor clicks;
-  software: layers lift). Two tiles in a cobalt → violet fade, two in paper (`tone`), still to be decided.
+  software: layers lift). All tiles use the cobalt → violet fade (`tone="fade"`).
 - **Demos in the cards** (`components/ui/Demo.astro`, shown through `ui/Scene.astro`): small HTML/CSS product
   scenes in the SDX-website style, 10 s loops, paused off screen; labels only, no numbers.
   Kinds: ai-automation, business-optimisation, websites, software, routing, assistant.
@@ -61,6 +61,14 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
 - **Inquiry** (`components/inquiry/Inquiry.astro`, `scripts/inquiry.ts`, questions in `data/inquiry.ts`):
   starts compact with four big service buttons, the box is as tall as the step it shows and eases between
   heights; several questions are multiple choice.
+- **Service pages** (`templates/Service.astro`, copy `i18n/serviceDeep.json`; Weby, Optimalizace, Prototypy):
+  head with the coloured icon, demo + three stats, then "Jak začínáme" (getting to know the business), "Kde to
+  uniká" (six concrete problems: what it costs, what we do), "Co stavíme", projects, and the inquiry preset to
+  the service. The selling angle Honza asked for: we learn their business, find problems they may not know
+  about, and fix them to bring more clients and sales.
+- **Every page** has the drifting lines now (`Base` `drift` defaults to true) and glass cards/panels.
+- **Icons**: Honza picked the coloured (fade) tiles; used on the homepage cards, the inquiry buttons and the
+  service page heads.
 - **Header**: split CTA "Spustit poptávku" (homepage inquiry) | "Kontakt"; bigger logo.
 
 ## Rules that still hold
@@ -99,7 +107,8 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
   +2 and +4 months).
 - Footer tagline still says "…a staví k tomu weby, prototypy…" (the wording Honza dropped in the hero); the
   automation page's process step "Demo" still says "na co se dá kliknout". Rewrite in the new tone.
-- Icon tiles: pick fade or paper, then use the new icons in the workflow board and the inquiry buttons too.
-- Inner pages (other service pages, About, work list) are not yet in the frameless style.
+- The workflow board on the homepage still uses the small line icons (fine as is; swap if wanted).
+- About, work list, contact and case pages have the lines and glass but no new content yet; the services
+  index could get the same selling sections as the service pages.
 - The old stream-of-light code (`scripts/stream.ts`, `scripts/canvas.ts`, `.adv-node`) is unused on the
   homepage and the automation page; remove it once no page needs it.

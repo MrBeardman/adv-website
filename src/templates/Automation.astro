@@ -34,7 +34,7 @@ const t = pick(automation, lang);
 const alternates = { cs: routes.service('cs', 'ai-automation'), en: routes.service('en', 'ai-automation') };
 ---
 
-<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={alternates} drift>
+<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={alternates}>
   <Hero lang={lang} pill={t.hero.pill} sub={t.hero.sub} />
   <Tools lang={lang} />
   <Statement lang={lang} />

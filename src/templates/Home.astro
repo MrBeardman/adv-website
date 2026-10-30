@@ -29,7 +29,7 @@ const n = pick(home, lang).canvas;
 const inquiryId = pick(home, lang).workflow.inquiryId;
 ---
 
-<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} drift>
+<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)}>
   <HeroFlow lang={lang} />
   <div class="adv-flow">
     <NodeFrame {...n.services} icon="racks" side="left">

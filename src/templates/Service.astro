@@ -1,22 +1,37 @@
 ---
 /**
- * One service page (/sluzby/<cs-path>/, /en/services/<en-path>/), enabled services only.
- * Head with "Service n of total", the long text and what it covers; the scene; the headline number;
- * the work behind it (rows, or a plain line when there is none yet); previous/next service.
+ * One service page (/sluzby/<cs-path>/, /en/services/<en-path>/), enabled services except AI and automation
+ * (that one has its own rich page, templates/Automation.astro).
+ *
+ * Frameless (Honza, Oct 30 2026: "give the rest of the subpages the same treatment ... more content that will
+ * sell clients: get to know their specific business, identify the concrete problems they might not even know
+ * about"). The drifting lines behind the page, glass cards, sections labelled like the homepage
+ * (ui/NodeFrame.astro). Copy per service in i18n/serviceDeep.json (new copy, docs/STATUS.md).
+ *
+ *   head      the service, its long text, what it covers, its tile icon
+ *   proof     the live demo and the three card stats (homeNumbers.ts)
+ *   discover  how we start: three steps of getting to know the business
+ *   problems  six problems that leak customers, time or money, each with what it costs and what we do
+ *   build     what we build
+ *   work      the projects behind it
+ *   inquiry   the inquiry, already set to this service
+ *   pager     previous / next service
  */
-import Node from '../components/ui/Node.astro';
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Scene from '../components/ui/Scene.astro';
+import ServiceIcon from '../components/ui/ServiceIcon.astro';
+import NodeFrame from '../components/ui/NodeFrame.astro';
 import Arrow from '../components/ui/Arrow.astro';
 import WorkRows from '../components/WorkRows.astro';
-import CtaPanel from '../components/CtaPanel.astro';
+import Inquiry from '../components/inquiry/Inquiry.astro';
 import { pick, loc, fill, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import services from '../i18n/services.json';
+import deep from '../i18n/serviceDeep.json';
 import { ENABLED_SERVICES } from '../data/capabilities';
 import { numberFor } from '../data/homeNumbers';
-import { caseStudiesFor, findCaseStudy } from '../data/caseStudies';
+import { caseStudiesFor } from '../data/caseStudies';
 import { routes } from '../data/routes';
 
 interface Props {
@@ -26,6 +41,9 @@ interface Props {
 const { lang, slug } = Astro.props;
 const c = pick(chrome, lang);
 const s = pick(services, lang);
+const d = pick(deep, lang);
+const page = (d as unknown as Record<string, typeof d.websites | undefined>)[slug];
+const L = d.labels;
 const idx = ENABLED_SERVICES.findIndex((x) => x.slug === slug);
 const total = ENABLED_SERVICES.length;
 const title = (sl: string) => s.capabilities.items.find((i) => i.slug === sl)!.title;
@@ -33,16 +51,19 @@ const copy = s.capabilities.items.find((i) => i.slug === slug)!;
 const prev = ENABLED_SERVICES[(idx - 1 + total) % total].slug;
 const next = ENABLED_SERVICES[(idx + 1) % total].slug;
 const number = numberFor(slug);
-const numberHref =
-  number && number.link.kind === 'case' && findCaseStudy(number.link.slug) ? routes.case(lang, number.link.slug) : null;
+const stats = number ? [number, ...number.more] : [];
 const work = caseStudiesFor(slug);
 const dev = import.meta.env.DEV;
 const alternates = { cs: routes.service('cs', slug), en: routes.service('en', slug) };
+const nf = (name: string) => ({ name, kind: '', wait: '', done: '' });
 ---
 
 <Base lang={lang} title={`${copy.title} · ${c.meta.siteName}`} description={copy.body} alternates={alternates}>
   <PageHead kicker={fill(s.service.eyebrow, { n: idx + 1, total })} title={copy.title} lead={copy.long}>
-    <a slot="before" class="adv-back" href={routes.services(lang)}><Arrow dir="left" />{c.nav.services}</a>
+    <div slot="before" class="adv-svc__top">
+      <a class="adv-back" href={routes.services(lang)}><Arrow dir="left" />{c.nav.services}</a>
+      <ServiceIcon slug={slug} tone="fade" />
+    </div>
     <ul class="adv-chips adv-svc__chips" data-reveal style="--i:3">
       {copy.covers.map((cv) => <li>{cv}</li>)}
     </ul>
@@ -54,51 +75,119 @@ const alternates = { cs: routes.service('cs', slug), en: routes.service('en', sl
         <Scene kind={slug} lang={lang} />
       </div>
       {
-        number && (
-          <div class="adv-panel adv-svc__num" data-reveal style="--i:1">
-            <p class="adv-svc__value">
-              <span
-                class:list={[{ 'adv-ph': dev && number.placeholder }]}
-                data-count={number.count}
-                data-prefix={number.prefix ?? ''}
-                data-suffix={loc(number.suffix, lang)}
-                aria-hidden="true"
-              >
-                {loc(number.value, lang)}
-              </span>
-              <span class="screen-reader-text">{loc(number.value, lang)}</span>
-            </p>
-            <p class="adv-svc__label">{loc(number.label, lang)}</p>
-            {numberHref && (
-              <a class="adv-link" href={numberHref}>
-                {loc(number.linkLabel, lang)}
-                <Arrow />
-              </a>
-            )}
-          </div>
+        stats.length > 0 && (
+          <ul class="adv-panel adv-svc__stats" data-reveal style="--i:1">
+            {stats.map((st) => (
+              <li>
+                <b class:list={[{ 'adv-ph': dev && st.placeholder }]}>{loc(st.value, lang)}</b>
+                <span>{loc(st.short, lang)}</span>
+              </li>
+            ))}
+          </ul>
         )
       }
     </div>
   </section>
 
-  <section class="adv-section adv-svc__work" aria-labelledby="adv-svc-work">
-    <div class="adv-wrap">
-      <div class="adv-head">
-        <div>
-          <h2 id="adv-svc-work" class="adv-h2" data-reveal><Node />{s.service.selectedWork}</h2>
-        </div>
-        {
-          work.length > 0 && (
-            <a class="adv-link" href={`${routes.work(lang)}?service=${slug}`}>
-              {fill(s.service.allWork, { service: copy.title })}
-              <Arrow />
-            </a>
-          )
-        }
+  {
+    page && (
+      <div class="adv-flow adv-svc__flow">
+        <NodeFrame {...nf(L.discover)} icon="nodes">
+          <section class="adv-svc__sec" aria-labelledby="svc-discover">
+            <h2 id="svc-discover" class="adv-h2" data-reveal>
+              {page.discover.title}
+            </h2>
+            <p class="adv-lead adv-svc__lead" data-reveal>
+              {page.discover.lead}
+            </p>
+            <ol class="adv-svc__steps">
+              {page.discover.steps.map((st, k) => (
+                <li class="adv-card" data-reveal style={`--i:${k}`}>
+                  <span class="adv-svc__n">{String(k + 1).padStart(2, '0')}</span>
+                  <h3>{st.title}</h3>
+                  <p>{st.body}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </NodeFrame>
+
+        <NodeFrame {...nf(L.problems)} icon="exchange">
+          <section class="adv-svc__sec" aria-labelledby="svc-problems">
+            <h2 id="svc-problems" class="adv-h2" data-reveal>
+              {page.problems.title}
+            </h2>
+            <p class="adv-lead adv-svc__lead" data-reveal>
+              {page.problems.lead}
+            </p>
+            <ul class="adv-svc__problems">
+              {page.problems.items.map((it, k) => (
+                <li class="adv-card adv-card--lift" data-reveal style={`--i:${k % 3}`}>
+                  <span class="adv-svc__warn" aria-hidden="true" />
+                  <h3>{it.title}</h3>
+                  <p class="adv-svc__cost">{it.cost}</p>
+                  <p class="adv-svc__fix">
+                    <span>{L.fix}</span>
+                    {it.fix}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </NodeFrame>
+
+        <NodeFrame {...nf(L.build)} icon="racks">
+          <section class="adv-svc__sec" aria-labelledby="svc-build">
+            <h2 id="svc-build" class="adv-h2" data-reveal>
+              {page.build.title}
+            </h2>
+            <ul class="adv-svc__build adv-panel" data-reveal>
+              {page.build.items.map((it) => (
+                <li>
+                  <i aria-hidden="true" />
+                  <div>
+                    <h3>{it.title}</h3>
+                    <p>{it.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </NodeFrame>
+
+        {work.length > 0 && (
+          <NodeFrame {...nf(L.work)} icon="shapes">
+            <section class="adv-svc__sec" aria-labelledby="svc-work">
+              <div class="adv-head">
+                <h2 id="svc-work" class="adv-h2" data-reveal>
+                  {s.service.selectedWork}
+                </h2>
+                <a class="adv-link" href={`${routes.work(lang)}?service=${slug}`}>
+                  {fill(s.service.allWork, { service: copy.title })}
+                  <Arrow />
+                </a>
+              </div>
+              <WorkRows lang={lang} items={work} />
+            </section>
+          </NodeFrame>
+        )}
+
+        <NodeFrame {...nf(L.inquiry)} icon="arrowRight" id="poptavka">
+          <section class="adv-svc__sec" aria-labelledby="svc-inquiry">
+            <div class="adv-svc__inqhead">
+              <h2 id="svc-inquiry" class="adv-h2" data-reveal>
+                {d.inquiryTitle}
+              </h2>
+              <p class="adv-lead" data-reveal>
+                {d.inquiryLead}
+              </p>
+            </div>
+            <Inquiry lang={lang} service={slug} heading={false} />
+          </section>
+        </NodeFrame>
       </div>
-      {work.length ? <WorkRows lang={lang} items={work} /> : <p class="adv-lead">{s.service.empty}</p>}
-    </div>
-  </section>
+    )
+  }
 
   <nav class="adv-wrap adv-svc__pager" aria-label={c.nav.services}>
     <a
@@ -118,11 +207,16 @@ const alternates = { cs: routes.service('cs', slug), en: routes.service('en', sl
       <span class="adv-svc__pagerTitle">{title(next)}</span>
     </a>
   </nav>
-
-  <CtaPanel lang={lang} />
 </Base>
 
 <style is:global>
+  .adv-svc__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
   .adv-svc__chips {
     margin-top: 28px;
   }
@@ -138,32 +232,149 @@ const alternates = { cs: routes.service('cs', slug), en: routes.service('en', sl
     height: 100%;
     min-height: 280px;
   }
-  .adv-svc__num {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 14px;
-    padding: clamp(24px, 3vw, 40px);
+  /* the three stats, stacked */
+  .adv-svc__stats {
+    display: grid;
+    align-content: center;
+    margin: 0;
+    padding: clamp(22px, 3vw, 36px);
+    list-style: none;
   }
-  .adv-svc__value {
-    font-family: var(--adv-display);
-    font-size: clamp(2.75rem, 2rem + 2.4vw, 4.5rem);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    white-space: nowrap;
-  }
-  .adv-svc__label {
+  .adv-svc__stats li {
+    display: grid;
+    gap: 4px;
+    padding: 16px 0;
+    font-size: 0.875rem;
     color: var(--adv-muted);
-    max-width: 30ch;
   }
-  .adv-svc__num .adv-link {
-    align-self: flex-start;
+  .adv-svc__stats li + li {
+    border-top: 1px solid var(--adv-line);
   }
+  .adv-svc__stats b {
+    font-family: var(--adv-mono);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+    color: var(--adv-text);
+  }
+
+  .adv-svc__flow {
+    margin-top: clamp(96px, 10vw, 160px);
+    padding-top: 0;
+  }
+  .adv-svc__lead {
+    max-width: 60ch;
+    margin-top: 18px;
+  }
+  .adv-svc__sec h3 {
+    font-family: var(--adv-display);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  /* how we start: three numbered steps */
+  .adv-svc__steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: clamp(28px, 3.5vw, 48px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-svc__steps li {
+    padding: 26px 24px 28px;
+  }
+  .adv-svc__steps p,
+  .adv-svc__problems p,
+  .adv-svc__build p {
+    color: var(--adv-muted);
+    line-height: 1.55;
+  }
+  .adv-svc__n {
+    font-family: var(--adv-mono);
+    font-size: 0.8125rem;
+    color: var(--adv-accent);
+  }
+
+  /* the problems: what it costs, then what we do about it */
+  .adv-svc__problems {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: clamp(28px, 3.5vw, 48px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-svc__problems li {
+    padding: 26px 24px 24px;
+  }
+  .adv-svc__warn {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #f5a524;
+    box-shadow: 0 0 0 4px rgba(245, 165, 36, 0.15);
+  }
+  .adv-svc__problems .adv-svc__cost {
+    flex: 1;
+  }
+  .adv-svc__problems .adv-svc__fix {
+    display: grid;
+    gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--adv-line);
+    color: var(--adv-text);
+  }
+  .adv-svc__fix span {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+
+  /* what we build: a two-column list on one glass panel */
+  .adv-svc__build {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px clamp(24px, 4vw, 64px);
+    margin: clamp(28px, 3.5vw, 48px) 0 0;
+    padding: clamp(24px, 3.4vw, 48px);
+    border-radius: var(--adv-r-xl);
+    list-style: none;
+  }
+  .adv-svc__build li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .adv-svc__build i {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    border-radius: 6px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2l2 2 4-4.4' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 100% no-repeat,
+      linear-gradient(135deg, rgb(var(--adv-l-cobalt)), rgb(var(--adv-l-violet)));
+  }
+  .adv-svc__build h3 {
+    margin-bottom: 4px;
+  }
+
+  .adv-svc__inqhead {
+    display: grid;
+    gap: 16px;
+    max-width: 60ch;
+    margin-bottom: clamp(28px, 3.5vw, 48px);
+  }
+
   .adv-svc__pager {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 18px;
+    padding-bottom: clamp(80px, 9vw, 140px);
   }
   .adv-svc__pager .adv-card {
     padding: 26px 26px 28px;
@@ -183,20 +394,26 @@ const alternates = { cs: routes.service('cs', slug), en: routes.service('en', sl
     font-size: var(--adv-h3);
     font-weight: 600;
   }
+  @media (max-width: 960px) {
+    .adv-svc__steps,
+    .adv-svc__problems {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
   @media (max-width: 860px) {
-    .adv-svc__grid {
+    .adv-svc__grid,
+    .adv-svc__build {
       grid-template-columns: 1fr;
     }
     .adv-svc__scene .adv-scene {
       min-height: 190px;
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 620px) {
+    .adv-svc__steps,
+    .adv-svc__problems,
     .adv-svc__pager {
       grid-template-columns: 1fr;
-    }
-    .adv-svc__value {
-      white-space: normal;
     }
   }
 </style>

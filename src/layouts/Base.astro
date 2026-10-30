@@ -18,7 +18,7 @@ interface Props {
   stream?: boolean | 'light';
   /** The page is a workflow canvas: sections in ui/NodeFrame.astro, wired by scripts/canvas.ts. */
   canvas?: boolean;
-  /** lab/frameless: the hero's lines drift behind the page as a slow helix (scripts/flow/drift.ts) */
+  /** the hero's lines drift behind the page as a slow helix (scripts/flow/drift.ts); on by default */
   drift?: boolean;
   noindex?: boolean;
 }
@@ -30,7 +30,7 @@ const {
   ogImage = '/media/cases/kesia/cover.webp',
   stream = false,
   canvas = false,
-  drift = false,
+  drift = true,
   noindex = false,
 } = Astro.props;
 const site = Astro.site!;
