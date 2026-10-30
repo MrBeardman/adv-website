@@ -124,7 +124,34 @@
         "body": "Chystáme napojení na Shopify: stejné ceny a k tomu sériové číslo každého slitku, aby i obchod na Shopify prodával ze stejných živých cen."
       },
       "related": "Další práce pro Kesii",
-      "cta": "Přepisujete něco každý den ručně? Tam obvykle začínáme."
+      "cta": "Přepisujete něco každý den ručně? Tam obvykle začínáme.",
+      "growth": {
+        "title": "Úspora rostla s každým e-shopem.",
+        "body": "Obchody jsme napojovali jeden po druhém, zhruba každé dva měsíce. Každý další přidal hodiny a poplatky, které odpadly. Čtvrtý, vlastní e-shop na Shopify, teď stavíme.",
+        "stats": [
+          {
+            "value": "~470 h",
+            "label": "ručního přeceňování odpadlo od spuštění"
+          },
+          {
+            "value": "~230 000 Kč",
+            "label": "zůstalo na poplatcích Shoptetu"
+          }
+        ],
+        "caption": "Ušetřené hodiny od spuštění",
+        "total": "~470 h",
+        "axis": [
+          "leden 2026",
+          "říjen 2026"
+        ],
+        "markers": [
+          "1. e-shop",
+          "2. e-shop",
+          "3. e-shop",
+          "4. e-shop: Shopify, ve výrobě"
+        ],
+        "note": "Odhad z výsledků případu (~700 h a ~340 000 Kč ročně za tři e-shopy), rozpočtený na e-shop a měsíc; data napojení zaokrouhlena na měsíce."
+      }
     }
   },
   "en": {
@@ -252,7 +279,34 @@
         "body": "A Shopify connection is on its way: the same prices, plus a serial number for every single bar, so a Shopify store can sell from the same live pricing."
       },
       "related": "Also for Kesia",
-      "cta": "Retyping something every day? That is usually where we start."
+      "cta": "Retyping something every day? That is usually where we start.",
+      "growth": {
+        "title": "The saving grew with every shop.",
+        "body": "We connected the shops one after another, about every two months. Each one added hours and fees that fell away. The fourth, a custom shop on Shopify, is being built now.",
+        "stats": [
+          {
+            "value": "~470 h",
+            "label": "of manual repricing gone since launch"
+          },
+          {
+            "value": "~230,000 CZK",
+            "label": "kept in Shoptet fees"
+          }
+        ],
+        "caption": "Hours saved since launch",
+        "total": "~470 h",
+        "axis": [
+          "January 2026",
+          "October 2026"
+        ],
+        "markers": [
+          "Shop 1",
+          "Shop 2",
+          "Shop 3",
+          "Shop 4: Shopify, in progress"
+        ],
+        "note": "Estimated from the case results (~700 h and ~340,000 CZK a year for three shops), split per shop and month; connection dates rounded to months."
+      }
     }
   }
 }

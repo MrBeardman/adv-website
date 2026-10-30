@@ -1,0 +1,296 @@
+---
+/**
+ * Savings that add up (lab/frameless, Honza Oct 30 2026: "how much money and time they saved through the
+ * year, it kept going higher because every 2 months we connected another one"). A smooth cumulative
+ * curve over the months (monotone cubic, so it never dips or overshoots), the monthly saving as quiet bars
+ * underneath, and a marker where each new connection starts adding to it. Plays once in view ([data-play]:
+ * the curve reveals left to right, the bars rise, the markers pop in order); reduced motion shows it finished.
+ *
+ * `rate[i]` is the saving in month i + 1; `markers` are at the start of a month (0 = the first month).
+ * A marker past the last month (m >= rate.length) is drawn at the right edge as "in progress".
+ */
+interface Props {
+  rate: number[];
+  markers: { m: number; label: string }[];
+  /** caption over the chart, e.g. "Ušetřeno celkem" */
+  caption: string;
+  /** the total printed at the top right, already formatted */
+  total: string;
+  /** small month axis labels, first and last */
+  axis: [string, string];
+  note?: string;
+}
+const { rate, markers, caption, total, axis, note } = Astro.props;
+const W = 600;
+const H = 220;
+const TOP = 34;
+const BASE = 196;
+const n = rate.length;
+const cum = [0];
+rate.forEach((r) => cum.push(cum[cum.length - 1] + r));
+const max = cum[n];
+const X = (m: number) => (m / n) * W;
+const Y = (v: number) => BASE - (v / max) * (BASE - TOP);
+const P = cum.map((v, m) => [X(m), Y(v)] as const);
+
+// monotone cubic (Fritsch–Carlson) through the points: smooth, no overshoot
+const dx = P.slice(1).map((p, i) => p[0] - P[i][0]);
+const sl = P.slice(1).map((p, i) => (p[1] - P[i][1]) / dx[i]);
+const tan = P.map((_, i) => (i === 0 ? sl[0] : i === n ? sl[n - 1] : sl[i - 1] * sl[i] <= 0 ? 0 : (sl[i - 1] + sl[i]) / 2));
+for (let i = 0; i < n; i++) {
+  if (sl[i] === 0) {
+    tan[i] = tan[i + 1] = 0;
+    continue;
+  }
+  const a = tan[i] / sl[i];
+  const b = tan[i + 1] / sl[i];
+  const h = Math.hypot(a, b);
+  if (h > 3) {
+    tan[i] = (3 * a * sl[i]) / h;
+    tan[i + 1] = (3 * b * sl[i]) / h;
+  }
+}
+const f = (v: number) => v.toFixed(1);
+let line = `M${f(P[0][0])} ${f(P[0][1])}`;
+for (let i = 0; i < n; i++) {
+  const d = dx[i] / 3;
+  line += ` C${f(P[i][0] + d)} ${f(P[i][1] + tan[i] * d)} ${f(P[i + 1][0] - d)} ${f(P[i + 1][1] - tan[i + 1] * d)} ${f(P[i + 1][0])} ${f(P[i + 1][1])}`;
+}
+const area = `${line} L${W} ${BASE} L0 ${BASE}Z`;
+const rmax = Math.max(...rate);
+const bw = (W / n) * 0.3;
+const uid = `gc-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<figure class="adv-gc" data-play>
+  <figcaption class="adv-gc__cap">
+    <span>{caption}</span>
+    <b>{total}</b>
+  </figcaption>
+  <div class="adv-gc__plot">
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id={`${uid}-area`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="rgb(124,200,255)" stop-opacity="0.3"></stop>
+          <stop offset="1" stop-color="rgb(110,64,230)" stop-opacity="0"></stop>
+        </linearGradient>
+        <linearGradient id={`${uid}-line`} x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="rgb(110,64,230)"></stop>
+          <stop offset="0.55" stop-color="rgb(38,92,255)"></stop>
+          <stop offset="1" stop-color="rgb(124,200,255)"></stop>
+        </linearGradient>
+      </defs>
+      <path class="adv-gc__grid" d={`M0 ${TOP} H${W} M0 ${(TOP + BASE) / 2} H${W} M0 ${BASE} H${W}`}></path>
+      {
+        rate.map((r, i) => (
+          <rect
+            class="adv-gc__bar"
+            x={X(i) + (W / n - bw) / 2}
+            y={BASE - (r / rmax) * 46}
+            width={bw}
+            height={(r / rmax) * 46}
+            rx="2"
+            style={`--k:${i}`}
+          />
+        ))
+      }
+      <g class="adv-gc__curve">
+        <path class="adv-gc__area" d={area} fill={`url(#${uid}-area)`}></path>
+        <path class="adv-gc__line" d={line} stroke={`url(#${uid}-line)`}></path>
+      </g>
+    </svg>
+    {
+      markers.map((mk, k) => {
+        const m = Math.min(mk.m, n);
+        const ahead = mk.m >= n;
+        return (
+          <span
+            class:list={['adv-gc__mark', { 'is-ahead': ahead }]}
+            style={`--x:${(X(m) / W) * 100}%;--y:${(Y(cum[m]) / H) * 100}%;--k:${k}`}
+          >
+            <em>{mk.label}</em>
+          </span>
+        );
+      })
+    }
+  </div>
+  <div class="adv-gc__axis" aria-hidden="true">
+    <span>{axis[0]}</span>
+    <span>{axis[1]}</span>
+  </div>
+  {note && <p class="adv-gc__note">{note}</p>}
+</figure>
+
+<style is:global>
+  .adv-gc {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .adv-gc__cap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+  .adv-gc__cap b {
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: var(--adv-text);
+  }
+  .adv-gc__plot {
+    position: relative;
+    height: clamp(200px, 22vw, 280px);
+  }
+  .adv-gc__plot svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .adv-gc__grid {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.07);
+    stroke-dasharray: 2 5;
+    vector-effect: non-scaling-stroke;
+  }
+  .adv-gc__bar {
+    fill: rgba(124, 200, 255, 0.11);
+    transform-box: fill-box;
+    transform-origin: bottom;
+  }
+  .adv-gc__line {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  /* a marker: a dot on the curve and its label above it, joined by a thin rule */
+  .adv-gc__mark {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 0;
+    height: 0;
+  }
+  .adv-gc__mark::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--adv-bg-2);
+    box-shadow:
+      inset 0 0 0 2px var(--adv-accent),
+      0 0 0 4px rgba(var(--adv-accent-rgb), 0.15);
+  }
+  .adv-gc__mark::after {
+    content: '';
+    position: absolute;
+    left: -0.5px;
+    bottom: 8px;
+    width: 1px;
+    height: 26px;
+    background: linear-gradient(transparent, rgba(var(--adv-accent-rgb), 0.5));
+  }
+  .adv-gc__mark em {
+    position: absolute;
+    left: 0;
+    bottom: 34px;
+    translate: -50% 0;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-style: normal;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--adv-text);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .adv-gc__mark:first-of-type em {
+    translate: 0 0;
+  }
+  .adv-gc__mark.is-ahead em {
+    bottom: 14px;
+    translate: calc(-100% + 8px) 0;
+    color: var(--adv-accent);
+    box-shadow: inset 0 0 0 1px rgba(var(--adv-accent-rgb), 0.45);
+    border: 0;
+  }
+  .adv-gc__mark.is-ahead::after {
+    display: none;
+  }
+  .adv-gc__mark.is-ahead::before {
+    box-shadow:
+      inset 0 0 0 2px var(--adv-accent),
+      0 0 0 4px rgba(var(--adv-accent-rgb), 0.15);
+    background: transparent;
+    animation: adv-gc-ping 1.8s ease-out infinite;
+  }
+  @keyframes adv-gc-ping {
+    60%,
+    100% {
+      box-shadow:
+        inset 0 0 0 2px var(--adv-accent),
+        0 0 0 12px rgba(var(--adv-accent-rgb), 0);
+    }
+  }
+  /* narrow screens: the dots stay, only the last label (no room for every name) */
+  @media (max-width: 700px) {
+    .adv-gc__mark:not(:last-of-type) em {
+      display: none;
+    }
+  }
+  .adv-gc__axis {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--adv-mono);
+    font-size: 0.6875rem;
+    color: #7f879b;
+  }
+  .adv-gc__note {
+    font-size: 0.75rem;
+    color: #7f879b;
+  }
+
+  /* playing once in view: bars rise, the curve draws, the markers pop in order */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .adv-gc .adv-gc__bar {
+      scale: 1 0;
+      transition: scale 700ms var(--adv-ease) calc(var(--k) * 70ms);
+    }
+    /* the curve and its area reveal left to right (a clip, so the non-scaling stroke stays even) */
+    .js .adv-gc .adv-gc__curve {
+      clip-path: inset(-10px 100% -10px 0);
+      transition: clip-path 2200ms cubic-bezier(0.45, 0, 0.2, 1) 200ms;
+    }
+    .js .adv-gc .adv-gc__mark {
+      opacity: 0;
+      translate: 0 6px;
+      transition:
+        opacity 500ms var(--adv-ease),
+        translate 500ms var(--adv-ease);
+      transition-delay: calc(400ms + var(--k) * 380ms);
+    }
+    .js .adv-gc.is-playing .adv-gc__bar {
+      scale: 1 1;
+    }
+    .js .adv-gc.is-playing .adv-gc__curve {
+      clip-path: inset(-10px -10px -10px 0);
+    }
+    .js .adv-gc.is-playing .adv-gc__mark {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+</style>

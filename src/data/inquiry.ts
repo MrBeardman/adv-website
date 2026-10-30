@@ -96,7 +96,7 @@ export const FLOWS: Record<string, Question[]> = {
   'ai-automation': [
     {
       id: 'process',
-      kind: 'one',
+      kind: 'many',
       problem: true,
       title: t('Která práce vám bere nejvíc času?', 'Which work takes the most of your time?'),
       options: [
@@ -153,7 +153,7 @@ export const FLOWS: Record<string, Question[]> = {
   'business-optimisation': [
     {
       id: 'pain',
-      kind: 'one',
+      kind: 'many',
       problem: true,
       title: t('Co vás ve firmě nejvíc brzdí?', 'What slows your company down most?'),
       options: [
@@ -199,7 +199,7 @@ export const FLOWS: Record<string, Question[]> = {
   websites: [
     {
       id: 'need',
-      kind: 'one',
+      kind: 'many',
       problem: true,
       title: t('Co potřebujete?', 'What do you need?'),
       options: [
@@ -211,7 +211,7 @@ export const FLOWS: Record<string, Question[]> = {
     },
     {
       id: 'goal',
-      kind: 'one',
+      kind: 'many',
       title: t('Co má web hlavně přinášet?', 'What should the site bring in, above all?'),
       options: [
         o('leads', 'Poptávky', 'Inquiries'),
@@ -272,7 +272,7 @@ export const FLOWS: Record<string, Question[]> = {
   software: [
     {
       id: 'build',
-      kind: 'one',
+      kind: 'many',
       problem: true,
       title: t('Co chcete postavit?', 'What do you want to build?'),
       options: [
@@ -331,7 +331,7 @@ export function classify(service: string, answers: Record<string, string | strin
   let problem = '';
   for (const q of qs) {
     const a = answers[q.id];
-    if (q.problem && typeof a === 'string') problem = a;
+    if (q.problem && a) problem = Array.isArray(a) ? a.join(',') : a;
     if (!q.axis || typeof a !== 'string') continue;
     const w = q.options?.find((x) => x.id === a)?.w;
     if (typeof w === 'number') axis[q.axis].push(w);

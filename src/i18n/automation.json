@@ -40,6 +40,36 @@
     },
     "work": {
       "kicker": "Realizace"
+    },
+    "growth": {
+      "title": "Úspora, která každý měsíc roste.",
+      "em": "roste",
+      "lead": "Nezačínáme velkým projektem. Napojíme první proces, a když běží, přidáme další. Každé propojení přidá úsporu a ta se měsíc po měsíci sčítá.",
+      "stats": [
+        {
+          "value": "~1 050 h",
+          "label": "ušetřeno za první rok"
+        },
+        {
+          "value": "~470 000 Kč",
+          "label": "hodnota té práce"
+        }
+      ],
+      "caption": "Ušetřené hodiny, celkem",
+      "total": "~1 050 h",
+      "axis": [
+        "1. měsíc",
+        "12. měsíc"
+      ],
+      "markers": [
+        "Faktury",
+        "Objednávky",
+        "Dotazy",
+        "Reporting",
+        "Sklad",
+        "Schvalování"
+      ],
+      "note": "Ukázka pro ilustraci: každé dva měsíce jedno nové propojení, každé ušetří 25 hodin měsíčně, hodina práce za 450 Kč."
     }
   },
   "en": {
@@ -83,6 +113,36 @@
     },
     "work": {
       "kicker": "Work"
+    },
+    "growth": {
+      "title": "Savings that grow every month.",
+      "em": "grow",
+      "lead": "We do not start with a big project. We connect the first process, and once it runs, we add the next. Every connection adds a saving, and the savings add up month after month.",
+      "stats": [
+        {
+          "value": "~1,050 h",
+          "label": "saved in the first year"
+        },
+        {
+          "value": "~470,000 CZK",
+          "label": "what that work is worth"
+        }
+      ],
+      "caption": "Hours saved, in total",
+      "total": "~1,050 h",
+      "axis": [
+        "Month 1",
+        "Month 12"
+      ],
+      "markers": [
+        "Invoices",
+        "Orders",
+        "Questions",
+        "Reporting",
+        "Stock",
+        "Approvals"
+      ],
+      "note": "An illustration: one new connection every two months, each saving 25 hours a month, an hour of work at 450 CZK."
     }
   }
 }

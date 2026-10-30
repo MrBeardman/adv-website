@@ -1,0 +1,105 @@
+---
+/**
+ * Automation page: savings that grow (lab/frameless, Honza Oct 30 2026, in place of the Kesia spotlight:
+ * "here we should be general"). A glass panel: the idea (start with one process, add the next once it
+ * runs, the savings add up), two totals for the first year, and the cumulative curve with a marker for
+ * every new connection (ui/GrowthChart.astro). The figures are an illustration and say so (note under the
+ * chart). The real version of this story is on the Kesia case page.
+ */
+import GrowthChart from '../ui/GrowthChart.astro';
+import { pick, type Lang } from '../../i18n';
+import automation from '../../i18n/automation.json';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(automation, lang).growth;
+const i = t.title.lastIndexOf(t.em);
+const [before, after] = [t.title.slice(0, i), t.title.slice(i + t.em.length)];
+// hours saved a month: a new connection every two months, 25 h a month each
+const RATE = Array.from({ length: 12 }, (_, m) => 25 * (Math.floor(m / 2) + 1));
+---
+
+<section class="adv-growth adv-section" aria-labelledby="adv-growth-title">
+  <div class="adv-wrap">
+    <div class="adv-growth__panel adv-panel" data-reveal>
+      <div class="adv-growth__head">
+        <div>
+          <h2 id="adv-growth-title" class="adv-h2 adv-growth__title">
+            {before}<em class="adv-em">{t.em}</em>{after}
+          </h2>
+          <p class="adv-lead">{t.lead}</p>
+        </div>
+        <ul class="adv-growth__stats">
+          {
+            t.stats.map((st) => (
+              <li>
+                <b>{st.value}</b>
+                <span>{st.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <GrowthChart
+        rate={RATE}
+        markers={t.markers.map((label, k) => ({ m: k * 2, label }))}
+        caption={t.caption}
+        total={t.total}
+        axis={t.axis as [string, string]}
+        note={t.note}
+      />
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .adv-growth__panel {
+    display: grid;
+    gap: clamp(28px, 3.4vw, 48px);
+    padding: clamp(24px, 3.6vw, 56px);
+    border-radius: var(--adv-r-xl);
+  }
+  .adv-growth__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(20px, 4vw, 72px);
+    align-items: end;
+  }
+  .adv-growth__title {
+    margin-bottom: 16px;
+  }
+  .adv-growth__head .adv-lead {
+    max-width: 48ch;
+  }
+  .adv-growth__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-growth__stats li {
+    display: grid;
+    gap: 6px;
+    padding-left: 16px;
+    border-left: 1px solid var(--adv-line);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: var(--adv-muted);
+  }
+  .adv-growth__stats b {
+    font-family: var(--adv-mono);
+    font-weight: 500;
+    font-size: clamp(1.375rem, 1.1rem + 0.9vw, 2rem);
+    white-space: nowrap;
+    color: var(--adv-text);
+  }
+  @media (max-width: 860px) {
+    .adv-growth__head {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

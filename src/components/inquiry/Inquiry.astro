@@ -289,11 +289,10 @@ const uid = `inq-${lang}`;
     display: grid;
     gap: 22px;
   }
-  /* the steps share one panel, as tall as the tallest step of any service (scripts/inquiry.ts measures
-     them), so changing a question never moves the page; steps cross-fade inside it */
+  /* the steps share one panel, as tall as the step it shows; scripts/inquiry.ts eases the height between
+     steps and cross-fades them */
   .adv-inq__panel {
     position: relative;
-    min-height: var(--inq-h, 0px);
   }
   .adv-inq__nav.is-off {
     visibility: hidden;
@@ -421,10 +420,7 @@ const uid = `inq-${lang}`;
     color: var(--adv-ink);
     translate: 3px 0;
   }
-  /* before a service is chosen: only as tall as the four services, no navigation row */
-  .adv-inq.is-start .adv-inq__panel {
-    min-height: 0;
-  }
+  /* before a service is chosen: no navigation row */
   .adv-inq.is-start .adv-inq__nav {
     display: none;
   }

@@ -51,6 +51,14 @@
   for your business." (was "Co děláme.").
 - **"Funkční prototyp" (Oct 30, lab)** replaces "proklikatelná ukázka" / "klikací demo": software card body, its long
   text, homeNumbers short/label ("do funkčního prototypu"); EN "working prototype".
+- **Automation page "Úspora, která každý měsíc roste." (Oct 30, lab)** (`automation.json` growth): replaces the Kesia
+  spotlight. ILLUSTRATION, labelled under the chart: a new connection every 2 months, 25 h/month each, 450 Kč/h →
+  "~1 050 h" and "~470 000 Kč" in the first year; marker names Faktury, Objednávky, Dotazy, Reporting, Sklad, Schvalování.
+- **Kesia case "Úspora rostla s každým e-shopem." (Oct 30, lab)** (`kesia.json` growth): ESTIMATE from the case's own
+  results (~700 h, ~340 000 Kč a year for three shops) split per shop and month, shops 2 and 3 joining 2 and 4 months
+  after the first, ten months since launch → "~470 h", "~230 000 Kč". Honza to confirm the real connection months and
+  the launch month; the 4th shop "Shopify, ve výrobě".
+- **Inquiry (Oct 30, lab)**: multiple choice now on process, pain, need, goal and build (classify() joins the ids).
 - **Automation page demos (Oct 30, lab)** (`automation.json` uses.scene): new chips "Přiděleno" / "Assigned" and
   "Odesláno" / "Sent".
 - **Service card stats (Oct 30, lab)** (`homeNumbers.ts` → `more`, two per service). PLACEHOLDERS, replace before launch:

@@ -17,6 +17,7 @@ import Arrow from '../components/ui/Arrow.astro';
 import Node from '../components/ui/Node.astro';
 import WorkRows from '../components/WorkRows.astro';
 import CtaPanel from '../components/CtaPanel.astro';
+import GrowthChart from '../components/ui/GrowthChart.astro';
 import { pick, loc, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import work from '../i18n/work.json';
@@ -62,6 +63,9 @@ const shots = {
 };
 type Shot = { name: string; w: number; h: number; cap: string; wide?: boolean };
 const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug) };
+// hours saved a month: ~700 h a year over three shops (results below), split per shop; shops 2 and 3 joined
+// two and four months after the first; ten months since launch
+const KESIA_RATE = Array.from({ length: 10 }, (_, i) => (700 / 3 / 12) * (i < 2 ? 1 : i < 4 ? 2 : 3));
 ---
 
 <Base
@@ -248,6 +252,34 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
             ))
           }
         </div>
+      </section>
+
+      <!-- Growth: the saving shop by shop (estimated from the results below) -->
+      <section class="adv-k__stack adv-k__growth adv-panel" aria-labelledby="k-growth" data-reveal>
+        <div class="adv-k__growthHead">
+          <div>
+            <h2 id="k-growth" class="adv-k__h2">{k.growth.title}</h2>
+            <p class="adv-k__prose">{k.growth.body}</p>
+          </div>
+          <ul class="adv-k__growthStats">
+            {
+              k.growth.stats.map((st) => (
+                <li>
+                  <b>{st.value}</b>
+                  <span>{st.label}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <GrowthChart
+          rate={KESIA_RATE}
+          markers={k.growth.markers.map((label, i) => ({ m: [0, 2, 4, 99][i], label }))}
+          caption={k.growth.caption}
+          total={k.growth.total}
+          axis={k.growth.axis as [string, string]}
+          note={k.growth.note}
+        />
       </section>
 
       <!-- Results -->
@@ -714,6 +746,43 @@ const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug
     }
     .adv-k__delta {
       min-width: 0;
+    }
+  }
+  /* the saving shop by shop */
+  .adv-k__growth {
+    display: grid;
+    gap: clamp(24px, 3vw, 40px);
+    padding: clamp(24px, 3.4vw, 52px);
+  }
+  .adv-k__growthHead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(20px, 4vw, 64px);
+    align-items: end;
+  }
+  .adv-k__growthStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-k__growthStats li {
+    display: grid;
+    gap: 4px;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-k__growthStats b {
+    font-family: var(--adv-mono);
+    font-weight: 500;
+    font-size: clamp(1.375rem, 1.1rem + 0.9vw, 2rem);
+    color: var(--adv-text);
+  }
+  @media (max-width: 860px) {
+    .adv-k__growthHead {
+      grid-template-columns: 1fr;
     }
   }
 </style>

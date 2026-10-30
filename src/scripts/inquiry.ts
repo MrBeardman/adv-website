@@ -177,48 +177,6 @@ export function initInquiry(root: HTMLElement) {
     return fs;
   }
 
-  // ---- no jumping: the panel is as tall as the tallest step of any service, measured off screen at the
-  // current width, again whenever the width changes. The rail grows beside it, never past it.
-  const panel = $('[data-inq-panel]');
-  function measure() {
-    const probe = document.createElement('div');
-    probe.setAttribute('aria-hidden', 'true');
-    probe.style.cssText = 'position:absolute;inset:0 0 auto 0;visibility:hidden;pointer-events:none';
-    panel.append(probe);
-    const tallest = (els: HTMLElement[]) =>
-      els.reduce((m, el) => {
-        probe.replaceChildren(el);
-        return Math.max(m, el.offsetHeight);
-      }, 0);
-    const copies = [pickEl, contact, runEl].map((el) => {
-      const c = el.cloneNode(true) as HTMLElement;
-      c.hidden = false;
-      c.removeAttribute('data-inq-pick');
-      c.removeAttribute('data-inq-contact');
-      c.removeAttribute('data-inq-run');
-      c.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
-      return c;
-    });
-    // the run with its four rows
-    const runCopy = copies[2];
-    const ol = runCopy.querySelector('ol');
-    if (ol)
-      for (let i = 0; i < 4; i++)
-        ol.append(Object.assign(document.createElement('li'), { innerHTML: '<i></i><b>—</b><span>—</span>' }));
-    const questions = Object.keys(D.flows).flatMap((svc) => D.flows[svc].map((q) => buildQuestion(q, svc)));
-    const h = tallest([...copies, ...questions]);
-    probe.remove();
-    panel.style.setProperty('--inq-h', `${Math.ceil(h)}px`);
-
-  }
-  let lastW = 0;
-  new ResizeObserver(() => {
-    if (panel.clientWidth === lastW) return;
-    lastW = panel.clientWidth;
-    measure();
-  }).observe(panel);
-  document.fonts?.ready.then(measure);
-
   function sync() {
     const n = flow().length;
     nav.classList.toggle('is-off', step < 0 || step > n);
@@ -238,7 +196,7 @@ export function initInquiry(root: HTMLElement) {
   }
 
   // cross-fade: the current step fades out (with a slight lift), the next one fades in (with a slight
-  // rise); the panel keeps its height throughout, so nothing around it moves.
+  // rise) while the body eases to the new step's height.
   let busy: Promise<void> = Promise.resolve();
   function go(to: number) {
     busy = busy.then(() => swap(to));
@@ -255,8 +213,8 @@ export function initInquiry(root: HTMLElement) {
       ).finished;
       cur.getAnimations().forEach((a) => a.cancel());
     }
-    // lab/frameless: the form starts compact (just the services) and opens to its full height once a
-    // service is chosen; the body grows (or shrinks back) smoothly instead of jumping
+    // lab/frameless: the form is only as tall as the step it shows; when the step changes, the body grows or
+    // shrinks to the new height smoothly instead of jumping
     const h0 = body.offsetHeight;
     show(to);
     const h1 = body.offsetHeight;
