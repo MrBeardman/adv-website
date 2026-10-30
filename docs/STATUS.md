@@ -44,6 +44,10 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **Hero sub (Oct 30, lab/frameless)** (`chrome.json` hero.sub): CS "Postavíme vaší firmě jeden systém, který běží
+  za vás: automatizace, které převezmou rutinu, software na míru, rychlé prototypy a weby, které prodávají." EN "We
+  build your business one system that runs for you: automations that take over the routine, custom software, fast
+  prototypes and websites that sell." One offer, automation first; replaces "...a stavíme k tomu weby...".
 - **Inquiry flows (Oct 29)**: every question and option per service in `src/data/inquiry.ts` (CS + EN) and the flow texts in `src/i18n/inquiry.json`. Budget bands (80k / 250k / 800k Kč; EUR 3k / 10k / 30k) are a first guess: confirm. Priority weights (size .35, urgency .35, budget .3; hot ≥ 62, warm ≥ 35) in `classify()`.
 - **Showcase (Oct 29)**: "Přečíst případovou studii" (`services.json` service.readCase). Studio Fit screens are captures of the live site (Oct 29); **Kesia Praha has no flat screenshots yet**, so it shows as a plain row until it gets `screens` in caseStudies.ts.
 - **Graphite canvas (Oct 29)**: "Jak to do sebe zapadá." + its lead (`home.json` workflow.sectionTitle/sectionLead), node "Jak to zapadá" / Workflow / Běží.
