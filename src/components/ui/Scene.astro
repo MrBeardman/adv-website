@@ -5,12 +5,11 @@
  * holds a clean final frame under reduced motion.
  *
  *   ai-automation, business-optimisation, software, websites   small product demos (ui/Demo.astro)
- *   routing, assistant                                          the automation page's use cases
+ *   routing, assistant                                          the automation page's use cases (also Demo)
  *
  * Labels only, no numbers: these are illustrations, not claims.
  */
 import { pick, type Lang } from '../../i18n';
-import automation from '../../i18n/automation.json';
 import Demo from './Demo.astro';
 
 interface Props {
@@ -18,56 +17,10 @@ interface Props {
   lang: Lang;
 }
 const { kind, lang } = Astro.props;
-const a = pick(automation, lang).uses.scene;
-const DEMOS = ['ai-automation', 'business-optimisation', 'software', 'websites'];
+const DEMOS = ['ai-automation', 'business-optimisation', 'software', 'websites', 'routing', 'assistant'];
 ---
 
 <div class={`adv-scene adv-scene--${kind}`} data-live aria-hidden="true">
-  {
-    kind === 'routing' && (
-      <div class="sc-route">
-        <i class="sc-route__in" />
-        <svg viewBox="0 0 200 100" preserveAspectRatio="none">
-          <path d="M18 50 H70" />
-          <path d="M70 50 C100 50 100 18 130 18 H150" />
-          <path d="M70 50 H150" />
-          <path d="M70 50 C100 50 100 82 130 82 H150" />
-          <path class="sc-route__run sc-route__run--a" pathLength="100" d="M18 50 H70 C100 50 100 18 130 18 H150" />
-          <path class="sc-route__run sc-route__run--b" pathLength="100" d="M18 50 H70 H150" />
-          <path class="sc-route__run sc-route__run--c" pathLength="100" d="M18 50 H70 C100 50 100 82 130 82 H150" />
-        </svg>
-        <ul>
-          {a.lanes.map((l, i) => (
-            <li style={`--k:${i}`}>
-              <b />
-              {l}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-  {
-    kind === 'assistant' && (
-      <div class="sc-chat">
-        <p class="sc-chat__in">
-          <span />
-          <span />
-        </p>
-        <p class="sc-chat__typing">
-          <i />
-          <i />
-          <i />
-        </p>
-        <div class="sc-chat__draft">
-          <small>{a.draft}</small>
-          <span />
-          <span />
-          <em>{a.send}</em>
-        </div>
-      </div>
-    )
-  }
   {DEMOS.includes(kind) && <Demo kind={kind} lang={lang} />}
 </div>
 

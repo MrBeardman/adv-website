@@ -481,10 +481,10 @@ main {
   gap: 14px;
   border-radius: var(--adv-r-lg);
   padding: 24px 22px 22px;
-  background:
-    radial-gradient(120% 70% at 20% 0%, rgba(255, 255, 255, 0.07), transparent 55%),
-    linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2) 70%);
-  box-shadow: var(--adv-shadow-card);
+  background: var(--adv-glass-bg);
+  -webkit-backdrop-filter: var(--adv-glass-blur);
+  backdrop-filter: var(--adv-glass-blur);
+  box-shadow: var(--adv-glass-shadow);
   color: inherit;
   text-decoration: none;
   isolation: isolate;
@@ -568,13 +568,36 @@ a.adv-card:hover,
   transform: translate(2px, -2px);
   color: var(--adv-text);
 }
-/* plain panel with the same finish, no hover */
+/* plain panel with the same finish, no hover (lab/frameless: frosted glass) */
 .adv-panel {
   border-radius: var(--adv-r-lg);
-  background:
-    radial-gradient(120% 70% at 20% 0%, rgba(255, 255, 255, 0.06), transparent 55%),
-    linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2) 70%);
-  box-shadow: var(--adv-shadow-card);
+  background: var(--adv-glass-bg);
+  -webkit-backdrop-filter: var(--adv-glass-blur);
+  backdrop-filter: var(--adv-glass-blur);
+  box-shadow: var(--adv-glass-shadow);
+}
+.is-drift .adv-node {
+  display: none;
+}
+/* on drift pages the loose lists sit on glass too, so every section has edges (the numbers band, the
+   project timeline, the project rows) */
+.is-drift :is(.adv-numbers__grid, .adv-process__list, .adv-rows) {
+  padding: clamp(22px, 3vw, 40px);
+  border: 0;
+  border-radius: var(--adv-r-xl);
+  background: var(--adv-glass-bg);
+  -webkit-backdrop-filter: var(--adv-glass-blur);
+  backdrop-filter: var(--adv-glass-blur);
+  box-shadow: var(--adv-glass-shadow);
+}
+.is-drift .adv-process__list::before,
+.is-drift .adv-process__list::after {
+  left: calc(clamp(22px, 3vw, 40px) + 7px);
+  right: clamp(22px, 3vw, 40px);
+  top: calc(clamp(22px, 3vw, 40px) + 7px);
+}
+.is-drift .adv-rows > li:last-child {
+  border-bottom: 0;
 }
 
 /* Development builds only: dashed outline around invented numbers and TODO boxes */

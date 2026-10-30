@@ -18,6 +18,8 @@ interface Props {
   stream?: boolean | 'light';
   /** The page is a workflow canvas: sections in ui/NodeFrame.astro, wired by scripts/canvas.ts. */
   canvas?: boolean;
+  /** lab/frameless: the hero's lines drift behind the page as a slow helix (scripts/flow/drift.ts) */
+  drift?: boolean;
   noindex?: boolean;
 }
 const {
@@ -28,6 +30,7 @@ const {
   ogImage = '/media/cases/kesia/cover.webp',
   stream = false,
   canvas = false,
+  drift = false,
   noindex = false,
 } = Astro.props;
 const site = Astro.site!;
@@ -114,7 +117,7 @@ const org = {
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
     <slot name="head" />
   </head>
-  <body class:list={[{ 'is-canvas': canvas }]}>
+  <body class:list={[{ 'is-canvas': canvas, 'is-drift': drift }]}>
     <a class="skip-link screen-reader-text" href="#content">{t.nav.skip}</a>
     <div class="adv-bg" aria-hidden="true">
       <div class="adv-bg__mood adv-bg__mood--top"></div>
@@ -123,6 +126,7 @@ const org = {
       <div class="adv-bg__grain"></div>
       <div class="adv-bg__vignette"></div>
     </div>
+    {drift && <canvas class="adv-drift" data-drift aria-hidden="true" />}
     <div class="adv-progress" aria-hidden="true"></div>
     <Header lang={lang} alternates={alternates} />
     <main id="content">
@@ -133,6 +137,18 @@ const org = {
     <Footer lang={lang} alternates={alternates} />
     <script>
       import '../scripts/site.ts';
+
+      // the drifting lines: WebGL2 only, never with reduced motion (three.js is loaded on demand)
+      const drift = document.querySelector<HTMLCanvasElement>('[data-drift]');
+      const gl = (() => {
+        try {
+          return !!document.createElement('canvas').getContext('webgl2');
+        } catch {
+          return false;
+        }
+      })();
+      if (drift && gl && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+        import('../scripts/flow/drift').then(({ startDrift }) => startDrift(drift));
     </script>
   </body>
 </html>

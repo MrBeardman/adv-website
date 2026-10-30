@@ -94,16 +94,16 @@ export const HOME_NUMBERS: HomeNumber[] = [
     slug: 'software',
     // TODO: placeholder. Replace with a real delivery time from a real project.
     placeholder: true,
-    count: 14,
+    count: 7,
     suffix: { en: ' days', cs: ' dní' },
-    value: { en: '14 days', cs: '14 dní' },
+    value: { en: '7 days', cs: '7 dní' },
     label: { en: 'from first call to a working prototype', cs: 'od prvního hovoru po funkční prototyp' },
     short: { en: 'to a working prototype', cs: 'do funkčního prototypu' },
     link: { kind: 'service', slug: 'software' },
     linkLabel: { en: 'See prototypes and software', cs: 'Detail prototypů a softwaru' },
     // TODO: both placeholders (Oct 30, for the layout). Replace with figures from real projects.
     more: [
-      { placeholder: true, value: { en: '6 weeks', cs: '6 týdnů' }, short: { en: 'to the first version in use', cs: 'do první verze v provozu' } },
+      { placeholder: true, value: { en: '3 weeks', cs: '3 týdny' }, short: { en: 'to the first version in use', cs: 'do první verze v provozu' } },
       { placeholder: true, value: { en: '1', cs: '1' }, short: { en: 'system instead of five spreadsheets', cs: 'systém místo pěti tabulek' } },
     ],
   },

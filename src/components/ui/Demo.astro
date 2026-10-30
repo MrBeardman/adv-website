@@ -11,12 +11,17 @@
  *                          bookings sparkline pop out
  *   software               a board assembles from its wireframe, the cursor drags a job to the next column,
  *                          "Saved"
+ *   routing (automation page)    items pass a rule and land in their lane with the person, the urgent one
+ *                                goes for approval, "Assigned"
+ *   assistant (automation page)  a question comes in, the AI drafts the answer, a person clicks "Send",
+ *                                "Sent"
  *
  * Labels only, no numbers: illustrations, not claims. Base styles are the finished frame, which is what
  * reduced motion shows (Scene.astro turns every animation off).
  */
 import { pick, type Lang } from '../../i18n';
 import home from '../../i18n/home.json';
+import automation from '../../i18n/automation.json';
 
 interface Props {
   kind: string;
@@ -25,6 +30,7 @@ interface Props {
 const { kind, lang } = Astro.props;
 const s = pick(home, lang).values.scene;
 const d = s.demo;
+const a = pick(automation, lang).uses.scene;
 ---
 
 <span class="dm-cur" aria-hidden="true" data-kind={kind}>
@@ -171,6 +177,74 @@ const d = s.demo;
       <span class="dm-chip dm-sw__toast">
         <i />
         {d.saved}
+      </span>
+    </div>
+  )
+}
+
+{
+  kind === 'routing' && (
+    <div class="dm dm-rt">
+      <p class="dm-label dm-rt__head">{d.inbox}</p>
+      <svg class="dm-ai__wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M30 50 H44" />
+        <path d="M56 50 C62 50 60 22 66 22" />
+        <path d="M56 50 H66" />
+        <path d="M56 50 C62 50 60 78 66 78" />
+      </svg>
+      <span class="dm-rt__rule">
+        <i />
+      </span>
+      <ul class="dm-ai__lanes dm-rt__lanes">
+        {a.lanes.map((l, k) => (
+          <li style={`--k:${k}`}>
+            <b />
+            {l}
+            <em class="dm-rt__who">{l.slice(0, 1)}</em>
+          </li>
+        ))}
+      </ul>
+      {[s.rows[0], s.rows[1], s.rows[0]].map((r, k) => (
+        <span class:list={['dm-rt__item', { 'is-big': k === 2 }]} style={`--k:${k}`}>
+          <i />
+          {r}
+        </span>
+      ))}
+      <span class="dm-chip dm-rt__done">
+        <i />
+        {a.assigned}
+      </span>
+    </div>
+  )
+}
+{
+  kind === 'assistant' && (
+    <div class="dm dm-as">
+      <div class="dm-as__in">
+        <p class="dm-label">{s.rows[2]}</p>
+        <span />
+        <span />
+      </div>
+      <p class="dm-as__typing">
+        <i />
+        <i />
+        <i />
+      </p>
+      <div class="dm-as__draft">
+        <p class="dm-label dm-as__label">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 1.5l1.5 4 4 1.5-4 1.5L8 12.5 6.5 8.5l-4-1.5 4-1.5z" />
+          </svg>
+          {a.draft}
+        </p>
+        <span class="dm-as__line" style="--k:0" />
+        <span class="dm-as__line" style="--k:1" />
+        <span class="dm-as__line dm-as__line--short" style="--k:2" />
+        <span class="dm-as__send">{a.send}</span>
+      </div>
+      <span class="dm-chip dm-as__sent">
+        <i />
+        {a.sent}
       </span>
     </div>
   )
@@ -1317,6 +1391,402 @@ const d = s.demo;
     100% {
       left: 66%;
       top: 98%;
+      opacity: 0;
+    }
+  }
+
+  /* ---- routing: items pass the rule and land with the right person; the one that needs a sign-off goes
+     for approval ---- */
+  .dm-rt__head {
+    position: absolute;
+    left: 5%;
+    top: 6%;
+  }
+  .dm-rt__rule {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 26px;
+    height: 26px;
+    translate: -50% -50%;
+    rotate: 45deg;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #2a3350, #0d1020);
+    box-shadow:
+      0 0 0 1px rgba(124, 200, 255, 0.45),
+      0 0 22px rgba(38, 92, 255, 0.35);
+  }
+  .dm-rt__rule i {
+    position: absolute;
+    inset: 8px;
+    border-radius: 2px;
+    background: var(--adv-accent);
+    animation-name: dm-rt-blink;
+    animation-duration: 1.6s;
+  }
+  @keyframes dm-rt-blink {
+    50% {
+      opacity: 0.35;
+      scale: 0.7;
+    }
+  }
+  .dm-rt__lanes li {
+    left: 66%;
+    gap: 6px;
+    animation-name: dm-rt-lane;
+    animation-delay: calc(var(--k) * 1.8s);
+  }
+  .dm-rt__lanes li b {
+    animation-name: dm-rt-tick;
+  }
+  .dm-rt__who {
+    margin-left: auto;
+    display: grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-style: normal;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    color: var(--adv-ink);
+    background: linear-gradient(180deg, #fff, var(--adv-paper-2));
+  }
+  @keyframes dm-rt-lane {
+    0%,
+    27% {
+      color: var(--adv-muted);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+    30%,
+    60% {
+      color: var(--adv-text);
+      background: rgba(124, 200, 255, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.5);
+    }
+    68%,
+    100% {
+      color: var(--adv-muted);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+  }
+  @keyframes dm-rt-tick {
+    0%,
+    27% {
+      scale: 0;
+    }
+    32%,
+    60% {
+      scale: 1;
+    }
+    68%,
+    100% {
+      scale: 0;
+    }
+  }
+  .dm-rt__item {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 22%;
+    max-height: 30px;
+    padding: 0 10px;
+    translate: 0 -50%;
+    border-radius: 8px;
+    white-space: nowrap;
+    color: var(--adv-text);
+    font-weight: 600;
+    background: linear-gradient(180deg, #232838, #151925);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 6px 16px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    animation-name: dm-rt-item;
+    animation-delay: calc(var(--k) * 1.8s);
+  }
+  .dm-rt__item i {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+  }
+  .dm-rt__item.is-big i {
+    background: #f5a524; /* needs a sign-off */
+  }
+  @keyframes dm-rt-item {
+    0% {
+      left: 5%;
+      top: 50%;
+      opacity: 0;
+      scale: 0.94;
+    }
+    4%,
+    10% {
+      left: 5%;
+      top: 50%;
+      opacity: 1;
+      scale: 1;
+    }
+    17%,
+    19% {
+      left: 42%;
+      top: 50%;
+      opacity: 1;
+      scale: 0.7;
+    }
+    28% {
+      left: 66%;
+      top: calc(22% + var(--k) * 28%);
+      opacity: 0.9;
+      scale: 0.85;
+    }
+    31%,
+    100% {
+      left: 66%;
+      top: calc(22% + var(--k) * 28%);
+      opacity: 0;
+      scale: 0.85;
+    }
+  }
+  .dm-rt__done {
+    left: 5%;
+    bottom: 8%;
+    animation-name: dm-pop;
+  }
+
+  /* ---- assistant: a question comes in, the AI drafts the answer, a person sends it ---- */
+  .dm-as__in {
+    position: absolute;
+    left: 5%;
+    top: 8%;
+    width: 52%;
+    display: grid;
+    gap: 6px;
+    padding: 9px 11px 11px;
+    border-radius: 4px 12px 12px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    animation-name: dm-as-in;
+  }
+  .dm-as__in span {
+    display: block;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .dm-as__in span + span {
+    width: 64%;
+  }
+  @keyframes dm-as-in {
+    0% {
+      opacity: 0;
+      translate: 0 6px;
+    }
+    5%,
+    94% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  .dm-as__typing {
+    position: absolute;
+    right: 5%;
+    top: 44%;
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 8px 10px;
+    border-radius: 12px 4px 12px 12px;
+    background: rgba(124, 200, 255, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.35);
+    opacity: 0;
+    animation-name: dm-as-typing;
+  }
+  .dm-as__typing i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+    animation: dm-as-dot 0.9s ease-in-out infinite;
+  }
+  .dm-as__typing i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .dm-as__typing i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes dm-as-dot {
+    50% {
+      translate: 0 -3px;
+      opacity: 0.5;
+    }
+  }
+  @keyframes dm-as-typing {
+    0%,
+    9% {
+      opacity: 0;
+    }
+    12%,
+    22% {
+      opacity: 1;
+    }
+    25%,
+    100% {
+      opacity: 0;
+    }
+  }
+  .dm-as__draft {
+    position: absolute;
+    right: 5%;
+    top: 34%;
+    bottom: 8%;
+    width: 60%;
+    display: grid;
+    align-content: start;
+    gap: 7px;
+    padding: 10px 12px;
+    border-radius: 12px 4px 12px 12px;
+    background: linear-gradient(180deg, rgba(38, 92, 255, 0.16), rgba(110, 64, 230, 0.08));
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.4);
+    animation-name: dm-as-draft;
+  }
+  @keyframes dm-as-draft {
+    0%,
+    22% {
+      opacity: 0;
+      translate: 0 8px;
+    }
+    26%,
+    94% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  .dm-as__label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--adv-accent);
+  }
+  .dm-as__label svg {
+    width: 11px;
+    height: 11px;
+    fill: var(--adv-accent);
+  }
+  .dm-as__line {
+    display: block;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.28);
+    transform-origin: left;
+    animation-name: dm-as-line;
+    animation-delay: calc(var(--k) * 0.35s);
+  }
+  .dm-as__line--short {
+    width: 58%;
+  }
+  @keyframes dm-as-line {
+    0%,
+    26% {
+      scale: 0 1;
+    }
+    36%,
+    100% {
+      scale: 1 1;
+    }
+  }
+  .dm-as__send {
+    justify-self: end;
+    margin-top: 2px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--adv-ink);
+    background: var(--adv-paper);
+    animation-name: dm-as-send;
+  }
+  @keyframes dm-as-send {
+    0%,
+    55% {
+      background: var(--adv-paper);
+    }
+    57%,
+    64% {
+      background: var(--adv-accent);
+    }
+    68%,
+    100% {
+      background: var(--adv-paper);
+    }
+  }
+  .dm-as__sent {
+    left: 5%;
+    bottom: 10%;
+    animation-name: dm-pop;
+  }
+  .dm-cur[data-kind='routing'] {
+    display: none; /* routing runs on its own */
+  }
+  .dm-cur[data-kind='assistant'] {
+    animation-name: dm-cur-as;
+  }
+  .dm-cur[data-kind='assistant']::after {
+    animation: dm-click-as var(--d) infinite;
+  }
+  @keyframes dm-click-as {
+    0%,
+    55% {
+      opacity: 0;
+      scale: 0.4;
+    }
+    56% {
+      opacity: 1;
+      scale: 0.6;
+    }
+    61%,
+    100% {
+      opacity: 0;
+      scale: 1.8;
+    }
+  }
+  @keyframes dm-cur-as {
+    0%,
+    36% {
+      left: 60%;
+      top: 104%;
+      opacity: 0;
+    }
+    42% {
+      opacity: 1;
+    }
+    54% {
+      left: 86%;
+      top: 80%;
+      opacity: 1;
+      scale: 1;
+    }
+    56% {
+      scale: 0.85;
+    }
+    59% {
+      scale: 1;
+    }
+    70%,
+    100% {
+      left: 92%;
+      top: 104%;
       opacity: 0;
     }
   }

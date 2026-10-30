@@ -27,9 +27,15 @@
         }
       ],
       "scene": {
-        "lanes": ["Účetní", "Obchod", "Schválení"],
+        "lanes": [
+          "Účetní",
+          "Obchod",
+          "Schválení"
+        ],
         "draft": "Návrh odpovědi",
-        "send": "Odeslat"
+        "send": "Odeslat",
+        "assigned": "Přiděleno",
+        "sent": "Odesláno"
       }
     },
     "work": {
@@ -64,9 +70,15 @@
         }
       ],
       "scene": {
-        "lanes": ["Accounts", "Sales", "Approval"],
+        "lanes": [
+          "Accounts",
+          "Sales",
+          "Approval"
+        ],
         "draft": "Draft reply",
-        "send": "Send"
+        "send": "Send",
+        "assigned": "Assigned",
+        "sent": "Sent"
       }
     },
     "work": {

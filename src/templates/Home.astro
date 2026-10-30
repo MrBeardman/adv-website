@@ -29,8 +29,7 @@ const n = pick(home, lang).canvas;
 const inquiryId = pick(home, lang).workflow.inquiryId;
 ---
 
-<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)}>
-  <canvas class="adv-drift" data-drift aria-hidden="true"></canvas>
+<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={both(routes.home)} drift>
   <HeroFlow lang={lang} />
   <div class="adv-flow">
     <NodeFrame {...n.services} icon="racks" side="left">
@@ -54,17 +53,3 @@ const inquiryId = pick(home, lang).workflow.inquiryId;
     </NodeFrame>
   </div>
 </Base>
-
-<script>
-  // lab/frameless: the hero's lines drift on behind the page as a helix (scripts/flow/drift.ts)
-  const drift = document.querySelector<HTMLCanvasElement>('[data-drift]');
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const gl = (() => {
-    try {
-      return !!document.createElement('canvas').getContext('webgl2');
-    } catch {
-      return false;
-    }
-  })();
-  if (drift && gl && !still) import('../scripts/flow/drift').then(({ startDrift }) => startDrift(drift));
-</script>

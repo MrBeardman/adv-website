@@ -51,8 +51,10 @@
   for your business." (was "Co děláme.").
 - **"Funkční prototyp" (Oct 30, lab)** replaces "proklikatelná ukázka" / "klikací demo": software card body, its long
   text, homeNumbers short/label ("do funkčního prototypu"); EN "working prototype".
+- **Automation page demos (Oct 30, lab)** (`automation.json` uses.scene): new chips "Přiděleno" / "Assigned" and
+  "Odesláno" / "Sent".
 - **Service card stats (Oct 30, lab)** (`homeNumbers.ts` → `more`, two per service). PLACEHOLDERS, replace before launch:
-  AI "85 % dokladů bez ruční práce", "6 procesů běží samo"; Weby "+30 % tržeb z webu"; Software "6 týdnů do první verze
+  AI "85 % dokladů bez ruční práce", "6 procesů běží samo"; Weby "+30 % tržeb z webu"; Software "7 dní do funkčního prototypu" (was 14), "3 týdny do první verze
   v provozu", "1 systém místo pěti tabulek". Real: Kesia "3 e-shopy s živými cenami", "0 ručně přepsaných cen"; Studio
   Fit "2 měsíce od spuštění".
 - **Inquiry flows (Oct 29)**: every question and option per service in `src/data/inquiry.ts` (CS + EN) and the flow texts in `src/i18n/inquiry.json`. Budget bands (80k / 250k / 800k Kč; EUR 3k / 10k / 30k) are a first guess: confirm. Priority weights (size .35, urgency .35, budget .3; hot ≥ 62, warm ≥ 35) in `classify()`.
