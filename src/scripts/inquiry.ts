@@ -44,6 +44,7 @@ export function initInquiry(root: HTMLElement) {
   const next = $<HTMLButtonElement>('[data-inq-next]');
   const skip = $<HTMLButtonElement>('[data-inq-skip]');
   const status = $('[data-inq-status]');
+  const body = $('.adv-inq__body');
 
   let service = '';
   let step = -1; // -1 pick, 0..n-1 questions, n contact, n+1 run
@@ -254,7 +255,16 @@ export function initInquiry(root: HTMLElement) {
       ).finished;
       cur.getAnimations().forEach((a) => a.cancel());
     }
+    // lab/frameless: the form starts compact (just the services) and opens to its full height once a
+    // service is chosen; the body grows (or shrinks back) smoothly instead of jumping
+    const h0 = body.offsetHeight;
     show(to);
+    const h1 = body.offsetHeight;
+    if (h0 !== h1 && !reduceMotion)
+      body.animate([{ height: `${h0}px`, overflow: 'hidden' }, { height: `${h1}px`, overflow: 'hidden' }], {
+        duration: 520,
+        easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+      });
     const next = [pickEl, qEl, contact, runEl].find((el) => !el.hidden);
     if (next && !reduceMotion)
       next.animate(
@@ -268,6 +278,7 @@ export function initInquiry(root: HTMLElement) {
   function show(to: number) {
     const n = flow().length;
     step = Math.max(-1, Math.min(to, n + 1));
+    root.classList.toggle('is-start', step === -1);
     pickEl.hidden = step !== -1;
     qEl.hidden = !(step >= 0 && step < n);
     contact.hidden = step !== n;

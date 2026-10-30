@@ -181,9 +181,19 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
 
   /* ---- the open file: a navy board with a steel-foil edge, a spine on the left ---- */
   /* the graph stands on its own in the node: no inner panel (Honza, Oct 29 2026) */
+  /* lab/frameless: the graph sits on a board, a glass panel with the dot grid of an automation canvas,
+     so the space around the steps reads as the canvas and the section has edges */
   .adv-wf__file {
     position: relative;
-    padding: clamp(8px, 1vw, 16px) 0 0 clamp(14px, 1.6vw, 22px);
+    margin-top: clamp(8px, 1vw, 16px);
+    padding: clamp(28px, 3.4vw, 56px) clamp(24px, 3vw, 48px);
+    border-radius: var(--adv-r-xl);
+    background:
+      radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1.6px) 0 0 / 24px 24px,
+      var(--adv-glass-bg);
+    -webkit-backdrop-filter: var(--adv-glass-blur);
+    backdrop-filter: var(--adv-glass-blur);
+    box-shadow: var(--adv-glass-shadow);
   }
   .adv-wf__wires {
     position: absolute;
@@ -457,7 +467,7 @@ const showValue = (s: ReturnType<typeof step>) => !!s.yieldValue;
   }
   @media (max-width: 760px) {
     .adv-wf__file {
-      padding: 0 0 0 22px;
+      padding: 24px 18px 24px 34px;
     }
     .adv-wf__graph {
       grid-template-columns: 1fr;

@@ -80,13 +80,19 @@ const serviceName = (slug: string) =>
     margin: 0 0 clamp(24px, 4vw, 48px);
     padding: 0;
     display: grid;
-    gap: clamp(40px, 6vw, 96px);
+    gap: clamp(14px, 1.6vw, 22px);
   }
   .adv-show__item {
     display: grid;
     grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
     align-items: center;
     gap: clamp(24px, 4vw, 64px);
+    padding: clamp(24px, 3.4vw, 56px);
+    border-radius: var(--adv-r-xl);
+    background: var(--adv-glass-bg);
+    -webkit-backdrop-filter: var(--adv-glass-blur);
+    backdrop-filter: var(--adv-glass-blur);
+    box-shadow: var(--adv-glass-shadow);
   }
   .adv-show__item.is-flip {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);

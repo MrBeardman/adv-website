@@ -1,6 +1,7 @@
 /**
  * lab/frameless (Honza, Oct 30 2026): "on scroll a few of the hero's lines separate and accompany the
- * scroll in the background, in a helix around the content". A fixed canvas behind the page: three thin
+ * scroll in the background, in a helix around the content". A fixed canvas behind the page, slightly
+ * out of focus (CSS blur, Honza: "blurred, then the lines can be stronger"): three thin
  * ribbons of lines (the hero's colours: violet, cobalt, ice, navy) wound as a helix around the page's
  * vertical axis. Scroll moves the helix up a little slower than the content (depth) and turns it, so the
  * strands sweep from the sides across behind the frosted cards and back. At the top the strands are
@@ -28,7 +29,7 @@ const VERT = /* glsl */ `
     float t = uTime;
     // screen y from just above the top to just below the bottom, and the page position it shows
     float y = 1.15 - aLU.y * 2.3;
-    float page = uScroll * 0.72 + (1.0 - y) * 0.5; // the helix moves at 72% of the content: depth
+    float page = uScroll * 0.5 + (1.0 - y) * 0.5; // the helix moves at half the content's speed: depth
     vPage = page;
     vU = aLU.y;
     vSeed = aStrand.z;
@@ -37,10 +38,10 @@ const VERT = /* glsl */ `
     // the helix opens from the hero's exit (small, on the right) to the full width down the page
     float open = smoothstep(0.7, 2.0, page);
     float cx = mix(0.55, 0.0, open);
-    float r = mix(0.06, 1.12, open) * (1.0 + 0.1 * sin(page * 1.3 + aStrand.x * 2.0));
+    float r = mix(0.06, 1.12, open) * (1.0 + 0.1 * sin(page * 0.8 + aStrand.x * 2.0));
     // the ribbon: lines side by side, a little fanned
-    float phi = aStrand.x + aStrand.y * 0.14 + page * 2.1 + uScroll * 0.9 + t * 0.04;
-    float rr = r * (1.0 + aStrand.y * 0.05) + sin(page * 6.0 + aStrand.z * 30.0 + t * 0.3) * 0.012;
+    float phi = aStrand.x + aStrand.y * 0.14 + page * 1.1 + uScroll * 0.2 + t * 0.015;
+    float rr = r * (1.0 + aStrand.y * 0.05) + sin(page * 4.0 + aStrand.z * 30.0 + t * 0.15) * 0.012;
     float x = cx + rr * cos(phi);
     float z = sin(phi);
     vDepth = z;
@@ -71,7 +72,7 @@ const FRAG = /* glsl */ `
     vec3 col = pick < 0.25 ? violet : pick < 0.5 ? cobalt : pick < 0.75 ? ice : navy;
 
     // data pulses running down every line
-    float ph = fract(vU * 1.6 - uTime * (0.05 + vSeed * 0.04) + vSeed * 7.0);
+    float ph = fract(vU * 1.6 - uTime * (0.03 + vSeed * 0.025) + vSeed * 7.0);
     float pulse = smoothstep(0.03, 0.0, abs(ph - 0.5));
 
     // the near side brighter, the far side behind the axis dim
@@ -79,7 +80,7 @@ const FRAG = /* glsl */ `
     // only once the hero scrolls away; never over the hero itself
     float show = smoothstep(0.2, 0.8, uScroll) * smoothstep(0.75, 1.35, vPage);
     float edge = smoothstep(0.0, 0.08, vU) * (1.0 - smoothstep(0.92, 1.0, vU));
-    float a = (0.22 * depth * (0.55 + 0.6 * fract(vSeed * 9.1)) + pulse * 0.6 * depth) * show * edge;
+    float a = (0.5 * depth * (0.55 + 0.6 * fract(vSeed * 9.1)) + pulse * 0.9 * depth) * show * edge;
     gl_FragColor = vec4(col + pulse * 0.5, a);
   }
 `;
@@ -151,7 +152,7 @@ export function startDrift(canvas: HTMLCanvasElement) {
     last = now;
     uniforms.uTime.value += dt;
     // eased scroll: the helix follows the page with a soft lag
-    uniforms.uScroll.value += (target() - uniforms.uScroll.value) * (1 - Math.exp(-dt * 5));
+    uniforms.uScroll.value += (target() - uniforms.uScroll.value) * (1 - Math.exp(-dt * 2.5));
     renderer.render(scene, camera);
   };
   const start = () => {

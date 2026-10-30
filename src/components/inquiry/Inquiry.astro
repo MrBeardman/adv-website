@@ -14,6 +14,7 @@ import services from '../../i18n/services.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { FLOWS } from '../../data/inquiry';
 import { SHAPES } from '../../scripts/stack/iconShapes.js';
+import Arrow from '../ui/Arrow.astro';
 
 interface Props {
   lang: Lang;
@@ -36,6 +37,7 @@ const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? []
 const list = ENABLED_SERVICES.filter((s) => FLOWS[s.slug]).map((s) => ({
   slug: s.slug,
   title: sv.capabilities.items.find((i) => i.slug === s.slug)!.title,
+  covers: sv.capabilities.items.find((i) => i.slug === s.slug)!.covers,
   icon: ICON[s.slug] ?? 'nodes',
 }));
 // Flows for the browser, already in this language.
@@ -91,7 +93,13 @@ const uid = `inq-${lang}`;
                       )}
                     </svg>
                   </span>
-                  {s.title}
+                  <span class="adv-inq__svc-text">
+                    <span class="adv-inq__svc-name">{s.title}</span>
+                    <span class="adv-inq__svc-covers">{s.covers.join(' · ')}</span>
+                  </span>
+                  <span class="adv-inq__svc-go" aria-hidden="true">
+                    <Arrow />
+                  </span>
                 </button>
               ))
             }
@@ -347,10 +355,78 @@ const uid = `inq-${lang}`;
       translate var(--adv-fast) var(--adv-ease),
       box-shadow 300ms var(--adv-ease);
   }
+  /* the four services: big, obviously buttons (lab/frameless): a lit tile, the service with what it
+     covers, and a round arrow that fills on hover */
   .adv-inq__svc {
-    min-height: 76px;
+    min-height: 104px;
+    gap: 18px;
+    padding: 18px 18px 18px 20px;
+    border-radius: 18px;
+    background:
+      linear-gradient(165deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02));
+    box-shadow:
+      inset 1px 1px 0 rgba(196, 214, 255, 0.28),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+      0 18px 36px -22px rgba(0, 0, 0, 0.9);
+  }
+  .adv-inq__svc:hover,
+  .adv-inq__svc:focus-visible {
+    background:
+      linear-gradient(165deg, rgba(124, 200, 255, 0.12), rgba(110, 64, 230, 0.06));
+    box-shadow:
+      inset 1px 1px 0 rgba(196, 214, 255, 0.5),
+      inset 0 0 0 1px rgba(var(--adv-accent-rgb), 0.35),
+      0 24px 44px -22px rgba(0, 0, 0, 0.95);
+  }
+  .adv-inq__svc .adv-inq__svc-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+  }
+  .adv-inq__svc-text {
+    display: grid;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+  .adv-inq__svc-name {
     font-family: var(--adv-display);
-    font-size: 1.0625rem;
+    font-size: 1.1875rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .adv-inq__svc-covers {
+    font-family: var(--adv-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--adv-muted);
+  }
+  .adv-inq__svc-go {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--adv-text);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    transition:
+      background-color var(--adv-fast) var(--adv-ease),
+      color var(--adv-fast) var(--adv-ease),
+      translate var(--adv-fast) var(--adv-ease);
+  }
+  .adv-inq__svc:hover .adv-inq__svc-go,
+  .adv-inq__svc:focus-visible .adv-inq__svc-go {
+    background: var(--adv-paper);
+    color: var(--adv-ink);
+    translate: 3px 0;
+  }
+  /* before a service is chosen: only as tall as the four services, no navigation row */
+  .adv-inq.is-start .adv-inq__panel {
+    min-height: 0;
+  }
+  .adv-inq.is-start .adv-inq__nav {
+    display: none;
   }
   .adv-inq__svc:hover,
   .adv-inq__opt:hover {

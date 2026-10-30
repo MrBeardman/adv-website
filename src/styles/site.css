@@ -1090,6 +1090,10 @@ textarea.adv-input {
 .adv-drift.is-on {
   opacity: 1;
 }
+/* out of focus: the lines sit behind the content like a depth of field, so they can be brighter */
+.adv-drift {
+  filter: blur(2.5px);
+}
 
 /* ---------- A hint of the page light in inner cards (.adv-lit) ----------
  * Honza, Oct 29 2026: the multicolour background, but only as a hint, and classy. At rest a card carries
