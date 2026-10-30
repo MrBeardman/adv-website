@@ -1,7 +1,8 @@
 /**
  * Homepage hero engine (components/home/HeroFlow.astro), Honza Oct 29 2026 ("like amaze-genius, in our
  * colours"): hundreds of fine lines. On the left they are tangled and scattered (a business today); they
- * pass inside the A of the ADV mark, a solid graphite letter (the organiser at work), and leave as a smooth,
+ * pass inside the A of the ADV mark, a solid graphite letter that floats a little and catches a drifting
+ * gloss (the organiser at work), and leave as a smooth,
  * slowly twisting ribbon of four strands that fans out (a business that runs). Pulses of light travel along every line: the data going through. Colour runs violet
  * → cobalt → ice along the stream; after the gate each line keeps a colour of its own and the ribbon is
  * shaded (folds and the far side dimmer, lines at uneven strength); additive blending gives the silk sheen.
@@ -192,6 +193,13 @@ const SOLID_FRAG = /* glsl */ `
     // a slow sheen across the face
     float band = (vP.x * 0.7 + vP.y * 0.5) - (fract(uTime * 0.07) * 7.0 - 3.5);
     col += edge * 0.08 * exp(-band * band * 5.0) * (1.0 - side);
+    // gloss, like the cards' lit edge: a key light that drifts slowly, so as the letter floats its
+    // highlight slides across the face and the bevels (a broad sheen plus a tight specular point)
+    vec3 L = normalize(vec3(sin(uTime * 0.31) * 0.7, 0.55 + 0.25 * cos(uTime * 0.23), 0.75));
+    vec3 H = normalize(L + V);
+    float nh = max(dot(N, H), 0.0);
+    vec3 glossCol = mix(ice, edge, 0.6);
+    col += glossCol * (pow(nh, 7.0) * 0.07 + pow(nh, 60.0) * 0.45);
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -256,7 +264,8 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   // opening; the letter hides whatever passes behind it. The lines flare as they pass.
   const gate = new THREE.Group();
   gate.position.set(0.6, 0, 0);
-  gate.rotation.y = 0.38 + 0.8; // a three-quarter view: the A reads, the lines still pass through it
+  const GATE_RY = 0.38 + 0.8; // a three-quarter view: the A reads, the lines still pass through it
+  gate.rotation.y = GATE_RY;
   // solid and opaque: it writes depth, so the lines behind it are hidden
   const solid = new THREE.Mesh(
     gateSolid(),
@@ -317,6 +326,10 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     uniforms.uTime.value += dt;
+    // the A floats with the lines: a slow bob and sway, small enough that the lines stay in its opening
+    const ft = uniforms.uTime.value;
+    gate.position.y = Math.sin(ft * 0.55) * 0.04;
+    gate.rotation.set(Math.sin(ft * 0.33) * 0.035, GATE_RY + Math.sin(ft * 0.41) * 0.07, Math.sin(ft * 0.47) * 0.025);
     const m = uniforms.uMouse.value;
     if (m.x > 50) m.copy(aim);
     else m.lerp(aim, 1 - Math.exp(-dt * 4));
