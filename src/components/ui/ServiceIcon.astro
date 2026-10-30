@@ -1,0 +1,278 @@
+---
+/**
+ * The four service icons, drawn for their tile (lab/frameless, Honza Oct 30 2026: "more effort into the
+ * icons ... some svg animation on hover and a colour fade like the website"). A 32-unit grid, 1.75 strokes,
+ * each icon tells its service when its card (a link or button) is hovered or focused, or an ancestor has .is-hot:
+ *   ai-automation          a node sends data down its three branches
+ *   business-optimisation  three sliders settle into line
+ *   websites               a page builds itself and the cursor clicks its button
+ *   software               a stack of layers lifts apart
+ * `tone`: 'fade' = a cobalt → violet tile with a white icon, 'solid' = the paper tile with an ink icon.
+ * Reduced motion: the still icon.
+ */
+interface Props {
+  slug: string;
+  tone?: 'fade' | 'solid';
+}
+const { slug, tone = 'solid' } = Astro.props;
+---
+
+<span class:list={['adv-sicon', `adv-sicon--${tone}`, `adv-sicon--${slug}`]} aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none">
+    {
+      slug === 'ai-automation' && (
+        <>
+          <path d="M16 16 7.5 8.5M16 16l8.5-7.5M16 16v9.5" />
+          <path class="adv-sicon__flow" pathLength="10" d="M16 16 7.5 8.5" />
+          <path class="adv-sicon__flow" pathLength="10" d="M16 16l8.5-7.5" style="--d:.25s" />
+          <path class="adv-sicon__flow" pathLength="10" d="M16 16v9.5" style="--d:.5s" />
+          <circle cx="7.5" cy="8.5" r="2.6" class="adv-sicon__fill" />
+          <circle cx="24.5" cy="8.5" r="2.6" class="adv-sicon__fill" />
+          <circle cx="16" cy="25.5" r="2.6" class="adv-sicon__fill" />
+          <circle cx="16" cy="16" r="3.6" class="adv-sicon__core" />
+        </>
+      )
+    }
+    {
+      slug === 'business-optimisation' && (
+        <>
+          <path d="M5 9.5h22M5 16h22M5 22.5h22" class="adv-sicon__track" />
+          <circle cx="11" cy="9.5" r="2.9" class="adv-sicon__fill adv-sicon__knob" style="--x:10px;--d:0s" />
+          <circle cx="23" cy="16" r="2.9" class="adv-sicon__fill adv-sicon__knob" style="--x:-2px;--d:.08s" />
+          <circle cx="8" cy="22.5" r="2.9" class="adv-sicon__fill adv-sicon__knob" style="--x:13px;--d:.16s" />
+        </>
+      )
+    }
+    {
+      slug === 'websites' && (
+        <>
+          <rect x="3.5" y="5.5" width="25" height="21" rx="3.5" />
+          <path d="M3.5 11h25" />
+          <circle cx="7" cy="8.25" r=".6" class="adv-sicon__dot" />
+          <circle cx="9.4" cy="8.25" r=".6" class="adv-sicon__dot" />
+          <path class="adv-sicon__line" pathLength="10" d="M8 15.5h11" />
+          <path class="adv-sicon__line" pathLength="10" d="M8 19h7" style="--d:.12s" />
+          <rect x="17.5" y="20" width="7" height="3.6" rx="1.8" class="adv-sicon__btn" />
+          <g class="adv-sicon__cursor">
+            <path d="M0 0v7l2-1.6 1.3 2.8 1.3-.6-1.3-2.7H6z" class="adv-sicon__fill" stroke-width="1.2" />
+          </g>
+        </>
+      )
+    }
+    {
+      slug === 'software' && (
+        <>
+          <path class="adv-sicon__layer adv-sicon__layer--low" d="M5 21.5 16 27l11-5.5" />
+          <path class="adv-sicon__layer adv-sicon__layer--mid" d="M5 16.5 16 22l11-5.5" />
+          <path class="adv-sicon__layer adv-sicon__layer--top adv-sicon__fill" d="M16 5.5 27 11l-11 5.5L5 11z" />
+          <circle cx="16" cy="11" r="1.6" class="adv-sicon__spark" />
+        </>
+      )
+    }
+  </svg>
+</span>
+
+<style is:global>
+  .adv-sicon {
+    --ic: var(--adv-ink);
+    --tile: var(--adv-paper);
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+    color: var(--ic);
+    background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 10px 24px -12px rgba(0, 0, 0, 0.8);
+    transition:
+      background-position 900ms var(--adv-ease),
+      box-shadow 400ms var(--adv-ease);
+  }
+  /* the fade: brand cobalt into violet, with a cool light from the top; on hover the light travels */
+  .adv-sicon--fade {
+    --ic: #fff;
+    --tile: rgb(64, 78, 240);
+    background:
+      radial-gradient(120% 90% at 20% 0%, rgba(var(--adv-l-ice), 0.55), transparent 55%),
+      linear-gradient(135deg, rgb(var(--adv-l-cobalt)), rgb(var(--adv-l-violet)) 55%, rgb(var(--adv-l-navy)));
+    background-size:
+      100% 100%,
+      220% 220%;
+    background-position:
+      0 0,
+      0% 0%;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+      0 12px 28px -12px rgba(var(--adv-l-cobalt), 0.7);
+  }
+  :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon--fade {
+    background-position:
+      0 0,
+      100% 100%;
+  }
+  .adv-sicon svg {
+    width: 30px;
+    height: 30px;
+    overflow: visible;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    shape-rendering: geometricPrecision;
+  }
+  .adv-sicon__fill {
+    fill: var(--tile);
+  }
+  .adv-sicon--fade .adv-sicon__fill {
+    fill: rgb(70, 76, 236);
+  }
+  .adv-sicon__dot {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  /* ---- AI: data runs from the core down the branches ---- */
+  .adv-sicon__core {
+    fill: currentColor;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .adv-sicon__flow {
+    stroke-width: 2.4;
+    stroke-dasharray: 2.2 12;
+    stroke-dashoffset: 2.2;
+    opacity: 0;
+  }
+
+  /* ---- optimisation: knobs settle into one line ---- */
+  .adv-sicon__track {
+    opacity: 0.55;
+  }
+  .adv-sicon__knob {
+    transition: translate 700ms cubic-bezier(0.34, 1.3, 0.5, 1) var(--d);
+  }
+
+  /* ---- websites: the page builds, the cursor clicks ---- */
+  .adv-sicon__line {
+    stroke-dasharray: 10 10;
+    stroke-dashoffset: 0;
+  }
+  .adv-sicon__btn {
+    fill: transparent;
+    transition: fill 200ms var(--adv-ease);
+  }
+  .adv-sicon__cursor {
+    translate: 23px 24px;
+    stroke-width: 1.2;
+  }
+
+  /* ---- software: the layers lift apart ---- */
+  .adv-sicon__layer {
+    transition: translate 600ms cubic-bezier(0.34, 1.3, 0.5, 1);
+  }
+  .adv-sicon__spark {
+    fill: currentColor;
+    stroke: none;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      opacity 300ms var(--adv-ease),
+      translate 600ms cubic-bezier(0.34, 1.3, 0.5, 1);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__flow {
+      animation: adv-sicon-flow 1.4s linear var(--d, 0s) infinite;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__core {
+      animation: adv-sicon-pulse 1.4s ease-in-out infinite;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__knob {
+      translate: var(--x) 0;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__line {
+      animation: adv-sicon-draw 1.8s var(--adv-ease) var(--d, 0s) infinite;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__cursor {
+      animation: adv-sicon-cursor 1.8s var(--adv-ease) infinite;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__btn {
+      animation: adv-sicon-btn 1.8s linear infinite;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__layer--top,
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__spark {
+      translate: 0 -2.5px;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__layer--low {
+      translate: 0 2px;
+    }
+    :is(.is-hot, a:hover, a:focus-visible, button:hover, button:focus-visible) .adv-sicon__spark {
+      opacity: 1;
+      animation: adv-sicon-pulse 1.6s ease-in-out infinite;
+    }
+  }
+  @keyframes adv-sicon-flow {
+    0% {
+      opacity: 1;
+      stroke-dashoffset: 2.2;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      stroke-dashoffset: -10;
+    }
+  }
+  @keyframes adv-sicon-pulse {
+    50% {
+      scale: 1.22;
+    }
+  }
+  @keyframes adv-sicon-draw {
+    0% {
+      stroke-dashoffset: 10;
+    }
+    40%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes adv-sicon-cursor {
+    0%,
+    30% {
+      translate: 25px 26px;
+    }
+    55% {
+      translate: 21px 21.5px;
+      scale: 1;
+    }
+    62% {
+      translate: 21px 21.5px;
+      scale: 0.85;
+    }
+    70%,
+    100% {
+      translate: 21px 21.5px;
+      scale: 1;
+    }
+  }
+  @keyframes adv-sicon-btn {
+    0%,
+    60% {
+      fill: transparent;
+    }
+    64%,
+    92% {
+      fill: currentColor;
+    }
+    100% {
+      fill: transparent;
+    }
+  }
+</style>

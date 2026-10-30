@@ -44,10 +44,17 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
-- **Hero sub (Oct 30, lab/frameless)** (`chrome.json` hero.sub): CS "Postavíme vaší firmě jeden systém, který běží
-  za vás: automatizace, které převezmou rutinu, software na míru, rychlé prototypy a weby, které prodávají." EN "We
-  build your business one system that runs for you: automations that take over the routine, custom software, fast
-  prototypes and websites that sell." One offer, automation first; replaces "...a stavíme k tomu weby...".
+- **Hero sub (Oct 30, lab/frameless, chosen by Honza)** (`chrome.json` hero.sub): CS "Jeden propojený systém pro vaši
+  firmu: automatizace, software na míru, prototypy a weby, které prodávají." EN "One connected system for your business:
+  automation, custom software, prototypes and websites that sell."
+- **Services heading (Oct 30, lab)** (`services.json` capabilities.title): "Co pro vaši firmu postavíme." / "What we build
+  for your business." (was "Co děláme.").
+- **"Funkční prototyp" (Oct 30, lab)** replaces "proklikatelná ukázka" / "klikací demo": software card body, its long
+  text, homeNumbers short/label ("do funkčního prototypu"); EN "working prototype".
+- **Service card stats (Oct 30, lab)** (`homeNumbers.ts` → `more`, two per service). PLACEHOLDERS, replace before launch:
+  AI "85 % dokladů bez ruční práce", "6 procesů běží samo"; Weby "+30 % tržeb z webu"; Software "6 týdnů do první verze
+  v provozu", "1 systém místo pěti tabulek". Real: Kesia "3 e-shopy s živými cenami", "0 ručně přepsaných cen"; Studio
+  Fit "2 měsíce od spuštění".
 - **Inquiry flows (Oct 29)**: every question and option per service in `src/data/inquiry.ts` (CS + EN) and the flow texts in `src/i18n/inquiry.json`. Budget bands (80k / 250k / 800k Kč; EUR 3k / 10k / 30k) are a first guess: confirm. Priority weights (size .35, urgency .35, budget .3; hot ≥ 62, warm ≥ 35) in `classify()`.
 - **Showcase (Oct 29)**: "Přečíst případovou studii" (`services.json` service.readCase). Studio Fit screens are captures of the live site (Oct 29); **Kesia Praha has no flat screenshots yet**, so it shows as a plain row until it gets `screens` in caseStudies.ts.
 - **Graphite canvas (Oct 29)**: "Jak to do sebe zapadá." + its lead (`home.json` workflow.sectionTitle/sectionLead), node "Jak to zapadá" / Workflow / Běží.

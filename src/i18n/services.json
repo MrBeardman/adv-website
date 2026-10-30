@@ -1,7 +1,7 @@
 {
   "cs": {
     "capabilities": {
-      "title": "Co děláme.",
+      "title": "Co pro vaši firmu postavíme.",
       "items": [
         {
           "slug": "ai-automation",
@@ -39,13 +39,13 @@
         {
           "slug": "software",
           "title": "Prototypy a firemní software",
-          "body": "Nejdřív proklikatelná ukázka, pak webové aplikace a firemní software za ní.",
+          "body": "Nejdřív funkční prototyp, pak webové aplikace a firemní software za ním.",
           "covers": [
             "Prototypy",
             "Webové aplikace",
             "Firemní software"
           ],
-          "long": "Pro tu část provozu, pro kterou žádný produkt na trhu nevznikl. Začínáme prototypem, na který se dá během pár týdnů kliknout, a webovou aplikaci nebo firemní software pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední."
+          "long": "Pro tu část provozu, pro kterou žádný produkt na trhu nevznikl. Začínáme funkčním prototypem, který máte v ruce během pár týdnů, a webovou aplikaci nebo firemní software pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední."
         },
         {
           "slug": "graphic-design",
@@ -98,7 +98,7 @@
   },
   "en": {
     "capabilities": {
-      "title": "What we do.",
+      "title": "What we build for your business.",
       "items": [
         {
           "slug": "ai-automation",
@@ -136,13 +136,13 @@
         {
           "slug": "software",
           "title": "Prototypes and business software",
-          "body": "Clickable demos first, then the web apps and business software behind them.",
+          "body": "A working prototype first, then the web apps and business software behind it.",
           "covers": [
             "Prototypes",
             "Web apps",
             "Business software"
           ],
-          "long": "For the part of the operation no product on the market was made for. We start with a prototype you can click within weeks, then build the web app or business software in phases, so the first version is in use before the last one is planned."
+          "long": "For the part of the operation no product on the market was made for. We start with a working prototype within weeks, then build the web app or business software in phases, so the first version is in use before the last one is planned."
         },
         {
           "slug": "graphic-design",

@@ -8,12 +8,12 @@
 import Arrow from '../ui/Arrow.astro';
 import Node from '../ui/Node.astro';
 import Scene from '../ui/Scene.astro';
+import ServiceIcon from '../ui/ServiceIcon.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import services from '../../i18n/services.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { numberFor } from '../../data/homeNumbers';
 import { routes } from '../../data/routes';
-import { SHAPES } from '../../scripts/stack/iconShapes.js';
 
 interface Props {
   lang: Lang;
@@ -21,14 +21,8 @@ interface Props {
 const { lang } = Astro.props;
 const s = pick(services, lang);
 const DEV = import.meta.env.DEV;
-const ICON: Record<string, string> = {
-  'ai-automation': 'nodes',
-  'business-optimisation': 'racks',
-  websites: 'globe',
-  software: 'diamondCore',
-};
-type Shape = { d?: string; circle?: number[]; rect?: number[] };
-const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? [];
+// lab/frameless: two tiles in the cobalt → violet fade, two in paper, set diagonally so they can be compared
+const FADE = new Set(['ai-automation', 'software']);
 const items = ENABLED_SERVICES.map((sv) => {
   const copy = s.capabilities.items.find((i) => i.slug === sv.slug)!;
   return {
@@ -37,7 +31,6 @@ const items = ENABLED_SERVICES.map((sv) => {
     title: copy.title,
     body: copy.body,
     covers: copy.covers,
-    icon: ICON[sv.slug] ?? 'nodes',
     number: numberFor(sv.slug),
   };
 });
@@ -60,17 +53,7 @@ const items = ENABLED_SERVICES.map((sv) => {
                 <Scene kind={it.slug} lang={lang} />
               </span>
               <span class="adv-sidx__tab">
-                <svg class="adv-sidx__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  {shapes(it.icon).map((sh) =>
-                    sh.d ? (
-                      <path d={sh.d} />
-                    ) : sh.circle ? (
-                      <circle cx={sh.circle[0]} cy={sh.circle[1]} r={sh.circle[2]} />
-                    ) : sh.rect ? (
-                      <rect x={sh.rect[0]} y={sh.rect[1]} width={sh.rect[2]} height={sh.rect[3]} rx={sh.rect[4]} />
-                    ) : null,
-                  )}
-                </svg>
+                <ServiceIcon slug={it.slug} tone={FADE.has(it.slug) ? 'fade' : 'solid'} />
               </span>
               <span class="adv-sidx__name">{it.title}</span>
               <span class="adv-sidx__body">
@@ -79,11 +62,16 @@ const items = ENABLED_SERVICES.map((sv) => {
               </span>
               {it.number && (
                 <span class="adv-sidx__result">
-                  <b class:list={{ 'adv-ph': DEV && it.number.placeholder }}>{loc(it.number.value, lang)}</b>
-                  <span>{loc(it.number.short, lang)}</span>
+                  {[it.number, ...it.number.more].map((st) => (
+                    <span class="adv-sidx__stat">
+                      <b class:list={{ 'adv-ph': DEV && st.placeholder }}>{loc(st.value, lang)}</b>
+                      <span>{loc(st.short, lang)}</span>
+                    </span>
+                  ))}
                 </span>
               )}
               <span class="adv-sidx__go" aria-hidden="true">
+                <Arrow size={18} />
                 <Arrow size={18} />
               </span>
             </a>
@@ -186,20 +174,6 @@ const items = ENABLED_SERVICES.map((sv) => {
   .adv-sidx__tab {
     grid-area: tab;
     display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, var(--adv-paper), var(--adv-paper-2));
-    box-shadow: inset 0 1px 0 #fff;
-  }
-  .adv-sidx__icon {
-    width: 22px;
-    height: 22px;
-    stroke: var(--adv-ink);
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
   }
   .adv-sidx__name {
     grid-area: name;
@@ -220,45 +194,81 @@ const items = ENABLED_SERVICES.map((sv) => {
     font-size: 0.8125rem;
     color: #7f879b;
   }
+  /* the results: the headline number and two more, side by side */
   .adv-sidx__result {
     grid-area: result;
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding-top: 16px;
     border-top: 1px solid var(--adv-line);
+  }
+  .adv-sidx__stat {
+    display: grid;
+    align-content: start;
+    gap: 4px;
     font-size: 0.8125rem;
+    line-height: 1.35;
     color: var(--adv-muted);
   }
-  .adv-sidx__result b {
+  .adv-sidx__stat + .adv-sidx__stat {
+    padding-left: 16px;
+    border-left: 1px solid var(--adv-line);
+  }
+  .adv-sidx__stat b {
     font-family: var(--adv-mono);
     font-weight: 500;
     font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
     color: var(--adv-text);
   }
+  /* the go button: on hover it fills and the arrow runs through (out right, a new one in from the left),
+     always inside the circle */
   .adv-sidx__go {
     grid-area: go;
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
+    position: relative;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    border: 1px solid var(--adv-edge);
+    overflow: hidden;
     color: var(--adv-foil);
+    box-shadow: inset 0 0 0 1px var(--adv-edge);
     transition:
-      border-color var(--adv-fast) var(--adv-ease),
-      color var(--adv-fast) var(--adv-ease);
-  }
-  .adv-sidx__row:hover .adv-sidx__go {
-    border-color: var(--adv-edge-hi);
-    color: var(--adv-text);
+      background-color 350ms var(--adv-ease),
+      color 350ms var(--adv-ease),
+      box-shadow 350ms var(--adv-ease);
   }
   .adv-sidx__go .adv-arr {
-    transition: translate 250ms var(--adv-ease);
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    transition: translate 450ms var(--adv-ease);
   }
-  .adv-sidx__row:hover .adv-arr {
-    translate: 2px 0;
+  .adv-sidx__go .adv-arr + .adv-arr {
+    translate: -30px 0;
+  }
+  .adv-sidx__row:hover .adv-sidx__go,
+  .adv-sidx__row:focus-visible .adv-sidx__go {
+    background-color: var(--adv-paper);
+    color: var(--adv-ink);
+    box-shadow: inset 0 0 0 1px var(--adv-paper);
+  }
+  .adv-sidx__row:hover .adv-sidx__go .adv-arr,
+  .adv-sidx__row:focus-visible .adv-sidx__go .adv-arr {
+    translate: 30px 0;
+  }
+  .adv-sidx__row:hover .adv-sidx__go .adv-arr + .adv-arr,
+  .adv-sidx__row:focus-visible .adv-sidx__go .adv-arr + .adv-arr {
+    translate: 0 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .adv-sidx__go .adv-arr + .adv-arr {
+      display: none;
+    }
+    .adv-sidx__row:hover .adv-sidx__go .adv-arr {
+      translate: 0 0;
+    }
   }
   @media (max-width: 860px) {
     .adv-sidx__list {
