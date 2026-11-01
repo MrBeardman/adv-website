@@ -1,0 +1,274 @@
+{
+  "cs": {
+    "laser": {
+      "metaTitle": "Laser Arena Praha: rezervace, které si majitel upraví sám · ADV Innovations",
+      "title": "Rezervační systém, který si majitel konečně upraví sám.",
+      "lead": "Laser Arena Praha je laser game v centru Prahy. Její starý web uvázl na rezervačním pluginu, který už nikdo nepodporoval. Postavili jsme ho znovu tak, aby ho majitel vedl sám, a od spuštění ho podporujeme.",
+      "day": {
+        "label": "Jeden den, sloty po 20 minut",
+        "note": "Ilustrace, ne skutečné rezervace.",
+        "srNote": "Animovaná ilustrace dne rozděleného na dvacetiminutové sloty, které se postupně obsazují. Nejde o skutečné rezervace.",
+        "free": "Volné",
+        "booked": "Obsazené"
+      },
+      "facts": {
+        "client": "Klient",
+        "clientValue": "Laser Arena Praha",
+        "sector": "Obor",
+        "sectorValue": "Zábava, laser game",
+        "live": "V provozu od",
+        "liveValue": "Léta 2026",
+        "status": "Stav"
+      },
+      "problem": {
+        "title": "Web, na kterém nikdo nesměl nic měnit.",
+        "body": "Starý web běžel na Joomle, kterou si majitel kdysi postavil sám, na hostingu s bezpečnostními dírami a s databází, ve které se nikdo nevyznal. Největší past ale byl rezervační plugin. Byl tuhý, a když majitel chtěl změnu, výrobce mu napsal, že ho už nepodporuje. Zůstal uvězněný v systému, který nemohl změnit ani opustit.",
+        "locks": [
+          "Starý systém na Joomle",
+          "Hosting s bezpečnostními dírami",
+          "Databáze plná nepořádku",
+          "Plugin, který nikdo nepodporuje"
+        ]
+      },
+      "listen": {
+        "title": "Nejdřív jsme poslouchali.",
+        "body": "Nezačali jsme šablonou. Nejdřív jsme uklidili data a pak postavili to, o co majitel skutečně žádal. Zpětnou vazbu dával ve dvou kolech a zhruba 18 jeho požadavků jsme dotáhli do provozu.",
+        "counter": "požadavků majitele jsme dotáhli",
+        "items": [
+          "Skupina si vezme víc slotů za sebou",
+          "Rezervace už i pro jednoho hráče",
+          "Celá aréna pro skupiny od 8 lidí",
+          "Brigádníci vidí rezervace dne i s kontakty",
+          "Zákazník zruší rezervaci sám, odkazem z e-mailu",
+          "Po návštěvě přijde žádost o hodnocení",
+          "E-maily česky i anglicky",
+          "Poznámka k rezervaci"
+        ]
+      },
+      "flex": {
+        "title": "Postavené tak, aby se dalo měnit.",
+        "body": "Každý text, obrázek, balíček a ceník na webu upraví majitel sám v jednoduché administraci. Nečeká na vývojáře a nic nerozbije. Web je dvojjazyčný a připravený pro vyhledávače.",
+        "fieldLabel": "Nadpis stránky",
+        "fieldValue": "Vánoční firemní párty",
+        "previewLabel": "Na webu",
+        "caption": "Úprava v administraci se hned objeví na webu."
+      },
+      "booking": {
+        "title": "Rezervace běží samy.",
+        "body": "Zákazník vybere den, čas, počet hráčů a zadá kontakt. Systém hlídá, aby dvě skupiny nezabraly stejný slot, a sám pošle potvrzení zákazníkovi i majiteli. Brigádníci vidí dnešní rezervace na své obrazovce, bez telefonování.",
+        "flowLabel": "Cesta jedné rezervace",
+        "flow": [
+          {
+            "title": "Formulář",
+            "body": "Čtyři kroky, 1 až 18 hráčů"
+          },
+          {
+            "title": "Slot zamčený",
+            "body": "Dvě skupiny nezabrají stejný čas"
+          },
+          {
+            "title": "E-mail zákazníkovi",
+            "body": "Potvrzení česky nebo anglicky, s odkazem na zrušení"
+          },
+          {
+            "title": "E-mail majiteli",
+            "body": "Upozornění na novou rezervaci"
+          },
+          {
+            "title": "Obrazovka brigádníků",
+            "body": "Dnešní rezervace, bez volání"
+          }
+        ],
+        "barsLabel": "Rezervace ve stejných měsících, index",
+        "oldLabel": "Loni, starý web",
+        "oldValue": "100",
+        "newLabel": "Po spuštění nového webu",
+        "newValue": "~160"
+      },
+      "support": {
+        "title": "Podpora na roky, ne na týdny.",
+        "body": "Když majitel něco chce změnit, napíše nám a my to změníme. Podporujeme ho denně od spuštění. Přesně to, co mu výrobce starého pluginu nedal.",
+        "steps": [
+          "Spuštění, léto 2026",
+          "1. kolo úprav",
+          "2. kolo úprav",
+          "Dnes: denní podpora"
+        ]
+      },
+      "results": {
+        "title": "Co se změnilo.",
+        "items": [
+          {
+            "prefix": "~+",
+            "target": 60,
+            "suffix": " %",
+            "final": "~+60 %",
+            "label": "rezervací víc než ve stejných měsících loni na starém webu"
+          },
+          {
+            "prefix": "~",
+            "target": 10,
+            "suffix": " h",
+            "final": "~10 h",
+            "label": "týdně ušetří majiteli automatizace a úpravy webu vlastními silami"
+          },
+          {
+            "prefix": "~",
+            "target": 18,
+            "suffix": "",
+            "final": "~18",
+            "label": "požadavků majitele dotažených do provozu ve dvou kolech"
+          }
+        ],
+        "footnote": "Zaokrouhlené odhady z údajů majitele. Rezervace: měsíce od spuštění nového webu proti stejným měsícům loni na starém webu. Hodiny: průměrný týdenní čas, který majiteli ušetřila automatizace rezervací a úpravy webu bez vývojáře. Požadavky: z přehledu změn ve dvou kolech zpětné vazby."
+      },
+      "cta": "Uvízli jste v systému, který nikdo nepodporuje? Tam obvykle začínáme.",
+      "shots": {
+        "slots": "Volné, vybrané a obsazené sloty po 20 minutách, u každého zbývající místa.",
+        "group": "Počet hráčů od 1 do 18. Celá aréna se odemkne od 8 hráčů.",
+        "calendar": "Výběr data v kalendáři.",
+        "steps": "Čtyři kroky: datum, čas, hráči, kontakt.",
+        "home": "Úvodní stránka, kterou majitel upravuje sám.",
+        "pricing": "Ceník, který majitel mění bez vývojáře.",
+        "events": "Akce pro firmy, školy a oslavy, taky upravitelné.",
+        "masked": "Snímky jsou z ostrého webu laserarenapraha.cz. Kliknutím je otevřete v plné velikosti."
+      }
+    }
+  },
+  "en": {
+    "laser": {
+      "metaTitle": "Laser Arena Praha: bookings the owner can change himself · ADV Innovations",
+      "title": "A booking system the owner can finally change himself.",
+      "lead": "Laser Arena Praha is a laser tag arena in the centre of Prague. Its old website was stuck on a booking plugin nobody supported any more. We rebuilt it so the owner runs it himself, and we have supported it since launch.",
+      "day": {
+        "label": "One day, 20-minute slots",
+        "note": "Illustration, not real bookings.",
+        "srNote": "An animated illustration of one day split into twenty-minute slots that fill up one by one. Not real bookings.",
+        "free": "Free",
+        "booked": "Booked"
+      },
+      "facts": {
+        "client": "Client",
+        "clientValue": "Laser Arena Praha",
+        "sector": "Sector",
+        "sectorValue": "Entertainment, laser tag",
+        "live": "Live since",
+        "liveValue": "Summer 2026",
+        "status": "Status"
+      },
+      "problem": {
+        "title": "A site nobody was allowed to change.",
+        "body": "The old site ran on Joomla that the owner had once built himself, on hosting with security holes and a database nobody could make sense of. The real trap was the booking plugin. It was rigid, and when the owner wanted a change, its maker told him they no longer supported it. He was locked into a system he could neither change nor leave.",
+        "locks": [
+          "An old Joomla system",
+          "Hosting with security holes",
+          "A database full of mess",
+          "A plugin nobody supports"
+        ]
+      },
+      "listen": {
+        "title": "We started by listening.",
+        "body": "We didn't start from a template. We cleaned up the data first, then built what the owner actually asked for. He gave feedback in two rounds, and about 18 of his requests went into the live system.",
+        "counter": "of the owner's requests shipped",
+        "items": [
+          "A group can take several slots in a row",
+          "Booking for a single player",
+          "The whole arena for groups of 8 or more",
+          "Staff see the day's bookings with contacts",
+          "Customers cancel themselves from the email",
+          "A rating request goes out after the visit",
+          "Emails in Czech and English",
+          "A note field on every booking"
+        ]
+      },
+      "flex": {
+        "title": "Built to be changed.",
+        "body": "The owner edits every text, image, package and price list on the site himself, in a simple admin. He doesn't wait for a developer and can't break anything. The site is bilingual and ready for search engines.",
+        "fieldLabel": "Page heading",
+        "fieldValue": "Christmas company party",
+        "previewLabel": "On the site",
+        "caption": "An edit in the admin shows on the site straight away."
+      },
+      "booking": {
+        "title": "Bookings run themselves.",
+        "body": "A customer picks a day, a time and the number of players, and leaves a contact. The system makes sure two groups never get the same slot, and sends the confirmation to the customer and the owner on its own. Staff see today's bookings on their own screen, with no phone calls.",
+        "flowLabel": "How one booking travels",
+        "flow": [
+          {
+            "title": "Booking form",
+            "body": "Four steps, 1 to 18 players"
+          },
+          {
+            "title": "Slot locked",
+            "body": "Two groups never get the same time"
+          },
+          {
+            "title": "Email to the customer",
+            "body": "Confirmation in Czech or English, with a cancel link"
+          },
+          {
+            "title": "Email to the owner",
+            "body": "A heads-up about the new booking"
+          },
+          {
+            "title": "Staff screen",
+            "body": "Today's bookings, no calls needed"
+          }
+        ],
+        "barsLabel": "Bookings in the same months, indexed",
+        "oldLabel": "Last year, old site",
+        "oldValue": "100",
+        "newLabel": "After the new site launched",
+        "newValue": "~160"
+      },
+      "support": {
+        "title": "Support for years, not weeks.",
+        "body": "When the owner wants something changed, he tells us and we change it. We have supported him daily since launch. Exactly what the old plugin's maker didn't give him.",
+        "steps": [
+          "Launch, summer 2026",
+          "1st round of changes",
+          "2nd round of changes",
+          "Today: daily support"
+        ]
+      },
+      "results": {
+        "title": "What changed.",
+        "items": [
+          {
+            "prefix": "~+",
+            "target": 60,
+            "suffix": "%",
+            "final": "~+60%",
+            "label": "more bookings than in the same months last year on the old site"
+          },
+          {
+            "prefix": "~",
+            "target": 10,
+            "suffix": " h",
+            "final": "~10 h",
+            "label": "a week saved by automation and by editing the site himself"
+          },
+          {
+            "prefix": "~",
+            "target": 18,
+            "suffix": "",
+            "final": "~18",
+            "label": "of the owner's requests shipped in two rounds of changes"
+          }
+        ],
+        "footnote": "Rounded estimates from the owner's figures. Bookings: the months since the new site launched against the same months last year on the old site. Hours: the average weekly time saved by automated booking and by editing the site without a developer. Requests: from the change list of two feedback rounds."
+      },
+      "cta": "Stuck in a system nobody supports? That is usually where we start.",
+      "shots": {
+        "slots": "Free, selected and taken 20-minute slots, with the places left on each.",
+        "group": "From 1 to 18 players. The whole arena unlocks from 8.",
+        "calendar": "Picking a date in the calendar.",
+        "steps": "Four steps: date, time, players, contact.",
+        "home": "The homepage, which the owner edits himself.",
+        "pricing": "The price list, which the owner changes without a developer.",
+        "events": "Events for companies, schools and parties, editable too.",
+        "masked": "Screenshots are from the live site laserarenapraha.cz. Select one to open it full size."
+      }
+    }
+  }
+}

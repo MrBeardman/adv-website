@@ -44,6 +44,13 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **Laser Arena Praha case (Nov 1, new page)** (`src/i18n/laser.json`, CS + EN, `templates/LaserArenaPraha.astro`, case in
+  `caseStudies.ts`, published): title "Rezervační systém, který si majitel konečně upraví sám.", lead, six sections (web nobody
+  could change, we listened, built to be changed, bookings run themselves, support for years, what changed). Numbers are
+  the owner's rounded estimates told to Honza: ~+60 % bookings (months since launch vs the same months last year on the old
+  site), ~10 h a week saved; "~18 requests" is counted from the booking plugin's changelog (two feedback rounds). The index
+  bar (100 / ~160) is the same 60 % drawn to scale. Launch is "léto 2026" (exact month unconfirmed). Open: client quote,
+  screenshots (booking steps, staff screen, admin tabs, old Joomla site), confirm what the ~10 h consists of.
 - **Service pages (Oct 30)** (`src/i18n/serviceDeep.json`, CS + EN, used by `templates/Service.astro` for Weby,
   Optimalizace firmy, Prototypy a software): section labels (Jak začínáme, Kde to uniká, Co stavíme, Realizace,
   Poptávka), per service "how we start" (title, lead, 3 steps), "where it leaks" (title, lead, 6 problems with what

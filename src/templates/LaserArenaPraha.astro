@@ -1,0 +1,873 @@
+---
+/**
+ * /realizace/laser-arena-praha/ (EN /en/work/laser-arena-praha/): the Laser Arena Praha success story.
+ * Copy: i18n/laser.json. Same shape as the Kesia page: one point and one number per section, one authored
+ * moment per view, each played once when it scrolls in ([data-play], site.ts):
+ *   hero      one day of 20-minute slots fills up (illustration, labelled as such)
+ *   problem   four things lock one after another
+ *   listen    the owner's requests tick off, the count climbs to 18
+ *   flex      a field is typed in the admin and the page heading appears
+ *   booking   one booking's path lights up node by node; two bars grow to scale (100 / ~160)
+ *   support   a timeline draws from launch to today
+ *   results   three numbers count up
+ * Numbers are the owner's rounded estimates (Honza, Nov 1 2026) and keep their footnote. Reduced motion / no JS:
+ * every view shows its final state.
+ */
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import Node from '../components/ui/Node.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, loc, type Lang } from '../i18n';
+import work from '../i18n/work.json';
+import services from '../i18n/services.json';
+import laser from '../i18n/laser.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { type CaseStudy } from '../data/caseStudies';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  c: CaseStudy;
+}
+const { lang, c } = Astro.props;
+const w = pick(work, lang).case;
+const s = pick(services, lang);
+const k = pick(laser, lang).laser;
+const stateLabel = (w.state as Record<string, string>)[c.detail!.state];
+const serviceNames = c.services
+  .filter((sl) => ENABLED_SERVICES.some((x) => x.slug === sl))
+  .map((sl) => s.capabilities.items.find((i) => i.slug === sl)!.title);
+const meta = [loc(c.sector, lang), c.year, ...serviceNames].filter(Boolean).join(' · ');
+const IMG = '/media/cases/laser';
+type Shot = { name: string; cap: string; wide?: boolean };
+const shot = (name: string, cap: string, wide = false): Shot => ({ name, cap, wide });
+const bookingShots = [
+  shot('02-slots', k.shots.slots, true),
+  shot('03-group', k.shots.group),
+  shot('04-calendar', k.shots.calendar),
+];
+const siteShots = [
+  shot('07-home', k.shots.home, true),
+  shot('05-pricing', k.shots.pricing),
+  shot('06-events', k.shots.events),
+];
+const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug) };
+// 10:00 to 22:00 in 20-minute slots = 36; a fixed illustrative pattern, not data
+const SLOTS = 36;
+const BOOKED = new Set([1, 2, 3, 5, 8, 9, 12, 13, 14, 15, 18, 20, 21, 24, 25, 26, 27, 28, 31, 32, 34]);
+---
+
+<Base
+  lang={lang}
+  title={k.metaTitle}
+  description={loc(c.outcome, lang)}
+  alternates={alternates}
+  ogImage={`${IMG}/cover.webp`}
+>
+  <article class="adv-l">
+    <header class="adv-l__hero">
+      <div class="adv-pagehead__grid" aria-hidden="true"></div>
+      <div class="adv-wrap adv-l__heroGrid">
+        <div class="adv-l__heroCopy">
+          <a class="adv-back" href={routes.work(lang)}><Arrow dir="left" />{w.back}</a>
+          <h1 class="adv-l__title" data-lines>
+            <Node /><span class="adv-line"><span>{k.title}</span></span>
+          </h1>
+          <p class="adv-meta adv-l__meta">{meta}</p>
+          <p class="adv-lead" data-reveal style="--i:2">{k.lead}</p>
+        </div>
+        <div class="adv-l__day adv-panel" data-play data-reveal style="--i:2">
+          <p class="adv-label">{k.day.label}</p>
+          <p class="screen-reader-text">{k.day.srNote}</p>
+          <div class="adv-l__slots" aria-hidden="true">
+            {
+              Array.from({ length: SLOTS }, (_, i) => (
+                <i
+                  class:list={{ 'is-booked': BOOKED.has(i) }}
+                  style={`--k:${BOOKED.has(i) ? [...BOOKED].indexOf(i) : 0}`}
+                />
+              ))
+            }
+          </div>
+          <p class="adv-l__legend" aria-hidden="true">
+            <span><i></i>{k.day.free}</span><span><i class="is-booked"></i>{k.day.booked}</span>
+          </p>
+          <p class="adv-l__note">{k.day.note}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="adv-wrap">
+      <dl class="adv-facts" data-reveal>
+        <div><dt>{k.facts.client}</dt><dd>{k.facts.clientValue}</dd></div>
+        <div><dt>{k.facts.sector}</dt><dd>{k.facts.sectorValue}</dd></div>
+        <div><dt>{k.facts.live}</dt><dd>{k.facts.liveValue}</dd></div>
+        <div><dt>{k.facts.status}</dt><dd>{stateLabel}</dd></div>
+      </dl>
+
+      <!-- Problem -->
+      <section class="adv-l__split" aria-labelledby="l-problem">
+        <div data-reveal>
+          <h2 id="l-problem" class="adv-l__h2">{k.problem.title}</h2>
+          <p class="adv-l__prose">{k.problem.body}</p>
+        </div>
+        <ul class="adv-l__locks adv-panel" data-play>
+          {
+            k.problem.locks.map((t, i) => (
+              <li style={`--k:${i}`}>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <rect
+                    x="5"
+                    y="11"
+                    width="14"
+                    height="9"
+                    rx="2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    class="adv-l__shackle"
+                    d="M8 11V8a4 4 0 0 1 8 0v3"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <span>{t}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- Listening -->
+      <section class="adv-l__split" aria-labelledby="l-listen">
+        <div data-reveal>
+          <h2 id="l-listen" class="adv-l__h2">{k.listen.title}</h2>
+          <p class="adv-l__prose">{k.listen.body}</p>
+        </div>
+        <div class="adv-l__listen adv-panel" data-play>
+          <p class="adv-l__big">
+            <span data-count="18" data-prefix="~" aria-hidden="true">~18</span>
+            <span class="screen-reader-text">~18</span>
+            <span class="adv-l__bigLabel">{k.listen.counter}</span>
+          </p>
+          <ul>
+            {
+              k.listen.items.map((t, i) => (
+                <li style={`--k:${i}`}>
+                  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                    <path
+                      d="M3 8.5l3.2 3.2L13 4.8"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <!-- Flexible -->
+      <section class="adv-l__split" aria-labelledby="l-flex">
+        <div data-reveal>
+          <h2 id="l-flex" class="adv-l__h2">{k.flex.title}</h2>
+          <p class="adv-l__prose">{k.flex.body}</p>
+        </div>
+        <figure class="adv-l__edit adv-panel" data-play style={`--n:${k.flex.fieldValue.length}`}>
+          <div class="adv-l__field">
+            <span class="adv-label">{k.flex.fieldLabel}</span>
+            <span class="adv-l__input"><b>{k.flex.fieldValue}</b></span>
+          </div>
+          <div class="adv-l__arrow" aria-hidden="true"></div>
+          <div class="adv-l__preview">
+            <span class="adv-label">{k.flex.previewLabel}</span>
+            <strong>{k.flex.fieldValue}</strong>
+          </div>
+          <figcaption>{k.flex.caption}</figcaption>
+        </figure>
+      </section>
+
+      <section class="adv-l__stack" aria-label={k.shots.home}>
+        <div class="adv-l__gallery">
+          {
+            siteShots.map((sh) => (
+              <figure class:list={['adv-l__shot', { 'is-wide': sh.wide }]} data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp 1440w`}
+                    sizes={
+                      sh.wide
+                        ? '(min-width: 1240px) 1200px, 100vw'
+                        : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'
+                    }
+                    width="1440"
+                    height="731"
+                    alt={sh.cap}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Booking -->
+      <section class="adv-l__stack" aria-labelledby="l-booking">
+        <div class="adv-l__stackHead" data-reveal>
+          <h2 id="l-booking" class="adv-l__h2">{k.booking.title}</h2>
+          <p class="adv-l__prose">{k.booking.body}</p>
+        </div>
+        <div class="adv-l__flowWrap">
+          <p class="adv-label">{k.booking.flowLabel}</p>
+          <ol class="adv-l__flow" data-play>
+            {
+              k.booking.flow.map((st, i) => (
+                <li style={`--k:${i}`}>
+                  <span class="adv-l__idx" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <strong>{st.title}</strong>
+                  <span>{st.body}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+        <figure class="adv-l__bars adv-panel" data-play>
+          <figcaption class="adv-label">{k.booking.barsLabel}</figcaption>
+          <div class="adv-l__barRow">
+            <div class="adv-l__barHead">
+              <span>{k.booking.oldLabel}</span><strong>{k.booking.oldValue}</strong>
+            </div>
+            <!-- 100 / 160 of the new bar, to scale. -->
+            <div class="adv-l__track"><i style="--w:0.625"></i></div>
+          </div>
+          <div class="adv-l__barRow">
+            <div class="adv-l__barHead">
+              <span>{k.booking.newLabel}</span><strong>{k.booking.newValue}</strong>
+            </div>
+            <div class="adv-l__track"><i class="is-new" style="--w:1"></i></div>
+          </div>
+        </figure>
+        <div class="adv-l__gallery">
+          {
+            bookingShots.map((sh) => (
+              <figure class:list={['adv-l__shot', { 'is-wide': sh.wide }]} data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp 1440w`}
+                    sizes={
+                      sh.wide
+                        ? '(min-width: 1240px) 1200px, 100vw'
+                        : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'
+                    }
+                    width="1440"
+                    height="731"
+                    alt={sh.cap}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+        <p class="adv-l__masked">{k.shots.masked}</p>
+      </section>
+
+      <!-- Support -->
+      <section class="adv-l__stack" aria-labelledby="l-support">
+        <div class="adv-l__stackHead" data-reveal>
+          <h2 id="l-support" class="adv-l__h2">{k.support.title}</h2>
+          <p class="adv-l__prose">{k.support.body}</p>
+        </div>
+        <ol class="adv-l__timeline adv-panel" data-play>
+          {
+            k.support.steps.map((t, i) => (
+              <li style={`--k:${i}`}>
+                <i aria-hidden="true" />
+                <span>{t}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <!-- Results -->
+      <section class="adv-l__stack" aria-labelledby="l-results">
+        <h2 id="l-results" class="adv-l__h2" data-reveal>{k.results.title}</h2>
+        <ul class="adv-l__results">
+          {
+            k.results.items.map((r, i) => (
+              <li class="adv-panel" data-reveal style={`--i:${i}`}>
+                <p class="adv-l__resultValue">
+                  <span
+                    data-count={r.target}
+                    data-prefix={r.prefix}
+                    data-suffix={r.suffix}
+                    data-delay={i * 120}
+                    aria-hidden="true"
+                  >
+                    {r.final}
+                  </span>
+                  <span class="screen-reader-text">{r.final}</span>
+                </p>
+                <p class="adv-l__resultLabel">{r.label}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="adv-l__footnote">{k.results.footnote}</p>
+      </section>
+
+      <p class="adv-l__ctaLine" data-reveal>{k.cta}</p>
+    </div>
+  </article>
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-l__hero {
+    position: relative;
+    padding: calc(var(--adv-header-h) + clamp(48px, 7vw, 100px)) 0 clamp(40px, 5vw, 64px);
+    overflow: clip;
+  }
+  .adv-l__hero .adv-pagehead__grid {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px;
+    -webkit-mask-image: radial-gradient(80% 90% at 75% 20%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(80% 90% at 75% 20%, #000 20%, transparent 75%);
+  }
+  .adv-l__heroGrid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(28px, 5vw, 72px);
+  }
+  .adv-l__title {
+    max-width: 16ch;
+    margin-bottom: 26px;
+    font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
+    letter-spacing: -0.035em;
+  }
+  .adv-l__meta {
+    margin: -8px 0 18px;
+  }
+
+  /* hero: a day of slots */
+  .adv-l__day {
+    display: grid;
+    gap: 14px;
+    padding: 24px;
+  }
+  .adv-l__slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+    gap: 6px;
+  }
+  .adv-l__slots i,
+  .adv-l__legend i {
+    display: block;
+    aspect-ratio: 1.4;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  .adv-l__slots i.is-booked,
+  .adv-l__legend i.is-booked {
+    background: rgba(124, 200, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.7);
+  }
+  .js .adv-l__day.is-armed .adv-l__slots i.is-booked {
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition:
+      background 350ms var(--adv-ease),
+      box-shadow 350ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 110ms);
+  }
+  .js .adv-l__day.is-playing .adv-l__slots i.is-booked {
+    background: rgba(124, 200, 255, 0.55);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.7);
+  }
+  .adv-l__legend {
+    display: flex;
+    gap: 18px;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-l__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .adv-l__legend i {
+    width: 14px;
+    aspect-ratio: 1;
+  }
+  .adv-l__note {
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+
+  .adv-l__h2 {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.625rem);
+    max-width: 20ch;
+  }
+  .adv-l__prose {
+    margin-top: 18px;
+    max-width: 58ch;
+    color: var(--adv-muted);
+    font-size: 1.0625rem;
+  }
+  .adv-l__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(28px, 5vw, 72px);
+    padding: clamp(56px, 7vw, 100px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+  .adv-l__stack {
+    display: grid;
+    gap: 28px;
+    padding: clamp(56px, 7vw, 100px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+
+  /* problem: four locks */
+  .adv-l__locks {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 12px 24px;
+    list-style: none;
+  }
+  .adv-l__locks li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--adv-line);
+    font-weight: 500;
+  }
+  .adv-l__locks li:last-child {
+    border-bottom: 0;
+  }
+  .adv-l__locks svg {
+    flex: none;
+    color: var(--adv-accent);
+  }
+  .adv-l__shackle {
+    transform-origin: 16px 11px;
+  }
+  .js .adv-l__locks.is-armed .adv-l__shackle {
+    transform: translateY(-3px) rotate(-18deg);
+    transition: transform 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 260ms);
+  }
+  .js .adv-l__locks.is-playing .adv-l__shackle {
+    transform: none;
+  }
+  .js .adv-l__locks.is-armed li svg {
+    color: var(--adv-muted);
+    transition: color 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 260ms);
+  }
+  .js .adv-l__locks.is-playing li svg {
+    color: var(--adv-accent);
+  }
+
+  /* listening: the owner's requests */
+  .adv-l__listen {
+    padding: 24px;
+  }
+  .adv-l__big {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 18px;
+  }
+  .adv-l__big > span:first-child {
+    font-family: var(--adv-display);
+    font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--adv-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-l__bigLabel {
+    color: var(--adv-muted);
+  }
+  .adv-l__listen ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-l__listen li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9375rem;
+  }
+  .adv-l__listen li svg {
+    flex: none;
+    color: var(--adv-accent);
+  }
+  .js .adv-l__listen.is-armed li {
+    opacity: 0.25;
+    transition: opacity 350ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 190ms);
+  }
+  .js .adv-l__listen.is-playing li {
+    opacity: 1;
+  }
+
+  /* flexible: edit in the admin, see it on the site */
+  .adv-l__edit {
+    display: grid;
+    gap: 16px;
+    padding: 26px;
+  }
+  .adv-l__field,
+  .adv-l__preview {
+    display: grid;
+    gap: 8px;
+  }
+  .adv-l__input {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.4);
+  }
+  .adv-l__input b {
+    display: block;
+    width: calc(var(--n) * 1ch);
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--adv-mono);
+    font-size: 0.9375rem;
+    font-weight: 400;
+  }
+  .adv-l__arrow {
+    height: 22px;
+    width: 1px;
+    margin-left: 18px;
+    background: linear-gradient(var(--adv-accent), transparent);
+  }
+  .adv-l__preview {
+    padding: 18px;
+    border-radius: 12px;
+    background: linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2));
+    box-shadow: var(--adv-shadow-card);
+  }
+  .adv-l__preview strong {
+    font-family: var(--adv-display);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    letter-spacing: -0.02em;
+  }
+  .adv-l__edit figcaption {
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .js .adv-l__edit.is-armed .adv-l__input b {
+    width: 0;
+  }
+  .js .adv-l__edit.is-playing .adv-l__input b {
+    width: calc(var(--n) * 1ch);
+    transition: width 1500ms steps(var(--n)) 200ms;
+  }
+  .js .adv-l__edit.is-armed .adv-l__preview,
+  .js .adv-l__edit.is-armed .adv-l__arrow {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  .js .adv-l__edit.is-playing .adv-l__preview,
+  .js .adv-l__edit.is-playing .adv-l__arrow {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity 500ms var(--adv-ease) 1800ms,
+      translate 500ms var(--adv-ease) 1800ms;
+  }
+
+  /* booking: the path of one booking */
+  .adv-l__flowWrap {
+    display: grid;
+    gap: 16px;
+  }
+  .adv-l__flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-l__flow li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 18px 16px;
+    border-radius: 14px;
+    background: linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2));
+    box-shadow: var(--adv-shadow-card);
+    font-size: 0.875rem;
+  }
+  .adv-l__flow li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    width: 12px;
+    height: 1px;
+    background: var(--adv-accent);
+  }
+  .adv-l__flow li > span:last-child {
+    color: var(--adv-muted);
+  }
+  .adv-l__idx {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .js .adv-l__flow.is-armed li {
+    opacity: 0;
+    translate: 0 10px;
+    transition:
+      opacity 450ms var(--adv-ease),
+      translate 450ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 220ms);
+  }
+  .js .adv-l__flow.is-playing li {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .adv-l__bars {
+    display: grid;
+    gap: 22px;
+    padding: 26px;
+  }
+  .adv-l__barHead {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 0.9375rem;
+    color: var(--adv-muted);
+  }
+  .adv-l__barHead strong {
+    color: var(--adv-text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .adv-l__track {
+    height: 12px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+  .adv-l__track i {
+    display: block;
+    height: 100%;
+    width: calc(var(--w) * 100%);
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.16));
+    transform-origin: left;
+  }
+  .adv-l__track i.is-new {
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.6));
+  }
+  .js .adv-l__bars.is-armed .adv-l__track i {
+    transform: scaleX(0);
+    transition: transform 1100ms var(--adv-ease);
+  }
+  .js .adv-l__bars.is-armed .adv-l__barRow + .adv-l__barRow .adv-l__track i {
+    transition-delay: 180ms;
+  }
+  .js .adv-l__bars.is-playing .adv-l__track i {
+    transform: none;
+  }
+
+  /* support: launch to today */
+  .adv-l__timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 36px 26px 26px;
+    list-style: none;
+  }
+  .adv-l__timeline::before {
+    content: '';
+    position: absolute;
+    top: 42px;
+    left: 32px;
+    right: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.25));
+    transform-origin: left;
+  }
+  .adv-l__timeline li {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    font-size: 0.9375rem;
+  }
+  .adv-l__timeline li i {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+    box-shadow: 0 0 0 4px rgba(124, 200, 255, 0.15);
+  }
+  .adv-l__timeline li:last-child span {
+    font-weight: 600;
+  }
+  .js .adv-l__timeline.is-armed::before {
+    transform: scaleX(0);
+  }
+  .js .adv-l__timeline.is-playing::before {
+    transform: none;
+    transition: transform 1500ms var(--adv-ease);
+  }
+  .js .adv-l__timeline.is-armed li {
+    opacity: 0;
+  }
+  .js .adv-l__timeline.is-playing li {
+    opacity: 1;
+    transition: opacity 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 380ms);
+  }
+
+  .adv-l__gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .adv-l__shot.is-wide {
+    grid-column: 1 / -1;
+  }
+  .adv-l__shot a {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      var(--adv-shadow-card),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .adv-l__shot img {
+    width: 100%;
+    height: auto;
+    transition: transform 700ms var(--adv-ease);
+  }
+  .adv-l__shot a:hover img {
+    transform: scale(1.015);
+  }
+  .adv-l__shot figcaption {
+    margin-top: 10px;
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .adv-l__masked {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+
+  .adv-l__results {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-l__results li {
+    padding: 26px;
+  }
+  .adv-l__resultValue {
+    font-family: var(--adv-display);
+    font-size: clamp(2.5rem, 1.8rem + 2vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-l__resultLabel {
+    margin-top: 12px;
+    color: var(--adv-muted);
+  }
+  .adv-l__footnote {
+    max-width: 90ch;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-l__ctaLine {
+    padding: clamp(48px, 6vw, 80px) 0 0;
+    font-family: var(--adv-display);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 600;
+    max-width: 30ch;
+  }
+
+  @media (max-width: 1000px) {
+    .adv-l__flow {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .adv-l__flow li:nth-child(3n)::after {
+      display: none;
+    }
+  }
+  @media (max-width: 860px) {
+    .adv-l__heroGrid,
+    .adv-l__split,
+    .adv-l__gallery,
+    .adv-l__results {
+      grid-template-columns: 1fr;
+    }
+    .adv-l__timeline {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 22px;
+    }
+    .adv-l__timeline::before {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-l__flow {
+      grid-template-columns: 1fr;
+    }
+    .adv-l__flow li::after {
+      display: none;
+    }
+  }
+</style>

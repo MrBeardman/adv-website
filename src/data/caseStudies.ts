@@ -20,7 +20,7 @@ export const TODO = 'TODO';
 
 export type CaseStatus = 'published' | 'draft' | 'placeholder';
 export interface CaseDetail {
-  layout?: 'kesia-live-pricing';
+  layout?: 'kesia-live-pricing' | 'laser-arena-praha';
   situation?: Localized;
   approach?: { title: Localized; body: Localized }[];
   results?: { value: string; label: Localized }[];
@@ -97,7 +97,8 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: 'studio-fit-uhrineves',
-    status: 'published',
+    // Hidden for now (Honza, Nov 1 2026). Back with 'published'.
+    status: 'draft',
     client: { en: 'Studio Fit Uhříněves' },
     sector: { en: 'Fitness', cs: 'Fitness' },
     year: null,
@@ -111,13 +112,22 @@ export const CASE_STUDIES: CaseStudy[] = [
     screens: { desktop: '/media/cases/studio/desktop.webp', mobile: '/media/cases/studio/mobile.webp' },
   },
   {
+    /* Custom WordPress site + booking system, the owner edits everything himself. Own page layout
+     * (templates/LaserArenaPraha.astro), copy in i18n/laser.json. Numbers are the owner's rounded estimates
+     * (~+60% bookings vs the same months last year, ~10 h a week saved); client approved, quote still to come. */
     slug: 'laser-arena-praha',
-    status: 'draft',
+    status: 'published',
     client: { en: 'Laser Arena Praha' },
     sector: { en: 'Entertainment', cs: 'Zábava' },
-    year: null,
-    services: ['websites'],
-    outcome: { en: TODO },
+    year: 2026,
+    services: ['websites', 'software'],
+    outcome: {
+      en: 'A booking system the owner runs himself: about 60% more bookings and around 10 hours a week saved.',
+      cs: 'Rezervační systém, který majitel vede sám: zhruba o 60 % víc rezervací a kolem 10 hodin týdně ušetřeno.',
+    },
+    image: '/media/cases/laser/cover.webp',
+    screens: { desktop: '/media/cases/laser/07-home.webp', float: '/media/cases/laser/02-slots-760.webp' },
+    detail: { layout: 'laser-arena-praha', state: 'ongoing-support' },
   },
   {
     slug: 'zive-vinohrady',
