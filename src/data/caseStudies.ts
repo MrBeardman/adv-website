@@ -126,7 +126,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       cs: 'Rezervační systém, který majitel vede sám: zhruba o 60 % víc rezervací a kolem 10 hodin týdně ušetřeno.',
     },
     image: '/media/cases/laser/cover.webp',
-    screens: { desktop: '/media/cases/laser/07-home.webp', float: '/media/cases/laser/02-slots-760.webp' },
+    screens: { desktop: '/media/cases/laser/08-home-laptop.webp', float: '/media/cases/laser/02-slots-760.webp' },
     detail: { layout: 'laser-arena-praha', state: 'ongoing-support' },
   },
   {
