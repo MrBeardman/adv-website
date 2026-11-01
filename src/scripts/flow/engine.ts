@@ -176,6 +176,34 @@ const SOLID_FRAG = /* glsl */ `
   varying vec3 vObjN;
   varying vec3 vP;
   varying vec3 vView;
+
+  // ---- surface texture (Honza, Nov 1 2026: "the A looks flat"): brushed graphite streaks, fine grain and a
+  // soft studio reflection sliding across the face. Procedural, and each layer fades out by pixel size
+  // (fwidth) so a small A (phones) stays calm, not shimmery. Faceted planes and an etched grid were tried
+  // and dropped (facets are the alternative to the brush; they do not combine well).
+  const float BRUSH = 0.55;   // streak contrast and how much the highlight stretches along them
+  const float GRAIN = 0.022;  // fine noise, like the page grain
+  const float REFL = 1.0;     // softbox reflection strength
+  float h11(float p) {
+    p = fract(p * 0.1031);
+    p *= p + 33.33;
+    p *= p + p;
+    return fract(p);
+  }
+  float h21(vec2 p) {
+    vec3 q = fract(vec3(p.xyx) * 0.1031);
+    q += dot(q, q.yzx + 33.33);
+    return fract((q.x + q.y) * q.z);
+  }
+  // 1D value noise across the brush direction, slowly wandering along it so streaks are not ruler-straight
+  float streak(vec2 p) {
+    float x = p.x + sin(p.y * 1.3 + p.x * 0.2) * 0.22;
+    float i = floor(x);
+    float f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(h11(i), h11(i + 1.0), f);
+  }
+
   void main() {
     vec3 N = normalize(vN);
     vec3 V = normalize(vView);
@@ -202,13 +230,39 @@ const SOLID_FRAG = /* glsl */ `
     // a slow sheen across the face
     float band = (vP.x * 0.7 + vP.y * 0.5) - (fract(uTime * 0.07) * 7.0 - 3.5);
     col += edge * 0.08 * exp(-band * band * 5.0) * (1.0 - side);
+    // texture, on the faces only (the bevels keep their clean rim light)
+    float faceMask = 1.0 - side;
+
+    // brushed: fine straight streaks along the letter (vertical), two scales; the highlight stretches along them
+    vec2 bp = vec2(vP.x * 115.0, vP.y * 2.2);
+    float bFade = 1.0 - smoothstep(0.75, 1.6, fwidth(bp.x));
+    float st = streak(bp) * 0.7 + streak(bp * vec2(2.1, 1.3) + 7.0) * 0.3;
+    float brush = (st - 0.5) * BRUSH * bFade * faceMask;
+    col *= 1.0 + brush * 0.5;
+    col += vec3(0.018, 0.022, 0.035) * brush;
+
     // gloss, like the cards' lit edge: a key light that drifts slowly, so as the letter floats its
     // highlight slides across the face and the bevels (a broad sheen plus a tight specular point)
     vec3 L = normalize(vec3(sin(uTime * 0.31) * 0.7, 0.55 + 0.25 * cos(uTime * 0.23), 0.75));
+
     vec3 H = normalize(L + V);
     float nh = max(dot(N, H), 0.0);
     vec3 glossCol = mix(ice, edge, 0.6);
-    col += glossCol * (pow(nh, 7.0) * 0.07 + pow(nh, 60.0) * 0.45);
+    // anisotropic feel: the tight specular breaks up along the streaks instead of one clean blob
+    float spec = pow(nh, 60.0) * 0.45 * (1.0 + brush * 1.6);
+    col += glossCol * (pow(nh, 7.0) * 0.07 * (1.0 + brush * 0.8) + spec);
+
+    // studio reflection: soft vertical lights that slide across the face (a fake environment: the reflection
+    // vector plus a little position parallax), so the flat face reads as glossy depth
+    vec3 R = reflect(-V, N);
+    float ru = R.x * 1.6 + vP.x * 0.45 + vP.y * 0.25 - uTime * 0.04;
+    float softbox = exp(-pow((fract(ru) - 0.5) * 5.0, 2.0));
+    float rFall = smoothstep(-1.6, 1.4, vP.y);
+    col += mix(ice, edge, 0.7) * 0.1 * softbox * rFall * REFL * faceMask;
+
+    // grain: static, screen-space, a hair of noise over the whole letter (also breaks gradient banding)
+    col += (h21(gl_FragCoord.xy) - 0.5) * GRAIN;
+    col = max(col, 0.0);
     gl_FragColor = vec4(col, 1.0);
   }
 `;
