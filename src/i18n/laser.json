@@ -22,7 +22,7 @@
       },
       "problem": {
         "title": "Web, na kterém nikdo nesměl nic měnit.",
-        "body": "Starý web běžel na Joomle, kterou si majitel kdysi postavil sám, na hostingu s bezpečnostními dírami a s databází, ve které se nikdo nevyznal. Největší past ale byl rezervační plugin. Byl tuhý, a když majitel chtěl změnu, výrobce mu napsal, že ho už nepodporuje. Zůstal uvězněný v systému, který nemohl změnit ani opustit.",
+        "body": "Starý web běžel na Joomle, kterou si majitel kdysi postavil sám, na hostingu s bezpečnostními dírami a s databází, ve které se nikdo nevyznal. Největší past ale byl rezervační plugin. Byl nepružný, a když majitel chtěl změnu, výrobce mu napsal, že ho už nepodporuje. Zůstal uvězněný v systému, který nemohl změnit ani opustit.",
         "locks": [
           "Starý systém na Joomle",
           "Hosting s bezpečnostními dírami",
@@ -86,8 +86,8 @@
         "newValue": "~160"
       },
       "support": {
-        "title": "Podpora na roky, ne na týdny.",
-        "body": "Když majitel něco chce změnit, napíše nám a my to změníme. Podporujeme ho denně od spuštění. Přesně to, co mu výrobce starého pluginu nedal.",
+        "title": "Podpora, která nekončí spuštěním.",
+        "body": "Když majitel něco chce změnit, napíše nám a my to změníme. Podporujeme ho denně. Přesně to, co mu výrobce starého pluginu nedal.",
         "steps": [
           "Spuštění, léto 2026",
           "1. kolo úprav",
@@ -222,8 +222,8 @@
         "newValue": "~160"
       },
       "support": {
-        "title": "Support for years, not weeks.",
-        "body": "When the owner wants something changed, he tells us and we change it. We have supported him daily since launch. Exactly what the old plugin's maker didn't give him.",
+        "title": "Support that doesn't stop at launch.",
+        "body": "When the owner wants something changed, he tells us and we change it. We support him daily. Exactly what the old plugin's maker didn't give him.",
         "steps": [
           "Launch, summer 2026",
           "1st round of changes",

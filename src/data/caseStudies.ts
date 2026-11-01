@@ -122,8 +122,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     year: 2026,
     services: ['websites', 'software'],
     outcome: {
-      en: 'A booking system the owner runs himself: about 60% more bookings and around 10 hours a week saved.',
-      cs: 'Rezervační systém, který majitel vede sám: zhruba o 60 % víc rezervací a kolem 10 hodin týdně ušetřeno.',
+      en: 'A booking system the owner runs himself: by his own count about 60% more bookings and around 10 hours a week saved.',
+      cs: 'Rezervační systém, který majitel vede sám: podle něj zhruba o 60 % víc rezervací a kolem 10 hodin týdně ušetřeno.',
     },
     image: '/media/cases/laser/cover.webp',
     screens: { desktop: '/media/cases/laser/08-home-laptop.webp', float: '/media/cases/laser/02-slots-760.webp' },

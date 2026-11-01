@@ -39,15 +39,15 @@ const serviceNames = c.services
   .map((sl) => s.capabilities.items.find((i) => i.slug === sl)!.title);
 const meta = [loc(c.sector, lang), c.year, ...serviceNames].filter(Boolean).join(' · ');
 const IMG = '/media/cases/laser';
-type Shot = { name: string; cap: string; wide?: boolean };
-const shot = (name: string, cap: string, wide = false): Shot => ({ name, cap, wide });
+type Shot = { name: string; cap: string; wide?: boolean; h: number };
+const shot = (name: string, cap: string, wide = false, h = 731): Shot => ({ name, cap, wide, h });
 const bookingShots = [
   shot('02-slots', k.shots.slots, true),
   shot('03-group', k.shots.group),
   shot('04-calendar', k.shots.calendar),
 ];
 const siteShots = [
-  shot('07-home', k.shots.home, true),
+  shot('07-home', k.shots.home, true, 738),
   shot('05-pricing', k.shots.pricing),
   shot('06-events', k.shots.events),
 ];
@@ -208,11 +208,11 @@ const BOOKED = new Set([1, 2, 3, 5, 8, 9, 12, 13, 14, 15, 18, 20, 21, 24, 25, 26
                     sizes={
                       sh.wide
                         ? '(min-width: 1240px) 1200px, 100vw'
-                        : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'
+                        : '(min-width: 1240px) 600px, (min-width: 861px) 50vw, 100vw'
                     }
                     width="1440"
-                    height="731"
-                    alt={sh.cap}
+                    height={sh.h}
+                    alt=""
                     loading="lazy"
                     decoding="async"
                   />
@@ -273,11 +273,11 @@ const BOOKED = new Set([1, 2, 3, 5, 8, 9, 12, 13, 14, 15, 18, 20, 21, 24, 25, 26
                     sizes={
                       sh.wide
                         ? '(min-width: 1240px) 1200px, 100vw'
-                        : '(min-width: 1240px) 600px, (min-width: 760px) 50vw, 100vw'
+                        : '(min-width: 1240px) 600px, (min-width: 861px) 50vw, 100vw'
                     }
                     width="1440"
-                    height="731"
-                    alt={sh.cap}
+                    height={sh.h}
+                    alt=""
                     loading="lazy"
                     decoding="async"
                   />
