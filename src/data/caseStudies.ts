@@ -145,6 +145,8 @@ export const CASE_STUDIES: CaseStudy[] = [
       cs: 'Rychlý nový web a administrace, ve které si majitel sám nastaví štítky, materiály, sestavy, pořadí i filtry.',
     },
     image: '/media/cases/homestyle/10-new-home.webp',
+    // the new site (aqua-sparrow-244867.hostingersite.com), captured Nov 1 2026 at 1440×900 and 390×844
+    screens: { desktop: '/media/cases/homestyle/desktop.webp', mobile: '/media/cases/homestyle/mobile.webp' },
     detail: { layout: 'homestyle', state: 'in-progress' },
   },
   {
