@@ -85,10 +85,13 @@ const FRAG = /* glsl */ `
   }
 `;
 
-export function startDrift(canvas: HTMLCanvasElement) {
+const yieldMain = () => new Promise<void>((r) => setTimeout(r, 0));
+
+export async function startDrift(canvas: HTMLCanvasElement) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.setClearColor(0x000000, 0);
+  await yieldMain();
   const scene = new THREE.Scene();
   const camera = new THREE.Camera();
 
@@ -141,6 +144,9 @@ export function startDrift(canvas: HTMLCanvasElement) {
   };
   resize();
   addEventListener('resize', resize);
+
+  await yieldMain();
+  await renderer.compileAsync(scene, camera);
 
   const target = () => scrollY / innerHeight;
   uniforms.uScroll.value = target();

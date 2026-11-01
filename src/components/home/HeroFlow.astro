@@ -25,36 +25,37 @@ const w = pick(home, lang).workflow;
 <section class="adv-hf" aria-labelledby="adv-hf-title" data-nf>
   <canvas class="adv-hf__canvas" data-hf-canvas aria-hidden="true"></canvas>
   <div class="adv-hf__inner adv-wrap">
-    <h1 id="adv-hf-title" class="adv-hf__title" data-lines>
+    <h1 id="adv-hf-title" class="adv-hf__title">
       <span class="adv-line"><span>{c.hero.headline1}</span></span>
       <span class="adv-line"><span>{c.hero.headline2}</span></span>
     </h1>
-    <p class="adv-lead adv-hf__sub" data-reveal style="--i:2">{c.hero.sub}</p>
-    <div class="adv-hf__ctas" data-reveal style="--i:3">
+    <p class="adv-lead adv-hf__sub" style="--i:2">{c.hero.sub}</p>
+    <div class="adv-hf__ctas" style="--i:3">
       <a class="adv-btn adv-btn--primary" href={'#' + w.inquiryId}><Play />{w.run}</a>
       <a class="adv-btn adv-btn--ghost" href={routes.work(lang)}>{c.notFound.work}<Arrow /></a>
     </div>
-    <p class="adv-hf__note" data-reveal style="--i:4">{c.hero.ctaNote}</p>
+    <p class="adv-hf__note" style="--i:4">{c.hero.ctaNote}</p>
   </div>
   <span class="adv-nf__port adv-nf__port--out adv-hf__port" data-nf-out aria-hidden="true"></span>
 </section>
 
 <script>
+  import { canRunWebGL } from '../../scripts/gl';
+
   const canvas = document.querySelector<HTMLCanvasElement>('[data-hf-canvas]');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const gl = (() => {
-    try {
-      return !!document.createElement('canvas').getContext('webgl2');
-    } catch {
-      return false;
-    }
-  })();
-  if (canvas && gl) {
+  if (canvas && canRunWebGL()) {
     const count = innerWidth < 760 ? 6000 : 16000;
-    import('../../scripts/flow/engine').then(({ startEngine }) => {
-      startEngine(canvas, { still, count });
-      canvas.classList.add('is-on');
-    });
+    // Boot after first paint and a quiet moment: the copy is already on screen (pure CSS entrance), so
+    // three.js and the shader compile never sit in front of the first paint or the LCP.
+    const boot = () =>
+      import('../../scripts/flow/engine').then(async ({ startEngine }) => {
+        await startEngine(canvas, { still, count });
+        canvas.classList.add('is-on');
+      });
+    const idle = () =>
+      'requestIdleCallback' in window ? requestIdleCallback(boot, { timeout: 1200 }) : setTimeout(boot, 300);
+    requestAnimationFrame(() => requestAnimationFrame(idle));
   }
 </script>
 
@@ -95,6 +96,33 @@ const w = pick(home, lang).workflow;
   }
   .adv-hf__inner {
     z-index: 2;
+  }
+  /* The entrance is CSS only (no script gate), so the hero copy paints with the first frame. */
+  @keyframes adv-hf-in {
+    from {
+      opacity: 0;
+      translate: 0 22px;
+      filter: blur(8px);
+    }
+  }
+  @keyframes adv-hf-line {
+    from {
+      translate: 0 105%;
+    }
+  }
+  .adv-hf__sub,
+  .adv-hf__ctas,
+  .adv-hf__note {
+    animation: adv-hf-in var(--adv-slow) var(--adv-ease) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+  .js .adv-hf__title .adv-line > span {
+    translate: 0 0;
+    transition: none;
+    animation: adv-hf-line 1000ms var(--adv-ease) both;
+  }
+  .js .adv-hf__title .adv-line:nth-child(2) > span {
+    animation-delay: 110ms;
   }
   .adv-hf__title {
     max-width: 12ch;

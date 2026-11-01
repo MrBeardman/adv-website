@@ -92,6 +92,8 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 - Prettier reflows templates; re-check inline spacing in built HTML after `npm run format`.
 
 ## Verify before handing over
+0. Performance: see `docs/STATUS.md` "Performance" (WebGL scenes are skipped on software GL via `scripts/gl.ts`; hero
+   copy entrance must stay CSS-only; fonts live in `src/assets/fonts`).
 1. `npm run build`; `npm run check:format`.
 2. `serve.ps1`, then `python shoot.py shots\<run> all [mid]` (1440 + 390, fold, full, mid-scroll; prints
    console errors and the 390 scrollWidth).

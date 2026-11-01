@@ -6,6 +6,11 @@ import Footer from '../components/Footer.astro';
 import { LANGS, langInfo, pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import { INDEXABLE, EM_STYLE } from '../data/site';
+// hashed under /_astro/ so the host serves them with a one-year immutable cache
+import urbanist600 from '../assets/fonts/urbanist-latin-600-normal.woff2?url';
+import manrope400 from '../assets/fonts/manrope-latin-400-normal.woff2?url';
+import urbanist600Ext from '../assets/fonts/urbanist-latin-ext-600-normal.woff2?url';
+import manrope400Ext from '../assets/fonts/manrope-latin-ext-400-normal.woff2?url';
 
 interface Props {
   lang: Lang;
@@ -92,25 +97,13 @@ const org = {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="preload" href="/fonts/urbanist-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={urbanist600} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={manrope400} as="font" type="font/woff2" crossorigin />
     {
       lang === 'cs' && (
         <>
-          <link
-            rel="preload"
-            href="/fonts/urbanist-latin-ext-600-normal.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-          />
-          <link
-            rel="preload"
-            href="/fonts/manrope-latin-ext-400-normal.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-          />
+          <link rel="preload" href={urbanist600Ext} as="font" type="font/woff2" crossorigin />
+          <link rel="preload" href={manrope400Ext} as="font" type="font/woff2" crossorigin />
         </>
       )
     }
@@ -137,18 +130,25 @@ const org = {
     <Footer lang={lang} alternates={alternates} />
     <script>
       import '../scripts/site.ts';
+      import { canRunWebGL } from '../scripts/gl';
 
       // the drifting lines: WebGL2 only, never with reduced motion (three.js is loaded on demand)
       const drift = document.querySelector<HTMLCanvasElement>('[data-drift]');
-      const gl = (() => {
-        try {
-          return !!document.createElement('canvas').getContext('webgl2');
-        } catch {
-          return false;
-        }
-      })();
-      if (drift && gl && !matchMedia('(prefers-reduced-motion: reduce)').matches)
-        import('../scripts/flow/drift').then(({ startDrift }) => startDrift(drift));
+      // The helix is fully transparent until the page is scrolled (see drift.ts `show`), so there is nothing
+      // to see before the visitor interacts: start it at the first scroll / wheel / touch / key (the shaders
+      // compile off the main thread), so it never competes with first paint.
+      if (drift && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        let started = false;
+        const events = ['scroll', 'wheel', 'touchstart', 'keydown'] as const;
+        const go = () => {
+          if (started) return;
+          started = true;
+          events.forEach((e) => removeEventListener(e, go));
+          if (!canRunWebGL()) return;
+          import('../scripts/flow/drift').then(({ startDrift }) => startDrift(drift));
+        };
+        events.forEach((e) => addEventListener(e, go, { passive: true }));
+      }
     </script>
   </body>
 </html>

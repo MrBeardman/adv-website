@@ -127,7 +127,16 @@ const FRAG = /* glsl */ `
 // grid, centred on its opening (between the legs, below the inner apex) so the lines pass inside the A
 const S = 0.012;
 const P = (x: number, y: number) => new THREE.Vector3((x - 128) * S * 1.25, -(y - 204) * S, 0);
-const A_PTS = [[112, 56], [144, 56], [193.3, 240], [159.3, 240], [128, 123.2], [96.7, 240], [62.7, 240], [112, 56]];
+const A_PTS = [
+  [112, 56],
+  [144, 56],
+  [193.3, 240],
+  [159.3, 240],
+  [128, 123.2],
+  [96.7, 240],
+  [62.7, 240],
+  [112, 56],
+];
 const A_DEPTH = 0.1;
 // the solid letter: the A extruded, with a small bevel
 function gateSolid() {
@@ -204,7 +213,10 @@ const SOLID_FRAG = /* glsl */ `
   }
 `;
 
-export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; count: number }) {
+// give the browser a turn between the heavy set-up steps, so none of them is one long task
+const yieldMain = () => new Promise<void>((r) => setTimeout(r, 0));
+
+export async function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; count: number }) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
@@ -214,6 +226,7 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   const dpr = Math.min(devicePixelRatio, 1.75);
   renderer.setPixelRatio(dpr);
   renderer.setClearColor(0x000000, 0);
+  await yieldMain();
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
   camera.position.set(0.4, 0.5, 8.2);
@@ -262,6 +275,7 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
 
   // the gate is the A of the ADV symbol as a solid graphite letter. The lines are squeezed through its
   // opening; the letter hides whatever passes behind it. The lines flare as they pass.
+  await yieldMain();
   const gate = new THREE.Group();
   gate.position.set(0.6, 0, 0);
   const GATE_RY = 0.38 + 0.8; // a three-quarter view: the A reads, the lines still pass through it
@@ -269,7 +283,11 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   // solid and opaque: it writes depth, so the lines behind it are hidden
   const solid = new THREE.Mesh(
     gateSolid(),
-    new THREE.ShaderMaterial({ vertexShader: SOLID_VERT, fragmentShader: SOLID_FRAG, uniforms: { uTime: uniforms.uTime } }),
+    new THREE.ShaderMaterial({
+      vertexShader: SOLID_VERT,
+      fragmentShader: SOLID_FRAG,
+      uniforms: { uTime: uniforms.uTime },
+    }),
   );
   gate.add(solid);
   stream.add(gate);
@@ -286,6 +304,10 @@ export function startEngine(canvas: HTMLCanvasElement, opts: { still: boolean; c
   };
   resize();
   new ResizeObserver(resize).observe(canvas);
+
+  // compile and link the shaders off the main thread (parallel shader compile), then draw
+  await yieldMain();
+  await renderer.compileAsync(scene, camera);
 
   if (opts.still) {
     renderer.render(scene, camera);

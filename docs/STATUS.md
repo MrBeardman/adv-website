@@ -90,6 +90,20 @@
   Rezervovat; Nová rezervace; Nové / Řeší se / Hotovo; Zakázka; Uloženo. EN equivalents alongside.
 - **Header CTA** is now a split pill: "Spustit poptávku" (homepage inquiry flow) | "Kontakt" (contact page).
 
+## Performance (Nov 1 2026)
+PageSpeed (pagespeed.web.dev, no GPU) first run: mobile 50-60 (LCP 3.9-4.1 s, TBT 1.5 s), desktop 65. Causes and fixes:
+- Hero copy (`data-reveal`/`data-lines`) waited for site.ts, queued behind three.js: now a CSS-only entrance
+  (`HeroFlow.astro`). LCP 4.1 s to 1.6 s.
+- Hero scene (`scripts/flow/engine.ts`) booted at load: now after first paint + idle, async shader compile, yields.
+- Drift helix (`scripts/flow/drift.ts`, invisible until scroll) now starts on first scroll/wheel/touch/key.
+- `scripts/gl.ts`: `failIfMajorPerformanceCaveat` skips both scenes on software-GL (PageSpeed, GPU-less PCs); they get
+  the page-without-WebGL look. Flip `REQUIRE_HARDWARE_GL` to run them everywhere (lab score then about 70 mobile).
+- Fonts moved to `src/assets/fonts` (hashed `/_astro/` URLs, one-year immutable cache).
+Local Lighthouse, software GL: mobile 99, desktop 100. Real GPU mobile still about 71 in the lab (one ~0.3 s
+shader-link hitch in the hero scene; simplify the fragment shader if it matters). SEO 69 = preview noindex only.
+Re-test on the live URL after each deploy: `npx lighthouse URL --only-categories=performance [--preset=desktop]`,
+and with `--chrome-flags="--headless=new --disable-gpu"` to mimic PageSpeed.
+
 ## Launch checklist
 - [ ] Replace placeholder numbers in `src/data/homeNumbers.ts`: AI **1,200 h** and Software **14 days**
       (`placeholder: true`, dashed outline in dev builds).
@@ -110,6 +124,8 @@
       four Telegram nodes; (3) activate; (4) in Hostinger set `N8N_INQUIRY_URL` =
       https://vmi3112391.contaboserver.net/webhook/adv-inquiry and `N8N_INQUIRY_KEY` = the same secret.
       Stores into the n8n data table `adv_inquiries`; the site keeps its own copy in data/submissions either way.
+- [ ] **Performance gate (checker agent, after the first full version, before launch)**: run the "Performance gate"
+      in the `astro-marketing-site` skill and the section below; record the numbers here.
 - [ ] **Flip the preview switch**: `PUBLIC_SITE_INDEXABLE=true`.
 
 ## Open decisions (Honza)
