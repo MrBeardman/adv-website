@@ -176,19 +176,177 @@ export const CASE_STUDIES: CaseStudy[] = [
     services: ['websites'],
     outcome: { en: TODO },
   },
+  /* ── Our own products (Honza, Nov 1 2026: "I made them for myself, technically I am my own client").
+   * Facts from their repos (github.com/MrBeardman/dreamshape-app, finance-tracker, freelance-dashboard):
+   * features, stack, start dates. No savings claimed. Draft until Honza has read them. */
   {
-    // Service mapping is a guess, pending confirmation.
     slug: 'dreamshape',
     status: 'draft',
     client: { en: 'DreamShape' },
-    sector: { en: TODO },
-    year: null,
+    sector: { en: 'Fitness, own product', cs: 'Fitness, vlastní produkt' },
+    year: 2025,
     services: ['software'],
     outcome: {
-      en: 'A product that finally looks like the price it asks for.',
-      cs: 'Produkt, který konečně vypadá na cenu, kterou si říká.',
+      en: 'One app for training, food and habits instead of three: workouts, records, nutrition with a barcode scanner and daily habits, synced across devices.',
+      cs: 'Jedna aplikace na trénink, jídlo a návyky místo tří: tréninky, rekordy, výživa se skenerem čárových kódů a denní návyky, synchronizované mezi zařízeními.',
     },
     image: '/media/cases/dreamshape-1.webp',
+    detail: {
+      situation: {
+        en: 'Training notes in one app, calories in another, habits on paper. None of them knew about the others, so there was no single view of how a week actually went, and logging a set mid-workout took longer than the rest between sets.',
+        cs: 'Tréninky v jedné aplikaci, kalorie v druhé, návyky na papíře. Žádná o těch ostatních nevěděla, takže nebyl jeden pohled na to, jak týden opravdu proběhl, a zapsat sérii uprostřed tréninku trvalo déle než pauza mezi sériemi.',
+      },
+      approach: [
+        {
+          title: { en: 'Fast where it matters: in the gym', cs: 'Rychlost tam, kde na ní záleží: v posilovně' },
+          body: {
+            en: 'Sets fill in from the last workout, a rest timer runs per exercise, and a workout can be minimised so the rest of the app stays usable without losing the session.',
+            cs: 'Série se předvyplní z minulého tréninku, u každého cviku běží časovač pauzy a trénink jde minimalizovat, takže zbytek aplikace zůstane použitelný a rozjetý trénink se neztratí.',
+          },
+        },
+        {
+          title: { en: 'Food without typing', cs: 'Jídlo bez přepisování' },
+          body: {
+            en: 'Search the Open Food Facts database or scan a barcode with the phone camera; your own foods keep named portions such as "1 slice = 30 g".',
+            cs: 'Vyhledávání v databázi Open Food Facts nebo sken čárového kódu kamerou telefonu; vlastní potraviny si pamatují porce typu „1 plátek = 30 g“.',
+          },
+        },
+        {
+          title: { en: 'One home screen', cs: 'Jedna úvodní obrazovka' },
+          body: {
+            en: 'Workouts this week, the streak, which muscle groups are overdue, today\'s calories and macros, habits and tasks, all at a glance; the long-term charts live in the profile.',
+            cs: 'Tréninky za týden, série dnů, které partie dlouho nepřišly na řadu, dnešní kalorie a makra, návyky a úkoly, všechno na jeden pohled; dlouhodobé grafy jsou v profilu.',
+          },
+        },
+        {
+          title: { en: 'Works offline, syncs when it can', cs: 'Funguje offline, synchronizuje, když může' },
+          body: {
+            en: 'A progressive web app: data is saved on the phone first and synced to the cloud (Supabase) when there is a connection, so a weak signal in a basement gym loses nothing.',
+            cs: 'Progresivní webová aplikace: data se ukládají nejdřív v telefonu a do cloudu (Supabase) se dostanou, jakmile je spojení, takže slabý signál ve sklepní posilovně nic nesmaže.',
+          },
+        },
+      ],
+      results: [
+        { value: '3 → 1', label: { en: 'apps replaced by one', cs: 'aplikace nahrazené jednou' } },
+        { value: '55', label: { en: 'built-in exercises, plus your own', cs: 'cviků v knihovně, k tomu vlastní' } },
+        { value: '12/2025', label: { en: 'in use since', cs: 'v provozu od' } },
+      ],
+      duration: { en: 'Built in phases since December 2025', cs: 'Stavěno po etapách od prosince 2025' },
+      team: { en: 'Design and development in-house', cs: 'Návrh i vývoj vlastními silami' },
+      state: 'live',
+    },
+  },
+  {
+    slug: 'finance-tracker',
+    status: 'draft',
+    client: { en: 'Household finances', cs: 'Rodinné finance' },
+    sector: { en: 'Personal finance, own product', cs: 'Osobní finance, vlastní produkt' },
+    year: 2026,
+    services: ['software', 'business-optimisation'],
+    outcome: {
+      en: 'A shared household budget on two phones instead of one spreadsheet: expenses in seconds, budgets per category and a monthly settlement that works itself out.',
+      cs: 'Společný rodinný rozpočet ve dvou telefonech místo jedné tabulky: výdaj zapsaný za pár vteřin, rozpočty po kategoriích a měsíční vyrovnání, které se spočítá samo.',
+    },
+    detail: {
+      situation: {
+        en: 'Two incomes, shared and personal expenses, savings goals, all in one Excel file. A whole day\'s spending went into a single cell, entering anything on a phone was painful, formulas needed constant care, and working out who owed whom when one of us paid a shared bill from a personal account was a monthly chore.',
+        cs: 'Dva příjmy, společné i osobní výdaje, cíle spoření, všechno v jednom Excelu. Útrata za celý den se vešla do jedné buňky, zapsat něco z telefonu bylo utrpení, vzorce se musely pořád hlídat a spočítat, kdo komu dluží, když jeden zaplatil společný účet z osobního, byla měsíční otrava.',
+      },
+      approach: [
+        {
+          title: { en: 'Built for the phone', cs: 'Postavené pro telefon' },
+          body: {
+            en: 'Each person logs in on their own phone; adding an expense is one screen: amount, category, who paid and from which account.',
+            cs: 'Každý se přihlásí ve svém telefonu; zapsat výdaj je jedna obrazovka: částka, kategorie, kdo platil a z jakého účtu.',
+          },
+        },
+        {
+          title: { en: 'The settlement does the maths', cs: 'Vyrovnání počítá samo' },
+          body: {
+            en: 'Shared costs split by each person\'s share of income; whenever someone pays a shared expense from their own pocket, the month-end balance updates by itself.',
+            cs: 'Společné náklady se dělí podle podílu na příjmech; když někdo zaplatí společný výdaj ze svého, vyrovnání na konci měsíce se upraví samo.',
+          },
+        },
+        {
+          title: { en: 'Budgets and goals you can see', cs: 'Rozpočty a cíle na očích' },
+          body: {
+            en: 'Budget against spending per category, income with a 60/20/20 allocation, savings goals with the monthly amount needed, and a 12-month overview laid out like the old spreadsheet.',
+            cs: 'Rozpočet proti útratě po kategoriích, příjmy s rozdělením 60/20/20, cíle spoření s měsíční částkou, kterou je potřeba odkládat, a přehled za 12 měsíců uspořádaný jako stará tabulka.',
+          },
+        },
+        {
+          title: { en: 'The small daily things too', cs: 'I drobnosti na každý den' },
+          body: {
+            en: 'A shared grocery list in the same app, and business expenses kept apart from household ones.',
+            cs: 'Společný nákupní seznam ve stejné aplikaci a firemní výdaje oddělené od domácích.',
+          },
+        },
+      ],
+      results: [
+        { value: '0', label: { en: 'formulas to maintain by hand', cs: 'vzorců k ruční údržbě' } },
+        { value: '2', label: { en: 'people, each on their own phone', cs: 'lidé, každý ve svém telefonu' } },
+        { value: '1', label: { en: 'tap to see who owes whom', cs: 'klepnutí a víte, kdo komu dluží' } },
+      ],
+      duration: { en: 'Since March 2026', cs: 'Od března 2026' },
+      team: { en: 'Design and development in-house', cs: 'Návrh i vývoj vlastními silami' },
+      state: 'live',
+    },
+  },
+  {
+    slug: 'freelance-os',
+    status: 'draft',
+    client: { en: 'Freelance OS' },
+    sector: { en: 'Project management, own product', cs: 'Řízení zakázek, vlastní produkt' },
+    year: 2026,
+    services: ['software', 'ai-automation'],
+    outcome: {
+      en: 'Clients, projects, meeting notes, tickets, hours and tasks in one place, with AI that turns meeting notes into tickets.',
+      cs: 'Klienti, projekty, poznámky ze schůzek, tikety, hodiny i úkoly na jednom místě, s AI, která z poznámek ze schůzky udělá tikety.',
+    },
+    detail: {
+      situation: {
+        en: 'Freelance work for several clients spread over a spreadsheet, notes, a time tracker and email. After every meeting the notes had to be rewritten into tasks by hand, hours lived somewhere else, and the overview of what was open for whom existed only in one head.',
+        cs: 'Práce pro několik klientů rozházená mezi tabulku, poznámky, měření času a e-mail. Po každé schůzce se poznámky musely ručně přepsat do úkolů, hodiny byly jinde a přehled, co je pro koho otevřené, existoval jen v jedné hlavě.',
+      },
+      approach: [
+        {
+          title: { en: 'One model of the work', cs: 'Jeden model práce' },
+          body: {
+            en: 'Clients, projects, scope documents and agreements, meeting notes, a ticket board and time entries, all linked to each other.',
+            cs: 'Klienti, projekty, rozsah a dohody, poznámky ze schůzek, nástěnka tiketů a odpracovaný čas, všechno navzájem propojené.',
+          },
+        },
+        {
+          title: { en: 'AI where the busywork was', cs: 'AI tam, kde byla rutina' },
+          body: {
+            en: 'Paste the notes from a meeting and Claude proposes the tickets; an in-app assistant answers questions about any project.',
+            cs: 'Vložíte poznámky ze schůzky a Claude navrhne tikety; asistent přímo v aplikaci odpoví na otázky ke kterémukoli projektu.',
+          },
+        },
+        {
+          title: { en: 'Tasks that work offline', cs: 'Úkoly, které fungují i offline' },
+          body: {
+            en: 'A fast task list with lists, tags and subtasks that keeps working without a connection and syncs later without losing a change.',
+            cs: 'Rychlý seznam úkolů se seznamy, štítky a podúkoly, který funguje i bez připojení a později se synchronizuje, aniž by se ztratila změna.',
+          },
+        },
+        {
+          title: { en: 'Moved when the platform got in the way', cs: 'Přestěhováno, když platforma překážela' },
+          body: {
+            en: 'When the free database kept pausing, the app moved to its own hosting and database with its own login, without losing data.',
+            cs: 'Když se bezplatná databáze pořád uspávala, aplikace se přestěhovala na vlastní hosting a databázi s vlastním přihlášením, bez ztráty dat.',
+          },
+        },
+      ],
+      results: [
+        { value: '1', label: { en: 'place for clients, tickets, hours and tasks', cs: 'místo pro klienty, tikety, hodiny i úkoly' } },
+        { value: 'AI', label: { en: 'meeting notes become tickets', cs: 'z poznámek ze schůzky jsou tikety' } },
+        { value: '03/2026', label: { en: 'in daily use since', cs: 'v každodenním provozu od' } },
+      ],
+      duration: { en: 'Since March 2026', cs: 'Od března 2026' },
+      team: { en: 'Design and development in-house', cs: 'Návrh i vývoj vlastními silami' },
+      state: 'live',
+    },
   },
 
   /* ── Placeholders. INVENTED. Development builds only. ─────────────────────── */

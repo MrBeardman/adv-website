@@ -44,6 +44,11 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **Own products as cases (Nov 1, DRAFT, dev only)** (`caseStudies.ts`: `dreamshape`, `finance-tracker` "Rodinné finance",
+  `freelance-os`): outcome, situation, four approach steps, three results each, from the repos. MY ASSUMPTIONS to confirm:
+  DreamShape "before" (training app + calorie app + habits on paper → "3 → 1"); Freelance OS "before" (spreadsheet,
+  notes, time tracker, email) and "v každodenním provozu"; whether "Rodinné finance" may name Zuzka/the household.
+  Finance tracker "before" is from its PLAN.md (real). Need screenshots without private data for all three.
 - **HomeStyle case (Nov 1, new page, published on request)** (`src/i18n/homestyle.json`, CS + EN, `templates/HomeStyle.astro`, case
   `homestyle` in `caseStudies.ts`, status `published`, state `in-progress`): title "Showroom, který si majitel konečně řídí
   sám.", sections: the seven product tabs (hero), a web where the owner could set nothing (six locks), old vs new homepage,
