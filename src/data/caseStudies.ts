@@ -20,7 +20,7 @@ export const TODO = 'TODO';
 
 export type CaseStatus = 'published' | 'draft' | 'placeholder';
 export interface CaseDetail {
-  layout?: 'kesia-live-pricing' | 'laser-arena-praha';
+  layout?: 'kesia-live-pricing' | 'laser-arena-praha' | 'homestyle';
   situation?: Localized;
   approach?: { title: Localized; body: Localized }[];
   results?: { value: string; label: Localized }[];
@@ -128,6 +128,24 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/media/cases/laser/cover.webp',
     screens: { desktop: '/media/cases/laser/08-home-laptop.webp', float: '/media/cases/laser/02-slots-760.webp' },
     detail: { layout: 'laser-arena-praha', state: 'ongoing-support' },
+  },
+  {
+    /* Custom WordPress site + admin for a Prague furniture showroom. DRAFT (dev only) until the client's approval and
+     * the go-live on homestyle.cz are confirmed; the new site still runs beside the old one and the owner is moving
+     * products over. Numbers: 151 products and 8 brands from the admin (Nov 1 2026), ~150 ms measured server response.
+     * No savings are claimed (none supplied). Own page layout (templates/HomeStyle.astro), copy in i18n/homestyle.json. */
+    slug: 'homestyle',
+    status: 'draft',
+    client: { en: 'HomeStyle' },
+    sector: { en: 'Furniture', cs: 'Nábytek' },
+    year: 2026,
+    services: ['websites', 'software'],
+    outcome: {
+      en: 'A fast new site and an admin where the owner sets tags, materials, sets, order and filters himself.',
+      cs: 'Rychlý nový web a administrace, ve které si majitel sám nastaví štítky, materiály, sestavy, pořadí i filtry.',
+    },
+    image: '/media/cases/homestyle/10-new-home.webp',
+    detail: { layout: 'homestyle', state: 'in-progress' },
   },
   {
     slug: 'zive-vinohrady',

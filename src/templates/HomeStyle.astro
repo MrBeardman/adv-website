@@ -1,0 +1,832 @@
+---
+/**
+ * /realizace/homestyle/ (EN /en/work/homestyle/): the HomeStyle success story. Copy: i18n/homestyle.json.
+ * Same shape as the Kesia and Laser Arena pages: one point and one play-once animation per section
+ * ([data-play], site.ts):
+ *   hero      the seven tabs every product has in the admin appear one by one (names are real)
+ *   problem   six locks open one after another
+ *   listen    the owner's needs tick off, the count climbs to 151
+ *   support   a timeline draws from the clean-up to ongoing support
+ *   results   three numbers count up
+ * Numbers: 151 products and 8 brands are from the admin (Nov 1 2026), ~150 ms is the measured server response
+ * of the new site (147 ms). No savings are claimed: none were supplied. The case is a draft (dev only) until
+ * the client's approval and the go-live are confirmed. Reduced motion / no JS: every view shows its final state.
+ */
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import Node from '../components/ui/Node.astro';
+import CtaPanel from '../components/CtaPanel.astro';
+import { pick, loc, type Lang } from '../i18n';
+import work from '../i18n/work.json';
+import services from '../i18n/services.json';
+import homestyle from '../i18n/homestyle.json';
+import { ENABLED_SERVICES } from '../data/capabilities';
+import { type CaseStudy } from '../data/caseStudies';
+import { routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+  c: CaseStudy;
+}
+const { lang, c } = Astro.props;
+const w = pick(work, lang).case;
+const s = pick(services, lang);
+const k = pick(homestyle, lang).hs;
+const stateLabel = (w.state as Record<string, string>)[c.detail!.state];
+const serviceNames = c.services
+  .filter((sl) => ENABLED_SERVICES.some((x) => x.slug === sl))
+  .map((sl) => s.capabilities.items.find((i) => i.slug === sl)!.title);
+const meta = [loc(c.sector, lang), c.year, ...serviceNames].filter(Boolean).join(' · ');
+const alternates = { cs: routes.case('cs', c.slug), en: routes.case('en', c.slug) };
+const IMG = '/media/cases/homestyle';
+type Shot = { name: string; cap: string; w: number; h: number; wide?: boolean };
+const shot = (name: string, cap: string, w: number, h: number, wide = false): Shot => ({ name, cap, w, h, wide });
+const beforeAfter = [shot('13-old-home', k.shots.oldHome, 1425, 643), shot('10-new-home', k.shots.newHome, 1425, 643)];
+const adminShots = [
+  shot('01-dashboard', k.shots.dashboard, 1120, 460, true),
+  shot('02-product-list', k.shots.list, 1230, 535),
+  shot('03-product-status', k.shots.status, 1245, 575),
+  shot('04-product-materials', k.shots.materials, 930, 450),
+  shot('05-product-gallery', k.shots.gallery, 930, 450),
+];
+const siteShots = [
+  shot('11-new-catalogue', k.shots.catalogue, 1425, 643),
+  shot('12-new-product', k.shots.product, 1425, 643),
+];
+---
+
+<Base
+  lang={lang}
+  title={k.metaTitle}
+  description={loc(c.outcome, lang)}
+  alternates={alternates}
+  ogImage={`${IMG}/10-new-home.webp`}
+  noindex={c.status !== 'published'}
+>
+  <article class="adv-hs">
+    <header class="adv-hs__hero">
+      <div class="adv-pagehead__grid" aria-hidden="true"></div>
+      <div class="adv-wrap adv-hs__heroGrid">
+        <div class="adv-hs__heroCopy">
+          <a class="adv-back" href={routes.work(lang)}><Arrow dir="left" />{w.back}</a>
+          <h1 class="adv-hs__title" data-lines>
+            <Node /><span class="adv-line"><span>{k.title}</span></span>
+          </h1>
+          <p class="adv-meta adv-hs__meta">{meta}</p>
+          <p class="adv-lead" data-reveal style="--i:2">{k.lead}</p>
+        </div>
+        <div class="adv-hs__tabs adv-panel" data-play data-reveal style="--i:2">
+          <p class="adv-label">{k.tabs.label}</p>
+          <p class="screen-reader-text">{k.tabs.srNote}</p>
+          <ol aria-hidden="true">
+            {
+              k.tabs.items.map((t, i) => (
+                <li style={`--k:${i}`}>
+                  <span class="adv-hs__idx">{String(i + 1).padStart(2, '0')}</span>
+                  {t}
+                </li>
+              ))
+            }
+          </ol>
+          <p class="adv-hs__note">{k.tabs.note}</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="adv-wrap">
+      <dl class="adv-facts" data-reveal>
+        <div><dt>{k.facts.client}</dt><dd>{k.facts.clientValue}</dd></div>
+        <div><dt>{k.facts.sector}</dt><dd>{k.facts.sectorValue}</dd></div>
+        <div><dt>{k.facts.live}</dt><dd>{k.facts.liveValue}</dd></div>
+        <div><dt>{k.facts.status}</dt><dd>{stateLabel}</dd></div>
+      </dl>
+
+      <!-- Problem -->
+      <section class="adv-hs__split" aria-labelledby="hs-problem">
+        <div data-reveal>
+          <h2 id="hs-problem" class="adv-hs__h2">{k.problem.title}</h2>
+          <p class="adv-hs__prose">{k.problem.body}</p>
+        </div>
+        <ul class="adv-hs__locks adv-panel" data-play>
+          {
+            k.problem.locks.map((t, i) => (
+              <li style={`--k:${i}`}>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <rect
+                    x="5"
+                    y="11"
+                    width="14"
+                    height="9"
+                    rx="2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                  />
+                  <path
+                    class="adv-hs__shackle"
+                    d="M8 11V8a4 4 0 0 1 8 0v3"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <span>{t}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- Before / after -->
+      <section class="adv-hs__stack" aria-label={`${k.shots.oldHome} / ${k.shots.newHome}`}>
+        <div class="adv-hs__gallery">
+          {
+            beforeAfter.map((sh) => (
+              <figure class="adv-hs__shot" data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp ${sh.w}w`}
+                    sizes="(min-width: 1240px) 600px, (min-width: 861px) 50vw, 100vw"
+                    width={sh.w}
+                    height={sh.h}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Listening -->
+      <section class="adv-hs__split" aria-labelledby="hs-listen">
+        <div data-reveal>
+          <h2 id="hs-listen" class="adv-hs__h2">{k.listen.title}</h2>
+          <p class="adv-hs__prose">{k.listen.body}</p>
+        </div>
+        <div class="adv-hs__listen adv-panel" data-play>
+          <p class="adv-hs__big">
+            <span data-count="151" aria-hidden="true">151</span>
+            <span class="screen-reader-text">151</span>
+            <span class="adv-hs__bigLabel">{k.listen.counter}</span>
+          </p>
+          <ul>
+            {
+              k.listen.items.map((t, i) => (
+                <li style={`--k:${i}`}>
+                  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                    <path
+                      d="M3 8.5l3.2 3.2L13 4.8"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <!-- The admin -->
+      <section class="adv-hs__stack" aria-labelledby="hs-flex">
+        <div class="adv-hs__stackHead" data-reveal>
+          <h2 id="hs-flex" class="adv-hs__h2">{k.flex.title}</h2>
+          <p class="adv-hs__prose">{k.flex.body}</p>
+        </div>
+        <div class="adv-hs__gallery">
+          {
+            adminShots.map((sh) => (
+              <figure class:list={['adv-hs__shot', { 'is-wide': sh.wide }]} data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp ${sh.w}w`}
+                    sizes={
+                      sh.wide
+                        ? '(min-width: 1240px) 1200px, 100vw'
+                        : '(min-width: 1240px) 600px, (min-width: 861px) 50vw, 100vw'
+                    }
+                    width={sh.w}
+                    height={sh.h}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+        <p class="adv-hs__masked">{k.shots.masked}</p>
+      </section>
+
+      <!-- The catalogue -->
+      <section class="adv-hs__stack" aria-labelledby="hs-catalogue">
+        <div class="adv-hs__stackHead" data-reveal>
+          <h2 id="hs-catalogue" class="adv-hs__h2">{k.catalogue.title}</h2>
+          <p class="adv-hs__prose">{k.catalogue.body}</p>
+        </div>
+        <div class="adv-hs__gallery">
+          {
+            siteShots.map((sh) => (
+              <figure class="adv-hs__shot" data-reveal>
+                <a href={`${IMG}/${sh.name}.webp`} target="_blank" rel="noopener">
+                  <img
+                    src={`${IMG}/${sh.name}-760.webp`}
+                    srcset={`${IMG}/${sh.name}-760.webp 760w, ${IMG}/${sh.name}.webp ${sh.w}w`}
+                    sizes="(min-width: 1240px) 600px, (min-width: 861px) 50vw, 100vw"
+                    width={sh.w}
+                    height={sh.h}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+                <figcaption>{sh.cap}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Support -->
+      <section class="adv-hs__stack" aria-labelledby="hs-support">
+        <div class="adv-hs__stackHead" data-reveal>
+          <h2 id="hs-support" class="adv-hs__h2">{k.support.title}</h2>
+          <p class="adv-hs__prose">{k.support.body}</p>
+        </div>
+        <ol class="adv-hs__timeline adv-panel" data-play>
+          {
+            k.support.steps.map((t, i) => (
+              <li style={`--k:${i}`}>
+                <i aria-hidden="true" />
+                <span>{t}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <!-- Results -->
+      <section class="adv-hs__stack" aria-labelledby="hs-results">
+        <h2 id="hs-results" class="adv-hs__h2" data-reveal>{k.results.title}</h2>
+        <ul class="adv-hs__results">
+          {
+            k.results.items.map((r, i) => (
+              <li class="adv-panel" data-reveal style={`--i:${i}`}>
+                <p class="adv-hs__resultValue">
+                  <span
+                    data-count={r.target}
+                    data-prefix={r.prefix}
+                    data-suffix={r.suffix}
+                    data-delay={i * 120}
+                    aria-hidden="true"
+                  >
+                    {r.final}
+                  </span>
+                  <span class="screen-reader-text">{r.final}</span>
+                </p>
+                <p class="adv-hs__resultLabel">{r.label}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="adv-hs__footnote">{k.results.footnote}</p>
+      </section>
+
+      <p class="adv-hs__ctaLine" data-reveal>{k.cta}</p>
+    </div>
+  </article>
+  <CtaPanel lang={lang} />
+</Base>
+
+<style is:global>
+  .adv-hs__hero {
+    position: relative;
+    padding: calc(var(--adv-header-h) + clamp(48px, 7vw, 100px)) 0 clamp(40px, 5vw, 64px);
+    overflow: clip;
+  }
+  .adv-hs__hero .adv-pagehead__grid {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px,
+      linear-gradient(90deg, rgba(236, 238, 244, 0.05) 1px, transparent 1px) 0 0 / 56px 56px;
+    -webkit-mask-image: radial-gradient(80% 90% at 75% 20%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(80% 90% at 75% 20%, #000 20%, transparent 75%);
+  }
+  .adv-hs__heroGrid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(28px, 5vw, 72px);
+  }
+  .adv-hs__title {
+    max-width: 16ch;
+    margin-bottom: 26px;
+    font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
+    letter-spacing: -0.035em;
+  }
+  .adv-hs__meta {
+    margin: -8px 0 18px;
+  }
+
+  .adv-hs__h2 {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.625rem);
+    max-width: 20ch;
+  }
+  .adv-hs__prose {
+    margin-top: 18px;
+    max-width: 58ch;
+    color: var(--adv-muted);
+    font-size: 1.0625rem;
+  }
+  .adv-hs__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(28px, 5vw, 72px);
+    padding: clamp(56px, 7vw, 100px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+  .adv-hs__stack {
+    display: grid;
+    gap: 28px;
+    padding: clamp(56px, 7vw, 100px) 0;
+    border-bottom: 1px solid var(--adv-line);
+  }
+
+  /* problem: four locks */
+  .adv-hs__locks {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 12px 24px;
+    list-style: none;
+  }
+  .adv-hs__locks li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--adv-line);
+    font-weight: 500;
+  }
+  .adv-hs__locks li:last-child {
+    border-bottom: 0;
+  }
+  .adv-hs__locks svg {
+    flex: none;
+    color: var(--adv-accent);
+  }
+  .adv-hs__shackle {
+    transform-origin: 16px 11px;
+  }
+  .js .adv-hs__locks.is-armed .adv-hs__shackle {
+    transform: translateY(-3px) rotate(-18deg);
+    transition: transform 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 260ms);
+  }
+  .js .adv-hs__locks.is-playing .adv-hs__shackle {
+    transform: none;
+  }
+  .js .adv-hs__locks.is-armed li svg {
+    color: var(--adv-muted);
+    transition: color 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 260ms);
+  }
+  .js .adv-hs__locks.is-playing li svg {
+    color: var(--adv-accent);
+  }
+
+  /* listening: the owner's requests */
+  .adv-hs__listen {
+    padding: 24px;
+  }
+  .adv-hs__big {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 18px;
+  }
+  .adv-hs__big > span:first-child {
+    font-family: var(--adv-display);
+    font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--adv-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-hs__bigLabel {
+    color: var(--adv-muted);
+  }
+  .adv-hs__listen ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-hs__listen li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9375rem;
+  }
+  .adv-hs__listen li svg {
+    flex: none;
+    color: var(--adv-accent);
+  }
+  .js .adv-hs__listen.is-armed li {
+    opacity: 0.25;
+    transition: opacity 350ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 190ms);
+  }
+  .js .adv-hs__listen.is-playing li {
+    opacity: 1;
+  }
+
+  /* flexible: edit in the admin, see it on the site */
+  .adv-hs__edit {
+    display: grid;
+    gap: 16px;
+    padding: 26px;
+  }
+  .adv-hs__field,
+  .adv-hs__preview {
+    display: grid;
+    gap: 8px;
+  }
+  .adv-hs__input {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.4);
+  }
+  .adv-hs__input b {
+    display: block;
+    width: calc(var(--n) * 1ch);
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--adv-mono);
+    font-size: 0.9375rem;
+    font-weight: 400;
+  }
+  .adv-hs__arrow {
+    height: 22px;
+    width: 1px;
+    margin-left: 18px;
+    background: linear-gradient(var(--adv-accent), transparent);
+  }
+  .adv-hs__preview {
+    padding: 18px;
+    border-radius: 12px;
+    background: linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2));
+    box-shadow: var(--adv-shadow-card);
+  }
+  .adv-hs__preview strong {
+    font-family: var(--adv-display);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    letter-spacing: -0.02em;
+  }
+  .adv-hs__edit figcaption {
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .js .adv-hs__edit.is-armed .adv-hs__input b {
+    width: 0;
+  }
+  .js .adv-hs__edit.is-playing .adv-hs__input b {
+    width: calc(var(--n) * 1ch);
+    transition: width 1500ms steps(var(--n)) 200ms;
+  }
+  .js .adv-hs__edit.is-armed .adv-hs__preview,
+  .js .adv-hs__edit.is-armed .adv-hs__arrow {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  .js .adv-hs__edit.is-playing .adv-hs__preview,
+  .js .adv-hs__edit.is-playing .adv-hs__arrow {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity 500ms var(--adv-ease) 1800ms,
+      translate 500ms var(--adv-ease) 1800ms;
+  }
+
+  /* booking: the path of one booking */
+  .adv-hs__flowWrap {
+    display: grid;
+    gap: 16px;
+  }
+  .adv-hs__flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-hs__flow li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 18px 16px;
+    border-radius: 14px;
+    background: linear-gradient(165deg, var(--adv-surface-1), var(--adv-surface-2));
+    box-shadow: var(--adv-shadow-card);
+    font-size: 0.875rem;
+  }
+  .adv-hs__flow li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    width: 12px;
+    height: 1px;
+    background: var(--adv-accent);
+  }
+  .adv-hs__flow li > span:last-child {
+    color: var(--adv-muted);
+  }
+  .adv-hs__idx {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .js .adv-hs__flow.is-armed li {
+    opacity: 0;
+    translate: 0 10px;
+    transition:
+      opacity 450ms var(--adv-ease),
+      translate 450ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 220ms);
+  }
+  .js .adv-hs__flow.is-playing li {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .adv-hs__bars {
+    display: grid;
+    gap: 22px;
+    padding: 26px;
+  }
+  .adv-hs__barHead {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 0.9375rem;
+    color: var(--adv-muted);
+  }
+  .adv-hs__barHead strong {
+    color: var(--adv-text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .adv-hs__track {
+    height: 12px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+  }
+  .adv-hs__track i {
+    display: block;
+    height: 100%;
+    width: calc(var(--w) * 100%);
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.16));
+    transform-origin: left;
+  }
+  .adv-hs__track i.is-new {
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.6));
+  }
+  .js .adv-hs__bars.is-armed .adv-hs__track i {
+    transform: scaleX(0);
+    transition: transform 1100ms var(--adv-ease);
+  }
+  .js .adv-hs__bars.is-armed .adv-hs__barRow + .adv-hs__barRow .adv-hs__track i {
+    transition-delay: 180ms;
+  }
+  .js .adv-hs__bars.is-playing .adv-hs__track i {
+    transform: none;
+  }
+
+  /* support: launch to today */
+  .adv-hs__timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 36px 26px 26px;
+    list-style: none;
+  }
+  .adv-hs__timeline::before {
+    content: '';
+    position: absolute;
+    top: 42px;
+    left: 32px;
+    right: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--adv-accent), rgba(124, 200, 255, 0.25));
+    transform-origin: left;
+  }
+  .adv-hs__timeline li {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    font-size: 0.9375rem;
+  }
+  .adv-hs__timeline li i {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+    box-shadow: 0 0 0 4px rgba(124, 200, 255, 0.15);
+  }
+  .adv-hs__timeline li:last-child span {
+    font-weight: 600;
+  }
+  .js .adv-hs__timeline.is-armed::before {
+    transform: scaleX(0);
+  }
+  .js .adv-hs__timeline.is-playing::before {
+    transform: none;
+    transition: transform 1500ms var(--adv-ease);
+  }
+  .js .adv-hs__timeline.is-armed li {
+    opacity: 0;
+  }
+  .js .adv-hs__timeline.is-playing li {
+    opacity: 1;
+    transition: opacity 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 380ms);
+  }
+
+  .adv-hs__gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .adv-hs__shot.is-wide {
+    grid-column: 1 / -1;
+  }
+  .adv-hs__shot a {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      var(--adv-shadow-card),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .adv-hs__shot img {
+    width: 100%;
+    height: auto;
+    transition: transform 700ms var(--adv-ease);
+  }
+  .adv-hs__shot a:hover img {
+    transform: scale(1.015);
+  }
+  .adv-hs__shot figcaption {
+    margin-top: 10px;
+    font-size: 0.875rem;
+    color: var(--adv-muted);
+  }
+  .adv-hs__masked {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+
+  .adv-hs__results {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-hs__results li {
+    padding: 26px;
+  }
+  .adv-hs__resultValue {
+    font-family: var(--adv-display);
+    font-size: clamp(2.5rem, 1.8rem + 2vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-hs__resultLabel {
+    margin-top: 12px;
+    color: var(--adv-muted);
+  }
+  .adv-hs__footnote {
+    max-width: 90ch;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-hs__ctaLine {
+    padding: clamp(48px, 6vw, 80px) 0 0;
+    font-family: var(--adv-display);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 600;
+    max-width: 30ch;
+  }
+
+  @media (max-width: 1000px) {
+    .adv-hs__flow {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .adv-hs__flow li:nth-child(3n)::after {
+      display: none;
+    }
+  }
+  @media (max-width: 860px) {
+    .adv-hs__heroGrid,
+    .adv-hs__split,
+    .adv-hs__gallery,
+    .adv-hs__results {
+      grid-template-columns: 1fr;
+    }
+    .adv-hs__timeline {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 22px;
+    }
+    .adv-hs__timeline::before {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .adv-hs__flow {
+      grid-template-columns: 1fr;
+    }
+    .adv-hs__flow li::after {
+      display: none;
+    }
+  }
+
+  /* hero: the seven tabs of a product */
+  .adv-hs__tabs {
+    display: grid;
+    gap: 14px;
+    padding: 24px;
+  }
+  .adv-hs__tabs ol {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .adv-hs__tabs li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    font-weight: 500;
+  }
+  .adv-hs__idx {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-accent);
+  }
+  .adv-hs__note {
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+  .js .adv-hs__tabs.is-armed li {
+    opacity: 0;
+    translate: 0 8px;
+    transition:
+      opacity 400ms var(--adv-ease),
+      translate 400ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 170ms);
+  }
+  .js .adv-hs__tabs.is-playing li {
+    opacity: 1;
+    translate: 0 0;
+  }
+</style>

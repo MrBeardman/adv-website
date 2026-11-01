@@ -3,6 +3,7 @@
 import Case from '../../templates/Case.astro';
 import KesiaLivePricing from '../../templates/KesiaLivePricing.astro';
 import LaserArenaPraha from '../../templates/LaserArenaPraha.astro';
+import HomeStyle from '../../templates/HomeStyle.astro';
 import { caseStudiesWithPages } from '../../data/caseStudies';
 
 export function getStaticPaths() {
@@ -16,6 +17,8 @@ const { c } = Astro.props;
     <KesiaLivePricing lang="cs" c={c} />
   ) : c.detail?.layout === 'laser-arena-praha' ? (
     <LaserArenaPraha lang="cs" c={c} />
+  ) : c.detail?.layout === 'homestyle' ? (
+    <HomeStyle lang="cs" c={c} />
   ) : (
     <Case lang="cs" c={c} />
   )

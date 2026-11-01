@@ -44,6 +44,16 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **HomeStyle case (Nov 1, new page, DRAFT: dev only)** (`src/i18n/homestyle.json`, CS + EN, `templates/HomeStyle.astro`, case
+  `homestyle` in `caseStudies.ts`, status `draft`, state `in-progress`): title "Showroom, který si majitel konečně řídí
+  sám.", sections: the seven product tabs (hero), a web where the owner could set nothing (six locks), old vs new homepage,
+  what we built (needs ticked off), the admin, the catalogue, "the move continues and so does support", where we are now.
+  Numbers: 151 products and 8 brands from the admin on Nov 1 2026 (the owner is still moving products over, so they
+  grow), ~150 ms = measured server response of the new site on its staging address (147 ms). NO savings are claimed:
+  none were supplied. The old site's agency/CMS is deliberately not named. Screens are from the real admin and the
+  staging site (the client's name and an in-progress draft were kept out of the shots). Open before publishing: client
+  approval to be named, go-live on homestyle.cz, real before/after numbers (time saved, enquiries), a quote, and the
+  security clean-up on the staging site (PHP backups under uploads, "admin" user, headers) before any security claim.
 - **Laser Arena Praha case (Nov 1, new page)** (`src/i18n/laser.json`, CS + EN, `templates/LaserArenaPraha.astro`, case in
   `caseStudies.ts`, published): title "Rezervační systém, který si majitel konečně upraví sám.", lead, six sections (web nobody
   could change, we listened, built to be changed, bookings run themselves, support for years, what changed). Numbers are

@@ -1,0 +1,170 @@
+{
+  "cs": {
+    "hs": {
+      "metaTitle": "HomeStyle: showroom, který si majitel řídí sám · ADV Innovations",
+      "title": "Showroom, který si majitel konečně řídí sám.",
+      "lead": "HomeStyle je pražský showroom evropského nábytku s osmi značkami. Starý web ho svazoval: štítky, materiály, pořadí ani filtry si nemohl upravit. Postavili jsme mu nový, rychlý web a administraci, ve které si nastaví skoro všechno sám.",
+      "tabs": {
+        "label": "Jeden produkt, sedm záložek",
+        "note": "Názvy záložek v administraci. Ilustrace.",
+        "srNote": "Animovaný seznam sedmi záložek, které má v administraci každý produkt.",
+        "items": ["Základní", "Stav a štítky", "Galerie", "Materiály", "Sestavy", "Co produkt umí", "Soubory a tlačítka"]
+      },
+      "facts": {
+        "client": "Klient",
+        "clientValue": "HomeStyle",
+        "sector": "Obor",
+        "sectorValue": "Nábytek, showroom v Praze",
+        "live": "Nový web",
+        "liveValue": "Běží, produkty se převádějí",
+        "status": "Stav"
+      },
+      "problem": {
+        "title": "Web, ve kterém majitel nemohl nic nastavit.",
+        "body": "Starý web byl dlouhá stránka, kterou měl majitel pod kontrolou jen z malé části. Hlavně u produktů: nešlo přidat vlastní štítky a typy, napsat, z jakých materiálů se vyrábí, nabídnout doplňky, seřadit značky a produkty podle sebe, ani nastavit filtry. Automatizace nebyla žádná.",
+        "locks": [
+          "Vlastní štítky a typy produktů",
+          "Materiály u každého produktu",
+          "Doplňky a oblíbené sestavy",
+          "Pořadí značek a produktů",
+          "Filtry v katalogu",
+          "Automatizace"
+        ]
+      },
+      "listen": {
+        "title": "Postavili jsme to, co skutečně potřeboval.",
+        "body": "Nezačali jsme obecným e-shopem. Ptali jsme se, jak showroom opravdu prodává: co chce ukázat, co skrýt a co nabídnout k čemu. Z toho vzniklo vlastní řešení na míru, které je zároveň přehledné.",
+        "counter": "produktů už je na novém webu",
+        "items": [
+          "Štítky: Novinka, Akce, Výprodej a Vystaveno v showroomu",
+          "Materiály a barvy u každého produktu, filtr se doplní sám",
+          "Oblíbené sestavy s fotkami, rozměry a cenami podle materiálu",
+          "Doplňky: které produkty se k sobě hodí",
+          "Cena na kartě i v detailu zapnutá nebo vypnutá zvlášť",
+          "Pořadí značek a produktů přetažením myší",
+          "Filtry podle značky, kategorie, místnosti a materiálu",
+          "Poptávky z webu se samy ukládají a chodí e-mailem"
+        ]
+      },
+      "flex": {
+        "title": "Administrace, ve které se majitel vyzná.",
+        "body": "Žádný zmatek z WordPressu. Majitel po přihlášení vidí velké dlaždice s tím, co dělá nejčastěji: přidat produkt, značky, poptávky, fotky, úvodní stránku a nastavení webu. A návod, jak přidat produkt, má rovnou před očima."
+      },
+      "catalogue": {
+        "title": "Katalog, který se dá procházet.",
+        "body": "Návštěvník filtruje podle značky, kategorie, místnosti, materiálu a stavu a u každé volby vidí, kolik produktů zbývá. Odkaz s vybraným filtrem se dá poslat dál. Web je rychlý: odpověď serveru trvá zhruba 150 milisekund."
+      },
+      "support": {
+        "title": "Převod pokračuje, podpora také.",
+        "body": "Majitel produkty převádí postupně a už teď si je upravuje a řadí sám. Když narazí na něco, co web neumí, doplníme to. Podpora u nás nekončí spuštěním.",
+        "steps": ["Staré údaje uklizené", "Nový web postavený", "Majitel převádí produkty", "Podpora podle potřeby"]
+      },
+      "results": {
+        "title": "Kde jsme teď.",
+        "items": [
+          { "prefix": "", "target": 151, "suffix": "", "final": "151", "label": "produktů je už na novém webu, další majitel postupně přidává" },
+          { "prefix": "", "target": 8, "suffix": "", "final": "8", "label": "značek, které si majitel řadí a popisuje sám" },
+          { "prefix": "~", "target": 150, "suffix": " ms", "final": "~150 ms", "label": "trvá odpověď serveru na úvodní stránku" }
+        ],
+        "footnote": "Stav k 1. 11. 2026, z administrace a z měření výkonu nového webu na zkušební adrese (147 ms, v době měření bez zátěže). Nový web zatím běží vedle starého; na adresu homestyle.cz přejde po dokončení převodu produktů. Čísla se budou měnit, jak majitel přidává další produkty."
+      },
+      "shots": {
+        "dashboard": "Úvodní obrazovka administrace majitele.",
+        "list": "Seznam produktů: pořadí se mění přetažením.",
+        "status": "Štítky a stav produktu, třeba Vystaveno v showroomu.",
+        "materials": "Materiály, ve kterých se produkt vyrábí.",
+        "gallery": "Galerie produktu: fotky i videa, pořadí přetažením.",
+        "oldHome": "Starý web",
+        "newHome": "Nový web",
+        "catalogue": "Katalog s filtry a počty u každé volby.",
+        "product": "Stránka produktu: popis, štítek Vystaveno, materiály.",
+        "masked": "Snímky jsou z reálné administrace a zkušebního webu. Kliknutím je otevřete v plné velikosti."
+      },
+      "cta": "Nemůžete na webu změnit, co potřebujete? Tam obvykle začínáme."
+    }
+  },
+  "en": {
+    "hs": {
+      "metaTitle": "HomeStyle: a showroom the owner runs himself · ADV Innovations",
+      "title": "A showroom the owner finally runs himself.",
+      "lead": "HomeStyle is a Prague showroom for European furniture, with eight brands. The old site held it back: tags, materials, the order of things and filters were out of the owner's hands. We built a new, fast site and an admin where he sets almost everything himself.",
+      "tabs": {
+        "label": "One product, seven tabs",
+        "note": "Tab names in the admin. Illustration.",
+        "srNote": "An animated list of the seven tabs every product has in the admin.",
+        "items": ["Basics", "Status and tags", "Gallery", "Materials", "Sets", "What it can do", "Files and buttons"]
+      },
+      "facts": {
+        "client": "Client",
+        "clientValue": "HomeStyle",
+        "sector": "Sector",
+        "sectorValue": "Furniture, showroom in Prague",
+        "live": "New site",
+        "liveValue": "Running, products being moved over",
+        "status": "Status"
+      },
+      "problem": {
+        "title": "A site where the owner couldn't set anything.",
+        "body": "The old site was one long page the owner controlled only in small part. Above all the products: he couldn't add his own tags and types, say what each is made of, offer add-ons, put brands and products in his own order, or set up filters. There was no automation at all.",
+        "locks": [
+          "Your own tags and product types",
+          "Materials on every product",
+          "Add-ons and favourite sets",
+          "The order of brands and products",
+          "Filters in the catalogue",
+          "Automation"
+        ]
+      },
+      "listen": {
+        "title": "We built what he actually needed.",
+        "body": "We didn't start from a generic shop. We asked how the showroom really sells: what he wants to show, hide and offer with what. That became a custom build that is also easy to follow.",
+        "counter": "products are already on the new site",
+        "items": [
+          "Tags: New, Sale, Clearance and On display in the showroom",
+          "Materials and colours on each product, the filter fills itself",
+          "Favourite sets with photos, dimensions and prices by material",
+          "Add-ons: which products go together",
+          "Price on the card and in the detail switched on or off separately",
+          "Brands and products ordered by dragging",
+          "Filters by brand, category, room and material",
+          "Enquiries from the site save themselves and arrive by email"
+        ]
+      },
+      "flex": {
+        "title": "An admin the owner finds easy.",
+        "body": "None of WordPress's clutter. After login the owner sees big tiles for what he does most: add a product, brands, enquiries, photos, the homepage and site settings. And the how-to for adding a product is right in front of him."
+      },
+      "catalogue": {
+        "title": "A catalogue you can browse.",
+        "body": "Visitors filter by brand, category, room, material and status, and see how many products are left for each choice. A link with the filter set can be shared. The site is fast: the server answers in about 150 milliseconds."
+      },
+      "support": {
+        "title": "The move continues, and so does support.",
+        "body": "The owner is moving products over step by step, and already edits and orders them himself. When he hits something the site can't do, we add it. With us, support doesn't end at launch.",
+        "steps": ["Old data cleaned up", "New site built", "Owner moves products over", "Support as needed"]
+      },
+      "results": {
+        "title": "Where we are now.",
+        "items": [
+          { "prefix": "", "target": 151, "suffix": "", "final": "151", "label": "products are already on the new site, and the owner keeps adding more" },
+          { "prefix": "", "target": 8, "suffix": "", "final": "8", "label": "brands the owner orders and describes himself" },
+          { "prefix": "~", "target": 150, "suffix": " ms", "final": "~150 ms", "label": "for the server to answer the homepage" }
+        ],
+        "footnote": "Status on 1 Nov 2026, from the admin and from a performance measurement of the new site on its staging address (147 ms, with no load at the time). The new site runs alongside the old one for now and moves to the homestyle.cz address when the product move is finished. The numbers will change as the owner adds more products."
+      },
+      "shots": {
+        "dashboard": "The owner's home screen in the admin.",
+        "list": "The product list: the order changes by dragging.",
+        "status": "Tags and status of a product, such as On display in the showroom.",
+        "materials": "The materials a product comes in.",
+        "gallery": "A product's gallery: photos and video, order by dragging.",
+        "oldHome": "Old site",
+        "newHome": "New site",
+        "catalogue": "The catalogue with filters and counts on every choice.",
+        "product": "A product page: description, On display tag, materials.",
+        "masked": "Screenshots are from the real admin and the staging site. Select one to open it full size."
+      },
+      "cta": "Can't change what you need on your site? That is usually where we start."
+    }
+  }
+}
