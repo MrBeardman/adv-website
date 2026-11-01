@@ -130,12 +130,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     detail: { layout: 'laser-arena-praha', state: 'ongoing-support' },
   },
   {
-    /* Custom WordPress site + admin for a Prague furniture showroom. DRAFT (dev only) until the client's approval and
+    /* Custom WordPress site + admin for a Prague furniture showroom. PUBLISHED on request (Nov 1 2026); still open: the client's approval and
      * the go-live on homestyle.cz are confirmed; the new site still runs beside the old one and the owner is moving
      * products over. Numbers: 151 products and 8 brands from the admin (Nov 1 2026), ~150 ms measured server response.
      * No savings are claimed (none supplied). Own page layout (templates/HomeStyle.astro), copy in i18n/homestyle.json. */
     slug: 'homestyle',
-    status: 'draft',
+    status: 'published',
     client: { en: 'HomeStyle' },
     sector: { en: 'Furniture', cs: 'Nábytek' },
     year: 2026,

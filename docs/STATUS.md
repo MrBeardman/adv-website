@@ -44,8 +44,8 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
-- **HomeStyle case (Nov 1, new page, DRAFT: dev only)** (`src/i18n/homestyle.json`, CS + EN, `templates/HomeStyle.astro`, case
-  `homestyle` in `caseStudies.ts`, status `draft`, state `in-progress`): title "Showroom, který si majitel konečně řídí
+- **HomeStyle case (Nov 1, new page, published on request)** (`src/i18n/homestyle.json`, CS + EN, `templates/HomeStyle.astro`, case
+  `homestyle` in `caseStudies.ts`, status `published`, state `in-progress`): title "Showroom, který si majitel konečně řídí
   sám.", sections: the seven product tabs (hero), a web where the owner could set nothing (six locks), old vs new homepage,
   what we built (needs ticked off), the admin, the catalogue, "the move continues and so does support", where we are now.
   Numbers: 151 products and 8 brands from the admin on Nov 1 2026 (the owner is still moving products over, so they
