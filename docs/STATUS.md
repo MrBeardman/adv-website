@@ -1,6 +1,7 @@
 # Status (2026-10-26)
 
 ## Preview phase: FLIP AT LAUNCH
+
 - The whole site is **noindex, nofollow** and `robots.txt` disallows everything while it is a preview
   (Hostinger preview, Honza's colleagues). One switch: `PUBLIC_SITE_INDEXABLE=true` in the build environment
   (`src/data/site.ts`), then rebuild. Without it: every page carries
@@ -9,6 +10,7 @@
   presentable milestones. Never force-push.
 
 ## Done
+
 - Astro stack scaffold (Jenomics pattern), fonts, media, CS + EN copy ported from PersonalPortfolio
   `adv-rebrand`, data modules (services with the `enabled` switch, case visibility rules, headline numbers,
   partners, routes).
@@ -44,6 +46,7 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+
 - **GEO / SEO layer (Nov 4)** (`src/i18n/geo.json`, CS + EN; research and reasoning in `docs/GEO.md`):
   - "V kostce" / "In short" block (`components/Plain.astro`) on the automation page, the three service pages
     and the about page: one plain paragraph (what, for whom, where, on which systems) + four facts. Names
@@ -52,8 +55,17 @@
   - "Otázky a odpovědi" / "Questions" (`components/Faq.astro`) on the homepage (6) and every service page
     (6–8): phrased as buyers ask. CLAIMS TO CONFIRM: price bands (menší automatizace do 80 000 Kč; nástroj,
     web, prototyp 80–250 000 Kč; propojený systém nad 250 000 Kč = the inquiry budget bands), "mapování
-    procesů 2–3 dny", "první verze do 2–3 měsíců", "kód a data patří vám", "evropské servery, kde to jde",
+    procesů 2–3 dny", "kód a data patří vám", "evropské servery, kde to jde",
     "n8n na vlastním serveru", "dlouhodobou správu kampaní neděláme", "mluvíme česky, anglicky, německy".
+    Delivery times (Honza, Nov 4 evening): "prezentační web do 3 dnů" and "funkční prototyp do 7 dnů" are his
+    numbers; "první automatizace do 7 dnů od zadání" and "jednoduché napojení od 24 hodin" match the fastest
+    competitors in the ChatGPT test (Adaptis "integrace za 7 dní", apios "napojení e-shopu od 24 h") on his
+    "match the fastest" instruction; "e-shop / web s administrací: první verze do 7 dnů, spuštění v řádu
+    týdnů" and "první verze softwaru v provozu do 3 týdnů" (= the homepage card) are MY alignment, CONFIRM.
+    Also new: "lokální AI modely na vlastním serveru" (automation fact, body, GDPR FAQ), "každý běh se
+    loguje" (error FAQ), WordPress/Shoptet framing "umíme, stavíme na míru, ale doporučíme vlastní kód;
+    WordPress byl standard, ne nejlepší volba" + a new FAQ "Stavíte na WordPressu nebo Shoptetu?" naming
+    Laser Arena Praha as a custom WordPress build (Honza). Reference facts link to the case pages.
   - Service page titles + meta descriptions (`geo.json` → `meta`), e.g. "Automatizace firemních procesů a AI
     pro firmy · ADV Innovations".
   - Automation page H1: "Faktury, dotazy, objednávky. / Běží samy." (typewriter: samy. / automaticky. / bez
@@ -132,7 +144,9 @@
 - **Header CTA** is now a split pill: "Spustit poptávku" (homepage inquiry flow) | "Kontakt" (contact page).
 
 ## Performance (Nov 1 2026)
+
 PageSpeed (pagespeed.web.dev, no GPU) first run: mobile 50-60 (LCP 3.9-4.1 s, TBT 1.5 s), desktop 65. Causes and fixes:
+
 - Hero copy (`data-reveal`/`data-lines`) waited for site.ts, queued behind three.js: now a CSS-only entrance
   (`HeroFlow.astro`). LCP 4.1 s to 1.6 s.
 - Hero scene (`scripts/flow/engine.ts`) booted at load: now after first paint + idle, async shader compile, yields.
@@ -140,12 +154,13 @@ PageSpeed (pagespeed.web.dev, no GPU) first run: mobile 50-60 (LCP 3.9-4.1 s, TB
 - `scripts/gl.ts`: `failIfMajorPerformanceCaveat` skips both scenes on software-GL (PageSpeed, GPU-less PCs); they get
   the page-without-WebGL look. Flip `REQUIRE_HARDWARE_GL` to run them everywhere (lab score then about 70 mobile).
 - Fonts moved to `src/assets/fonts` (hashed `/_astro/` URLs, one-year immutable cache).
-Local Lighthouse, software GL: mobile 99, desktop 100. Real GPU mobile still about 71 in the lab (one ~0.3 s
-shader-link hitch in the hero scene; simplify the fragment shader if it matters). SEO 69 = preview noindex only.
-Re-test on the live URL after each deploy: `npx lighthouse URL --only-categories=performance [--preset=desktop]`,
-and with `--chrome-flags="--headless=new --disable-gpu"` to mimic PageSpeed.
+  Local Lighthouse, software GL: mobile 99, desktop 100. Real GPU mobile still about 71 in the lab (one ~0.3 s
+  shader-link hitch in the hero scene; simplify the fragment shader if it matters). SEO 69 = preview noindex only.
+  Re-test on the live URL after each deploy: `npx lighthouse URL --only-categories=performance [--preset=desktop]`,
+  and with `--chrome-flags="--headless=new --disable-gpu"` to mimic PageSpeed.
 
 ## Launch checklist
+
 - [ ] Replace placeholder numbers in `src/data/homeNumbers.ts`: AI **1,200 h** and Software **14 days**
       (`placeholder: true`, dashed outline in dev builds).
 - [ ] Savings slider assumptions (46 weeks, 70 %, 450 CZK/h) confirmed or changed (`07-savings.astro`).
@@ -176,6 +191,7 @@ and with `--chrome-flags="--headless=new --disable-gpu"` to mimic PageSpeed.
       (`src/data/seo.ts`); the FAQ price bands and policies confirmed (New copy above).
 
 ## Open decisions (Honza)
+
 - Headline emphasis: default is the same face in Ice; the Relay-style Instrument Serif italic is one switch
   (`EM_STYLE` in `src/data/site.ts`: 'ice' | 'serif' | 'off'). The impeccable detector flags the serif.
 - Logo tile on dark: Ice via `--adv-logo-tile` (brand guide 1.0 says Signal amber; amber is retired).

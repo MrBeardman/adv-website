@@ -11,14 +11,14 @@ search, and quote the pages that state things plainly.
 Pulled from the live suggest endpoints (`suggestqueries.google.com`, hl=cs; `suggest.seznam.cz`). These
 are the real phrasings; our headings and the "V kostce" blocks use them.
 
-| Need | Czech phrasings people actually type |
-| --- | --- |
-| Automation | automatizace procesů **ve firmě**, automatizace **firemních** procesů, automatizace **podnikových** procesů (Seznam), automatizace **účetních** procesů, robotická automatizace procesů (RPA), automatizace faktur / fakturace, **ai zpracování faktur**, automatizace objednávek (shoptet) |
-| AI | ai pro firmy → **ai agenti pro firmy**, **ai automatizace pro firmy**, **ai asistent pro firmy**, školení ai pro firmy, claude ai pro firmy |
-| Integration | **propojení systémů**, napojení eshopu na pohodu |
-| Software | **vývoj aplikace na míru (praha)**, **webová aplikace na míru praha**, software na míru → vývoj software na míru, **crm na míru (praha)**, interní systém pro firmu, prototyp aplikace, vývoj mvp |
-| Web | **tvorba webu praha**, tvorba eshopu → cena / na míru / shoptet / shopify / praha, kdo mi udělá web / webové stránky, nový web pro firmu |
-| Change | **digitalizace firmy** (+ dotace, praha) |
+| Need        | Czech phrasings people actually type                                                                                                                                                                                                                                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Automation  | automatizace procesů **ve firmě**, automatizace **firemních** procesů, automatizace **podnikových** procesů (Seznam), automatizace **účetních** procesů, robotická automatizace procesů (RPA), automatizace faktur / fakturace, **ai zpracování faktur**, automatizace objednávek (shoptet) |
+| AI          | ai pro firmy → **ai agenti pro firmy**, **ai automatizace pro firmy**, **ai asistent pro firmy**, školení ai pro firmy, claude ai pro firmy                                                                                                                                                 |
+| Integration | **propojení systémů**, napojení eshopu na pohodu                                                                                                                                                                                                                                            |
+| Software    | **vývoj aplikace na míru (praha)**, **webová aplikace na míru praha**, software na míru → vývoj software na míru, **crm na míru (praha)**, interní systém pro firmu, prototyp aplikace, vývoj mvp                                                                                           |
+| Web         | **tvorba webu praha**, tvorba eshopu → cena / na míru / shoptet / shopify / praha, kdo mi udělá web / webové stránky, nový web pro firmu                                                                                                                                                    |
+| Change      | **digitalizace firmy** (+ dotace, praha)                                                                                                                                                                                                                                                    |
 
 Takeaways: people add **Praha** to software/web queries (Seznam suggests "…na míru praha" for every
 software term); they name the systems (**Pohoda, Shoptet**); "optimalizace firmy" is not a search term
@@ -33,13 +33,13 @@ What matters is **who wins and why ChatGPT says it picked them**:
 1. CZ: "Doporuč mi firmu v Praze, která malé firmě zautomatizuje faktury a objednávky, napojí e-shop na
    Pohodu a postaví k tomu interní systém a web."
    → Adaptis IT (1st), Velupasoft, PragueCoding, apios, XART, WEBZI.
-   Reasons given: *"na svém webu popisuje přesně kombinaci funkcí, kterou hledáte"*, named systems
+   Reasons given: _"na svém webu popisuje přesně kombinaci funkcí, kterou hledáte"_, named systems
    (Pohoda, Shoptet API), named realised projects, an address, **a published rate** (apios: od 1 500 Kč/h,
    napojení e-shopu od 24 h).
 2. CZ: "Hledám firmu v Praze, která nejdřív pochopí náš byznys, pak pomocí AI zautomatizuje rutinu
    (e-maily, doklady, reporting), postaví nám interní systém s jedním dashboardem a nový web. 15 lidí."
    → MATUCHA.DEV (1st), Prahapp, Elementario, Haxo.
-   Reasons: *"pojetí jednoho firemního systému, který propojuje data, lidi, automatizace a reporting"*
+   Reasons: _"pojetí jednoho firemního systému, který propojuje data, lidi, automatizace a reporting"_
    (= ADV's own positioning, stated plainly on their site), Prahapp's explicit list + "prototyp zdarma do
    tří pracovních dnů", Elementario's audit → návrh → vývoj process, Haxo's "přes 100 projektů" + Praha 1.
    MATUCHA.DEV's site was in maintenance mode at the time and still won: the model also answers from memory,
@@ -54,16 +54,16 @@ milestone payments. Our FAQ answers exactly these.
 
 ### What the winners' pages have (and ours did not)
 
-| | Adaptis IT | Prahapp | Velupasoft | ADV before | ADV now |
-| --- | --- | --- | --- | --- | --- |
-| Words on the money page | 2 241 | 1 734 | 420 | ~730 | ~1 200 |
-| Concrete H3s naming the job (faktury, Shoptet API, Pohoda sync…) | 15+ | 10 | 6 | 3 slogans | 16–21 |
-| Systems named in body text | Pohoda, Shoptet, GRiT, Retino | ERP, CRM | Pohoda, ABRA, Money S3 | none (only inside a demo) | Pohoda, Fakturoid, Shoptet, Shopify, n8n, Make, OpenAI, Claude, WordPress |
-| Price or rate | yes | yes | no | no | budget bands (to confirm) |
-| City in body text | no | yes | yes + schema | footer only | yes, every service page |
-| FAQ / "Questions" section | no | yes | yes | no | yes (6–8 per page) |
-| Organization schema with description | yes | ProfessionalService @graph | LocalBusiness + address | minimal Organization | ProfessionalService + WebSite + Service + FAQPage + BreadcrumbList |
-| llms.txt | no | no | (HTML, broken) | no | yes, generated |
+|                                                                  | Adaptis IT                    | Prahapp                    | Velupasoft              | ADV before                | ADV now                                                                   |
+| ---------------------------------------------------------------- | ----------------------------- | -------------------------- | ----------------------- | ------------------------- | ------------------------------------------------------------------------- |
+| Words on the money page                                          | 2 241                         | 1 734                      | 420                     | ~730                      | ~1 200                                                                    |
+| Concrete H3s naming the job (faktury, Shoptet API, Pohoda sync…) | 15+                           | 10                         | 6                       | 3 slogans                 | 16–21                                                                     |
+| Systems named in body text                                       | Pohoda, Shoptet, GRiT, Retino | ERP, CRM                   | Pohoda, ABRA, Money S3  | none (only inside a demo) | Pohoda, Fakturoid, Shoptet, Shopify, n8n, Make, OpenAI, Claude, WordPress |
+| Price or rate                                                    | yes                           | yes                        | no                      | no                        | budget bands (to confirm)                                                 |
+| City in body text                                                | no                            | yes                        | yes + schema            | footer only               | yes, every service page                                                   |
+| FAQ / "Questions" section                                        | no                            | yes                        | yes                     | no                        | yes (6–8 per page)                                                        |
+| Organization schema with description                             | yes                           | ProfessionalService @graph | LocalBusiness + address | minimal Organization      | ProfessionalService + WebSite + Service + FAQPage + BreadcrumbList        |
+| llms.txt                                                         | no                            | no                         | (HTML, broken)          | no                        | yes, generated                                                            |
 
 ## 3. Where these buyers are
 
@@ -142,8 +142,15 @@ after indexing for the live-search engines; longer for answers from memory.
 - Price bands in the FAQs (under 80 000 / 80–250 000 / over 250 000 Kč) reuse the inquiry budget bands
   (`data/inquiry.ts`, still a first guess). Confirm or change: ChatGPT rewards a published range, but it must
   be one you will honour.
-- "Kód a data patří vám", "evropské servery kde to jde", "mapování 2–3 dny", "první verze do 2–3 měsíců":
-  written as policy; confirm.
+- "Kód a data patří vám", "evropské servery kde to jde", "mapování 2–3 dny": written as policy; confirm.
+- Delivery times (decided Nov 4 evening, see STATUS.md "New copy"): prezentační web do 3 dnů, prototyp do
+  7 dnů (Honza); první automatizace do 7 dnů, napojení od 24 h (= Adaptis / apios, "match the fastest");
+  e-shop first version 7 days + software first version 3 weeks still to confirm. One number per promise,
+  everywhere (geo.json, services.json, serviceDeep.json, homeNumbers.ts): a model that reads two different
+  numbers trusts neither.
+- WordPress and Shoptet stay in the copy (the queries are typed a lot), framed as "umíme, stavíme na míru,
+  ale doporučíme vlastní kód": keeps the match, states the real offer, and is a niche no winner claims.
+  Follow-up: a post "Proč nestavíme nový web na WordPressu" for the comparison queries ("wordpress nebo…").
 - The automation page's new H1 (replaces the homepage headline there).
 - `SAME_AS` profile URLs; founded year and team size for the about facts (not stated anywhere, so not claimed).
 - Niche: the research says the winners are the ones that name a system and a job ("Shoptet → Pohoda",

@@ -52,7 +52,7 @@
           },
           {
             "q": "Za jak dlouho uvidíme první výsledek?",
-            "a": "Nezačínáme velkým projektem. První automatizace nebo prototyp bývá hotový v řádu týdnů, pak přidáváme další kroky, dokud firma neběží tak, jak má. Každá část se používá dřív, než se plánuje ta další."
+            "a": "Rychle. Prezentační web máte do 3 dnů, funkční prototyp aplikace do 7 dnů a první automatizace běží do 7 dnů od zadání. Nezačínáme velkým projektem: pak přidáváme další kroky, dokud firma neběží tak, jak má, a každá část se používá dřív, než se plánuje ta další."
           },
           {
             "q": "Na jaké systémy se umíte napojit?",
@@ -67,12 +67,12 @@
         },
         "plain": {
           "title": "Automatizace a AI, v kostce.",
-          "body": "Automatizace firemních procesů a AI pro malé a střední firmy v Praze a po celém Česku: zpracování faktur a objednávek, třídění a odpovídání na e-maily, napojení e-shopu (Shoptet, Shopify) na účetnictví (Pohoda, Fakturoid), reporting, který se skládá sám, a AI asistenti pro opakované dotazy. Stavíme na n8n, Make a modelech OpenAI a Claude, nebo na vlastním kódu, a napojujeme to na systémy, které už používáte. Člověk rozhoduje tam, kde jde o úsudek.",
+          "body": "Automatizace firemních procesů a AI pro malé a střední firmy v Praze a po celém Česku: zpracování faktur a objednávek, třídění a odpovídání na e-maily, napojení e-shopu (Shoptet, Shopify) na účetnictví (Pohoda, Fakturoid), reporting, který se skládá sám, a AI asistenti pro opakované dotazy. Stavíme na n8n, Make a modelech OpenAI a Claude, nebo na lokálních AI modelech na vlastním serveru, když data nesmí ven, nebo na vlastním kódu, a napojujeme to na systémy, které už používáte. Člověk rozhoduje tam, kde jde o úsudek.",
           "facts": [
             { "label": "Co automatizujeme", "value": "Faktury a doklady, objednávky, e-maily a poptávky, reporting, schvalování, přenos dat mezi systémy" },
-            { "label": "Na čem", "value": "n8n, Make, OpenAI, Claude, API vašich systémů, vlastní kód" },
+            { "label": "Na čem", "value": "n8n, Make, OpenAI, Claude, lokální AI modely na vlastním serveru, API vašich systémů, vlastní kód" },
             { "label": "Napojení", "value": "Pohoda, Fakturoid, Shoptet, Shopify, Google Workspace, Microsoft 365" },
-            { "label": "Začátek", "value": "Hovor zdarma, mapování procesů, první proces běží v řádu týdnů" }
+            { "label": "Začátek", "value": "Hovor zdarma, mapování procesů, první proces běží do 7 dnů" }
           ]
         },
         "faq": [
@@ -98,15 +98,15 @@
           },
           {
             "q": "Jak dlouho to trvá?",
-            "a": "První proces běží v řádu týdnů. Pak napojujeme další, jeden po druhém, takže úspora roste každý měsíc a firma si na změnu zvyká postupně, ne naráz."
+            "a": "První automatizace běží do 7 dnů od zadání, jednoduché napojení (e-shop na Pohodu) od 24 hodin. Pak napojujeme další, jeden po druhém, takže úspora roste každý měsíc a firma si na změnu zvyká postupně, ne naráz."
           },
           {
             "q": "Co s daty a GDPR?",
-            "a": "Data zůstávají ve vašich systémech. Před spuštěním se domluvíme, co smí AI vidět, co se nesmí posílat ven a které kroky musí schválit člověk. Kde to jde, používáme evropské servery a n8n na vlastním serveru."
+            "a": "Data zůstávají ve vašich systémech. Před spuštěním se domluvíme, co smí AI vidět, co se nesmí posílat ven a které kroky musí schválit člověk. Citlivá data může zpracovávat lokální AI model na vlastním serveru, takže neodcházejí k žádnému poskytovateli. Kde to jde, používáme evropské servery a n8n na vlastním serveru."
           },
           {
             "q": "Může AI udělat chybu?",
-            "a": "Může, proto ji nenecháváme rozhodovat o penězích a závazcích sama. Doklady nad limit, nezvyklé částky a odpovědi zákazníkům čekají na schválení člověkem, a každý běh je dohledatelný: vidíte, co se stalo, kdy a proč."
+            "a": "Může, proto ji nenecháváme rozhodovat o penězích a závazcích sama. Doklady nad limit, nezvyklé částky a odpovědi zákazníkům čekají na schválení člověkem. Každý běh se loguje: vidíte, co AI dostala na vstupu, co s tím udělala, kdy a proč, a každý krok jde dohledat a vrátit."
           }
         ]
       },
@@ -148,29 +148,37 @@
           },
           {
             "q": "Kolik to stojí a jak dlouho trvá?",
-            "a": "Mapování procesů trvá dva až tři dny a vejde se do nižších desítek tisíc korun; interní nástroj nebo dashboard bývá mezi 80 000 a 250 000 Kč, větší propojený systém nad 250 000 Kč. První verze se používá v řádu týdnů. Cenu dostanete písemně po bezplatné konzultaci."
+            "a": "Mapování procesů trvá dva až tři dny a vejde se do nižších desítek tisíc korun; interní nástroj nebo dashboard bývá mezi 80 000 a 250 000 Kč, větší propojený systém nad 250 000 Kč. První verze se používá do 3 týdnů. Cenu dostanete písemně po bezplatné konzultaci."
           }
         ]
       },
       "websites": {
         "meta": {
           "title": "Tvorba webů a e-shopů pro firmy, Praha · ADV Innovations",
-          "description": "Rychlé, moderní weby a e-shopy na míru pro malé a střední firmy: WordPress nebo vlastní kód, napojené na rezervace, poptávky a účetnictví. Spravujete si je sami. Praha, celé Česko."
+          "description": "Rychlé, moderní weby a e-shopy na míru pro malé a střední firmy: prezentační web do 3 dnů, ve vlastním kódu nebo na WordPressu, napojený na rezervace, poptávky a účetnictví. Spravujete si ho sami. Praha, celé Česko."
         },
         "plain": {
           "title": "Weby a e-shopy, v kostce.",
-          "body": "Tvorba webů a e-shopů pro malé a střední firmy v Praze a po celém Česku: rychlé, moderní stránky na WordPressu nebo ve vlastním kódu, navržené podle toho, co prodáváte a komu, a postavené tak, aby je spravoval váš tým bez agentury. Web napojíme na rezervace, poptávky, CRM a účetnictví, takže poptávka z webu neskončí v e-mailu, ale ve vašem systému.",
+          "body": "Tvorba webů a e-shopů pro malé a střední firmy v Praze a po celém Česku: rychlé, moderní stránky, prezentační web do 3 dnů, navržené podle toho, co prodáváte a komu, a postavené tak, aby je spravoval váš tým bez agentury. WordPress i Shoptet umíme a stavíme na nich, když to dává smysl; většinou ale doporučíme vlastní kód, který je rychlejší, bez pluginů a bez měsíčních poplatků. WordPress byl standard, ne nejlepší volba. Web napojíme na rezervace, poptávky, CRM a účetnictví, takže poptávka z webu neskončí v e-mailu, ale ve vašem systému.",
           "facts": [
             { "label": "Co stavíme", "value": "Firemní weby, e-shopy, rezervační systémy, weby s administrací na míru, texty a struktura" },
-            { "label": "Na čem", "value": "WordPress, Astro a vlastní kód; Shoptet a Shopify pro e-shopy" },
+            { "label": "Na čem", "value": "Vlastní kód (Astro) nebo WordPress na míru; e-shop na míru, Shoptet nebo Shopify, podle toho, co prodáváte" },
             { "label": "Napojení", "value": "Poptávky do CRM nebo Telegramu, objednávky do Pohody a Fakturoidu, rezervace do kalendáře" },
-            { "label": "Reference", "value": "Laser Arena Praha, HomeStyle, Kesia" }
+            {
+              "label": "Reference",
+              "value": "Laser Arena Praha, HomeStyle, Kesia",
+              "links": { "Laser Arena Praha": "laser-arena-praha", "HomeStyle": "homestyle", "Kesia": "kesia-live-pricing" }
+            }
           ]
         },
         "faq": [
           {
             "q": "Jaké weby stavíte?",
-            "a": "Firemní weby, e-shopy a rezervační systémy. Na WordPressu, když má web spravovat tým bez vývojáře, nebo ve vlastním kódu (Astro), když má být rychlý a bez pluginů. E-shopy stavíme na Shoptetu, Shopify nebo na míru, podle toho, co prodáváte."
+            "a": "Firemní weby, e-shopy a rezervační systémy. Nejraději ve vlastním kódu (Astro): rychlý, bez pluginů, s administrací přesně pro vaši práci. WordPress umíme a stavíme na něm na míru, bez nakupovaných šablon. E-shopy na míru, na Shoptetu nebo Shopify, podle toho, co prodáváte."
+          },
+          {
+            "q": "Stavíte na WordPressu nebo Shoptetu?",
+            "a": "Ano, když to dává smysl: WordPress na míru (tak běží Laser Arena Praha), Shoptet pro e-shop, který chcete mít na pronajaté platformě. Když vám na WordPressu nezáleží, ukážeme lepší cestu: web ve vlastním kódu je rychlejší, bezpečnější, bez pluginů a bez měsíčních poplatků a administraci dostanete přesně pro svou práci. WordPress byl standard, protože nic lepšího nebylo po ruce. Dnes je."
           },
           {
             "q": "Kolik stojí nový web nebo e-shop?",
@@ -178,7 +186,7 @@
           },
           {
             "q": "Jak dlouho web trvá?",
-            "a": "Menší web v řádu týdnů, web s administrací na míru nebo e-shop do několika měsíců. Nejdřív uvidíte funkční ukázku, ne návrh v prezentaci, a první stránky jdou ven dřív, než jsou hotové všechny."
+            "a": "Prezentační web do 3 dnů. Web s administrací na míru nebo e-shop: první verze do 7 dnů, spuštění v řádu týdnů. Nejdřív uvidíte funkční ukázku, ne návrh v prezentaci, a první stránky jdou ven dřív, než jsou hotové všechny."
           },
           {
             "q": "Budeme si web spravovat sami?",
@@ -197,22 +205,26 @@
       "software": {
         "meta": {
           "title": "Prototypy a firemní software na míru · ADV Innovations",
-          "description": "Vývoj webových aplikací a firemního softwaru na míru pro malé a střední firmy: nejdřív funkční prototyp za pár týdnů, pak první verze v provozu. Praha, celé Česko."
+          "description": "Vývoj webových aplikací a firemního softwaru na míru pro malé a střední firmy: funkční prototyp do 7 dnů, první verze v provozu do 3 týdnů. Praha, celé Česko."
         },
         "plain": {
           "title": "Prototypy a software, v kostce.",
-          "body": "Vývoj softwaru na míru pro malé a střední firmy v Praze a po celém Česku: interní systémy, webové aplikace, CRM a evidence pro tu část provozu, pro kterou žádný hotový produkt nevznikl. Začínáme funkčním prototypem (MVP), který máte v ruce během pár týdnů a na kterém se rozhodujete nad něčím, na co se dá kliknout. Pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední. Kód a data patří vám.",
+          "body": "Vývoj softwaru na míru pro malé a střední firmy v Praze a po celém Česku: interní systémy, webové aplikace, CRM a evidence pro tu část provozu, pro kterou žádný hotový produkt nevznikl. Začínáme funkčním prototypem (MVP), který máte v ruce do 7 dnů a na kterém se rozhodujete nad něčím, na co se dá kliknout. Pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední. Kód a data patří vám.",
           "facts": [
             { "label": "Co stavíme", "value": "Interní systémy, webové aplikace, CRM a evidence na míru, administrace, dashboardy" },
-            { "label": "Jak", "value": "Funkční prototyp za pár týdnů, pak verze po etapách, předání a podpora" },
+            { "label": "Jak", "value": "Funkční prototyp do 7 dnů, první verze v provozu do 3 týdnů, pak etapy, předání a podpora" },
             { "label": "Na čem", "value": "Webové technologie, databáze s API, napojení na Pohodu, Fakturoid, Shoptet, Shopify, AI modely OpenAI a Claude" },
-            { "label": "Reference", "value": "Kesia (živé ceny ve třech e-shopech), Laser Arena Praha (rezervační systém)" }
+            {
+              "label": "Reference",
+              "value": "Kesia (živé ceny ve třech e-shopech), Laser Arena Praha (rezervační systém)",
+              "links": { "Kesia": "kesia-live-pricing", "Laser Arena Praha": "laser-arena-praha" }
+            }
           ]
         },
         "faq": [
           {
             "q": "Co je funkční prototyp a proč jím začínáte?",
-            "a": "Zjednodušená, ale fungující verze aplikace, pokud možno na vašich datech. Do pár týdnů si ji proklikáte, ukážete lidem, kteří s ní budou pracovat, a teprve pak se rozhodnete, co stavět dál. Levnější než měsíce vývoje podle zadání, které se ukáže jako špatné."
+            "a": "Zjednodušená, ale fungující verze aplikace, pokud možno na vašich datech. Do 7 dnů si ji proklikáte, ukážete lidem, kteří s ní budou pracovat, a teprve pak se rozhodnete, co stavět dál. Levnější než měsíce vývoje podle zadání, které se ukáže jako špatné."
           },
           {
             "q": "Kdy má smysl software na míru místo hotového produktu?",
@@ -220,7 +232,7 @@
           },
           {
             "q": "Jak dlouho trvá prototyp a první verze?",
-            "a": "Prototyp v řádu týdnů, první verze v provozu obvykle do dvou až tří měsíců. Další etapy přidáváme podle toho, co provoz ukáže, ne podle plánu z první schůzky."
+            "a": "Prototyp do 7 dnů, první verze v provozu do 3 týdnů. Další etapy přidáváme podle toho, co provoz ukáže, ne podle plánu z první schůzky."
           },
           {
             "q": "Kolik software na míru stojí?",
@@ -303,7 +315,7 @@
           },
           {
             "q": "How soon do we see the first result?",
-            "a": "We do not start with a big project. The first automation or prototype is usually ready within weeks, then we add the next steps until the business runs the way it should. Each part is in use before the next one is planned."
+            "a": "Fast. A presentation website within 3 days, a working prototype of an application within 7 days, and the first automation running within 7 days of the brief. We do not start with a big project: then we add the next steps until the business runs the way it should, and each part is in use before the next one is planned."
           },
           {
             "q": "Which systems can you connect to?",
@@ -318,12 +330,12 @@
         },
         "plain": {
           "title": "Automation and AI, in short.",
-          "body": "Business process automation and AI for small and mid-sized companies in Prague and across the Czech Republic: invoice and order processing, sorting and answering email, connecting the e-shop (Shoptet, Shopify) to accounting (Pohoda, Fakturoid), reports that assemble themselves, and AI assistants for the questions that keep coming back. Built on n8n, Make and the OpenAI and Claude models, or in custom code, and connected to the systems you already use. A person decides wherever judgement matters.",
+          "body": "Business process automation and AI for small and mid-sized companies in Prague and across the Czech Republic: invoice and order processing, sorting and answering email, connecting the e-shop (Shoptet, Shopify) to accounting (Pohoda, Fakturoid), reports that assemble themselves, and AI assistants for the questions that keep coming back. Built on n8n, Make and the OpenAI and Claude models, on local AI models on your own server when data must not leave, or in custom code, and connected to the systems you already use. A person decides wherever judgement matters.",
           "facts": [
             { "label": "What we automate", "value": "Invoices and documents, orders, email and enquiries, reporting, approvals, data transfer between systems" },
-            { "label": "Built on", "value": "n8n, Make, OpenAI, Claude, your systems' APIs, custom code" },
+            { "label": "Built on", "value": "n8n, Make, OpenAI, Claude, local AI models on your own server, your systems' APIs, custom code" },
             { "label": "Integrations", "value": "Pohoda, Fakturoid, Shoptet, Shopify, Google Workspace, Microsoft 365" },
-            { "label": "How it starts", "value": "A free call, process mapping, the first process running within weeks" }
+            { "label": "How it starts", "value": "A free call, process mapping, the first process running within 7 days" }
           ]
         },
         "faq": [
@@ -349,15 +361,15 @@
           },
           {
             "q": "How long does it take?",
-            "a": "The first process runs within weeks. Then we connect the next ones, one by one, so the savings grow every month and the company gets used to the change gradually, not all at once."
+            "a": "The first automation runs within 7 days of the brief, a simple integration (e-shop to Pohoda) from 24 hours. Then we connect the next ones, one by one, so the savings grow every month and the company gets used to the change gradually, not all at once."
           },
           {
             "q": "What about data and GDPR?",
-            "a": "Data stays in your systems. Before launch we agree what AI may see, what must never leave the company and which steps a person has to approve. Where possible we use European servers and n8n on your own server."
+            "a": "Data stays in your systems. Before launch we agree what AI may see, what must never leave the company and which steps a person has to approve. Sensitive data can be processed by a local AI model on your own server, so it never goes to any provider. Where possible we use European servers and n8n on your own server."
           },
           {
             "q": "Can AI make a mistake?",
-            "a": "It can, which is why we never let it decide about money and commitments on its own. Documents above a limit, unusual amounts and replies to customers wait for a person's approval, and every run is traceable: you see what happened, when and why."
+            "a": "It can, which is why we never let it decide about money and commitments on its own. Documents above a limit, unusual amounts and replies to customers wait for a person's approval. Every run is logged: you see what AI received, what it did with it, when and why, and every step can be traced and reverted."
           }
         ]
       },
@@ -399,29 +411,37 @@
           },
           {
             "q": "How much does it cost and how long does it take?",
-            "a": "Process mapping takes two or three days and fits in the low tens of thousands of CZK; an internal tool or dashboard is usually between 80,000 and 250,000 CZK, a larger connected system above 250,000 CZK. The first version is in use within weeks. You get the price in writing after the free consultation."
+            "a": "Process mapping takes two or three days and fits in the low tens of thousands of CZK; an internal tool or dashboard is usually between 80,000 and 250,000 CZK, a larger connected system above 250,000 CZK. The first version is in use within 3 weeks. You get the price in writing after the free consultation."
           }
         ]
       },
       "websites": {
         "meta": {
           "title": "Websites and e-shops for businesses, Prague · ADV Innovations",
-          "description": "Fast, modern websites and e-shops for small and mid-sized businesses: WordPress or custom code, connected to bookings, enquiries and accounting. You run them yourself. Prague and the Czech Republic."
+          "description": "Fast, modern websites and e-shops for small and mid-sized businesses: a presentation website within 3 days, in custom code or on WordPress, connected to bookings, enquiries and accounting. You run it yourself. Prague and the Czech Republic."
         },
         "plain": {
           "title": "Websites and e-shops, in short.",
-          "body": "Websites and e-shops for small and mid-sized businesses in Prague and across the Czech Republic: fast, modern sites on WordPress or in custom code, planned around what you sell and who you sell to, and built so your own team runs them without an agency. We connect the website to bookings, enquiries, CRM and accounting, so an enquiry from the website does not end in an inbox but in your system.",
+          "body": "Websites and e-shops for small and mid-sized businesses in Prague and across the Czech Republic: fast, modern sites, a presentation website within 3 days, planned around what you sell and who you sell to, and built so your own team runs them without an agency. We know WordPress and Shoptet and build on them when it makes sense; most of the time we recommend custom code, which is faster, plugin-free and has no monthly fees. WordPress was the standard, not the best choice. We connect the website to bookings, enquiries, CRM and accounting, so an enquiry from the website does not end in an inbox but in your system.",
           "facts": [
             { "label": "What we build", "value": "Company websites, e-shops, booking systems, sites with a custom admin, content and structure" },
-            { "label": "Built on", "value": "WordPress, Astro and custom code; Shoptet and Shopify for e-shops" },
+            { "label": "Built on", "value": "Custom code (Astro) or a custom WordPress build; a custom e-shop, Shoptet or Shopify, depending on what you sell" },
             { "label": "Integrations", "value": "Enquiries into CRM or Telegram, orders into Pohoda and Fakturoid, bookings into the calendar" },
-            { "label": "References", "value": "Laser Arena Praha, HomeStyle, Kesia" }
+            {
+              "label": "References",
+              "value": "Laser Arena Praha, HomeStyle, Kesia",
+              "links": { "Laser Arena Praha": "laser-arena-praha", "HomeStyle": "homestyle", "Kesia": "kesia-live-pricing" }
+            }
           ]
         },
         "faq": [
           {
             "q": "What kind of websites do you build?",
-            "a": "Company websites, e-shops and booking systems. On WordPress when the team should run the site without a developer, or in custom code (Astro) when it has to be fast and free of plugins. E-shops on Shoptet, Shopify or custom-built, depending on what you sell."
+            "a": "Company websites, e-shops and booking systems. Preferably in custom code (Astro): fast, plugin-free, with an admin made for your work. We know WordPress and build custom sites on it, without bought themes. E-shops custom-built, on Shoptet or on Shopify, depending on what you sell."
+          },
+          {
+            "q": "Do you build on WordPress or Shoptet?",
+            "a": "Yes, when it makes sense: a custom WordPress build (Laser Arena Praha runs on one), Shoptet for an e-shop you want on a rented platform. If WordPress itself does not matter to you, we show a better route: a site in custom code is faster, safer, plugin-free, has no monthly fees, and you get an admin made exactly for your work. WordPress was the standard because nothing better was at hand. Now there is."
           },
           {
             "q": "How much does a new website or e-shop cost?",
@@ -429,7 +449,7 @@
           },
           {
             "q": "How long does a website take?",
-            "a": "A smaller site within weeks, a site with a custom admin or an e-shop within a few months. You see a working version first, not a design in a deck, and the first pages go live before all of them are finished."
+            "a": "A presentation website within 3 days. A site with a custom admin or an e-shop: the first version within 7 days, launch within weeks. You see a working version first, not a design in a deck, and the first pages go live before all of them are finished."
           },
           {
             "q": "Will we manage the website ourselves?",
@@ -448,22 +468,26 @@
       "software": {
         "meta": {
           "title": "Prototypes and custom business software · ADV Innovations",
-          "description": "Custom web applications and business software for small and mid-sized companies: a working prototype in a few weeks first, then the first version in use. Prague and the Czech Republic."
+          "description": "Custom web applications and business software for small and mid-sized companies: a working prototype within 7 days, the first version in use within 3 weeks. Prague and the Czech Republic."
         },
         "plain": {
           "title": "Prototypes and software, in short.",
-          "body": "Custom software development for small and mid-sized companies in Prague and across the Czech Republic: internal systems, web applications, CRM and records for the part of the operation no ready-made product was built for. We start with a working prototype (MVP) that you have in your hands within a few weeks and decide on something you can click. Then we build in phases, so the first version is in use before the last one is planned. The code and the data are yours.",
+          "body": "Custom software development for small and mid-sized companies in Prague and across the Czech Republic: internal systems, web applications, CRM and records for the part of the operation no ready-made product was built for. We start with a working prototype (MVP) that you have in your hands within 7 days and decide on something you can click. Then we build in phases, so the first version is in use before the last one is planned. The code and the data are yours.",
           "facts": [
             { "label": "What we build", "value": "Internal systems, web applications, custom CRM and records, admin panels, dashboards" },
-            { "label": "How", "value": "A working prototype in a few weeks, then versions in phases, handover and support" },
+            { "label": "How", "value": "A working prototype within 7 days, the first version in use within 3 weeks, then phases, handover and support" },
             { "label": "Built on", "value": "Web technologies, a database with an API, integrations with Pohoda, Fakturoid, Shoptet, Shopify, the OpenAI and Claude models" },
-            { "label": "References", "value": "Kesia (live prices in three e-shops), Laser Arena Praha (booking system)" }
+            {
+              "label": "References",
+              "value": "Kesia (live prices in three e-shops), Laser Arena Praha (booking system)",
+              "links": { "Kesia": "kesia-live-pricing", "Laser Arena Praha": "laser-arena-praha" }
+            }
           ]
         },
         "faq": [
           {
             "q": "What is a working prototype and why do you start with one?",
-            "a": "A simplified but functioning version of the application, on your own data where possible. Within a few weeks you click through it, show it to the people who will use it, and only then decide what to build next. Cheaper than months of development against a brief that turns out to be wrong."
+            "a": "A simplified but functioning version of the application, on your own data where possible. Within 7 days you click through it, show it to the people who will use it, and only then decide what to build next. Cheaper than months of development against a brief that turns out to be wrong."
           },
           {
             "q": "When does custom software make sense instead of a ready-made product?",
@@ -471,7 +495,7 @@
           },
           {
             "q": "How long do the prototype and the first version take?",
-            "a": "The prototype within weeks, the first version in use usually within two to three months. Further phases are added according to what operation shows, not according to the plan from the first meeting."
+            "a": "The prototype within 7 days, the first version in use within 3 weeks. Further phases are added according to what operation shows, not according to the plan from the first meeting."
           },
           {
             "q": "How much does custom software cost?",

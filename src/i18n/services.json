@@ -45,7 +45,7 @@
             "Webové aplikace",
             "Firemní software"
           ],
-          "long": "Pro tu část provozu, pro kterou žádný produkt na trhu nevznikl. Začínáme funkčním prototypem, který máte v ruce během pár týdnů, a webovou aplikaci nebo firemní software pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední."
+          "long": "Pro tu část provozu, pro kterou žádný produkt na trhu nevznikl. Začínáme funkčním prototypem, který máte v ruce do 7 dnů, a webovou aplikaci nebo firemní software pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední."
         },
         {
           "slug": "graphic-design",
@@ -142,7 +142,7 @@
             "Web apps",
             "Business software"
           ],
-          "long": "For the part of the operation no product on the market was made for. We start with a working prototype within weeks, then build the web app or business software in phases, so the first version is in use before the last one is planned."
+          "long": "For the part of the operation no product on the market was made for. We start with a working prototype within 7 days, then build the web app or business software in phases, so the first version is in use before the last one is planned."
         },
         {
           "slug": "graphic-design",

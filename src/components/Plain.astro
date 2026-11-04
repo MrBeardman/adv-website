@@ -5,6 +5,8 @@
  * where and on what, then four facts. Copy in i18n/geo.json (pages.<key>.plain).
  */
 import NodeFrame from './ui/NodeFrame.astro';
+import Node from './ui/Node.astro';
+import { routes } from '../data/routes';
 import { pick, type Lang } from '../i18n';
 import geo from '../i18n/geo.json';
 
@@ -12,15 +14,24 @@ interface Props {
   lang: Lang;
   /** key in geo.json pages: home | ai-automation | business-optimisation | websites | software | about */
   page: string;
-  /** wrap in a section node with the "V kostce" label (default) or render bare */
+  /** wrap in a section node with the "V kostce" label (default), or render as a plain `.adv-section` with the
+   *  heading node (pages whose sections are not nodes, e.g. the automation page) */
   node?: boolean;
   id?: string;
 }
 const { lang, page, node = true, id = 'v-kostce' } = Astro.props;
 const g = pick(geo, lang);
-const p = (
-  g.pages as Record<string, { plain?: { title: string; body: string; facts: { label: string; value: string }[] } }>
-)[page]?.plain;
+type Fact = { label: string; value: string; links?: Record<string, string> };
+const p = (g.pages as Record<string, { plain?: { title: string; body: string; facts: Fact[] } }>)[page]?.plain;
+const esc = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+// a fact's value, with the names in `links` (name -> case slug) linked to their case pages
+const fact = (f: Fact) => {
+  let html = esc(f.value);
+  for (const [name, slug] of Object.entries(f.links ?? {})) {
+    html = html.replace(esc(name), `<a href="${routes.case(lang, slug)}">${esc(name)}</a>`);
+  }
+  return html;
+};
 ---
 
 {
@@ -41,7 +52,7 @@ const p = (
               {p.facts.map((f) => (
                 <div>
                   <dt>{f.label}</dt>
-                  <dd>{f.value}</dd>
+                  <dd set:html={fact(f)} />
                 </div>
               ))}
             </dl>
@@ -49,10 +60,11 @@ const p = (
         </section>
       </NodeFrame>
     ) : (
-      <section class="adv-plain" aria-labelledby={`${id}-title`} id={id}>
+      <section class="adv-plain adv-section" aria-labelledby={`${id}-title`} id={id}>
         <div class="adv-wrap adv-plain__grid">
           <div class="adv-plain__text">
             <h2 id={`${id}-title`} class="adv-h2" data-reveal>
+              <Node />
               {p.title}
             </h2>
             <p class="adv-lead adv-plain__body" data-reveal style="--i:1">
@@ -63,7 +75,7 @@ const p = (
             {p.facts.map((f) => (
               <div>
                 <dt>{f.label}</dt>
-                <dd>{f.value}</dd>
+                <dd set:html={fact(f)} />
               </div>
             ))}
           </dl>

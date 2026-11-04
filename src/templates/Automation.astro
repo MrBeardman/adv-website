@@ -10,6 +10,8 @@
  *   03 statement (scroll-lit words)                   08 how we work (timeline)
  *   04 what we automate (three scene cards)           09 selected automation work
  *   05 savings that grow                               10 Ice CTA panel with a short form
+ * The "V kostce" block (after the tools) and the FAQ (before the CTA) render as plain sections here, not inside
+ * `.adv-flow`: 01-hero.astro uses that class name for the wires in its window (aspect-ratio + margin).
  */
 import Base from '../layouts/Base.astro';
 import Hero from '../components/home/01-hero.astro';
@@ -67,9 +69,7 @@ const schema = [
     typeWords={t.hero.typeWords}
   />
   <Tools lang={lang} />
-  <div class="adv-flow">
-    <Plain lang={lang} page="ai-automation" />
-  </div>
+  <Plain lang={lang} page="ai-automation" node={false} />
   <Statement lang={lang} />
   <Uses lang={lang} />
   <Growth lang={lang} />
@@ -77,8 +77,6 @@ const schema = [
   <Savings lang={lang} />
   <Process lang={lang} />
   <SelectedWork lang={lang} service="ai-automation" />
-  <div class="adv-flow">
-    <Faq lang={lang} page="ai-automation" />
-  </div>
+  <Faq lang={lang} page="ai-automation" node={false} />
   <CtaPanel lang={lang} />
 </Base>

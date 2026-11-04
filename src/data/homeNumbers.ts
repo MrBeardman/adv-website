@@ -50,8 +50,16 @@ export const HOME_NUMBERS: HomeNumber[] = [
     linkLabel: { en: 'See AI and automation', cs: 'Detail AI a automatizace' },
     // TODO: both placeholders (Oct 30, for the layout). Replace with measured figures.
     more: [
-      { placeholder: true, value: { en: '85 %', cs: '85 %' }, short: { en: 'of documents with no manual step', cs: 'dokladů bez ruční práce' } },
-      { placeholder: true, value: { en: '6', cs: '6' }, short: { en: 'processes running on their own', cs: 'procesů běží samo' } },
+      {
+        placeholder: true,
+        value: { en: '85 %', cs: '85 %' },
+        short: { en: 'of documents with no manual step', cs: 'dokladů bez ruční práce' },
+      },
+      {
+        placeholder: true,
+        value: { en: '6', cs: '6' },
+        short: { en: 'processes running on their own', cs: 'procesů běží samo' },
+      },
     ],
   },
   {
@@ -70,8 +78,16 @@ export const HOME_NUMBERS: HomeNumber[] = [
     linkLabel: { en: 'Read the Kesia case', cs: 'Přečíst případ Kesia' },
     // real: the Kesia case (live prices in three e-shops, no daily manual retyping)
     more: [
-      { placeholder: false, value: { en: '3', cs: '3' }, short: { en: 'e-shops on live prices', cs: 'e-shopy s živými cenami' } },
-      { placeholder: false, value: { en: '0', cs: '0' }, short: { en: 'prices retyped by hand', cs: 'ručně přepsaných cen' } },
+      {
+        placeholder: false,
+        value: { en: '3', cs: '3' },
+        short: { en: 'e-shops on live prices', cs: 'e-shopy s živými cenami' },
+      },
+      {
+        placeholder: false,
+        value: { en: '0', cs: '0' },
+        short: { en: 'prices retyped by hand', cs: 'ručně přepsaných cen' },
+      },
     ],
   },
   {
@@ -84,16 +100,25 @@ export const HOME_NUMBERS: HomeNumber[] = [
     short: { en: 'the bookings', cs: 'víc rezervací' },
     link: { kind: 'service', slug: 'websites' },
     linkLabel: { en: 'See websites', cs: 'Detail webů' },
-    // first one real (Studio Fit: doubled within two months); the second is a placeholder
+    // first one real (Studio Fit: doubled within two months); the second is Honza's delivery promise (Nov 4 2026:
+    // a presentation site in 3 days, same number in geo.json)
     more: [
-      { placeholder: false, value: { en: '2 months', cs: '2 měsíce' }, short: { en: 'from relaunch', cs: 'od spuštění' } },
-      { placeholder: true, value: { en: '+30 %', cs: '+30 %' }, short: { en: 'sales from the web', cs: 'tržeb z webu' } },
+      {
+        placeholder: false,
+        value: { en: '2 months', cs: '2 měsíce' },
+        short: { en: 'from relaunch', cs: 'od spuštění' },
+      },
+      {
+        placeholder: false,
+        value: { en: '3 days', cs: '3 dny' },
+        short: { en: 'to a presentation site', cs: 'do prezentačního webu' },
+      },
     ],
   },
   {
     slug: 'software',
-    // TODO: placeholder. Replace with a real delivery time from a real project.
-    placeholder: true,
+    // Honza's delivery promise (Nov 4 2026): a working prototype in 7 days; the same number in geo.json and services.json
+    placeholder: false,
     count: 7,
     suffix: { en: ' days', cs: ' dní' },
     value: { en: '7 days', cs: '7 dní' },
@@ -101,10 +126,19 @@ export const HOME_NUMBERS: HomeNumber[] = [
     short: { en: 'to a working prototype', cs: 'do funkčního prototypu' },
     link: { kind: 'service', slug: 'software' },
     linkLabel: { en: 'See prototypes and software', cs: 'Detail prototypů a softwaru' },
-    // TODO: both placeholders (Oct 30, for the layout). Replace with figures from real projects.
+    // TODO: both placeholders (Oct 30, for the layout). '3 weeks' is repeated in geo.json (software + optimisation FAQs):
+    // Honza to confirm; '1 system' needs a real project.
     more: [
-      { placeholder: true, value: { en: '3 weeks', cs: '3 týdny' }, short: { en: 'to the first version in use', cs: 'do první verze v provozu' } },
-      { placeholder: true, value: { en: '1', cs: '1' }, short: { en: 'system instead of five spreadsheets', cs: 'systém místo pěti tabulek' } },
+      {
+        placeholder: true,
+        value: { en: '3 weeks', cs: '3 týdny' },
+        short: { en: 'to the first version in use', cs: 'do první verze v provozu' },
+      },
+      {
+        placeholder: true,
+        value: { en: '1', cs: '1' },
+        short: { en: 'system instead of five spreadsheets', cs: 'systém místo pěti tabulek' },
+      },
     ],
   },
 ];

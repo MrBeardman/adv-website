@@ -191,7 +191,7 @@
           },
           {
             "title": "Postavíme funkční prototyp",
-            "body": "Během pár týdnů máte v ruce první verzi, ideálně nad vašimi daty."
+            "body": "Do 7 dnů máte v ruce první verzi, ideálně nad vašimi daty."
           },
           {
             "title": "Rozhodujeme na skutečné věci",
@@ -211,7 +211,7 @@
           {
             "title": "Zadání se píše měsíce",
             "cost": "Než se začne stavět, polovina požadavků už neplatí.",
-            "fix": "Funkční prototyp, na kterém se rozhoduje za pár týdnů."
+            "fix": "Funkční prototyp, na kterém se rozhoduje do 7 dnů."
           },
           {
             "title": "Starý systém, na který se bojíte sáhnout",
@@ -458,7 +458,7 @@
           },
           {
             "title": "We build a working prototype",
-            "body": "Within a few weeks you have a first version in your hands, ideally on your own data."
+            "body": "Within 7 days you have a first version in your hands, ideally on your own data."
           },
           {
             "title": "We decide on something real",
@@ -478,7 +478,7 @@
           {
             "title": "The specification takes months",
             "cost": "By the time building starts, half of the requirements no longer apply.",
-            "fix": "A working prototype to decide on within a few weeks."
+            "fix": "A working prototype to decide on within 7 days."
           },
           {
             "title": "An old system nobody dares to touch",

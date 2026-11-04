@@ -6,6 +6,7 @@
  * Copy in i18n/geo.json (pages.<key>.faq).
  */
 import NodeFrame from './ui/NodeFrame.astro';
+import Node from './ui/Node.astro';
 import { pick, type Lang } from '../i18n';
 import geo from '../i18n/geo.json';
 import { faqSchema } from '../data/seo';
@@ -14,9 +15,11 @@ interface Props {
   lang: Lang;
   /** key in geo.json pages */
   page: string;
+  /** wrap in a section node (default), or render as a plain `.adv-section` with the heading node */
+  node?: boolean;
   id?: string;
 }
-const { lang, page, id = 'otazky' } = Astro.props;
+const { lang, page, node = true, id = 'otazky' } = Astro.props;
 const g = pick(geo, lang);
 const items = (g.pages as Record<string, { faq?: { q: string; a: string }[] }>)[page]?.faq ?? [];
 const title = g.labels.faqTitle;
@@ -30,11 +33,33 @@ const ld = { '@context': 'https://schema.org', ...faqSchema(items) };
 ---
 
 {
-  items.length > 0 && (
-    <NodeFrame name={g.labels.faq} kind="" wait="" done="" icon="nodes" id={id}>
-      <section class="adv-faq" aria-labelledby={`${id}-title`}>
+  items.length > 0 &&
+    (node ? (
+      <NodeFrame name={g.labels.faq} kind="" wait="" done="" icon="nodes" id={id}>
+        <section class="adv-faq" aria-labelledby={`${id}-title`}>
+          <div class="adv-wrap">
+            <h2 id={`${id}-title`} class="adv-h2" data-reveal set:html={titleHtml} />
+            <dl class="adv-panel adv-faq__list">
+              {items.map((it, k) => (
+                <div class="adv-faq__item" data-reveal style={`--i:${k % 4}`}>
+                  <dt>
+                    <h3>{it.q}</h3>
+                  </dt>
+                  <dd>{it.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+        <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+      </NodeFrame>
+    ) : (
+      <section class="adv-faq adv-section" aria-labelledby={`${id}-title`} id={id}>
         <div class="adv-wrap">
-          <h2 id={`${id}-title`} class="adv-h2" data-reveal set:html={titleHtml} />
+          <h2 id={`${id}-title`} class="adv-h2" data-reveal>
+            <Node />
+            <Fragment set:html={titleHtml} />
+          </h2>
           <dl class="adv-panel adv-faq__list">
             {items.map((it, k) => (
               <div class="adv-faq__item" data-reveal style={`--i:${k % 4}`}>
@@ -46,10 +71,9 @@ const ld = { '@context': 'https://schema.org', ...faqSchema(items) };
             ))}
           </dl>
         </div>
+        <script type="application/ld+json" set:html={JSON.stringify(ld)} />
       </section>
-      <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-    </NodeFrame>
-  )
+    ))
 }
 
 <style is:global>
