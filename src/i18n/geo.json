@@ -159,7 +159,7 @@
         },
         "plain": {
           "title": "Weby a e-shopy, v kostce.",
-          "body": "Tvorba webů a e-shopů pro malé a střední firmy v Praze a po celém Česku: rychlé, moderní stránky, prezentační web do 3 dnů, navržené podle toho, co prodáváte a komu, a postavené tak, aby je spravoval váš tým bez agentury. WordPress i Shoptet umíme a stavíme na nich, když to dává smysl; většinou ale doporučíme vlastní kód, který je rychlejší, bez pluginů a bez měsíčních poplatků. WordPress byl standard, ne nejlepší volba. Web napojíme na rezervace, poptávky, CRM a účetnictví, takže poptávka z webu neskončí v e-mailu, ale ve vašem systému.",
+          "body": "Tvorba webů a e-shopů pro malé a střední firmy v Praze a po celém Česku: rychlé, moderní stránky, prezentační web do 3 dnů, navržené podle toho, co prodáváte a komu, a postavené tak, aby je spravoval váš tým bez agentury. WordPress i Shoptet umíme a stavíme na nich, když to dává smysl; většinou ale doporučíme vlastní řešení, které je rychlejší, bez pluginů a bez měsíčních poplatků. WordPress byl standard, ne nejlepší volba. Web napojíme na rezervace, poptávky, CRM a účetnictví, takže poptávka z webu neskončí v e-mailu, ale ve vašem systému.",
           "facts": [
             { "label": "Co stavíme", "value": "Firemní weby, e-shopy, rezervační systémy, weby s administrací na míru, texty a struktura" },
             { "label": "Na čem", "value": "Vlastní kód (Astro) nebo WordPress na míru; e-shop na míru, Shoptet nebo Shopify, podle toho, co prodáváte" },
@@ -178,7 +178,7 @@
           },
           {
             "q": "Stavíte na WordPressu nebo Shoptetu?",
-            "a": "Ano, když to dává smysl: WordPress na míru (tak běží Laser Arena Praha), Shoptet pro e-shop, který chcete mít na pronajaté platformě. Když vám na WordPressu nezáleží, ukážeme lepší cestu: web ve vlastním kódu je rychlejší, bezpečnější, bez pluginů a bez měsíčních poplatků a administraci dostanete přesně pro svou práci. WordPress byl standard, protože nic lepšího nebylo po ruce. Dnes je."
+            "a": "Ano, když to dává smysl: WordPress na míru (tak běží Laser Arena Praha), Shoptet pro e-shop, který chcete mít na pronajaté platformě. Když vám na WordPressu nezáleží, ukážeme lepší cestu: vlastní řešení je rychlejší, bezpečnější, bez pluginů a bez měsíčních poplatků a administraci dostanete přesně pro svou práci. WordPress byl standard, protože nic lepšího nebylo po ruce. Dnes je."
           },
           {
             "q": "Kolik stojí nový web nebo e-shop?",
@@ -422,7 +422,7 @@
         },
         "plain": {
           "title": "Websites and e-shops, in short.",
-          "body": "Websites and e-shops for small and mid-sized businesses in Prague and across the Czech Republic: fast, modern sites, a presentation website within 3 days, planned around what you sell and who you sell to, and built so your own team runs them without an agency. We know WordPress and Shoptet and build on them when it makes sense; most of the time we recommend custom code, which is faster, plugin-free and has no monthly fees. WordPress was the standard, not the best choice. We connect the website to bookings, enquiries, CRM and accounting, so an enquiry from the website does not end in an inbox but in your system.",
+          "body": "Websites and e-shops for small and mid-sized businesses in Prague and across the Czech Republic: fast, modern sites, a presentation website within 3 days, planned around what you sell and who you sell to, and built so your own team runs them without an agency. We know WordPress and Shoptet and build on them when it makes sense; most of the time we recommend a custom solution, which is faster, plugin-free and has no monthly fees. WordPress was the standard, not the best choice. We connect the website to bookings, enquiries, CRM and accounting, so an enquiry from the website does not end in an inbox but in your system.",
           "facts": [
             { "label": "What we build", "value": "Company websites, e-shops, booking systems, sites with a custom admin, content and structure" },
             { "label": "Built on", "value": "Custom code (Astro) or a custom WordPress build; a custom e-shop, Shoptet or Shopify, depending on what you sell" },
@@ -441,7 +441,7 @@
           },
           {
             "q": "Do you build on WordPress or Shoptet?",
-            "a": "Yes, when it makes sense: a custom WordPress build (Laser Arena Praha runs on one), Shoptet for an e-shop you want on a rented platform. If WordPress itself does not matter to you, we show a better route: a site in custom code is faster, safer, plugin-free, has no monthly fees, and you get an admin made exactly for your work. WordPress was the standard because nothing better was at hand. Now there is."
+            "a": "Yes, when it makes sense: a custom WordPress build (Laser Arena Praha runs on one), Shoptet for an e-shop you want on a rented platform. If WordPress itself does not matter to you, we show a better route: a custom solution is faster, safer, plugin-free, has no monthly fees, and you get an admin made exactly for your work. WordPress was the standard because nothing better was at hand. Now there is."
           },
           {
             "q": "How much does a new website or e-shop cost?",

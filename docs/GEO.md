@@ -149,7 +149,7 @@ after indexing for the live-search engines; longer for answers from memory.
   everywhere (geo.json, services.json, serviceDeep.json, homeNumbers.ts): a model that reads two different
   numbers trusts neither.
 - WordPress and Shoptet stay in the copy (the queries are typed a lot), framed as "umíme, stavíme na míru,
-  ale doporučíme vlastní kód": keeps the match, states the real offer, and is a niche no winner claims.
+  ale doporučíme vlastní řešení": keeps the match, states the real offer, and is a niche no winner claims.
   Follow-up: a post "Proč nestavíme nový web na WordPressu" for the comparison queries ("wordpress nebo…").
 - The automation page's new H1 (replaces the homepage headline there).
 - `SAME_AS` profile URLs; founded year and team size for the about facts (not stated anywhere, so not claimed).

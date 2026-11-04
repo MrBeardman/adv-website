@@ -63,7 +63,7 @@
     "match the fastest" instruction; "e-shop / web s administrací: první verze do 7 dnů, spuštění v řádu
     týdnů" and "první verze softwaru v provozu do 3 týdnů" (= the homepage card) are MY alignment, CONFIRM.
     Also new: "lokální AI modely na vlastním serveru" (automation fact, body, GDPR FAQ), "každý běh se
-    loguje" (error FAQ), WordPress/Shoptet framing "umíme, stavíme na míru, ale doporučíme vlastní kód;
+    loguje" (error FAQ), WordPress/Shoptet framing "umíme, stavíme na míru, ale doporučíme vlastní řešení (Honza: "řešení", not "kód");
     WordPress byl standard, ne nejlepší volba" + a new FAQ "Stavíte na WordPressu nebo Shoptetu?" naming
     Laser Arena Praha as a custom WordPress build (Honza). Reference facts link to the case pages.
   - Service page titles + meta descriptions (`geo.json` → `meta`), e.g. "Automatizace firemních procesů a AI
