@@ -100,6 +100,11 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
 
 ## Open items
 
+- **GEO/SEO (Nov 4)**: `docs/GEO.md` has the research (what buyers type, who ChatGPT recommends and why),
+  the site changes (V kostce + FAQ sections, structured data, llms.txt, robots) and Honza's off-site checklist
+  (Google Business Profile, Firmy.cz, LinkedIn, Clutch, n8n/Make directories, `SAME_AS`). The FAQ price bands
+  and policies are listed under "New copy" in STATUS.md for approval.
+
 - Honza to approve the new copy in `docs/STATUS.md` (hero sub, services heading, card stats, growth sections,
   demo chips) and give real figures for every placeholder (AI card stats, Weby "+30 %", Prototypy "7 dní",
   "3 týdny", "1 systém místo pěti tabulek").

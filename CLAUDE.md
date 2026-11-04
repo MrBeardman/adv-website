@@ -79,6 +79,11 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   the stream rail runs through all `.adv-node`s. No coloured glow shadows (use gradients), no infinite
   pulsing dots or marquees, body text ≥ 12px. Keep the detector at 0.
 - Headline emphasis: `.adv-em`, style switch `EM_STYLE` in `src/data/site.ts`.
+- **GEO/SEO** (`docs/GEO.md`): every page's JSON-LD is one `@graph` from `src/data/seo.ts` (ProfessionalService
+  + WebSite, pages add Service / BreadcrumbList via `<Base schema>`); buyer-facing plain copy and FAQs in
+  `src/i18n/geo.json` (`components/Plain.astro`, `components/Faq.astro` with FAQPage JSON-LD); `/llms.txt` is
+  generated (`pages/llms.txt.ts`); robots.txt allows the AI crawlers by name once indexable. Keep the
+  automation page's H1 different from the homepage's. New facts go into geo.json only when they are true.
 
 ## Gotchas (from the skill and this build)
 - `[data-reveal]` overrides an element's own transitions: site.ts removes it after the reveal.

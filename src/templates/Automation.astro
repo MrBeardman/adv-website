@@ -22,21 +22,54 @@ import Savings from '../components/home/07-savings.astro';
 import Process from '../components/home/08-process.astro';
 import SelectedWork from '../components/SelectedWork.astro';
 import CtaPanel from '../components/CtaPanel.astro';
+import Plain from '../components/Plain.astro';
+import Faq from '../components/Faq.astro';
 import { pick, type Lang } from '../i18n';
 import automation from '../i18n/automation.json';
+import chrome from '../i18n/chrome.json';
+import services from '../i18n/services.json';
+import geo from '../i18n/geo.json';
 import { routes } from '../data/routes';
+import { serviceSchema, breadcrumbSchema, SERVICE_TYPES } from '../data/seo';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = pick(automation, lang);
+const c = pick(chrome, lang);
+const s = pick(services, lang);
+const meta = pick(geo, lang).pages['ai-automation'].meta;
+const copy = s.capabilities.items.find((i) => i.slug === 'ai-automation')!;
 const alternates = { cs: routes.service('cs', 'ai-automation'), en: routes.service('en', 'ai-automation') };
+const site = Astro.site!;
+const schema = [
+  serviceSchema(lang, site, {
+    name: copy.title,
+    description: meta.description,
+    path: alternates[lang],
+    serviceType: SERVICE_TYPES['ai-automation'][lang],
+  }),
+  breadcrumbSchema(site, [
+    { name: c.nav.home, path: routes.home(lang) },
+    { name: c.nav.services, path: routes.services(lang) },
+    { name: copy.title, path: alternates[lang] },
+  ]),
+];
 ---
 
-<Base lang={lang} title={t.meta.title} description={t.meta.description} alternates={alternates}>
-  <Hero lang={lang} pill={t.hero.pill} sub={t.hero.sub} />
+<Base lang={lang} title={meta.title} description={meta.description} alternates={alternates} schema={schema}>
+  <Hero
+    lang={lang}
+    pill={t.hero.pill}
+    sub={t.hero.sub}
+    headline={[t.hero.headline1, t.hero.headline2]}
+    typeWords={t.hero.typeWords}
+  />
   <Tools lang={lang} />
+  <div class="adv-flow">
+    <Plain lang={lang} page="ai-automation" />
+  </div>
   <Statement lang={lang} />
   <Uses lang={lang} />
   <Growth lang={lang} />
@@ -44,5 +77,8 @@ const alternates = { cs: routes.service('cs', 'ai-automation'), en: routes.servi
   <Savings lang={lang} />
   <Process lang={lang} />
   <SelectedWork lang={lang} service="ai-automation" />
+  <div class="adv-flow">
+    <Faq lang={lang} page="ai-automation" />
+  </div>
   <CtaPanel lang={lang} />
 </Base>

@@ -1,0 +1,93 @@
+---
+/**
+ * Questions and answers for one page, the way buyers ask them (docs/GEO.md): a section node "Otázky a
+ * odpovědi", each question an h3 with its answer right under it (answer-first, no accordion: the text must
+ * be in the HTML for crawlers and screen readers alike). Emits the matching FAQPage JSON-LD.
+ * Copy in i18n/geo.json (pages.<key>.faq).
+ */
+import NodeFrame from './ui/NodeFrame.astro';
+import { pick, type Lang } from '../i18n';
+import geo from '../i18n/geo.json';
+import { faqSchema } from '../data/seo';
+
+interface Props {
+  lang: Lang;
+  /** key in geo.json pages */
+  page: string;
+  id?: string;
+}
+const { lang, page, id = 'otazky' } = Astro.props;
+const g = pick(geo, lang);
+const items = (g.pages as Record<string, { faq?: { q: string; a: string }[] }>)[page]?.faq ?? [];
+const title = g.labels.faqTitle;
+const em = g.labels.faqEm;
+const i = title.lastIndexOf(em);
+const esc = (x: string) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+// one word in the emphasis face; built as a string so no whitespace creeps in around the <em>
+const titleHtml =
+  i >= 0 ? `${esc(title.slice(0, i))}<em class="adv-em">${esc(em)}</em>${esc(title.slice(i + em.length))}` : esc(title);
+const ld = { '@context': 'https://schema.org', ...faqSchema(items) };
+---
+
+{
+  items.length > 0 && (
+    <NodeFrame name={g.labels.faq} kind="" wait="" done="" icon="nodes" id={id}>
+      <section class="adv-faq" aria-labelledby={`${id}-title`}>
+        <div class="adv-wrap">
+          <h2 id={`${id}-title`} class="adv-h2" data-reveal set:html={titleHtml} />
+          <dl class="adv-panel adv-faq__list">
+            {items.map((it, k) => (
+              <div class="adv-faq__item" data-reveal style={`--i:${k % 4}`}>
+                <dt>
+                  <h3>{it.q}</h3>
+                </dt>
+                <dd>{it.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+      <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    </NodeFrame>
+  )
+}
+
+<style is:global>
+  .adv-faq__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(24px, 4vw, 64px);
+    margin: clamp(28px, 3.5vw, 48px) 0 0;
+    padding: clamp(8px, 1.5vw, 20px) clamp(24px, 3.4vw, 48px);
+    border-radius: var(--adv-r-xl);
+  }
+  .adv-faq__item {
+    display: grid;
+    gap: 10px;
+    padding: 22px 0;
+    border-top: 1px solid var(--adv-line);
+  }
+  .adv-faq__item:nth-child(-n + 2) {
+    border-top: 0;
+  }
+  .adv-faq__item h3 {
+    font-family: var(--adv-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+  .adv-faq__item dd {
+    margin: 0;
+    color: var(--adv-muted);
+    line-height: 1.55;
+  }
+  @media (max-width: 860px) {
+    .adv-faq__list {
+      grid-template-columns: 1fr;
+    }
+    .adv-faq__item:nth-child(2) {
+      border-top: 1px solid var(--adv-line);
+    }
+  }
+</style>

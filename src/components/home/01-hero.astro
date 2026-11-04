@@ -21,18 +21,24 @@ interface Props {
   pill?: string;
   /** sub line under the headline (default: the company sub from chrome.json) */
   sub?: string;
+  /** the two headline lines (default: the company headline from chrome.json); a page that is not the
+   *  homepage needs its own H1 (docs/GEO.md) */
+  headline?: [string, string];
+  /** words the typewriter cycles after the headline's last word (default: home.json typeWords) */
+  typeWords?: string[];
 }
-const { lang, pill, sub } = Astro.props;
+const { lang, pill, sub, headline, typeWords } = Astro.props;
 const c = pick(chrome, lang);
 const t = pick(home, lang).hero;
 const w = t.window;
 const n = w.nodes;
 // "Víc byznysu." → "Víc " + typed "byznysu." (the approved headline stays the first word typed)
-const h2 = c.hero.headline2;
+const h1 = headline?.[0] ?? c.hero.headline1;
+const h2 = headline?.[1] ?? c.hero.headline2;
 const cut = h2.lastIndexOf(' ');
 const h2Lead = h2.slice(0, cut + 1);
 const h2Word = h2.slice(cut + 1);
-const words = [h2Word, ...t.typeWords.filter((x) => x !== h2Word)];
+const words = [h2Word, ...(typeWords ?? t.typeWords).filter((x) => x !== h2Word)];
 const kc = (v: number) =>
   new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB').format(v) + (lang === 'cs' ? ' Kč' : ' CZK');
 const sec = (v: number) =>
@@ -57,7 +63,7 @@ const seedRows = [
     <div class="adv-hero__copy" data-grid-avoid>
       <p class="adv-pill adv-hero__pill"><i></i>{pill ?? t.pill}</p>
       <h1 id="adv-hero-title" class="adv-hero__title" data-lines>
-        <span class="adv-line"><span style="--l:0">{c.hero.headline1}</span></span>
+        <span class="adv-line"><span style="--l:0">{h1}</span></span>
         <span class="adv-line"
           ><span style="--l:1"
             >{h2Lead}<em class="adv-em adv-hero__type" data-type data-words={JSON.stringify(words)}>{h2Word}</em></span

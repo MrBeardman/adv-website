@@ -25,10 +25,14 @@ import NodeFrame from '../components/ui/NodeFrame.astro';
 import Arrow from '../components/ui/Arrow.astro';
 import WorkRows from '../components/WorkRows.astro';
 import Inquiry from '../components/inquiry/Inquiry.astro';
+import Plain from '../components/Plain.astro';
+import Faq from '../components/Faq.astro';
 import { pick, loc, fill, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import services from '../i18n/services.json';
 import deep from '../i18n/serviceDeep.json';
+import geo from '../i18n/geo.json';
+import { serviceSchema, breadcrumbSchema, SERVICE_TYPES } from '../data/seo';
 import { ENABLED_SERVICES } from '../data/capabilities';
 import { numberFor } from '../data/homeNumbers';
 import { caseStudiesFor } from '../data/caseStudies';
@@ -56,9 +60,27 @@ const work = caseStudiesFor(slug);
 const dev = import.meta.env.DEV;
 const alternates = { cs: routes.service('cs', slug), en: routes.service('en', slug) };
 const nf = (name: string) => ({ name, kind: '', wait: '', done: '' });
+// title, description and structured data for search engines and AI assistants (docs/GEO.md)
+const meta = (pick(geo, lang).pages as Record<string, { meta?: { title: string; description: string } }>)[slug]?.meta;
+const pageTitle = meta?.title ?? `${copy.title} · ${c.meta.siteName}`;
+const description = meta?.description ?? copy.body;
+const site = Astro.site!;
+const schema = [
+  serviceSchema(lang, site, {
+    name: copy.title,
+    description,
+    path: alternates[lang],
+    serviceType: SERVICE_TYPES[slug]?.[lang] ?? [copy.title],
+  }),
+  breadcrumbSchema(site, [
+    { name: c.nav.home, path: routes.home(lang) },
+    { name: c.nav.services, path: routes.services(lang) },
+    { name: copy.title, path: alternates[lang] },
+  ]),
+];
 ---
 
-<Base lang={lang} title={`${copy.title} · ${c.meta.siteName}`} description={copy.body} alternates={alternates}>
+<Base lang={lang} title={pageTitle} description={description} alternates={alternates} schema={schema}>
   <PageHead kicker={fill(s.service.eyebrow, { n: idx + 1, total })} title={copy.title} lead={copy.long}>
     <div slot="before" class="adv-svc__top">
       <a class="adv-back" href={routes.services(lang)}><Arrow dir="left" />{c.nav.services}</a>
@@ -92,6 +114,8 @@ const nf = (name: string) => ({ name, kind: '', wait: '', done: '' });
   {
     page && (
       <div class="adv-flow adv-svc__flow">
+        <Plain lang={lang} page={slug} />
+
         <NodeFrame {...nf(L.discover)} icon="nodes">
           <section class="adv-svc__sec" aria-labelledby="svc-discover">
             <h2 id="svc-discover" class="adv-h2" data-reveal>
@@ -171,6 +195,8 @@ const nf = (name: string) => ({ name, kind: '', wait: '', done: '' });
             </section>
           </NodeFrame>
         )}
+
+        <Faq lang={lang} page={slug} />
 
         <NodeFrame {...nf(L.inquiry)} icon="arrowRight" id="poptavka">
           <section class="adv-svc__sec" aria-labelledby="svc-inquiry">

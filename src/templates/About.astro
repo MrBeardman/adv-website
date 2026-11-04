@@ -9,6 +9,7 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Partners from '../components/Partners.astro';
 import CtaPanel from '../components/CtaPanel.astro';
+import Plain from '../components/Plain.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import about from '../i18n/about.json';
@@ -68,6 +69,9 @@ const STATS = [
       </ul>
     </div>
   </section>
+  <div class="adv-flow adv-about__plain">
+    <Plain lang={lang} page="about" id="fakta" />
+  </div>
   <Partners lang={lang} />
   <CtaPanel lang={lang} />
 </Base>
@@ -112,6 +116,9 @@ const STATS = [
     margin-top: 12px;
     color: var(--adv-muted);
     font-size: 0.9375rem;
+  }
+  .adv-about__plain {
+    margin-top: clamp(64px, 8vw, 120px);
   }
   @media (max-width: 900px) {
     .adv-about__grid.has-todo {

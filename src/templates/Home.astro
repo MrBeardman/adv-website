@@ -15,6 +15,7 @@ import Showcase from '../components/home/Showcase.astro';
 import Partners from '../components/Partners.astro';
 import Inquiry from '../components/inquiry/Inquiry.astro';
 import NodeFrame from '../components/ui/NodeFrame.astro';
+import Faq from '../components/Faq.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import home from '../i18n/home.json';
@@ -44,6 +45,7 @@ const inquiryId = pick(home, lang).workflow.inquiryId;
     <NodeFrame {...n.partners} icon="shapes" side="right">
       <Partners lang={lang} />
     </NodeFrame>
+    <Faq lang={lang} page="home" />
     <NodeFrame {...n.inquiry} icon="arrowRight" side="full" id={inquiryId} last>
       <div class="adv-section adv-home-inq">
         <div class="adv-wrap">

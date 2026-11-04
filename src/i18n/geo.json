@@ -1,0 +1,504 @@
+{
+  "cs": {
+    "labels": {
+      "plain": "V kostce",
+      "faq": "Otázky a odpovědi",
+      "faqTitle": "Na co se nás ptají.",
+      "faqEm": "ptají",
+      "facts": "Fakta"
+    },
+    "company": {
+      "description": "ADV Innovations je pražská firma, která malým a středním firmám automatizuje opakovanou práci (faktury, objednávky, e-maily, reporting), propojuje jejich systémy do jednoho celku a staví k tomu weby, e-shopy, prototypy a firemní software na míru.",
+      "knowsAbout": [
+        "automatizace firemních procesů",
+        "AI asistenti a AI agenti pro firmy",
+        "zpracování faktur a dokladů",
+        "napojení e-shopu na účetnictví (Shoptet, Shopify, Pohoda, Fakturoid)",
+        "interní systémy a firemní dashboardy",
+        "vývoj webových aplikací a softwaru na míru",
+        "funkční prototypy (MVP)",
+        "tvorba webů a e-shopů",
+        "n8n, Make, OpenAI, Claude, WordPress, Astro"
+      ]
+    },
+    "pages": {
+      "home": {
+        "plain": {
+          "title": "Co děláme, v jedné větě.",
+          "body": "ADV Innovations je pražská firma pro malé a střední firmy a e-shopy: nejdřív pochopíme, jak váš byznys funguje, pak zautomatizujeme rutinu (faktury, objednávky, e-maily, reporting), propojíme systémy, které už používáte, do jednoho celku s jedním přehledem, a postavíme k tomu web, e-shop, prototyp nebo firemní software na míru.",
+          "facts": [
+            { "label": "Pro koho", "value": "Malé a střední firmy a e-shopy, od živnostníka po firmu s desítkami lidí" },
+            { "label": "Kde", "value": "Praha, celé Česko a Německo, na dálku i osobně; česky, anglicky, německy" },
+            { "label": "Na čem", "value": "n8n, Make, OpenAI, Claude, Pohoda, Fakturoid, Shoptet, Shopify, WordPress, vlastní kód" },
+            { "label": "Jak začínáme", "value": "Půlhodinový hovor zdarma, pak mapování procesů a funkční prototyp" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "Co ADV Innovations dělá?",
+            "a": "Automatizujeme opakovanou práci ve firmách (faktury, objednávky, e-maily, reporting), propojujeme firemní systémy do jednoho celku a stavíme k tomu weby, e-shopy, prototypy a firemní software na míru. Všechno se potkává v jednom přehledu, ve kterém vidíte, co běží samo a co čeká na člověka."
+          },
+          {
+            "q": "Pro jaké firmy pracujete?",
+            "a": "Pro malé a střední firmy a e-shopy: od živnostníka s e-shopem po firmu s desítkami lidí. Nejčastěji pro obchod, služby a výrobu, kde se každý týden ručně přepisují doklady, schvaluje e-mailem a skládají tabulky."
+          },
+          {
+            "q": "Kde působíte?",
+            "a": "Sídlíme v Praze (Rybná 234/20) a pracujeme pro firmy po celém Česku a v Německu. Většinu práce zvládneme na dálku, mapování procesů rádi uděláme u vás ve firmě. Mluvíme česky, anglicky a německy."
+          },
+          {
+            "q": "Jak spolupráce začíná a co stojí první schůzka?",
+            "a": "Půlhodinovým hovorem o tom, kde ve firmě mizí čas. Je zdarma a bez závazků. Pak zmapujeme procesy, navrhneme, co se vyplatí nejdřív, a první výsledek ukážeme jako funkční prototyp, ne jako prezentaci."
+          },
+          {
+            "q": "Za jak dlouho uvidíme první výsledek?",
+            "a": "Nezačínáme velkým projektem. První automatizace nebo prototyp bývá hotový v řádu týdnů, pak přidáváme další kroky, dokud firma neběží tak, jak má. Každá část se používá dřív, než se plánuje ta další."
+          },
+          {
+            "q": "Na jaké systémy se umíte napojit?",
+            "a": "Na ty, které už používáte: Pohoda, Fakturoid, Shoptet, Shopify, Google Workspace, Microsoft 365 a další systémy s API nebo exportem. Automatizace stavíme na n8n, Make a modelech OpenAI a Claude, nebo na vlastním kódu, když je potřeba něco, co hotové nástroje neumí."
+          }
+        ]
+      },
+      "ai-automation": {
+        "meta": {
+          "title": "Automatizace firemních procesů a AI pro firmy · ADV Innovations",
+          "description": "Automatizace faktur, objednávek a e-mailů, napojení e-shopu na Pohodu nebo Fakturoid, AI asistenti a reporting pro malé a střední firmy. Praha, celé Česko. První konzultace zdarma."
+        },
+        "plain": {
+          "title": "Automatizace a AI, v kostce.",
+          "body": "Automatizace firemních procesů a AI pro malé a střední firmy v Praze a po celém Česku: zpracování faktur a objednávek, třídění a odpovídání na e-maily, napojení e-shopu (Shoptet, Shopify) na účetnictví (Pohoda, Fakturoid), reporting, který se skládá sám, a AI asistenti pro opakované dotazy. Stavíme na n8n, Make a modelech OpenAI a Claude, nebo na vlastním kódu, a napojujeme to na systémy, které už používáte. Člověk rozhoduje tam, kde jde o úsudek.",
+          "facts": [
+            { "label": "Co automatizujeme", "value": "Faktury a doklady, objednávky, e-maily a poptávky, reporting, schvalování, přenos dat mezi systémy" },
+            { "label": "Na čem", "value": "n8n, Make, OpenAI, Claude, API vašich systémů, vlastní kód" },
+            { "label": "Napojení", "value": "Pohoda, Fakturoid, Shoptet, Shopify, Google Workspace, Microsoft 365" },
+            { "label": "Začátek", "value": "Hovor zdarma, mapování procesů, první proces běží v řádu týdnů" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "Co se dá ve firmě automatizovat?",
+            "a": "Všechno, co se opakuje a má jasná pravidla: vytěžení faktur a objednávek do účetnictví, třídění e-mailů a poptávek ke správnému člověku, přenos dat mezi e-shopem, skladem a účetnictvím, schvalování nad limit, reporty pro vedení a první odpovědi na opakované dotazy. Začínáme tím, co stojí nejvíc hodin."
+          },
+          {
+            "q": "Jaký je rozdíl mezi automatizací a AI asistentem?",
+            "a": "Automatizace dělá vždy to samé podle pravidel: objednávka přišla, zapsat do Pohody, poslat potvrzení. AI asistent zvládne i to, co pravidla nepopíšou: přečte dopis od dodavatele, pozná, o co jde, a připraví odpověď. Většinou oboje kombinujeme a AI dostane jen tu část, kde je potřeba porozumět textu."
+          },
+          {
+            "q": "Umíte napojit e-shop na Pohodu nebo Fakturoid?",
+            "a": "Ano. Objednávky ze Shoptetu, Shopify nebo vlastního e-shopu zapisujeme do Pohody nebo Fakturoidu, a zpátky posíláme stavy, sklad a ceny. Stejně propojujeme CRM, sklad a Google Workspace nebo Microsoft 365. Když systém nemá API, jde to přes exporty a importy."
+          },
+          {
+            "q": "Co když už používáme Make, Zapier nebo n8n?",
+            "a": "Dobře, stavíme na stejných nástrojích. Projdeme, co máte, opravíme scénáře, které padají, a doplníme to, co chybí. Když se to vyplatí, převedeme to na n8n na vlastním serveru, aby se za běh neplatilo za každý krok."
+          },
+          {
+            "q": "Kolik automatizace stojí?",
+            "a": "Menší automatizace jednoho procesu se obvykle vejde do 80 000 Kč, propojení několika systémů a asistentů bývá mezi 80 000 a 250 000 Kč. Přesnou cenu řekneme písemně po bezplatné konzultaci a mapování, dřív to nejde poctivě spočítat."
+          },
+          {
+            "q": "Jak dlouho to trvá?",
+            "a": "První proces běží v řádu týdnů. Pak napojujeme další, jeden po druhém, takže úspora roste každý měsíc a firma si na změnu zvyká postupně, ne naráz."
+          },
+          {
+            "q": "Co s daty a GDPR?",
+            "a": "Data zůstávají ve vašich systémech. Před spuštěním se domluvíme, co smí AI vidět, co se nesmí posílat ven a které kroky musí schválit člověk. Kde to jde, používáme evropské servery a n8n na vlastním serveru."
+          },
+          {
+            "q": "Může AI udělat chybu?",
+            "a": "Může, proto ji nenecháváme rozhodovat o penězích a závazcích sama. Doklady nad limit, nezvyklé částky a odpovědi zákazníkům čekají na schválení člověkem, a každý běh je dohledatelný: vidíte, co se stalo, kdy a proč."
+          }
+        ]
+      },
+      "business-optimisation": {
+        "meta": {
+          "title": "Optimalizace firemních procesů, interní nástroje a reporting · ADV Innovations",
+          "description": "Revize procesů, interní systém s jedním dashboardem a reporting, který se skládá sám. Pro malé a střední firmy, které běží na tabulkách a e-mailu. Praha, celé Česko."
+        },
+        "plain": {
+          "title": "Optimalizace firmy, v kostce.",
+          "body": "Optimalizace firemních procesů pro malé a střední firmy: zmapujeme, jak práce ve firmě skutečně teče, odstraníme kroky, které nepotřebují člověka, a ze zbytku postavíme interní systém s jedním dashboardem, ve kterém vedení i tým vidí zakázky, doklady, úkoly a čísla na jednom místě. Nahrazuje tabulky, sdílené schránky a jednoho člověka, který ví, kde co je. Napojíme ho na e-shop, sklad, účetnictví a CRM, které už máte.",
+          "facts": [
+            { "label": "Co děláme", "value": "Revize procesů, interní nástroje, firemní dashboard, reporting, schvalovací toky, napojení systémů" },
+            { "label": "Pro koho", "value": "Firmy, které běží na tabulkách, e-mailu a zvyku, obvykle 5 až 100 lidí" },
+            { "label": "Kde", "value": "Praha, celé Česko a Německo; mapování u vás ve firmě, zbytek na dálku" },
+            { "label": "Začátek", "value": "Hovor zdarma, pak dva až tři dny mapování s lidmi, kteří práci dělají" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "Co u vás znamená optimalizace firmy?",
+            "a": "Ne poradenství s prezentací na konci. Zmapujeme, kudy ve firmě tečou objednávky, doklady a informace, kde se zdvojují a kde čekají, a pak to opravíme: zbytečné kroky zrušíme, rutinu zautomatizujeme a ze zbytku postavíme nástroje, se kterými pracuje celý tým."
+          },
+          {
+            "q": "Jak probíhá revize procesů?",
+            "a": "Mluvíme s lidmi, kteří práci dělají, ne jen s vedením. Projdeme s nimi, co dělají každý den, kde přepisují a na co čekají. Výsledkem je mapa procesů a seznam změn seřazený podle toho, kolik času a peněz ušetří a jak rychle jdou udělat."
+          },
+          {
+            "q": "Nahradíte nám tabulky?",
+            "a": "Tam, kde tabulka dělá práci systému, ano: zakázky, sklad, směny, evidence. Jednoduchá aplikace s jedním zdrojem pravdy, do které zapisuje víc lidí najednou a která se napojí na účetnictví a e-shop. Tabulky, které fungují, necháme být."
+          },
+          {
+            "q": "Co je firemní dashboard a co v něm uvidíme?",
+            "a": "Jeden přehled pro vedení a tým: co se dnes prodalo, které faktury čekají na schválení, které zakázky stojí a proč, kolik hodin ušetřily automatizace. Čísla se aktualizují sama z vašich systémů, nikdo je neskládá v pátek ručně."
+          },
+          {
+            "q": "Musíme kvůli tomu měnit účetnictví nebo e-shop?",
+            "a": "Ne. Stavíme nad tím, co máte: Pohoda, Fakturoid, Shoptet, Shopify, CRM. Měníme jen to, za co platíte a nevyužíváte, a to až po dohodě."
+          },
+          {
+            "q": "Kolik to stojí a jak dlouho trvá?",
+            "a": "Mapování procesů trvá dva až tři dny a vejde se do nižších desítek tisíc korun; interní nástroj nebo dashboard bývá mezi 80 000 a 250 000 Kč, větší propojený systém nad 250 000 Kč. První verze se používá v řádu týdnů. Cenu dostanete písemně po bezplatné konzultaci."
+          }
+        ]
+      },
+      "websites": {
+        "meta": {
+          "title": "Tvorba webů a e-shopů pro firmy, Praha · ADV Innovations",
+          "description": "Rychlé, moderní weby a e-shopy na míru pro malé a střední firmy: WordPress nebo vlastní kód, napojené na rezervace, poptávky a účetnictví. Spravujete si je sami. Praha, celé Česko."
+        },
+        "plain": {
+          "title": "Weby a e-shopy, v kostce.",
+          "body": "Tvorba webů a e-shopů pro malé a střední firmy v Praze a po celém Česku: rychlé, moderní stránky na WordPressu nebo ve vlastním kódu, navržené podle toho, co prodáváte a komu, a postavené tak, aby je spravoval váš tým bez agentury. Web napojíme na rezervace, poptávky, CRM a účetnictví, takže poptávka z webu neskončí v e-mailu, ale ve vašem systému.",
+          "facts": [
+            { "label": "Co stavíme", "value": "Firemní weby, e-shopy, rezervační systémy, weby s administrací na míru, texty a struktura" },
+            { "label": "Na čem", "value": "WordPress, Astro a vlastní kód; Shoptet a Shopify pro e-shopy" },
+            { "label": "Napojení", "value": "Poptávky do CRM nebo Telegramu, objednávky do Pohody a Fakturoidu, rezervace do kalendáře" },
+            { "label": "Reference", "value": "Laser Arena Praha, HomeStyle, Kesia" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "Jaké weby stavíte?",
+            "a": "Firemní weby, e-shopy a rezervační systémy. Na WordPressu, když má web spravovat tým bez vývojáře, nebo ve vlastním kódu (Astro), když má být rychlý a bez pluginů. E-shopy stavíme na Shoptetu, Shopify nebo na míru, podle toho, co prodáváte."
+          },
+          {
+            "q": "Kolik stojí nový web nebo e-shop?",
+            "a": "Firemní web s texty a administrací obvykle mezi 80 000 a 250 000 Kč, menší prezentace pod tím, e-shop nebo web s rezervacemi a napojením na systémy nad tím. Cenu dostanete písemně po bezplatné konzultaci, rozsah určíme spolu."
+          },
+          {
+            "q": "Jak dlouho web trvá?",
+            "a": "Menší web v řádu týdnů, web s administrací na míru nebo e-shop do několika měsíců. Nejdřív uvidíte funkční ukázku, ne návrh v prezentaci, a první stránky jdou ven dřív, než jsou hotové všechny."
+          },
+          {
+            "q": "Budeme si web spravovat sami?",
+            "a": "Ano, s tím ho stavíme. Texty, obrázky, produkty, ceny a termíny měníte sami v administraci, kterou vám ukážeme a předáme. My zůstáváme na podporu a větší změny."
+          },
+          {
+            "q": "Napojíte web na naše systémy?",
+            "a": "Ano. Poptávky z formuláře jdou rovnou do CRM nebo na Telegram, objednávky do Pohody či Fakturoidu, rezervace do kalendáře. Web je pro nás první krok propojené firmy, ne samostatná vizitka."
+          },
+          {
+            "q": "Děláte i texty a SEO?",
+            "a": "Strukturu a texty webu navrhujeme s vámi podle toho, na co se zákazníci ptají, a stavíme web tak, aby ho vyhledávače i AI asistenti přečetli a správně pochopili: rychlost, strukturovaná data, jasné odpovědi. Dlouhodobou správu kampaní neděláme."
+          }
+        ]
+      },
+      "software": {
+        "meta": {
+          "title": "Prototypy a firemní software na míru · ADV Innovations",
+          "description": "Vývoj webových aplikací a firemního softwaru na míru pro malé a střední firmy: nejdřív funkční prototyp za pár týdnů, pak první verze v provozu. Praha, celé Česko."
+        },
+        "plain": {
+          "title": "Prototypy a software, v kostce.",
+          "body": "Vývoj softwaru na míru pro malé a střední firmy v Praze a po celém Česku: interní systémy, webové aplikace, CRM a evidence pro tu část provozu, pro kterou žádný hotový produkt nevznikl. Začínáme funkčním prototypem (MVP), který máte v ruce během pár týdnů a na kterém se rozhodujete nad něčím, na co se dá kliknout. Pak stavíme po etapách, takže první verze se používá dřív, než se plánuje ta poslední. Kód a data patří vám.",
+          "facts": [
+            { "label": "Co stavíme", "value": "Interní systémy, webové aplikace, CRM a evidence na míru, administrace, dashboardy" },
+            { "label": "Jak", "value": "Funkční prototyp za pár týdnů, pak verze po etapách, předání a podpora" },
+            { "label": "Na čem", "value": "Webové technologie, databáze s API, napojení na Pohodu, Fakturoid, Shoptet, Shopify, AI modely OpenAI a Claude" },
+            { "label": "Reference", "value": "Kesia (živé ceny ve třech e-shopech), Laser Arena Praha (rezervační systém)" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "Co je funkční prototyp a proč jím začínáte?",
+            "a": "Zjednodušená, ale fungující verze aplikace, pokud možno na vašich datech. Do pár týdnů si ji proklikáte, ukážete lidem, kteří s ní budou pracovat, a teprve pak se rozhodnete, co stavět dál. Levnější než měsíce vývoje podle zadání, které se ukáže jako špatné."
+          },
+          {
+            "q": "Kdy má smysl software na míru místo hotového produktu?",
+            "a": "Když hotové produkty pokrývají 80 % a zbylých 20 % vás stojí hodiny každý týden, nebo když platíte za několik nástrojů, které spolu nemluví. Když existuje produkt, který to řeší dobře, řekneme vám to a napojíme ho."
+          },
+          {
+            "q": "Jak dlouho trvá prototyp a první verze?",
+            "a": "Prototyp v řádu týdnů, první verze v provozu obvykle do dvou až tří měsíců. Další etapy přidáváme podle toho, co provoz ukáže, ne podle plánu z první schůzky."
+          },
+          {
+            "q": "Kolik software na míru stojí?",
+            "a": "Prototyp a menší nástroj obvykle mezi 80 000 a 250 000 Kč, propojený interní systém nad 250 000 Kč, po etapách, takže platíte za části, které už používáte. Cenu dostanete písemně po bezplatné konzultaci."
+          },
+          {
+            "q": "Komu patří kód a data?",
+            "a": "Vám. Zdrojový kód, databáze i přístupy předáváme spolu s dokumentací, a systém může dál rozvíjet kdokoli, ne jen my."
+          },
+          {
+            "q": "Co se děje po spuštění?",
+            "a": "Předáme to lidem, kteří s tím budou pracovat, zaškolíme je a zůstáváme: podpora, drobné úpravy a další etapy podle toho, co firma potřebuje."
+          }
+        ]
+      },
+      "about": {
+        "plain": {
+          "title": "Fakta o firmě.",
+          "body": "ADV Innovations je pražská firma pro automatizaci, firemní software a weby pro malé a střední firmy. Vede ji Jan Matyáš; tým má přes deset let zkušeností s vývojem webů, aplikací a firemních systémů pro české a německé klienty. Pracujeme sami a s partnery Alture, Jenomics a Sisu Vision, takže za jedním kontaktem v ADV jsou ti správní specialisté.",
+          "facts": [
+            { "label": "Sídlo", "value": "Rybná 234/20, Praha 1" },
+            { "label": "Trhy", "value": "Česko a Německo; česky, anglicky, německy" },
+            { "label": "Služby", "value": "Automatizace a AI, optimalizace firmy, weby a e-shopy, prototypy a software na míru" },
+            { "label": "Partneři", "value": "Alture (design a digitální produkty), Jenomics (software a hosting), Sisu Vision (realizace)" }
+          ]
+        }
+      }
+    }
+  },
+  "en": {
+    "labels": {
+      "plain": "In short",
+      "faq": "Questions",
+      "faqTitle": "What people ask us.",
+      "faqEm": "ask",
+      "facts": "Facts"
+    },
+    "company": {
+      "description": "ADV Innovations is a Prague company that automates the repetitive work in small and mid-sized businesses (invoices, orders, email, reporting), connects their systems into one whole, and builds the websites, e-shops, prototypes and custom business software around it.",
+      "knowsAbout": [
+        "business process automation",
+        "AI assistants and AI agents for business",
+        "invoice and document processing",
+        "connecting e-shops to accounting (Shoptet, Shopify, Pohoda, Fakturoid)",
+        "internal systems and business dashboards",
+        "custom web application and software development",
+        "working prototypes (MVP)",
+        "website and e-shop development",
+        "n8n, Make, OpenAI, Claude, WordPress, Astro"
+      ]
+    },
+    "pages": {
+      "home": {
+        "plain": {
+          "title": "What we do, in one sentence.",
+          "body": "ADV Innovations is a Prague company for small and mid-sized businesses and e-shops: we first understand how your business works, then automate the routine (invoices, orders, email, reporting), connect the systems you already use into one whole with one overview, and build the website, e-shop, prototype or custom business software around it.",
+          "facts": [
+            { "label": "For whom", "value": "Small and mid-sized businesses and e-shops, from a one-person shop to a company of dozens" },
+            { "label": "Where", "value": "Prague, all of the Czech Republic and Germany, remote or on site; Czech, English, German" },
+            { "label": "Built on", "value": "n8n, Make, OpenAI, Claude, Pohoda, Fakturoid, Shoptet, Shopify, WordPress, custom code" },
+            { "label": "How it starts", "value": "A free half-hour call, then process mapping and a working prototype" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "What does ADV Innovations do?",
+            "a": "We automate the repetitive work in a business (invoices, orders, email, reporting), connect business systems into one whole, and build the websites, e-shops, prototypes and custom business software around it. Everything meets in one overview, where you see what runs on its own and what is waiting for a person."
+          },
+          {
+            "q": "What kind of companies do you work for?",
+            "a": "Small and mid-sized businesses and e-shops: from a one-person shop to a company of dozens of people. Most often trade, services and manufacturing, where documents are retyped by hand every week, approvals go by email and reports are assembled in spreadsheets."
+          },
+          {
+            "q": "Where are you based?",
+            "a": "In Prague (Rybná 234/20), working for companies across the Czech Republic and in Germany. Most of the work is done remotely; we like to map the processes at your company in person. We speak Czech, English and German."
+          },
+          {
+            "q": "How does it start, and what does the first meeting cost?",
+            "a": "With a half-hour call about where the time goes in your business. It is free and without obligation. Then we map the processes, propose what pays off first, and show the first result as a working prototype, not a slide deck."
+          },
+          {
+            "q": "How soon do we see the first result?",
+            "a": "We do not start with a big project. The first automation or prototype is usually ready within weeks, then we add the next steps until the business runs the way it should. Each part is in use before the next one is planned."
+          },
+          {
+            "q": "Which systems can you connect to?",
+            "a": "The ones you already use: Pohoda, Fakturoid, Shoptet, Shopify, Google Workspace, Microsoft 365 and any system with an API or an export. We build automations on n8n, Make and the OpenAI and Claude models, or in custom code when the ready-made tools cannot do what is needed."
+          }
+        ]
+      },
+      "ai-automation": {
+        "meta": {
+          "title": "Business process automation and AI for companies · ADV Innovations",
+          "description": "Invoice, order and email automation, e-shop to Pohoda or Fakturoid integration, AI assistants and reporting for small and mid-sized businesses. Prague and the Czech Republic. First consultation free."
+        },
+        "plain": {
+          "title": "Automation and AI, in short.",
+          "body": "Business process automation and AI for small and mid-sized companies in Prague and across the Czech Republic: invoice and order processing, sorting and answering email, connecting the e-shop (Shoptet, Shopify) to accounting (Pohoda, Fakturoid), reports that assemble themselves, and AI assistants for the questions that keep coming back. Built on n8n, Make and the OpenAI and Claude models, or in custom code, and connected to the systems you already use. A person decides wherever judgement matters.",
+          "facts": [
+            { "label": "What we automate", "value": "Invoices and documents, orders, email and enquiries, reporting, approvals, data transfer between systems" },
+            { "label": "Built on", "value": "n8n, Make, OpenAI, Claude, your systems' APIs, custom code" },
+            { "label": "Integrations", "value": "Pohoda, Fakturoid, Shoptet, Shopify, Google Workspace, Microsoft 365" },
+            { "label": "How it starts", "value": "A free call, process mapping, the first process running within weeks" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "What can be automated in a company?",
+            "a": "Everything that repeats and follows clear rules: extracting invoices and orders into accounting, routing email and enquiries to the right person, moving data between the e-shop, the warehouse and accounting, approvals above a limit, management reports and first replies to recurring questions. We start with what costs the most hours."
+          },
+          {
+            "q": "What is the difference between automation and an AI assistant?",
+            "a": "Automation does the same thing every time by rules: an order came in, write it to Pohoda, send a confirmation. An AI assistant handles what rules cannot describe: it reads a supplier's letter, works out what it is about and prepares a reply. We usually combine both, and AI gets only the part where text has to be understood."
+          },
+          {
+            "q": "Can you connect an e-shop to Pohoda or Fakturoid?",
+            "a": "Yes. Orders from Shoptet, Shopify or a custom e-shop are written to Pohoda or Fakturoid, and statuses, stock and prices are sent back. We connect CRM, warehouse and Google Workspace or Microsoft 365 the same way. When a system has no API, it works through exports and imports."
+          },
+          {
+            "q": "What if we already use Make, Zapier or n8n?",
+            "a": "Good, we build on the same tools. We go through what you have, fix the scenarios that fail and add what is missing. When it pays off, we move it to n8n on your own server, so you stop paying per step."
+          },
+          {
+            "q": "How much does automation cost?",
+            "a": "A smaller automation of one process usually fits under 80,000 CZK; connecting several systems and assistants is typically between 80,000 and 250,000 CZK. You get the exact price in writing after the free consultation and mapping; it cannot be honestly calculated earlier."
+          },
+          {
+            "q": "How long does it take?",
+            "a": "The first process runs within weeks. Then we connect the next ones, one by one, so the savings grow every month and the company gets used to the change gradually, not all at once."
+          },
+          {
+            "q": "What about data and GDPR?",
+            "a": "Data stays in your systems. Before launch we agree what AI may see, what must never leave the company and which steps a person has to approve. Where possible we use European servers and n8n on your own server."
+          },
+          {
+            "q": "Can AI make a mistake?",
+            "a": "It can, which is why we never let it decide about money and commitments on its own. Documents above a limit, unusual amounts and replies to customers wait for a person's approval, and every run is traceable: you see what happened, when and why."
+          }
+        ]
+      },
+      "business-optimisation": {
+        "meta": {
+          "title": "Business process optimisation, internal tools and reporting · ADV Innovations",
+          "description": "Process review, an internal system with one dashboard and reporting that assembles itself. For small and mid-sized companies running on spreadsheets and email. Prague and the Czech Republic."
+        },
+        "plain": {
+          "title": "Business optimisation, in short.",
+          "body": "Business process optimisation for small and mid-sized companies: we map how the work actually flows, remove the steps that do not need a person, and build the rest into an internal system with one dashboard where management and the team see jobs, documents, tasks and numbers in one place. It replaces spreadsheets, shared inboxes and the one person who knows where everything is. We connect it to the e-shop, warehouse, accounting and CRM you already have.",
+          "facts": [
+            { "label": "What we do", "value": "Process review, internal tools, business dashboard, reporting, approval flows, system integration" },
+            { "label": "For whom", "value": "Companies running on spreadsheets, email and habit, usually 5 to 100 people" },
+            { "label": "Where", "value": "Prague, the Czech Republic and Germany; mapping at your company, the rest remotely" },
+            { "label": "How it starts", "value": "A free call, then two or three days of mapping with the people who do the work" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "What does business optimisation mean at ADV?",
+            "a": "Not consulting with a slide deck at the end. We map where orders, documents and information flow in the company, where they are duplicated and where they wait, and then we fix it: needless steps are removed, the routine is automated, and the rest becomes tools the whole team works with."
+          },
+          {
+            "q": "How does a process review work?",
+            "a": "We talk to the people who do the work, not only to management. We go through what they do every day, where they retype and what they wait for. The result is a process map and a list of changes, ranked by how much time and money each saves and how fast it can be done."
+          },
+          {
+            "q": "Will you replace our spreadsheets?",
+            "a": "Where a spreadsheet does the job of a system, yes: jobs, stock, shifts, records. A simple application with one source of truth, used by several people at once and connected to accounting and the e-shop. Spreadsheets that work are left alone."
+          },
+          {
+            "q": "What is a business dashboard and what will we see in it?",
+            "a": "One overview for management and the team: what sold today, which invoices await approval, which jobs are stuck and why, how many hours the automations saved. The numbers update themselves from your systems; nobody assembles them by hand on Friday."
+          },
+          {
+            "q": "Do we have to change our accounting or e-shop?",
+            "a": "No. We build on what you have: Pohoda, Fakturoid, Shoptet, Shopify, CRM. We only change what you pay for and do not use, and only after agreeing it with you."
+          },
+          {
+            "q": "How much does it cost and how long does it take?",
+            "a": "Process mapping takes two or three days and fits in the low tens of thousands of CZK; an internal tool or dashboard is usually between 80,000 and 250,000 CZK, a larger connected system above 250,000 CZK. The first version is in use within weeks. You get the price in writing after the free consultation."
+          }
+        ]
+      },
+      "websites": {
+        "meta": {
+          "title": "Websites and e-shops for businesses, Prague · ADV Innovations",
+          "description": "Fast, modern websites and e-shops for small and mid-sized businesses: WordPress or custom code, connected to bookings, enquiries and accounting. You run them yourself. Prague and the Czech Republic."
+        },
+        "plain": {
+          "title": "Websites and e-shops, in short.",
+          "body": "Websites and e-shops for small and mid-sized businesses in Prague and across the Czech Republic: fast, modern sites on WordPress or in custom code, planned around what you sell and who you sell to, and built so your own team runs them without an agency. We connect the website to bookings, enquiries, CRM and accounting, so an enquiry from the website does not end in an inbox but in your system.",
+          "facts": [
+            { "label": "What we build", "value": "Company websites, e-shops, booking systems, sites with a custom admin, content and structure" },
+            { "label": "Built on", "value": "WordPress, Astro and custom code; Shoptet and Shopify for e-shops" },
+            { "label": "Integrations", "value": "Enquiries into CRM or Telegram, orders into Pohoda and Fakturoid, bookings into the calendar" },
+            { "label": "References", "value": "Laser Arena Praha, HomeStyle, Kesia" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "What kind of websites do you build?",
+            "a": "Company websites, e-shops and booking systems. On WordPress when the team should run the site without a developer, or in custom code (Astro) when it has to be fast and free of plugins. E-shops on Shoptet, Shopify or custom-built, depending on what you sell."
+          },
+          {
+            "q": "How much does a new website or e-shop cost?",
+            "a": "A company website with content and an admin is usually between 80,000 and 250,000 CZK, a smaller presentation site below that, an e-shop or a site with bookings and integrations above it. You get the price in writing after the free consultation; we define the scope together."
+          },
+          {
+            "q": "How long does a website take?",
+            "a": "A smaller site within weeks, a site with a custom admin or an e-shop within a few months. You see a working version first, not a design in a deck, and the first pages go live before all of them are finished."
+          },
+          {
+            "q": "Will we manage the website ourselves?",
+            "a": "Yes, that is how we build it. You change texts, images, products, prices and dates yourself in an admin we show you and hand over. We stay on for support and bigger changes."
+          },
+          {
+            "q": "Will you connect the website to our systems?",
+            "a": "Yes. Enquiries from the form go straight to CRM or Telegram, orders to Pohoda or Fakturoid, bookings to the calendar. For us the website is the first step of a connected business, not a standalone business card."
+          },
+          {
+            "q": "Do you also write the content and do SEO?",
+            "a": "We plan the structure and texts with you around what customers actually ask, and build the site so that search engines and AI assistants can read it and understand it correctly: speed, structured data, clear answers. We do not run long-term ad campaigns."
+          }
+        ]
+      },
+      "software": {
+        "meta": {
+          "title": "Prototypes and custom business software · ADV Innovations",
+          "description": "Custom web applications and business software for small and mid-sized companies: a working prototype in a few weeks first, then the first version in use. Prague and the Czech Republic."
+        },
+        "plain": {
+          "title": "Prototypes and software, in short.",
+          "body": "Custom software development for small and mid-sized companies in Prague and across the Czech Republic: internal systems, web applications, CRM and records for the part of the operation no ready-made product was built for. We start with a working prototype (MVP) that you have in your hands within a few weeks and decide on something you can click. Then we build in phases, so the first version is in use before the last one is planned. The code and the data are yours.",
+          "facts": [
+            { "label": "What we build", "value": "Internal systems, web applications, custom CRM and records, admin panels, dashboards" },
+            { "label": "How", "value": "A working prototype in a few weeks, then versions in phases, handover and support" },
+            { "label": "Built on", "value": "Web technologies, a database with an API, integrations with Pohoda, Fakturoid, Shoptet, Shopify, the OpenAI and Claude models" },
+            { "label": "References", "value": "Kesia (live prices in three e-shops), Laser Arena Praha (booking system)" }
+          ]
+        },
+        "faq": [
+          {
+            "q": "What is a working prototype and why do you start with one?",
+            "a": "A simplified but functioning version of the application, on your own data where possible. Within a few weeks you click through it, show it to the people who will use it, and only then decide what to build next. Cheaper than months of development against a brief that turns out to be wrong."
+          },
+          {
+            "q": "When does custom software make sense instead of a ready-made product?",
+            "a": "When ready-made products cover 80% and the remaining 20% cost you hours every week, or when you pay for several tools that do not talk to each other. When a product exists that solves it well, we tell you and connect it."
+          },
+          {
+            "q": "How long do the prototype and the first version take?",
+            "a": "The prototype within weeks, the first version in use usually within two to three months. Further phases are added according to what operation shows, not according to the plan from the first meeting."
+          },
+          {
+            "q": "How much does custom software cost?",
+            "a": "A prototype and a smaller tool usually between 80,000 and 250,000 CZK, a connected internal system above 250,000 CZK, in phases, so you pay for the parts you already use. You get the price in writing after the free consultation."
+          },
+          {
+            "q": "Who owns the code and the data?",
+            "a": "You do. We hand over the source code, the database and the access together with documentation, and anyone can develop the system further, not only us."
+          },
+          {
+            "q": "What happens after launch?",
+            "a": "We hand it over to the people who will work with it, train them and stay on: support, small changes and further phases as the business needs them."
+          }
+        ]
+      },
+      "about": {
+        "plain": {
+          "title": "Facts about the company.",
+          "body": "ADV Innovations is a Prague company for automation, business software and websites for small and mid-sized businesses. It is led by Jan Matyáš; the team has over ten years of experience building websites, applications and business systems for Czech and German clients. We work on our own and with the partners Alture, Jenomics and Sisu Vision, so one contact at ADV brings the right specialists.",
+          "facts": [
+            { "label": "Office", "value": "Rybná 234/20, Prague 1" },
+            { "label": "Markets", "value": "Czech Republic and Germany; Czech, English, German" },
+            { "label": "Services", "value": "Automation and AI, business optimisation, websites and e-shops, prototypes and custom software" },
+            { "label": "Partners", "value": "Alture (design and digital products), Jenomics (software and hosting), Sisu Vision (delivery)" }
+          ]
+        }
+      }
+    }
+  }
+}

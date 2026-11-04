@@ -44,6 +44,25 @@
 - impeccable detector: 0 findings on every route (CS + EN, 1280 and 390).
 
 ## New copy (needs Honza's approval)
+- **GEO / SEO layer (Nov 4)** (`src/i18n/geo.json`, CS + EN; research and reasoning in `docs/GEO.md`):
+  - "V kostce" / "In short" block (`components/Plain.astro`) on the automation page, the three service pages
+    and the about page: one plain paragraph (what, for whom, where, on which systems) + four facts. Names
+    Pohoda, Fakturoid, Shoptet, Shopify, n8n, Make, OpenAI, Claude, WordPress, Astro; "Praha, celé Česko a
+    Německo"; "česky, anglicky, německy"; references Laser Arena Praha, HomeStyle, Kesia.
+  - "Otázky a odpovědi" / "Questions" (`components/Faq.astro`) on the homepage (6) and every service page
+    (6–8): phrased as buyers ask. CLAIMS TO CONFIRM: price bands (menší automatizace do 80 000 Kč; nástroj,
+    web, prototyp 80–250 000 Kč; propojený systém nad 250 000 Kč = the inquiry budget bands), "mapování
+    procesů 2–3 dny", "první verze do 2–3 měsíců", "kód a data patří vám", "evropské servery, kde to jde",
+    "n8n na vlastním serveru", "dlouhodobou správu kampaní neděláme", "mluvíme česky, anglicky, německy".
+  - Service page titles + meta descriptions (`geo.json` → `meta`), e.g. "Automatizace firemních procesů a AI
+    pro firmy · ADV Innovations".
+  - Automation page H1: "Faktury, dotazy, objednávky. / Běží samy." (typewriter: samy. / automaticky. / bez
+    přepisování.), EN "Invoices, enquiries, orders. / Run themselves." (`automation.json` hero). It shared the
+    homepage H1 before.
+  - Company description + `knowsAbout` list in the schema and `/llms.txt` (`geo.json` → `company`);
+    founder "Jan Matyáš" in the schema (`data/seo.ts`).
+  - About facts: "Vede ji Jan Matyáš; tým má přes deset let zkušeností…" (from the 13-years stat), partners
+    with their categories.
 - **Own products as cases (Nov 1, DRAFT, dev only)** (`caseStudies.ts`: `dreamshape`, `finance-tracker` "Rodinné finance",
   `freelance-os`): outcome, situation, four approach steps, three results each, from the repos. MY ASSUMPTIONS to confirm:
   DreamShape "before" (training app + calorie app + habits on paper → "3 → 1"); Freelance OS "before" (spreadsheet,
@@ -149,6 +168,12 @@ and with `--chrome-flags="--headless=new --disable-gpu"` to mimic PageSpeed.
 - [ ] **Performance gate (checker agent, after the first full version, before launch)**: run the "Performance gate"
       in the `astro-marketing-site` skill and the section below; record the numbers here.
 - [ ] **Flip the preview switch**: `PUBLIC_SITE_INDEXABLE=true`.
+- [ ] **GEO after the domain switch** (`docs/GEO.md` §5–6): `https://<domain>/robots.txt` is ours (the
+      Hostinger preview domain serves its own, Googlebot disallowed); `curl -A GPTBot -I` returns 200 (the
+      preview edge answers 429); `/llms.txt` and `/sitemap-index.xml` reachable; Search Console + Bing
+      Webmaster Tools verified and the sitemap submitted; Google Business Profile, Firmy.cz, LinkedIn,
+      Clutch profiles created with the schema `description` wording; their URLs in `SAME_AS`
+      (`src/data/seo.ts`); the FAQ price bands and policies confirmed (New copy above).
 
 ## Open decisions (Honza)
 - Headline emphasis: default is the same face in Ice; the Relay-style Instrument Serif italic is one switch

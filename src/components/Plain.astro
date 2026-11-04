@@ -1,0 +1,124 @@
+---
+/**
+ * "V kostce" / "In short": the plain-language statement of what a page is about, for people who skim and
+ * for search engines and AI assistants that quote (docs/GEO.md). One paragraph that says what, for whom,
+ * where and on what, then four facts. Copy in i18n/geo.json (pages.<key>.plain).
+ */
+import NodeFrame from './ui/NodeFrame.astro';
+import { pick, type Lang } from '../i18n';
+import geo from '../i18n/geo.json';
+
+interface Props {
+  lang: Lang;
+  /** key in geo.json pages: home | ai-automation | business-optimisation | websites | software | about */
+  page: string;
+  /** wrap in a section node with the "V kostce" label (default) or render bare */
+  node?: boolean;
+  id?: string;
+}
+const { lang, page, node = true, id = 'v-kostce' } = Astro.props;
+const g = pick(geo, lang);
+const p = (
+  g.pages as Record<string, { plain?: { title: string; body: string; facts: { label: string; value: string }[] } }>
+)[page]?.plain;
+---
+
+{
+  p &&
+    (node ? (
+      <NodeFrame name={g.labels.plain} kind="" wait="" done="" icon="exchange" id={id}>
+        <section class="adv-plain" aria-labelledby={`${id}-title`}>
+          <div class="adv-wrap adv-plain__grid">
+            <div class="adv-plain__text">
+              <h2 id={`${id}-title`} class="adv-h2" data-reveal>
+                {p.title}
+              </h2>
+              <p class="adv-lead adv-plain__body" data-reveal style="--i:1">
+                {p.body}
+              </p>
+            </div>
+            <dl class="adv-panel adv-plain__facts" data-reveal style="--i:2">
+              {p.facts.map((f) => (
+                <div>
+                  <dt>{f.label}</dt>
+                  <dd>{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      </NodeFrame>
+    ) : (
+      <section class="adv-plain" aria-labelledby={`${id}-title`} id={id}>
+        <div class="adv-wrap adv-plain__grid">
+          <div class="adv-plain__text">
+            <h2 id={`${id}-title`} class="adv-h2" data-reveal>
+              {p.title}
+            </h2>
+            <p class="adv-lead adv-plain__body" data-reveal style="--i:1">
+              {p.body}
+            </p>
+          </div>
+          <dl class="adv-panel adv-plain__facts" data-reveal style="--i:2">
+            {p.facts.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+    ))
+}
+
+<style is:global>
+  .adv-plain__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: start;
+  }
+  .adv-plain__body {
+    max-width: 62ch;
+    margin-top: 18px;
+    font-size: 1.0625rem;
+  }
+  .adv-plain__facts {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: clamp(18px, 2.4vw, 30px) clamp(20px, 2.6vw, 32px);
+  }
+  .adv-plain__facts div {
+    display: grid;
+    grid-template-columns: minmax(0, 9em) 1fr;
+    gap: 12px;
+    padding: 14px 0;
+  }
+  .adv-plain__facts div + div {
+    border-top: 1px solid var(--adv-line);
+  }
+  .adv-plain__facts dt {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--adv-accent);
+    padding-top: 3px;
+  }
+  .adv-plain__facts dd {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--adv-text);
+  }
+  @media (max-width: 860px) {
+    .adv-plain__grid {
+      grid-template-columns: 1fr;
+    }
+    .adv-plain__facts div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

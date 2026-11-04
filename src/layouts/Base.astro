@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import { LANGS, langInfo, pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import { INDEXABLE, EM_STYLE } from '../data/site';
+import { orgSchema, websiteSchema } from '../data/seo';
 // hashed under /_astro/ so the host serves them with a one-year immutable cache
 import urbanist600 from '../assets/fonts/urbanist-latin-600-normal.woff2?url';
 import manrope400 from '../assets/fonts/manrope-latin-400-normal.woff2?url';
@@ -26,6 +27,8 @@ interface Props {
   /** the hero's lines drift behind the page as a slow helix (scripts/flow/drift.ts); on by default */
   drift?: boolean;
   noindex?: boolean;
+  /** extra schema.org nodes for this page's JSON-LD graph (Service, BreadcrumbList; see data/seo.ts) */
+  schema?: Record<string, unknown>[];
 }
 const {
   lang,
@@ -37,25 +40,16 @@ const {
   canvas = false,
   drift = true,
   noindex = false,
+  schema = [],
 } = Astro.props;
 const site = Astro.site!;
 const canonical = new URL(alternates[lang] ?? Astro.url.pathname, site).href;
 const info = langInfo(lang);
 const t = pick(chrome, lang);
-const org = {
+// The page's JSON-LD graph: the company and the site on every page, plus what the page adds (docs/GEO.md).
+const graph = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'ADV Innovations',
-  url: site.href,
-  logo: new URL('/icon-512.png', site).href,
-  email: t.brand.email,
-  telephone: t.brand.phone,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: t.brand.street,
-    addressLocality: t.brand.city,
-    addressCountry: 'CZ',
-  },
+  '@graph': [orgSchema(lang, site), websiteSchema(lang, site), ...schema],
 };
 ---
 
@@ -107,7 +101,7 @@ const org = {
         </>
       )
     }
-    <script type="application/ld+json" set:html={JSON.stringify(org)} />
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
     <slot name="head" />
   </head>
   <body class:list={[{ 'is-canvas': canvas, 'is-drift': drift }]}>
