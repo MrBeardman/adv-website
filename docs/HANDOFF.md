@@ -101,6 +101,14 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
 - Telegram: the five notify nodes use the credential "ADV inquiry bot" (**@adv_inquiry_bot**, a bot only for
   this) and post to the group "ADV inquiry" (`-5295592546`). Working since Nov 4 (the earlier "chat not found"
   was the wrong bot: "Telegram account" is NatalieBot). Hostinger has `N8N_INQUIRY_URL` / `N8N_INQUIRY_KEY` set.
+  The message: bold question lines with the answer under each, priority as the website's label (vysoká /
+  střední / běžná) instead of the score; built in the "Prepare Inquiry" Set node (assignment `message`).
+- Agent Dash (`C:\Data\Devgentdash`, Work page): the inquiries also appear under "New requests" with the
+  tile "ADV inquiries", route `adv`. The server reads n8n workflow "ADV Website - Inquiry Feed"
+  (id `b7DaL3UKKz7FfCct`: GET `/webhook/adv-inquiries` returns the rows still `new`, POST
+  `/webhook/adv-inquiries-status` marks one dispatched / dismissed / new; same `X-ADV-Key`), every 15 minutes
+  and on Sync; "Create work" dispatches an agent (Freelance Dashboard ticket + Gmail reply draft). Config:
+  `~/.agentdash/config.json` → `"adv": { "url", "key" }`.
 - **Open:** delete the test rows "TEST (Claude), ignore" / "Test GmbH" (ids 1, 3, 4, 5, 6 in `adv_inquiries`)
   and the matching lines in `data/submissions` on Hostinger.
 
