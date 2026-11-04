@@ -12,7 +12,7 @@ export const PARTNERS = [
     name: 'Alture',
     logo: '/media/partners/alture.png',
     logoH: 30,
-    url: null as string | null, // TODO: Alture website
+    url: 'https://alture.io' as string | null,
     plate: 'dark' as 'dark' | 'light',
   },
   {
