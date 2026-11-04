@@ -171,15 +171,17 @@ PageSpeed (pagespeed.web.dev, no GPU) first run: mobile 50-60 (LCP 3.9-4.1 s, TB
 - [ ] Domain in `astro.config.mjs` (`site`), then 301s from the old React URLs (`src/data/routes.ts`),
       e.g. `/services/ai-automation` → `/sluzby/automatizace/`.
 - [ ] Privacy note / page for the form.
-- [ ] **Inquiry n8n workflow**: own `X-ADV-Key` credential set, Telegram group -5295592546 set, workflow active
-      (Oct 29). Test run stored row 1 in `adv_inquiries` ("TEST (Claude), ignore": delete it) but Telegram said
-      "chat not found": **add the bot behind n8n's "Telegram account" credential to the group**. Then set
-      `N8N_INQUIRY_URL` / `N8N_INQUIRY_KEY` in Hostinger. Original steps: "ADV Website - Inquiry Intake" (https://vmi3112391.contaboserver.net/workflow/9ytultcdcrouxu2D,
-      created inactive Oct 29): (1) give the webhook its own Header Auth credential, header name `X-ADV-Key`
-      (n8n auto-assigned the content queue's "Queue API Key"); (2) put the Telegram chat ID for inquiries in the
-      four Telegram nodes; (3) activate; (4) in Hostinger set `N8N_INQUIRY_URL` =
-      https://vmi3112391.contaboserver.net/webhook/adv-inquiry and `N8N_INQUIRY_KEY` = the same secret.
-      Stores into the n8n data table `adv_inquiries`; the site keeps its own copy in data/submissions either way.
+- [x] **Inquiry n8n workflow → Telegram (done Nov 4)**: "ADV Website - Inquiry Intake"
+      (https://vmi3112391.contaboserver.net/workflow/9ytultcdcrouxu2D) is active and published; Hostinger has
+      `N8N_INQUIRY_URL` / `N8N_INQUIRY_KEY` set (a real test inquiry from the preview reached n8n and was stored).
+      The "chat not found" error was the bot: the "Telegram account" credential is NatalieBot (the Natalie
+      automation), not a bot in the group. Honza created a dedicated bot **@adv_inquiry_bot** (n8n credential
+      "ADV inquiry bot"), added it to the Telegram group "ADV inquiry" (`-5295592546`); the five notify nodes use
+      it; test message delivered. Three bots, three groups: NatalieBot → Natalie automation, ContentSorterBot →
+      content dump, ADV Inquiry → website inquiries. Stores into the data table `adv_inquiries`; the site keeps
+      its own copy in data/submissions either way.
+- [ ] Delete the test rows in `adv_inquiries` (ids 1, 3, 4, 5, 6: "TEST (Claude), ignore" and the "Test GmbH"
+      inquiry) and the matching lines in `data/submissions` on Hostinger.
 - [ ] **Performance gate (checker agent, after the first full version, before launch)**: run the "Performance gate"
       in the `astro-marketing-site` skill and the section below; record the numbers here.
 - [ ] **Flip the preview switch**: `PUBLIC_SITE_INDEXABLE=true`.

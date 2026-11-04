@@ -98,10 +98,11 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
 - n8n workflow "ADV Website - Inquiry Intake" (id `9ytultcdcrouxu2D`) on vmi3112391.contaboserver.net: stores
   every submission in the data table `adv_inquiries`, then posts to Telegram by tier (hot / warm / cold silent
   / contact / unsorted).
-- **Open:** Telegram answers "chat not found" for chat `-5295592546` (bot not in the group, or the group became
-  a supergroup with a new `-100…` id). Fix the chat id in the five Telegram nodes, then send one test.
-- **Open:** delete the test rows "TEST (Claude), ignore" (rows 1 and 2 in `adv_inquiries`) and the matching
-  lines in `data/submissions` on Hostinger.
+- Telegram: the five notify nodes use the credential "ADV inquiry bot" (**@adv_inquiry_bot**, a bot only for
+  this) and post to the group "ADV inquiry" (`-5295592546`). Working since Nov 4 (the earlier "chat not found"
+  was the wrong bot: "Telegram account" is NatalieBot). Hostinger has `N8N_INQUIRY_URL` / `N8N_INQUIRY_KEY` set.
+- **Open:** delete the test rows "TEST (Claude), ignore" / "Test GmbH" (ids 1, 3, 4, 5, 6 in `adv_inquiries`)
+  and the matching lines in `data/submissions` on Hostinger.
 
 ## Open items
 
