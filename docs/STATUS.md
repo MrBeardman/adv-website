@@ -151,7 +151,7 @@ and with `--chrome-flags="--headless=new --disable-gpu"` to mimic PageSpeed.
 - [ ] Savings slider assumptions (46 weeks, 70 %, 450 CZK/h) confirmed or changed (`07-savings.astro`).
 - [ ] Tool list confirmed (`02-tools.astro`).
 - [ ] About stats (13 years, 50+ projects, 2–50k EUR, CZ/DE) confirmed; team section copy + portraits.
-- [ ] Partner URLs for Alture and Sisu Vision; one "together" line per partner (`partners.ts`, about.json).
+- [ ] Partner URL for Sisu Vision (Alture = alture.io, done; Sisu Vision is still building its site, so its card stays unlinked until it is live); one "together" line per partner (`partners.ts`, about.json).
 - [ ] Contact: `MAIL_TO` recipient + SMTP env vars in Hostinger (`.env.example`).
 - [ ] Domain in `astro.config.mjs` (`site`), then 301s from the old React URLs (`src/data/routes.ts`),
       e.g. `/services/ai-automation` → `/sluzby/automatizace/`.

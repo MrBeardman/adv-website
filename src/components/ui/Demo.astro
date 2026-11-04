@@ -4,12 +4,15 @@
  * miniature app screen in HTML/CSS that plays a 10 s story and loops: a cursor clicks, chips pop out over the
  * frame, a toast confirms. Rendered inside ui/Scene.astro (its frame, [data-live] pause off screen).
  *
- *   ai-automation          three documents arrive, pass the AI node and land in their lanes, "all sorted"
+ *   ai-automation          all six pills stay put; data runs along the wires from each document through the AI
+ *                          node to its department, which is checked, and the document gets its check too,
+ *                          "all sorted"
  *   business-optimisation  a five-step manual process; the cursor switches on "Automate", the middle steps
  *                          fold into one automatic step and the hours bar shrinks
  *   websites               a page builds in a browser, the cursor clicks "Book", a booking toast and a
  *                          bookings sparkline pop out
- *   software               a board assembles from its wireframe, the cursor drags a job to the next column,
+ *   software               a board assembles from its wireframe, the cursor grabs a job and carries it to the
+ *                          next column (card and cursor share their keyframes, so they move as one),
  *                          "Saved"
  *   routing (automation page)    items pass a rule and land in their lane with the person, the urgent one
  *                                goes for approval, "Assigned"
@@ -31,22 +34,34 @@ const { kind, lang } = Astro.props;
 const s = pick(home, lang).values.scene;
 const d = s.demo;
 const a = pick(automation, lang).uses.scene;
+// the AI demo's wires, one document -> node -> department per row (rows at 22, 50 and 78 % of the height).
+// viewBox 300 x 100 is close to the real shape of the scene, so the travelling dashes stay even.
+const AI_ROWS = [22, 50, 78].map((y) => ({
+  in: `M105 ${y} C132 ${y} 126 50 150 50`,
+  out: `M150 50 C174 50 168 ${y} 192 ${y}`,
+}));
 ---
 
 <span class="dm-cur" aria-hidden="true" data-kind={kind}>
-  <svg viewBox="0 0 16 16"><path d="M2 1.5 13 8.2 7.9 9.1 5.6 14 2 1.5Z" /></svg>
+  <svg viewBox="0 0 16 16"><path d="M2 1.5 13 8.2 7.9 9.1 5.6 14 2 1.5Z"></path></svg>
 </span>
 {
   kind === 'ai-automation' && (
     <div class="dm dm-ai">
       <p class="dm-label dm-ai__head">{d.inbox}</p>
-      <svg class="dm-ai__wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M36 22 C44 22 42 50 50 50" />
-        <path d="M36 50 H50" />
-        <path d="M36 78 C44 78 42 50 50 50" />
-        <path d="M50 50 C58 50 56 22 64 22" />
-        <path d="M50 50 H64" />
-        <path d="M50 50 C58 50 56 78 64 78" />
+      <svg class="dm-ai__wires" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">
+        {AI_ROWS.map((r) => (
+          <path class="dm-ai__wire" d={`${r.in} ${r.out}`} />
+        ))}
+        {AI_ROWS.map((r, k) => (
+          <path class="dm-ai__lit" data-k={k} d={`${r.in} ${r.out}`} />
+        ))}
+        {AI_ROWS.map((r, k) => (
+          <path class="dm-ai__data dm-ai__data--in" style={`--k:${k}`} pathLength="100" d={r.in} />
+        ))}
+        {AI_ROWS.map((r, k) => (
+          <path class="dm-ai__data dm-ai__data--out" style={`--k:${k}`} pathLength="100" d={r.out} />
+        ))}
       </svg>
       <span class="dm-ai__node">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -55,15 +70,16 @@ const a = pick(automation, lang).uses.scene;
       </span>
       <ul class="dm-ai__lanes">
         {d.lanes.map((l, k) => (
-          <li style={`--k:${k}`}>
+          <li data-k={k} style={`--k:${k}`}>
             <b />
             {l}
           </li>
         ))}
       </ul>
       {d.files.map((f, k) => (
-        <span class="dm-ai__file" style={`--k:${k}`}>
+        <span class="dm-ai__file" data-k={k} style={`--k:${k}`}>
           <i />
+          <b />
           {f}
         </span>
       ))}
@@ -378,22 +394,30 @@ const a = pick(automation, lang).uses.scene;
   }
   @keyframes dm-click-sw {
     0%,
-    27% {
+    26% {
       opacity: 0;
       scale: 0.4;
     }
-    28% {
+    27% {
       opacity: 1;
       scale: 0.6;
     }
-    33%,
+    32%,
     100% {
       opacity: 0;
       scale: 1.8;
     }
   }
 
-  /* ---- AI and automation: documents pass the AI node into their lanes ---- */
+  /* ---- AI and automation: nothing moves but the data. Every pill stays where it is; a short train of dashes
+     runs along the wire from a document to the node, the node checks it, and the next train runs on to the
+     right department. On arrival the department and the document both get their check and the route stays lit.
+     Base styles are the finished frame (--on: 1), which is what reduced motion shows. ---- */
+  @property --on {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+  }
   .dm-ai__head {
     position: absolute;
     left: 5%;
@@ -406,16 +430,58 @@ const a = pick(automation, lang).uses.scene;
     height: 100%;
     fill: none;
   }
-  .dm-ai__wires path {
-    stroke: rgba(124, 200, 255, 0.35);
+  .dm-ai__wire {
+    stroke: rgba(124, 200, 255, 0.3);
     stroke-width: 1;
     stroke-dasharray: 3 4;
     vector-effect: non-scaling-stroke;
-    animation: dm-dash 1.2s linear infinite;
   }
-  @keyframes dm-dash {
-    to {
-      stroke-dashoffset: -14;
+  .dm-ai__lit {
+    stroke: rgba(124, 200, 255, 0.75);
+    stroke-width: 1;
+    stroke-opacity: var(--on);
+    vector-effect: non-scaling-stroke;
+  }
+  /* one train per wire: thin to thick, the thick head in front. Measured in pathLength units (100 = the whole
+     wire). The offset takes the train from just before the wire's start to just past its end. */
+  .dm-ai .dm-ai__data {
+    stroke: #eaf6ff;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-dasharray: 0.5 3 1 3 2 3 6 200;
+    stroke-dashoffset: 18.5;
+    opacity: 0;
+    animation-timing-function: linear;
+    animation-delay: calc(var(--k) * 1.6s);
+  }
+  .dm-ai__data--in {
+    animation-name: dm-ai-in;
+  }
+  .dm-ai__data--out {
+    animation-name: dm-ai-out;
+  }
+  @keyframes dm-ai-in {
+    0%,
+    5% {
+      stroke-dashoffset: 18.5;
+      opacity: 1;
+    }
+    17%,
+    100% {
+      stroke-dashoffset: -100;
+      opacity: 1;
+    }
+  }
+  @keyframes dm-ai-out {
+    0%,
+    19% {
+      stroke-dashoffset: 18.5;
+      opacity: 1;
+    }
+    31%,
+    100% {
+      stroke-dashoffset: -100;
+      opacity: 1;
     }
   }
   .dm-ai__node {
@@ -432,6 +498,25 @@ const a = pick(automation, lang).uses.scene;
     box-shadow:
       0 0 0 1px rgba(124, 200, 255, 0.45),
       0 0 24px rgba(38, 92, 255, 0.35);
+    animation-name: dm-ai-check;
+  }
+  /* the node takes each train in and checks it: one short beat per document */
+  @keyframes dm-ai-check {
+    0%,
+    15%,
+    21%,
+    31%,
+    37%,
+    47%,
+    53%,
+    100% {
+      scale: 1;
+    }
+    18%,
+    34%,
+    50% {
+      scale: 1.14;
+    }
   }
   .dm-ai__node::before {
     content: '';
@@ -475,16 +560,67 @@ const a = pick(automation, lang).uses.scene;
     white-space: nowrap;
     overflow: hidden;
   }
+  /* each row switches on when its data arrives; all three clear together before the loop restarts */
+  .dm-ai [data-k='0'] {
+    animation-name: dm-ai-on-0;
+  }
+  .dm-ai [data-k='1'] {
+    animation-name: dm-ai-on-1;
+  }
+  .dm-ai [data-k='2'] {
+    animation-name: dm-ai-on-2;
+  }
+  @keyframes dm-ai-on-0 {
+    0%,
+    29% {
+      --on: 0;
+    }
+    32%,
+    92% {
+      --on: 1;
+    }
+    98%,
+    100% {
+      --on: 0;
+    }
+  }
+  @keyframes dm-ai-on-1 {
+    0%,
+    45% {
+      --on: 0;
+    }
+    48%,
+    92% {
+      --on: 1;
+    }
+    98%,
+    100% {
+      --on: 0;
+    }
+  }
+  @keyframes dm-ai-on-2 {
+    0%,
+    61% {
+      --on: 0;
+    }
+    64%,
+    92% {
+      --on: 1;
+    }
+    98%,
+    100% {
+      --on: 0;
+    }
+  }
   .dm-ai__lanes li {
     left: 64%;
     right: 5%;
-    color: var(--adv-text);
-    background: rgba(124, 200, 255, 0.1);
-    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.5);
-    animation-name: dm-lane;
-    animation-delay: calc(var(--k) * 1.2s);
+    color: color-mix(in srgb, var(--adv-text) calc(var(--on) * 100%), var(--adv-muted));
+    background: rgba(124, 200, 255, calc(0.03 + var(--on) * 0.07));
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, calc(0.14 + var(--on) * 0.36));
   }
-  .dm-ai__lanes b {
+  .dm-ai__lanes b,
+  .dm-ai__file b {
     flex: none;
     width: 10px;
     height: 10px;
@@ -492,42 +628,7 @@ const a = pick(automation, lang).uses.scene;
     background: var(--adv-accent)
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2l2 2 4-4.4' fill='none' stroke='%2307101e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
       center / 100% no-repeat;
-    animation: inherit;
-    animation-name: dm-lane-tick;
-  }
-  @keyframes dm-lane {
-    0%,
-    38% {
-      color: var(--adv-muted);
-      background: rgba(255, 255, 255, 0.03);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-    }
-    41%,
-    84% {
-      color: var(--adv-text);
-      background: rgba(124, 200, 255, 0.1);
-      box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.5);
-    }
-    94%,
-    100% {
-      color: var(--adv-muted);
-      background: rgba(255, 255, 255, 0.03);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-    }
-  }
-  @keyframes dm-lane-tick {
-    0%,
-    38% {
-      scale: 0;
-    }
-    43%,
-    84% {
-      scale: 1;
-    }
-    94%,
-    100% {
-      scale: 0;
-    }
+    scale: var(--on);
   }
   .dm-ai__file {
     left: 5%;
@@ -537,11 +638,8 @@ const a = pick(automation, lang).uses.scene;
     font-size: 0.625rem;
     background: linear-gradient(180deg, #232838, #151925);
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(124, 200, 255, calc(0.1 + var(--on) * 0.32)),
       0 6px 16px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    animation-name: dm-file;
-    animation-delay: calc(var(--k) * 1.2s);
   }
   .dm-ai__file i {
     flex: none;
@@ -549,41 +647,58 @@ const a = pick(automation, lang).uses.scene;
     height: 10px;
     border-radius: 2px;
     background: linear-gradient(180deg, #9fd3ff, #4c7dff);
+    opacity: calc(1 - var(--on));
   }
-  @keyframes dm-file {
-    0% {
-      left: 5%;
-      top: calc(22% + var(--k) * 28%);
-      opacity: 0;
-      scale: 0.94;
-    }
-    5%,
-    14% {
-      left: 5%;
-      top: calc(22% + var(--k) * 28%);
-      opacity: 1;
-      scale: 1;
-    }
-    25%,
-    28% {
-      left: 35%;
-      top: 50%;
-      opacity: 0.9;
-      scale: 0.5;
-    }
-    40%,
-    100% {
-      left: 64%;
-      top: calc(22% + var(--k) * 28%);
-      opacity: 0;
-      scale: 0.9;
-    }
+  /* the document's check lands exactly on its icon, so a narrow pill never has to find room for it */
+  .dm-ai__file b {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    margin-top: -5px;
   }
   .dm-ai__done {
-    left: 5%;
-    top: 50%;
-    margin-top: -12px; /* in the emptied inbox */
-    animation-name: dm-pop;
+    left: 0;
+    right: 0;
+    bottom: 4%;
+    width: fit-content;
+    margin-inline: auto;
+    animation-name: dm-ai-done;
+  }
+  @media (max-width: 480px) {
+    .dm-ai__file {
+      gap: 5px;
+      padding: 0 6px;
+      font-size: 0.5625rem;
+    }
+    .dm-ai__file b {
+      left: 5px;
+    }
+    .dm-ai__done {
+      bottom: 1%;
+      gap: 4px;
+      padding: 3px 8px 3px 6px;
+      font-size: 0.625rem;
+    }
+  }
+  @keyframes dm-ai-done {
+    0%,
+    66% {
+      opacity: 0;
+      translate: 0 6px;
+      scale: 0.92;
+    }
+    70%,
+    90% {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+    96%,
+    100% {
+      opacity: 0;
+      translate: 0 -4px;
+      scale: 0.98;
+    }
   }
   /* a chip or toast pops in late in the loop and leaves before it restarts */
   @keyframes dm-pop {
@@ -1288,10 +1403,14 @@ const a = pick(automation, lang).uses.scene;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  /* The drag. The card and the cursor (below, dm-cur-sw) have the same stops with the same timing functions from
+     the press (27 %) to the drop (49 %), and the cursor always sits 8 % + 12 px from the card's corner: it holds
+     the card, it cannot lag. Change one and you must change the other. */
   @keyframes dm-drag {
     0%,
     10% {
       left: calc(18% + 6px);
+      top: 68%;
       opacity: 0;
       rotate: 0deg;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -1299,25 +1418,48 @@ const a = pick(automation, lang).uses.scene;
     16%,
     27% {
       left: calc(18% + 6px);
+      top: 68%;
       opacity: 1;
       rotate: 0deg;
       translate: 0 0;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
-    31%,
-    44% {
+    30% {
+      left: calc(18% + 6px);
+      top: 68%;
+      opacity: 1;
+      rotate: 2.5deg;
+      translate: 0 -3px;
+      box-shadow:
+        inset 0 0 0 1px rgba(124, 200, 255, 0.55),
+        0 12px 24px rgba(0, 0, 0, 0.55);
+      animation-timing-function: ease-in;
+    }
+    38% {
+      left: calc(31.5% + 6px);
+      top: 63%;
+      opacity: 1;
+      rotate: 2.5deg;
+      translate: 0 -3px;
+      box-shadow:
+        inset 0 0 0 1px rgba(124, 200, 255, 0.55),
+        0 12px 24px rgba(0, 0, 0, 0.55);
+      animation-timing-function: ease-out;
+    }
+    46% {
+      left: calc(45% + 6px);
+      top: 68%;
+      opacity: 1;
       rotate: 2.5deg;
       translate: 0 -3px;
       box-shadow:
         inset 0 0 0 1px rgba(124, 200, 255, 0.55),
         0 12px 24px rgba(0, 0, 0, 0.55);
     }
-    44% {
-      left: calc(18% + 27% + 6px);
-    }
-    48%,
+    49%,
     90% {
-      left: calc(18% + 27% + 6px);
+      left: calc(45% + 6px);
+      top: 68%;
       opacity: 1;
       rotate: 0deg;
       translate: 0 0;
@@ -1325,7 +1467,8 @@ const a = pick(automation, lang).uses.scene;
     }
     97%,
     100% {
-      left: calc(18% + 27% + 6px);
+      left: calc(45% + 6px);
+      top: 68%;
       opacity: 0;
     }
   }
@@ -1358,33 +1501,54 @@ const a = pick(automation, lang).uses.scene;
       left: 60%;
       top: 98%;
       opacity: 0;
+      translate: 0 0;
+      scale: 1;
     }
     16% {
       opacity: 1;
     }
     26% {
-      left: 30%;
-      top: 76%;
+      left: calc(26% + 6px);
+      top: calc(68% + 12px);
       opacity: 1;
+      translate: 0 0;
       scale: 1;
     }
-    28% {
-      scale: 0.85;
-    }
-    31% {
-      left: 30%;
-      top: 74%;
-      scale: 0.85;
-    }
-    44% {
-      left: 57%;
-      top: 74%;
-      scale: 0.85;
-    }
-    48% {
-      left: 57%;
-      top: 76%;
+    27% {
+      left: calc(26% + 6px);
+      top: calc(68% + 12px);
       opacity: 1;
+      translate: 0 0;
+      scale: 0.85;
+    }
+    30% {
+      left: calc(26% + 6px);
+      top: calc(68% + 12px);
+      opacity: 1;
+      translate: 0 -3px;
+      scale: 0.85;
+      animation-timing-function: ease-in;
+    }
+    38% {
+      left: calc(39.5% + 6px);
+      top: calc(63% + 12px);
+      opacity: 1;
+      translate: 0 -3px;
+      scale: 0.85;
+      animation-timing-function: ease-out;
+    }
+    46% {
+      left: calc(53% + 6px);
+      top: calc(68% + 12px);
+      opacity: 1;
+      translate: 0 -3px;
+      scale: 0.85;
+    }
+    49% {
+      left: calc(53% + 6px);
+      top: calc(68% + 12px);
+      opacity: 1;
+      translate: 0 0;
       scale: 1;
     }
     60%,
@@ -1392,6 +1556,8 @@ const a = pick(automation, lang).uses.scene;
       left: 66%;
       top: 98%;
       opacity: 0;
+      translate: 0 0;
+      scale: 1;
     }
   }
 

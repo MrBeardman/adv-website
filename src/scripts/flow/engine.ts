@@ -1,9 +1,11 @@
 /**
  * Homepage hero engine (components/home/HeroFlow.astro), Honza Oct 29 2026 ("like amaze-genius, in our
- * colours"): hundreds of fine lines. On the left they are tangled and scattered (a business today); they
- * pass inside the A of the ADV mark, a solid graphite letter that floats a little and catches a drifting
- * gloss (the organiser at work), and leave as a smooth,
- * slowly twisting ribbon of four strands that fans out (a business that runs). Pulses of light travel along every line: the data going through. Colour runs violet
+ * colours"), Nov 3 2026 ("we take your scattered data and make it coherent"). On the left there are no lines:
+ * a loose cloud of points and bits of data (digits, symbols, records) floats around at random, and one by one
+ * they get pulled, swirling, into the A of the ADV mark, a solid graphite letter that floats a little and
+ * catches a drifting gloss (the organiser at work). Only there do the lines begin: they leave as a smooth,
+ * slowly twisting ribbon of four strands that fans out (a business that runs). Pulses of light travel along
+ * every line: the data going through. Colour runs violet
  * → cobalt → ice along the stream; after the gate each line keeps a colour of its own and the ribbon is
  * shaded (folds and the far side dimmer, lines at uneven strength); additive blending gives the silk sheen.
  *
@@ -62,6 +64,8 @@ const VERT = /* glsl */ `
       cos(x * (0.7 + aSeed) + s * 1.3 + t * 0.4) * (0.7 + aSeed)
     );
 
+    tangled.yz *= 0.55; // the wisps just before the gate stay inside the tunnel
+
     // the gate sits at x = 0.6: tangled before it, ordered after it, everything squeezed through it
     float k = smoothstep(-2.4, 1.6, x);
     vOrder = k;
@@ -83,6 +87,7 @@ const VERT = /* glsl */ `
 
 const FRAG = /* glsl */ `
   precision highp float;
+  const float LINES_FROM = 0.425; // along the stream (0..1); the gate is at 0.54
   uniform float uTime;
   varying float vU;
   varying float vLine;
@@ -112,8 +117,8 @@ const FRAG = /* glsl */ `
     float ph = fract(vU * 2.2 - uTime * (0.16 + vSeed * 0.08) + vSeed * 7.0);
     float pulse = smoothstep(0.035, 0.0, abs(ph - 0.5)) * (0.4 + vOrder);
 
-    // fade in late on the left so the tangle stays clear of the headline
-    float edge = smoothstep(0.16, 0.42, vU) * (1.0 - smoothstep(0.9, 1.0, vU));
+    // the lines only exist from just before the gate: left of it there are only the loose points (DATA_VERT)
+    float edge = smoothstep(LINES_FROM, LINES_FROM + 0.09, vU) * (1.0 - smoothstep(0.9, 1.0, vU));
     // shading after the gate: folds dimmer (vFace), the far side darker (vDepth), lines at uneven strength
     float shade = mix(1.0, vFace * (0.6 + 0.4 * smoothstep(-0.9, 0.9, vDepth)) * (0.45 + 0.75 * fract(vSeed * 9.1)), vOrder);
     // passing the gate: the lines flare, each in its own beat, as they are sorted
@@ -122,6 +127,194 @@ const FRAG = /* glsl */ `
     gl_FragColor = vec4(col + pulse * 0.6 + flare * 0.5, a);
   }
 `;
+
+// The scattered data, left of the gate: each point floats around on its own for most of its life, then gets
+// pulled in (swirling, faster and faster, brighter) to the gate, where the lines take over, and starts again
+// somewhere else. Computed from one time uniform like the lines. All knobs here:
+const DATA = {
+  perPoint: 7, // opts.count / perPoint = number of points
+  glyphs: 0.32, // share of points drawn as a digit, symbol or record instead of a dot
+  streaks: 0.45, // share of points that draw a streak behind them while being pulled in
+};
+const DATA_COMMON = /* glsl */ `
+  uniform float uTime;
+  uniform vec2 uMouse;
+  uniform float uMouseOn;
+  uniform float uWide;     // 1: the copy sits left of the gate; 0: below it
+  attribute vec4 aS;       // four random numbers per point
+  varying float vAlpha;
+  varying float vPull;
+  varying float vTone;
+
+  const float FLOAT_SHARE = 0.5;                 // of its life a point just floats
+  const vec3 GATE = vec3(0.6, 0.0, 0.0);
+  // the points float in a tunnel along the stream that opens slightly away from the gate (Honza, Nov 4 2026)
+  const vec2 TUNNEL_X = vec2(-6.2, -0.4);        // far end, gate end
+  const float TUNNEL_FAR = 1.0;                  // radius at the far end
+  const float TUNNEL_NEAR = 0.45;                // radius at the gate end
+  const float STRAY = 0.1;                       // share of points floating a little outside the tunnel
+  const float STRAY_R = 1.6;                     // how far outside, as a multiple of the radius
+  const float WANDER_R = 0.4;                    // sideways wander, as a share of the lengthwise wander
+
+  float lifeAt(float t) {
+    return t * mix(0.042, 0.08, aS.w) + aS.x * 17.0 + aS.y * 5.0;
+  }
+  float pullAt(float t) {
+    return smoothstep(FLOAT_SHARE, 1.0, fract(lifeAt(t)));
+  }
+  vec3 dataPos(float t) {
+    float l = lifeAt(t);
+    // a new home for every life, so the cloud never repeats a pattern; more of them close to the gate
+    vec3 r = fract(aS.xyz * 43.7 + floor(l) * vec3(0.137, 0.271, 0.413));
+    float hx = mix(TUNNEL_X.x, TUNNEL_X.y, pow(r.x, 0.6));
+    float radius = mix(TUNNEL_NEAR, TUNNEL_FAR, smoothstep(TUNNEL_X.y, TUNNEL_X.x, hx));
+    if (fract(aS.w * 91.0) < STRAY) radius *= STRAY_R;
+    float around = r.y * 6.2832;
+    float rad = radius * sqrt(r.z);
+    vec3 home = vec3(hx, cos(around) * rad, sin(around) * rad);
+    // no common motion at all: every point wanders at its own speeds in its own directions
+    vec3 f = 0.09 + aS.wzy * 0.22;
+    vec3 ph = aS.yzx * 40.0;
+    home += vec3(
+      sin(t * f.x + ph.x) * 0.7 + sin(t * f.y * 2.3 + ph.z) * 0.28,
+      (sin(t * f.y + ph.y) * 0.6 + cos(t * f.z * 2.1 + ph.x) * 0.26) * WANDER_R,
+      cos(t * f.z + ph.z) * 0.6 * WANDER_R
+    );
+    float pull = smoothstep(FLOAT_SHARE, 1.0, fract(l));
+    float k = pull * pull * pull;
+    vec3 p = mix(home, GATE + vec3(-0.25, (aS.y - 0.5) * 0.16, (aS.z - 0.5) * 0.08), k);
+    // the swirl on the way in, each point its own way round, tightening towards the opening
+    float a = pull * pull * (aS.x < 0.5 ? -1.0 : 1.0) * (1.2 + aS.z * 2.4);
+    float ca = cos(a);
+    float sa = sin(a);
+    p.yz = mat2(ca, -sa, sa, ca) * p.yz;
+    // the same weak magnet as the lines, stronger here: the pointer stirs the loose points
+    vec2 d = uMouse - p.xy;
+    p.xy += d * (uMouseOn * 0.3 * exp(-dot(d, d) * 0.9)) * (1.0 - k);
+    return p;
+  }
+  // born softly, gone at the gate, and only a few stray over the copy so it stays clean
+  float dataAlpha(float t, vec4 clip) {
+    float life = fract(lifeAt(t));
+    vec2 n = clip.xy / clip.w;
+    float clear = uWide > 0.5 ? smoothstep(-0.3, 0.02, n.x) : smoothstep(0.1, 0.32, n.y);
+    return smoothstep(0.0, 0.06, life) * (1.0 - smoothstep(0.975, 1.0, life)) * mix(0.03, 1.0, clear);
+  }
+`;
+const DATA_VERT = /* glsl */ `
+  ${DATA_COMMON}
+  uniform float uPx;
+  attribute float aGlyph;  // atlas cell, -1 for a plain dot
+  varying float vGlyph;
+
+  void main() {
+    float t = uTime;
+    float pull = pullAt(t);
+    vec4 mv = modelViewMatrix * vec4(dataPos(t), 1.0);
+    gl_Position = projectionMatrix * mv;
+    bool glyph = aGlyph >= 0.0;
+    float size = glyph ? mix(13.0, 23.0, aS.z) : mix(2.0, 5.5, aS.y * aS.y);
+    gl_PointSize = size * uPx * (8.0 / -mv.z) * mix(1.0, 0.65, pull * pull);
+    float twinkle = 0.7 + 0.3 * sin(t * (0.7 + aS.w * 1.6) + aS.x * 60.0);
+    vAlpha = dataAlpha(t, gl_Position) * twinkle * mix(mix(0.55, 1.0, aS.w), 1.0, pull) * (glyph ? 1.0 : 0.9);
+    vPull = pull;
+    vGlyph = aGlyph;
+    vTone = aS.z;
+  }
+`;
+// a streak behind a point being pulled in: the same point a moment ago, so it needs no state. Grows with the pull.
+const DATA_TAIL_VERT = /* glsl */ `
+  ${DATA_COMMON}
+  attribute float aEnd;    // 0 at the point, 1 at the far end of the streak
+  varying float vEnd;
+
+  void main() {
+    float pull = pullAt(uTime);
+    float t = uTime - aEnd * pull * mix(0.14, 0.34, aS.y);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(dataPos(t), 1.0);
+    vAlpha = dataAlpha(uTime, gl_Position) * smoothstep(0.1, 0.6, pull) * 0.42;
+    vPull = pull;
+    vTone = aS.z;
+    vEnd = aEnd;
+  }
+`;
+const DATA_PALETTE = /* glsl */ `
+  // scattered: violet to cobalt, as random as the rest; pulled in: towards the ice of the stream
+  vec3 dataColour(float tone, float pull) {
+    vec3 violet = vec3(0.56, 0.38, 1.0);
+    vec3 cobalt = vec3(0.3, 0.52, 1.0);
+    vec3 ice = vec3(0.76, 0.92, 1.0);
+    return mix(mix(violet, cobalt, tone), ice, smoothstep(0.1, 0.9, pull));
+  }
+`;
+const DATA_FRAG = /* glsl */ `
+  precision highp float;
+  uniform sampler2D uAtlas;
+  uniform float uCells;
+  varying float vAlpha;
+  varying float vPull;
+  varying float vGlyph;
+  varying float vTone;
+  ${DATA_PALETTE}
+
+  void main() {
+    float m;
+    if (vGlyph < 0.0) {
+      m = smoothstep(0.5, 0.2, length(gl_PointCoord - 0.5));
+    } else {
+      vec2 cell = vec2(mod(vGlyph, uCells), floor(vGlyph / uCells));
+      m = texture2D(uAtlas, (cell + gl_PointCoord) / uCells).r;
+    }
+    gl_FragColor = vec4(dataColour(vTone, vPull), m * vAlpha);
+  }
+`;
+const DATA_TAIL_FRAG = /* glsl */ `
+  precision highp float;
+  varying float vAlpha;
+  varying float vPull;
+  varying float vTone;
+  varying float vEnd;
+  ${DATA_PALETTE}
+
+  void main() {
+    gl_FragColor = vec4(dataColour(vTone, vPull), vAlpha * (1.0 - vEnd));
+  }
+`;
+// the bits of data: a small atlas of digits and symbols drawn once on a canvas, plus a few "records"
+const DATA_CHARS = ['0', '1', '0', '1', '#', '{', '}', '/', '%', '@', '=', '<', '>'];
+const DATA_RECORDS = 3;
+function dataAtlas() {
+  const cells = 4;
+  const size = 64;
+  const c = document.createElement('canvas');
+  c.width = c.height = cells * size;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#000';
+  g.fillRect(0, 0, c.width, c.height);
+  g.fillStyle = '#fff';
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.font = `500 ${size * 0.72}px ui-monospace, Consolas, Menlo, monospace`;
+  const at = (i: number) => [(i % cells) * size, Math.floor(i / cells) * size];
+  DATA_CHARS.forEach((ch, i) => {
+    const [x, y] = at(i);
+    g.fillText(ch, x + size / 2, y + size / 2);
+  });
+  // records: two or three short rows, like a line of a table
+  for (let i = 0; i < DATA_RECORDS; i++) {
+    const [x, y] = at(DATA_CHARS.length + i);
+    for (let row = 0; row < 2 + (i % 2); row++) {
+      const w = size * (0.8 - ((row + i) % 3) * 0.2);
+      g.fillRect(x + size * 0.1, y + size * (0.26 + row * 0.22), w, size * 0.09);
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.flipY = false; // gl_PointCoord runs top to bottom, like the canvas
+  tex.generateMipmaps = true;
+  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  return { tex, cells };
+}
 
 // the A of the ADV symbol (data/logoPaths.ts SYMBOL_TILE) in the gate's plane, from the 256-unit logo
 // grid, centred on its opening (between the legs, below the inner apex) so the lines pass inside the A
@@ -327,6 +520,59 @@ export async function startEngine(canvas: HTMLCanvasElement, opts: { still: bool
   stream.rotation.set(0.12, -0.38, 0.06);
   scene.add(stream);
 
+  // the scattered data, in the stream's space so it enters the gate where the lines begin
+  await yieldMain();
+  const points = Math.round(opts.count / DATA.perPoint);
+  const pS = new Float32Array(points * 4);
+  const pGlyph = new Float32Array(points);
+  const glyphKinds = DATA_CHARS.length + DATA_RECORDS;
+  for (let i = 0; i < points; i++) {
+    for (let j = 0; j < 4; j++) pS[i * 4 + j] = Math.random();
+    pGlyph[i] = Math.random() < DATA.glyphs ? Math.floor(Math.random() * glyphKinds) : -1;
+  }
+  const dataGeo = new THREE.BufferGeometry();
+  dataGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points * 3), 3));
+  dataGeo.setAttribute('aS', new THREE.BufferAttribute(pS, 4));
+  dataGeo.setAttribute('aGlyph', new THREE.BufferAttribute(pGlyph, 1));
+  const atlas = dataAtlas();
+  const dataUniforms = {
+    uTime: uniforms.uTime,
+    uMouse: uniforms.uMouse,
+    uMouseOn: uniforms.uMouseOn,
+    uWide: { value: 1 },
+    uPx: { value: dpr },
+    uAtlas: { value: atlas.tex },
+    uCells: { value: atlas.cells },
+  };
+  const dataMat = (vertexShader: string, fragmentShader: string) =>
+    new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: dataUniforms,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+  const data = new THREE.Points(dataGeo, dataMat(DATA_VERT, DATA_FRAG));
+  data.frustumCulled = false;
+  // the streaks: a pair of vertices (point, far end) for some of the same points
+  const tails = Math.round(points * DATA.streaks);
+  const tS = new Float32Array(tails * 8);
+  const tEnd = new Float32Array(tails * 2);
+  for (let i = 0; i < tails; i++) {
+    tS.set(pS.subarray(i * 4, i * 4 + 4), i * 8);
+    tS.set(pS.subarray(i * 4, i * 4 + 4), i * 8 + 4);
+    tEnd[i * 2 + 1] = 1;
+  }
+  const tailGeo = new THREE.BufferGeometry();
+  tailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(tails * 6), 3));
+  tailGeo.setAttribute('aS', new THREE.BufferAttribute(tS, 4));
+  tailGeo.setAttribute('aEnd', new THREE.BufferAttribute(tEnd, 1));
+  const dataTails = new THREE.LineSegments(tailGeo, dataMat(DATA_TAIL_VERT, DATA_TAIL_FRAG));
+  dataTails.frustumCulled = false;
+  stream.add(dataTails);
+  stream.add(data);
+
   // the gate is the A of the ADV symbol as a solid graphite letter. The lines are squeezed through its
   // opening; the letter hides whatever passes behind it. The lines flare as they pass.
   await yieldMain();
@@ -354,6 +600,7 @@ export async function startEngine(canvas: HTMLCanvasElement, opts: { still: bool
     camera.aspect = w / h;
     // wide screens: the gate sits right of the copy; narrow: centred above it
     camera.setViewOffset(w, h, w > 900 ? -w * 0.17 : 0, 0, w, h);
+    dataUniforms.uWide.value = w > 900 ? 1 : 0;
     camera.updateProjectionMatrix();
   };
   resize();

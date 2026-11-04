@@ -193,15 +193,84 @@ function initLive() {
 }
 
 // 6. Card spotlight: the pointer position inside each matte card and each .adv-lit card, as --mx/--my.
+// At most once a frame, and only the card under the pointer does any work.
 function initSpotlight() {
   if (!finePointer) return;
-  document.querySelectorAll<HTMLElement>('.adv-card, .adv-lit').forEach((c) =>
-    c.addEventListener('pointermove', (e) => {
+  document.querySelectorAll<HTMLElement>('.adv-card, .adv-lit').forEach((c) => {
+    let raf = 0;
+    let x = 0;
+    let y = 0;
+    const write = () => {
+      raf = 0;
       const r = c.getBoundingClientRect();
-      c.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      c.style.setProperty('--my', `${e.clientY - r.top}px`);
-    }),
-  );
+      c.style.setProperty('--mx', `${x - r.left}px`);
+      c.style.setProperty('--my', `${y - r.top}px`);
+    };
+    c.addEventListener(
+      'pointermove',
+      (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        raf ||= requestAnimationFrame(write);
+      },
+      { passive: true },
+    );
+  });
+}
+
+// 6b. Device tilt: the mockups in a [data-tilt] card lean a very little towards the pointer and settle back when
+// it leaves (ui/Devices.astro turns --dev-x/--dev-y, -1..1, into angles). The loop only runs while it moves.
+function initDeviceTilt() {
+  if (!finePointer || reduceMotion) return;
+  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
+    const dev = card.querySelector<HTMLElement>('.adv-dev');
+    if (!dev) return;
+    let raf = 0;
+    let last = 0;
+    let x = 0;
+    let y = 0;
+    let tx = 0;
+    let ty = 0;
+    const frame = (now: number) => {
+      const k = 1 - Math.exp(-Math.min(50, now - last) * 0.006);
+      last = now;
+      x += (tx - x) * k;
+      y += (ty - y) * k;
+      const settled = Math.abs(tx - x) < 0.002 && Math.abs(ty - y) < 0.002;
+      if (settled) {
+        x = tx;
+        y = ty;
+      }
+      dev.style.setProperty('--dev-x', x.toFixed(3));
+      dev.style.setProperty('--dev-y', y.toFixed(3));
+      if (settled) {
+        raf = 0;
+        return;
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    const run = () => {
+      if (raf) return;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    card.addEventListener(
+      'pointermove',
+      (e) => {
+        const r = dev.getBoundingClientRect();
+        const clamp = (v: number) => Math.max(-1, Math.min(1, v));
+        tx = clamp((e.clientX - (r.left + r.width / 2)) / (r.width * 0.75));
+        ty = clamp((e.clientY - (r.top + r.height / 2)) / (r.height * 0.75));
+        run();
+      },
+      { passive: true },
+    );
+    card.addEventListener('pointerleave', () => {
+      tx = 0;
+      ty = 0;
+      run();
+    });
+  });
 }
 
 // 7. Count-ups (scripts/count.ts) when visible; [data-count-manual] ones are started by their section.
@@ -305,6 +374,7 @@ initLit();
 initHeader();
 initLive();
 initSpotlight();
+initDeviceTilt();
 initCounters();
 initPlay();
 initType();

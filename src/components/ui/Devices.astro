@@ -3,7 +3,8 @@
  * Device mockups drawn in code, no backdrop (Honza, Oct 29 2026: "big mockups, no background, just a
  * notebook or tablet"): a graphite laptop with the case's screen, and in front of it either a phone or a
  * second app window. Slight 3D tilt; the page's own light sits behind it. Screens come from
- * caseStudies.ts `screens` (flat screenshots, never photos of devices).
+ * caseStudies.ts `screens` (flat screenshots, never photos of devices). --dev-x / --dev-y (-1..1, from a
+ * [data-tilt] parent, site.ts) lean the devices a very little towards the pointer; the front one moves more.
  */
 interface Props {
   desktop: string;
@@ -58,13 +59,21 @@ const { desktop, mobile, float, alt = '', side = 'right' } = Astro.props;
   .adv-dev--left {
     padding: 4% 2% 9% 8%;
   }
+  .adv-dev {
+    --dev-x: 0;
+    --dev-y: 0;
+    --lean-x: calc(var(--dev-x) * 2.4deg);
+    --lean-y: calc(var(--dev-y) * -1.8deg);
+    /* the front device, a little more and with a small shift, so the two separate in depth */
+    --front: translate3d(calc(var(--dev-x) * 5px), calc(var(--dev-y) * 4px), 0);
+  }
   .adv-dev__laptop {
     position: relative;
-    transform: rotateY(-9deg) rotateX(5deg);
+    transform: rotateY(calc(-9deg + var(--lean-x))) rotateX(calc(5deg + var(--lean-y)));
     transform-style: flat;
   }
   .adv-dev--left .adv-dev__laptop {
-    transform: rotateY(9deg) rotateX(5deg);
+    transform: rotateY(calc(9deg + var(--lean-x))) rotateX(calc(5deg + var(--lean-y)));
   }
   .adv-dev__lid {
     padding: 2.1% 2.1% 2.6%;
@@ -121,12 +130,12 @@ const { desktop, mobile, float, alt = '', side = 'right' } = Astro.props;
       inset 1px 1px 0 rgba(196, 214, 255, 0.4),
       inset -1px -1px 0 rgba(0, 0, 0, 0.6),
       0 40px 60px -24px rgba(0, 0, 0, 0.95);
-    transform: rotateY(-14deg) rotateX(4deg);
+    transform: var(--front) rotateY(calc(-14deg + var(--lean-x) * 1.3)) rotateX(calc(4deg + var(--lean-y) * 1.3));
   }
   .adv-dev--left .adv-dev__phone {
     right: auto;
     left: 0;
-    transform: rotateY(14deg) rotateX(4deg);
+    transform: var(--front) rotateY(calc(14deg + var(--lean-x) * 1.3)) rotateX(calc(4deg + var(--lean-y) * 1.3));
   }
   .adv-dev__phone-screen {
     overflow: hidden;
@@ -151,12 +160,12 @@ const { desktop, mobile, float, alt = '', side = 'right' } = Astro.props;
     box-shadow:
       inset 1px 1px 0 rgba(196, 214, 255, 0.35),
       0 40px 70px -24px rgba(0, 0, 0, 0.95);
-    transform: rotateY(-12deg) rotateX(4deg);
+    transform: var(--front) rotateY(calc(-12deg + var(--lean-x) * 1.3)) rotateX(calc(4deg + var(--lean-y) * 1.3));
   }
   .adv-dev--left .adv-dev__window {
     right: auto;
     left: 0;
-    transform: rotateY(12deg) rotateX(4deg);
+    transform: var(--front) rotateY(calc(12deg + var(--lean-x) * 1.3)) rotateX(calc(4deg + var(--lean-y) * 1.3));
   }
   .adv-dev__window img {
     width: 100%;

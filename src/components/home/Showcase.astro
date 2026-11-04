@@ -2,7 +2,8 @@
 /**
  * Homepage selected work (Honza, Oct 29 2026): big device mockups with no backdrop, one case per row,
  * alternating sides; the case text beside it with its run status and the link. Cases that have no flat
- * screenshots yet (`screens` in caseStudies.ts) follow as plain rows.
+ * screenshots yet (`screens` in caseStudies.ts) follow as plain rows. A case with a page is one big link
+ * (.adv-linkcard); the light follows the pointer (.adv-lit) and the laptop leans towards it (site.ts).
  */
 import Arrow from '../ui/Arrow.astro';
 import Devices from '../ui/Devices.astro';
@@ -40,7 +41,7 @@ const serviceName = (slug: string) =>
           const href = cs.detail ? routes.case(lang, cs.slug) : undefined;
           const tags = [loc(cs.sector, lang), cs.year, ...cs.services.map(serviceName)].filter(Boolean);
           return (
-            <li class:list={['adv-show__item', { 'is-flip': k % 2 === 1 }]}>
+            <li class:list={['adv-show__item', 'adv-lit', { 'is-flip': k % 2 === 1, 'adv-linkcard': href }]} data-tilt>
               <div class="adv-show__media">
                 <Devices
                   desktop={cs.screens!.desktop}
@@ -59,7 +60,7 @@ const serviceName = (slug: string) =>
                 <p class="adv-show__outcome">{loc(cs.outcome, lang)}</p>
                 <p class="adv-show__tags">{tags.join(' · ')}</p>
                 {href && (
-                  <a class="adv-link" href={href}>
+                  <a class="adv-link adv-stretch" href={href}>
                     {s.service.readCase}
                     <Arrow />
                   </a>

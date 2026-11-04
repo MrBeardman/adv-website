@@ -42,6 +42,11 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
 - **Background lines** (`scripts/flow/drift.ts`): a fixed canvas behind the page, three thin ribbons wound as a
   slow helix that turns with scroll, slightly blurred (CSS) so they can be bright. Opt in per page with
   `<Base drift>` (homepage and the automation page have it). Off with reduced motion and without WebGL2.
+- **Hero, left of the A** (Nov 3, 2026): no tangled lines any more. Loose points and bits of data (`DATA*` in
+  `scripts/flow/engine.ts`) float at random, get pulled into the A with a short streak, and the lines begin there.
+- **Cards as links**: `.adv-linkcard` + `.adv-stretch` on the card's own text link makes the whole card clickable
+  (home projects, partners with a URL); `.adv-lit` is the light that follows the pointer; `[data-tilt]` leans the
+  mockups inside it (`initDeviceTilt` in `site.ts`, angles in `ui/Devices.astro`).
 - **Sections** (`components/ui/NodeFrame.astro`): no frame, bar or ports any more. Each section is the small
   label (icon tile + name, e.g. "Služby") above its heading, then its content, full page width.
   Honza explicitly wanted that label, even though the old rule said "no kickers above headings".

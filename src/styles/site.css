@@ -1176,3 +1176,41 @@ textarea.adv-input {
 .adv-lit:focus-visible::after {
   opacity: 0.85;
 }
+
+/* ---------- A card that is one big link (Honza, Nov 3 2026) ----------
+ * The card's own text link stays the only real link (.adv-stretch) and its hit area is stretched over the whole
+ * card, so screen readers hear one short link and hovering anywhere plays the link's own hover. The card
+ * (.adv-linkcard) needs position: relative, which .adv-lit gives it. */
+.adv-stretch::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: inherit;
+}
+.adv-stretch:focus-visible {
+  outline: none;
+}
+.adv-linkcard {
+  transition: translate var(--adv-med) var(--adv-ease);
+}
+.adv-linkcard:has(.adv-stretch:focus-visible) {
+  outline: 2px solid var(--adv-accent);
+  outline-offset: 3px;
+}
+.adv-linkcard:has(.adv-stretch:focus-visible)::before {
+  opacity: 1;
+}
+.adv-linkcard:has(.adv-stretch:focus-visible)::after {
+  opacity: 0.85;
+}
+@media (hover: hover) {
+  .adv-linkcard:hover {
+    translate: 0 -4px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adv-linkcard:hover {
+    translate: none;
+  }
+}

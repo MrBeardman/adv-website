@@ -2,7 +2,8 @@
 /**
  * Partner cards (home and About). Everything readable without hovering: logo on a light plate,
  * category, name, one line, dated facts, link. Facts nobody has confirmed are TODO boxes in development
- * builds only. Words from i18n/about.json (partners), logos and links from data/partners.ts.
+ * builds only. Words from i18n/about.json (partners), logos and links from data/partners.ts. The light follows
+ * the pointer on every card (.adv-lit); a partner with a confirmed website is one big link (.adv-linkcard).
  */
 import Node from './ui/Node.astro';
 import Arrow from './ui/Arrow.astro';
@@ -40,7 +41,11 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
           const c = byId[p.id] ?? { category: '', line: '', facts: [] as string[] };
           const together = (c as { together?: string }).together;
           return (
-            <li class="adv-partners__card" data-reveal style={`--i:${i}`}>
+            <li
+              class:list={['adv-partners__card', 'adv-lit', { 'adv-linkcard': p.url }]}
+              data-reveal
+              style={`--i:${i}`}
+            >
               <div class="adv-partners__logo">
                 <img
                   src={p.logo}
@@ -73,7 +78,12 @@ const id = lang === 'cs' ? 'partneri' : 'partners';
                 dev && <p class="adv-todo">{fill(t.todoTogether, { name: p.name })}</p>
               )}
               {p.url ? (
-                <a class="adv-link adv-partners__link" href={p.url} target="_blank" rel="noopener noreferrer">
+                <a
+                  class="adv-link adv-partners__link adv-stretch"
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {fill(t.visit, { host: host(p.url) })}
                   <Arrow dir="up" />
                 </a>
