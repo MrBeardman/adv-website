@@ -120,8 +120,11 @@
   "Odesláno" / "Sent".
 - **Service card stats (Oct 30, lab)** (`homeNumbers.ts` → `more`, two per service). PLACEHOLDERS, replace before launch:
   AI "85 % dokladů bez ruční práce", "6 procesů běží samo"; Weby "+30 % tržeb z webu"; Software "7 dní do funkčního prototypu" (was 14), "3 týdny do první verze
-  v provozu", "1 systém místo pěti tabulek". Real: Kesia "3 e-shopy s živými cenami", "0 ručně přepsaných cen"; Studio
-  Fit "2 měsíce od spuštění".
+  v provozu", "1 systém místo pěti tabulek". Real: Studio Fit "2 měsíce od spuštění". Optimalizace (Nov 5, general
+  instead of Kesia's "3 e-shopy", "0 ručně přepsaných cen"): "1 dashboard pro celou firmu", "0 ručních
+  přepisů" (both approved by Honza). Homepage lead stat "2–3 dny do mapy procesů" instead of ~340 000 Kč, which stays
+  only in the numbers band linking to Kesia; the same on /sluzby/ and the Optimalizace page (approved by Honza, Nov 5).
+- **Routing demo (Nov 5)** (`automation.json` uses.scene): "Faktura", "Poptávka", "Objednávka", "Nad limit", "Schválit".
 - **Inquiry flows (Oct 29)**: every question and option per service in `src/data/inquiry.ts` (CS + EN) and the flow texts in `src/i18n/inquiry.json`. Budget bands (80k / 250k / 800k Kč; EUR 3k / 10k / 30k) are a first guess: confirm. Priority weights (size .35, urgency .35, budget .3; hot ≥ 62, warm ≥ 35) in `classify()`.
 - **Showcase (Oct 29)**: "Přečíst případovou studii" (`services.json` service.readCase). Studio Fit screens are captures of the live site (Oct 29); **Kesia Praha has no flat screenshots yet**, so it shows as a plain row until it gets `screens` in caseStudies.ts.
 - **Graphite canvas (Oct 29)**: "Jak to do sebe zapadá." + its lead (`home.json` workflow.sectionTitle/sectionLead), node "Jak to zapadá" / Workflow / Běží.

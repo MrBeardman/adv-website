@@ -14,8 +14,9 @@
  *   software               a board assembles from its wireframe, the cursor grabs a job and carries it to the
  *                          next column (card and cursor share their keyframes, so they move as one),
  *                          "Saved"
- *   routing (automation page)    items pass a rule and land in their lane with the person, the urgent one
- *                                goes for approval, "Assigned"
+ *   routing (automation page)    an inbox list, no wires (Honza, Nov 5 2026: too close to the AI demo): each row
+ *                                lights up and gets its person; the one over the limit waits until the cursor
+ *                                clicks "Approve", "Assigned"
  *   assistant (automation page)  a question comes in, the AI drafts the answer, a person clicks "Send",
  *                                "Sent"
  *
@@ -202,30 +203,23 @@ const AI_ROWS = [22, 50, 78].map((y) => ({
   kind === 'routing' && (
     <div class="dm dm-rt">
       <p class="dm-label dm-rt__head">{d.inbox}</p>
-      <svg class="dm-ai__wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M30 50 H44" />
-        <path d="M56 50 C62 50 60 22 66 22" />
-        <path d="M56 50 H66" />
-        <path d="M56 50 C62 50 60 78 66 78" />
-      </svg>
-      <span class="dm-rt__rule">
-        <i />
-      </span>
-      <ul class="dm-ai__lanes dm-rt__lanes">
-        {a.lanes.map((l, k) => (
-          <li style={`--k:${k}`}>
-            <b />
-            {l}
-            <em class="dm-rt__who">{l.slice(0, 1)}</em>
+      <ul class="dm-rt__list">
+        {a.items.map((item, k) => (
+          <li class={`dm-rt__row dm-rt__row--${k}`}>
+            <i />
+            <span class="dm-rt__name">{item}</span>
+            {k === 2 && <span class="dm-rt__tag">{a.overLimit}</span>}
+            <span class="dm-rt__to">
+              <em class="dm-rt__who">{a.lanes[k].slice(0, 1)}</em>
+              {a.lanes[k]}
+              <svg viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M2.5 6.4l2.4 2.4 4.6-5.2" />
+              </svg>
+            </span>
+            {k === 2 && <span class="dm-rt__approve">{a.approve}</span>}
           </li>
         ))}
       </ul>
-      {[s.rows[0], s.rows[1], s.rows[0]].map((r, k) => (
-        <span class:list={['dm-rt__item', { 'is-big': k === 2 }]} style={`--k:${k}`}>
-          <i />
-          {r}
-        </span>
-      ))}
       <span class="dm-chip dm-rt__done">
         <i />
         {a.assigned}
@@ -359,6 +353,12 @@ const AI_ROWS = [22, 50, 78].map((y) => ({
   }
   .dm-cur[data-kind='software']::after {
     animation: dm-click-sw var(--d) infinite;
+  }
+  .dm-cur[data-kind='routing'] {
+    animation-name: dm-cur-rt;
+  }
+  .dm-cur[data-kind='routing']::after {
+    animation: dm-click-rt var(--d) infinite;
   }
   @keyframes dm-click {
     0%,
@@ -1561,52 +1561,75 @@ const AI_ROWS = [22, 50, 78].map((y) => ({
     }
   }
 
-  /* ---- routing: items pass the rule and land with the right person; the one that needs a sign-off goes
-     for approval ---- */
+  /* ---- routing: an inbox list. Each row lights up in turn and gets its person; the one over the limit stops and
+     waits for a person's click. Base styles are the finished frame. ---- */
   .dm-rt__head {
     position: absolute;
     left: 5%;
-    top: 6%;
+    top: 7%;
   }
-  .dm-rt__rule {
+  .dm-rt__list {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 26px;
-    height: 26px;
-    translate: -50% -50%;
-    rotate: 45deg;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #2a3350, #0d1020);
-    box-shadow:
-      0 0 0 1px rgba(124, 200, 255, 0.45),
-      0 0 22px rgba(38, 92, 255, 0.35);
+    left: 4%;
+    right: 4%;
+    top: 24%;
+    bottom: 7%;
+    display: grid;
+    grid-auto-rows: 1fr;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
-  .dm-rt__rule i {
-    position: absolute;
-    inset: 8px;
-    border-radius: 2px;
+  .dm-rt__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    padding: 0 8px 0 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    color: var(--adv-muted);
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  }
+  .dm-rt__row > i {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
     background: var(--adv-accent);
-    animation-name: dm-rt-blink;
-    animation-duration: 1.6s;
   }
-  @keyframes dm-rt-blink {
-    50% {
-      opacity: 0.35;
-      scale: 0.7;
-    }
+  .dm-rt__name {
+    font-weight: 600;
   }
-  .dm-rt__lanes li {
-    left: 66%;
-    gap: 6px;
-    animation-name: dm-rt-lane;
-    animation-delay: calc(var(--k) * 1.8s);
+  .dm-rt__tag {
+    padding: 1px 6px;
+    border-radius: 999px;
+    font-family: var(--adv-mono);
+    font-size: 0.625rem;
+    color: var(--adv-accent);
+    box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.45);
+    animation-name: dm-rt-tag;
   }
-  .dm-rt__lanes li b {
-    animation-name: dm-rt-tick;
+  .dm-rt__to {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    color: var(--adv-text);
+  }
+  .dm-rt__to svg {
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: var(--adv-accent);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   .dm-rt__who {
-    margin-left: auto;
     display: grid;
     place-items: center;
     width: 16px;
@@ -1618,112 +1641,253 @@ const AI_ROWS = [22, 50, 78].map((y) => ({
     color: var(--adv-ink);
     background: linear-gradient(180deg, #fff, var(--adv-paper-2));
   }
-  @keyframes dm-rt-lane {
+  .dm-rt__approve {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    padding: 3px 10px;
+    translate: 0 -50%;
+    border-radius: 6px;
+    font-weight: 600;
+    color: var(--adv-ink);
+    background: linear-gradient(180deg, #fff, var(--adv-paper));
+    opacity: 0;
+    animation-name: dm-rt-approve;
+  }
+  .dm-rt__row--0 {
+    animation-name: dm-rt-row-0;
+  }
+  .dm-rt__row--1 {
+    animation-name: dm-rt-row-1;
+  }
+  .dm-rt__row--2 {
+    animation-name: dm-rt-row-2;
+  }
+  .dm-rt__row--0 .dm-rt__to {
+    animation-name: dm-rt-to-0;
+  }
+  .dm-rt__row--1 .dm-rt__to {
+    animation-name: dm-rt-to-1;
+  }
+  .dm-rt__row--2 .dm-rt__to {
+    animation-name: dm-rt-to-2;
+  }
+  @keyframes dm-rt-row-0 {
     0%,
-    27% {
+    6% {
       color: var(--adv-muted);
       background: rgba(255, 255, 255, 0.03);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
     }
-    30%,
-    60% {
+    8%,
+    18% {
       color: var(--adv-text);
       background: rgba(124, 200, 255, 0.1);
       box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.5);
     }
-    68%,
+    22%,
     100% {
       color: var(--adv-muted);
       background: rgba(255, 255, 255, 0.03);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
     }
   }
-  @keyframes dm-rt-tick {
+  @keyframes dm-rt-row-1 {
     0%,
-    27% {
-      scale: 0;
+    20% {
+      color: var(--adv-muted);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
     }
-    32%,
-    60% {
-      scale: 1;
+    22%,
+    32% {
+      color: var(--adv-text);
+      background: rgba(124, 200, 255, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.5);
     }
-    68%,
+    36%,
     100% {
-      scale: 0;
+      color: var(--adv-muted);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
     }
   }
-  .dm-rt__item {
-    position: absolute;
-    left: 5%;
-    top: 50%;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    height: 22%;
-    max-height: 30px;
-    padding: 0 10px;
-    translate: 0 -50%;
-    border-radius: 8px;
-    white-space: nowrap;
-    color: var(--adv-text);
-    font-weight: 600;
-    background: linear-gradient(180deg, #232838, #151925);
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 6px 16px rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    animation-name: dm-rt-item;
-    animation-delay: calc(var(--k) * 1.8s);
+  @keyframes dm-rt-row-2 {
+    0%,
+    34% {
+      color: var(--adv-muted);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+    }
+    36%,
+    62% {
+      color: var(--adv-text);
+      background: rgba(124, 200, 255, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(124, 200, 255, 0.5);
+    }
+    66%,
+    100% {
+      color: var(--adv-muted);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+    }
   }
-  .dm-rt__item i {
-    flex: none;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--adv-accent);
-  }
-  .dm-rt__item.is-big i {
-    background: #f5a524; /* needs a sign-off */
-  }
-  @keyframes dm-rt-item {
-    0% {
-      left: 5%;
-      top: 50%;
+  @keyframes dm-rt-to-0 {
+    0%,
+    11% {
       opacity: 0;
-      scale: 0.94;
+      translate: 8px 0;
     }
-    4%,
-    10% {
-      left: 5%;
-      top: 50%;
+    14%,
+    92% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    97%,
+    100% {
+      opacity: 0;
+      translate: 0 0;
+    }
+  }
+  @keyframes dm-rt-to-1 {
+    0%,
+    25% {
+      opacity: 0;
+      translate: 8px 0;
+    }
+    28%,
+    92% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    97%,
+    100% {
+      opacity: 0;
+      translate: 0 0;
+    }
+  }
+  @keyframes dm-rt-to-2 {
+    0%,
+    57% {
+      opacity: 0;
+      translate: 8px 0;
+    }
+    60%,
+    92% {
+      opacity: 1;
+      translate: 0 0;
+    }
+    97%,
+    100% {
+      opacity: 0;
+      translate: 0 0;
+    }
+  }
+  @keyframes dm-rt-tag {
+    0%,
+    39% {
+      opacity: 0;
+      scale: 0.9;
+    }
+    42%,
+    92% {
       opacity: 1;
       scale: 1;
     }
-    17%,
-    19% {
-      left: 42%;
-      top: 50%;
+    97%,
+    100% {
+      opacity: 0;
+      scale: 1;
+    }
+  }
+  @keyframes dm-rt-approve {
+    0%,
+    43% {
+      opacity: 0;
+      scale: 0.92;
+    }
+    46%,
+    54% {
       opacity: 1;
-      scale: 0.7;
+      scale: 1;
     }
-    28% {
-      left: 66%;
-      top: calc(22% + var(--k) * 28%);
-      opacity: 0.9;
-      scale: 0.85;
+    55.5% {
+      opacity: 1;
+      scale: 0.92;
     }
-    31%,
+    57% {
+      opacity: 1;
+      scale: 1;
+    }
+    59%,
+    100% {
+      opacity: 0;
+      scale: 1;
+    }
+  }
+  @keyframes dm-cur-rt {
+    0%,
+    44% {
+      left: 74%;
+      top: 104%;
+      opacity: 0;
+    }
+    46% {
+      left: 74%;
+      top: 100%;
+      opacity: 1;
+    }
+    53%,
+    57% {
+      left: calc(96% - 34px);
+      top: 81%;
+      opacity: 1;
+    }
+    64%,
     100% {
       left: 66%;
-      top: calc(22% + var(--k) * 28%);
+      top: 104%;
       opacity: 0;
-      scale: 0.85;
+    }
+  }
+  @keyframes dm-click-rt {
+    0%,
+    54% {
+      opacity: 0;
+      scale: 0.4;
+    }
+    55% {
+      opacity: 1;
+      scale: 0.6;
+    }
+    60%,
+    100% {
+      opacity: 0;
+      scale: 1.8;
     }
   }
   .dm-rt__done {
-    left: 5%;
-    bottom: 8%;
-    animation-name: dm-pop;
+    right: 4%;
+    top: 4%;
+    padding: 3px 9px 3px 7px;
+    animation-name: dm-rt-done;
+  }
+  @keyframes dm-rt-done {
+    0%,
+    65% {
+      opacity: 0;
+      scale: 0.9;
+    }
+    68%,
+    90% {
+      opacity: 1;
+      scale: 1;
+    }
+    95%,
+    100% {
+      opacity: 0;
+      scale: 1;
+    }
   }
 
   /* ---- assistant: a question comes in, the AI drafts the answer, a person sends it ---- */
@@ -1901,9 +2065,6 @@ const AI_ROWS = [22, 50, 78].map((y) => ({
     left: 5%;
     bottom: 10%;
     animation-name: dm-pop;
-  }
-  .dm-cur[data-kind='routing'] {
-    display: none; /* routing runs on its own */
   }
   .dm-cur[data-kind='assistant'] {
     animation-name: dm-cur-as;

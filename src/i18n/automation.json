@@ -39,6 +39,13 @@
           "Obchod",
           "Schválení"
         ],
+        "items": [
+          "Faktura",
+          "Poptávka",
+          "Objednávka"
+        ],
+        "overLimit": "Nad limit",
+        "approve": "Schválit",
         "draft": "Návrh odpovědi",
         "send": "Odeslat",
         "assigned": "Přiděleno",
@@ -119,6 +126,13 @@
           "Sales",
           "Approval"
         ],
+        "items": [
+          "Invoice",
+          "Enquiry",
+          "Order"
+        ],
+        "overLimit": "Over limit",
+        "approve": "Approve",
         "draft": "Draft reply",
         "send": "Send",
         "assigned": "Assigned",

@@ -17,7 +17,7 @@ import home from '../../i18n/home.json';
 import services from '../../i18n/services.json';
 import { routes } from '../../data/routes';
 import { serviceBySlug } from '../../data/capabilities';
-import { HOME_NUMBERS } from '../../data/homeNumbers';
+import { HOME_NUMBERS, leadStat } from '../../data/homeNumbers';
 import { SHAPES } from '../../scripts/stack/iconShapes.js';
 
 interface Props {
@@ -41,7 +41,8 @@ const shapes = (name: string) => (SHAPES as Record<string, Shape[]>)[name] ?? []
 const step = (slug: string) => {
   const meta = serviceBySlug(slug);
   const copy = sv.capabilities.items.find((i) => i.slug === slug)!;
-  const n = HOME_NUMBERS.find((x) => x.slug === slug);
+  const found = HOME_NUMBERS.find((x) => x.slug === slug);
+  const n = found && leadStat(found);
   return {
     slug,
     enabled: !!meta?.enabled,

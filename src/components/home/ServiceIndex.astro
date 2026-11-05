@@ -12,7 +12,7 @@ import ServiceIcon from '../ui/ServiceIcon.astro';
 import { pick, loc, type Lang } from '../../i18n';
 import services from '../../i18n/services.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
-import { numberFor } from '../../data/homeNumbers';
+import { leadStat, numberFor } from '../../data/homeNumbers';
 import { routes } from '../../data/routes';
 
 interface Props {
@@ -60,7 +60,7 @@ const items = ENABLED_SERVICES.map((sv) => {
               </span>
               {it.number && (
                 <span class="adv-sidx__result">
-                  {[it.number, ...it.number.more].map((st) => (
+                  {[leadStat(it.number), ...it.number.more].map((st) => (
                     <span class="adv-sidx__stat">
                       <b class:list={{ 'adv-ph': DEV && st.placeholder }}>{loc(st.value, lang)}</b>
                       <span>{loc(st.short, lang)}</span>

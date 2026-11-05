@@ -11,7 +11,7 @@ import chrome from '../i18n/chrome.json';
 import services from '../i18n/services.json';
 import home from '../i18n/home.json';
 import { ENABLED_SERVICES } from '../data/capabilities';
-import { numberFor } from '../data/homeNumbers';
+import { leadStat, numberFor } from '../data/homeNumbers';
 import { both, routes } from '../data/routes';
 
 interface Props {
@@ -59,10 +59,10 @@ const items = ENABLED_SERVICES.map((sv) => ({
                   <div class="adv-svc-card__foot">
                     {it.number && (
                       <p class="adv-svc-card__num">
-                        <strong class:list={[{ 'adv-ph': dev && it.number.placeholder }]}>
-                          {loc(it.number.value, lang)}
+                        <strong class:list={[{ 'adv-ph': dev && leadStat(it.number).placeholder }]}>
+                          {loc(leadStat(it.number).value, lang)}
                         </strong>
-                        <span>{loc(it.number.label, lang)}</span>
+                        <span>{loc(it.number.general?.short ?? it.number.label, lang)}</span>
                       </p>
                     )}
                     <span class="adv-link">

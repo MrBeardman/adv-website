@@ -34,6 +34,8 @@ export interface HomeNumber {
   linkLabel: Localized;
   /** two more stats under the headline one on the homepage service cards */
   more: CardStat[];
+  /** replaces the headline stat everywhere except the numbers band, when the headline is one client's case */
+  general?: CardStat;
 }
 
 export const HOME_NUMBERS: HomeNumber[] = [
@@ -76,17 +78,25 @@ export const HOME_NUMBERS: HomeNumber[] = [
     short: { en: 'saved a year', cs: 'ušetřeno ročně' },
     link: { kind: 'case', slug: 'kesia-live-pricing' },
     linkLabel: { en: 'Read the Kesia case', cs: 'Přečíst případ Kesia' },
-    // real: the Kesia case (live prices in three e-shops, no daily manual retyping)
+    // The ~340,000 Kč stays only where it links to the Kesia case (numbers band); everywhere else says something
+    // general (Honza, Nov 5 2026). Same "two to three days" as the optimisation FAQ in geo.json.
+    general: {
+      placeholder: false,
+      value: { en: '2–3 days', cs: '2–3 dny' },
+      short: { en: 'to a process map', cs: 'do mapy procesů' },
+    },
+    // general, not one client's setup (Honza, Nov 5 2026: "3 e-shopy" belongs on the Kesia case, which keeps it):
+    // what the service delivers, as geo.json describes it (one dashboard, no retyping between systems)
     more: [
       {
         placeholder: false,
-        value: { en: '3', cs: '3' },
-        short: { en: 'e-shops on live prices', cs: 'e-shopy s živými cenami' },
+        value: { en: '1', cs: '1' },
+        short: { en: 'dashboard for the whole company', cs: 'dashboard pro celou firmu' },
       },
       {
         placeholder: false,
         value: { en: '0', cs: '0' },
-        short: { en: 'prices retyped by hand', cs: 'ručně přepsaných cen' },
+        short: { en: 'manual re-entries', cs: 'ručních přepisů' },
       },
     ],
   },
@@ -144,3 +154,5 @@ export const HOME_NUMBERS: HomeNumber[] = [
 ];
 
 export const numberFor = (slug: string) => HOME_NUMBERS.find((n) => n.slug === slug);
+/** the headline stat anywhere but the numbers band */
+export const leadStat = (n: HomeNumber): CardStat => n.general ?? n;
