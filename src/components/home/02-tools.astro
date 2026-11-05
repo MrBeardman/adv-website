@@ -1,7 +1,9 @@
 ---
 /**
- * Tools strip: the systems we connect, as one calm row of names (no marquee: everything readable at once).
- * When it scrolls in, the names light one after another, like a workflow connecting them, once.
+ * Tools strip: the systems we connect, as one seamless endless row (Honza, Nov 5 2026: "so it seems like we do a lot
+ * of things"; his call over the no-marquee rule). CSS only: the same list twice, moved by exactly one copy per loop
+ * (one copy is wider than the capped .adv-wrap, so two always fill it). It stops under the pointer and off screen. Screen readers get one
+ * list; with reduced motion it is that one list, still and wrapped.
  * TODO (Honza): the list is a placeholder until confirmed (docs/STATUS.md). Names only, no logos:
  * third-party logos need permission and would pull the eye away from ours.
  */
@@ -38,9 +40,19 @@ const dev = import.meta.env.DEV;
         <p class="adv-todo adv-tools__todo">TODO: seznam nástrojů je zástupný, potvrdit (jen ve vývojovém buildu).</p>
       )
     }
-    <ul class="adv-tools__list" data-play>
-      {TOOLS.map((n, i) => <li style={`--k:${i}`}>{n}</li>)}
-    </ul>
+    <div class="adv-tools__strip" data-live>
+      <div class="adv-tools__track">
+        {
+          [0, 1].map((copy) => (
+            <ul class="adv-tools__list" aria-hidden={copy > 0 ? 'true' : undefined}>
+              {TOOLS.map((n) => (
+                <li>{n}</li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>
 
@@ -60,14 +72,32 @@ const dev = import.meta.env.DEV;
     margin-top: 14px;
     justify-self: start;
   }
-  .adv-tools__list {
+  .adv-tools__strip {
+    margin-top: 36px;
+    border-block: 1px solid var(--adv-line);
+    overflow: clip;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .adv-tools__track {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0;
-    margin: 36px 0 0;
+    width: max-content;
+    animation: adv-tools-slide 40s linear infinite;
+  }
+  .adv-tools__strip:hover .adv-tools__track {
+    animation-play-state: paused;
+  }
+  @keyframes adv-tools-slide {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  .adv-tools__list {
+    flex: none;
+    display: flex;
+    margin: 0;
     padding: 0;
     list-style: none;
-    border-block: 1px solid var(--adv-line);
   }
   .adv-tools__list li {
     display: flex;
@@ -79,10 +109,13 @@ const dev = import.meta.env.DEV;
     letter-spacing: -0.01em;
     color: rgba(241, 242, 245, 0.72);
     white-space: nowrap;
-    transition: color 500ms var(--adv-ease);
-    transition-delay: calc(var(--k) * 90ms);
+    transition: color 200ms var(--adv-ease);
   }
-  .adv-tools__list li + li::before {
+  .adv-tools__list li:hover {
+    color: var(--adv-text);
+  }
+  /* every name has its mark in front, also the first of a copy, so the seam does not show */
+  .adv-tools__list li::before {
     content: '';
     width: 5px;
     height: 5px;
@@ -90,10 +123,24 @@ const dev = import.meta.env.DEV;
     border-radius: 2px;
     border: 1px solid rgba(var(--adv-accent-rgb), 0.55);
   }
-  .js .adv-tools__list.is-armed li {
-    color: rgba(241, 242, 245, 0.28);
-  }
-  .js .adv-tools__list.is-playing li {
-    color: rgba(241, 242, 245, 0.72);
+  @media (prefers-reduced-motion: reduce) {
+    .adv-tools__strip {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .adv-tools__track {
+      width: auto;
+      animation: none;
+    }
+    .adv-tools__list {
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .adv-tools__list[aria-hidden] {
+      display: none;
+    }
+    .adv-tools__list li:first-child::before {
+      display: none;
+    }
   }
 </style>

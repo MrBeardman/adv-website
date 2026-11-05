@@ -6,6 +6,9 @@
  * Behind it, the breathing workflow grid from the palette study (scripts/flowGrid.ts), kept clear of
  * the text and the window ([data-grid-avoid]).
  *
+ * The window answers the mouse (Honza, Nov 5 2026: "too static"): it leans towards the pointer anywhere in the hero,
+ * a soft light follows it across the glass, and the node nearest to it lifts and lights its wires.
+ *
  * The window is a labelled sample (no real invoices); its amounts are generated in the browser.
  * No JS / reduced motion: the window shows one finished run and three log rows, from the markup.
  */
@@ -81,6 +84,7 @@ const seedRows = [
 
     <div class="adv-hero__stage" data-grid-avoid>
       <div class="adv-win" data-stream-start data-win data-reveal style="--i:2">
+        <span class="adv-win__light" data-win-light aria-hidden="true"></span>
         <div class="adv-win__bar">
           <span class="adv-win__dots" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="adv-win__file">{w.file}</span>
@@ -248,9 +252,26 @@ const seedRows = [
       inset -1px -1px 0 rgba(255, 255, 255, 0.04),
       0 50px 100px -40px rgba(0, 0, 0, 0.85),
       0 0 0 1px rgba(255, 255, 255, 0.06);
-    transform: rotateY(-13deg) rotateX(7deg) rotateZ(1.2deg);
+    /* --win-x, --win-y: the pointer, -1..1 (the script below) */
+    transform: rotateY(calc(-13deg + var(--win-x, 0) * 6deg)) rotateX(calc(7deg - var(--win-y, 0) * 4deg))
+      rotateZ(1.2deg);
     transform-origin: 60% 50%;
     overflow: hidden;
+  }
+  .adv-win__light {
+    position: absolute;
+    left: -230px;
+    top: -230px;
+    width: 460px;
+    height: 460px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(var(--adv-accent-rgb), 0.15), transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 500ms var(--adv-ease);
+  }
+  .adv-win__light.is-on {
+    opacity: 1;
   }
   .adv-win::before {
     /* glass sheen */
@@ -306,6 +327,8 @@ const seedRows = [
     aspect-ratio: 520 / 340;
     margin: 18px 18px 6px;
     container-type: inline-size;
+    /* the diagram sits a little deeper than the glass */
+    translate: calc(var(--win-x, 0) * 5px) calc(var(--win-y, 0) * 3px);
   }
   .adv-flow__wires {
     position: absolute;
@@ -319,6 +342,10 @@ const seedRows = [
     stroke: rgba(255, 255, 255, 0.16);
     stroke-width: 1.2;
     vector-effect: non-scaling-stroke;
+    transition: stroke 300ms var(--adv-ease);
+  }
+  .adv-flow__wires > path.is-near {
+    stroke: rgba(var(--adv-accent-rgb), 0.6);
   }
   .adv-flow__runs path {
     stroke: var(--adv-accent);
@@ -379,7 +406,14 @@ const seedRows = [
     line-height: 1.25;
     transition:
       border-color 300ms var(--adv-ease),
-      box-shadow 300ms var(--adv-ease);
+      box-shadow 300ms var(--adv-ease),
+      opacity 300ms var(--adv-ease),
+      scale 300ms var(--adv-ease);
+  }
+  .adv-fnode.is-near {
+    scale: 1.05;
+    border-color: rgba(var(--adv-accent-rgb), 0.8);
+    opacity: 1;
   }
   .adv-fnode i {
     grid-row: span 2;
@@ -513,7 +547,7 @@ const seedRows = [
       max-width: 560px;
     }
     .adv-win {
-      transform: rotateX(8deg) rotateZ(-0.6deg);
+      transform: rotateY(calc(var(--win-x, 0) * 6deg)) rotateX(calc(8deg - var(--win-y, 0) * 4deg)) rotateZ(-0.6deg);
     }
   }
   @media (max-width: 520px) {
@@ -556,6 +590,105 @@ const seedRows = [
      hidden tab; reduced motion keeps the finished state from the markup. */
   const win = document.querySelector<HTMLElement>('[data-win]');
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* The window answers the mouse. The loop only runs while something still has to settle. */
+  const host = win?.closest<HTMLElement>('.adv-hero');
+  if (win && host && !RM && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const light = win.querySelector<HTMLElement>('[data-win-light]')!;
+    const nodes = [...win.querySelectorAll<HTMLElement>('.adv-fnode')];
+    // the wires (data-e) that touch each node (data-n)
+    const WIRES: Record<string, number[]> = { 1: [1], 2: [1, 2], 3: [2, 3, 4], 4: [3, 5], 5: [4, 6], 6: [5, 6] };
+    const NEAR_PX = 26;
+    const clamp = (v: number) => Math.max(-1, Math.min(1, v));
+    let raf = 0;
+    let last = 0;
+    let x = 0;
+    let y = 0;
+    let tx = 0;
+    let ty = 0;
+    let lx = 0;
+    let ly = 0;
+    let lightX = 0;
+    let lightY = 0;
+    let near: HTMLElement | undefined;
+    const setNear = (n?: HTMLElement) => {
+      if (n === near) return;
+      near?.classList.remove('is-near');
+      n?.classList.add('is-near');
+      near = n;
+      win.querySelectorAll('.adv-flow__wires > path.is-near').forEach((p) => p.classList.remove('is-near'));
+      if (n) {
+        WIRES[n.dataset.n!].forEach((e) =>
+          win.querySelector(`.adv-flow__wires > [data-e="${e}"]`)?.classList.add('is-near'),
+        );
+      }
+    };
+    const frame = (now: number) => {
+      const k = 1 - Math.exp(-Math.min(50, now - last) * 0.005);
+      last = now;
+      x += (tx - x) * k;
+      y += (ty - y) * k;
+      lx += (lightX - lx) * Math.min(1, k * 2);
+      ly += (lightY - ly) * Math.min(1, k * 2);
+      win.style.setProperty('--win-x', x.toFixed(3));
+      win.style.setProperty('--win-y', y.toFixed(3));
+      light.style.transform = `translate(${lx.toFixed(1)}px, ${ly.toFixed(1)}px)`;
+      const settled =
+        Math.abs(tx - x) < 0.002 &&
+        Math.abs(ty - y) < 0.002 &&
+        Math.abs(lightX - lx) < 0.5 &&
+        Math.abs(lightY - ly) < 0.5;
+      raf = settled ? 0 : requestAnimationFrame(frame);
+    };
+    const run = () => {
+      if (raf) return;
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    host.addEventListener(
+      'pointermove',
+      (e) => {
+        if (e.pointerType !== 'mouse') return;
+        const r = win.getBoundingClientRect();
+        tx = clamp((e.clientX - (r.left + r.width / 2)) / (r.width * 0.75));
+        ty = clamp((e.clientY - (r.top + r.height / 2)) / (r.height * 0.75));
+        lightX = e.clientX - r.left;
+        lightY = e.clientY - r.top;
+        const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+        if (inside && !light.classList.contains('is-on')) {
+          lx = lightX;
+          ly = lightY;
+        }
+        light.classList.toggle('is-on', inside);
+        let best: HTMLElement | undefined;
+        let bestD = NEAR_PX;
+        if (inside) {
+          for (const n of nodes) {
+            const b = n.getBoundingClientRect();
+            const d = Math.hypot(
+              Math.max(b.left - e.clientX, 0, e.clientX - b.right),
+              Math.max(b.top - e.clientY, 0, e.clientY - b.bottom),
+            );
+            if (d < bestD) {
+              bestD = d;
+              best = n;
+            }
+          }
+        }
+        setNear(best);
+        run();
+      },
+      { passive: true },
+    );
+    host.addEventListener('pointerleave', () => {
+      tx = 0;
+      ty = 0;
+      light.classList.remove('is-on');
+      setNear();
+      run();
+    });
+  }
+
   if (win && !RM) {
     const flow = win.querySelector<HTMLElement>('.adv-flow')!;
     const log = win.querySelector<HTMLOListElement>('[data-log]')!;

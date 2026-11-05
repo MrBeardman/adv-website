@@ -77,7 +77,8 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 - Section nodes, not kickers: no small uppercase label above headings (the impeccable detector bans it).
   A section's node is `<Node />` as the heading's first child (or `<Node panel />` before a padded panel);
   the stream rail runs through all `.adv-node`s. No coloured glow shadows (use gradients), no infinite
-  pulsing dots or marquees, body text ≥ 12px. Keep the detector at 0.
+  pulsing dots or marquees (one exception, Honza's call Nov 5 2026: the tools strip on the automation page), body
+  text ≥ 12px. Keep the detector at 0.
 - Headline emphasis: `.adv-em`, style switch `EM_STYLE` in `src/data/site.ts`.
 - **GEO/SEO** (`docs/GEO.md`): every page's JSON-LD is one `@graph` from `src/data/seo.ts` (ProfessionalService
   + WebSite, pages add Service / BreadcrumbList via `<Base schema>`); buyer-facing plain copy and FAQs in
