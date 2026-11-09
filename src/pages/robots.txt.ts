@@ -37,6 +37,6 @@ export const GET: APIRoute = ({ site }) => {
         `# Summary for language models: ${new URL('/llms.txt', site).href}`,
         '',
       ].join('\n')
-    : `# Preview: not for search engines yet (PUBLIC_SITE_INDEXABLE is not "true").\nUser-agent: *\nDisallow: /\n`;
+    : `# Preview: not for search engines (PUBLIC_SITE_INDEXABLE=false).\nUser-agent: *\nDisallow: /\n`;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 };

@@ -110,7 +110,7 @@ hero copy on the homepage, the service "Kde to uniká" sections.
   ours, and answers **GPTBot with HTTP 429** at the edge (PerplexityBot and ClaudeBot get 200). After the
   domain switch: open `https://<domain>/robots.txt` and confirm it is ours; `curl -A "GPTBot" -I` must give
   200; in hPanel check CDN "bot protection / Under Attack" settings (Hostinger's article on AI crawlers).
-- Everything is `noindex` until `PUBLIC_SITE_INDEXABLE=true` (STATUS.md).
+- Since Nov 9 2026 the site is indexable by default (`PUBLIC_SITE_INDEXABLE=false` = preview build, STATUS.md).
 
 ## 6. Off-site checklist (Honza; nothing on the site can replace this)
 

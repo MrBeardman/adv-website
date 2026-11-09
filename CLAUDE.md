@@ -5,6 +5,7 @@ open items; it supersedes the homepage and stream notes below), then this file, 
 `docs/STATUS.md`.
 
 ## What this is
+
 The 2026 website of **ADV Innovations** (Prague; Jan "Honza" Matyáš). Replaces the React site in
 `C:\Data\Dev\PersonalPortfolio` (branch `adv-rebrand`), which stays as the content source and reference
 (its `/preview/*` 3D experiments are not ported: Honza found code-made 3D too clean).
@@ -15,9 +16,9 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   Hostinger preview URL: **https://tan-jellyfish-775816.hostingersite.com/** (temporary domain).
   Hostinger auto-pulls `main`, so **every push goes live on the preview**: push only at verified, presentable
   milestones, never force-push. Don't touch `.env` files or credentials.
-- **Preview phase = noindex, FLIP AT LAUNCH**: `src/data/site.ts` `INDEXABLE` reads
-  `PUBLIC_SITE_INDEXABLE` (build time). Not "true" → every page `noindex, nofollow`, `robots.txt`
-  (`src/pages/robots.txt.ts`) disallows all. Set `PUBLIC_SITE_INDEXABLE=true` in Hostinger at launch.
+- **Live since Nov 2026 on https://www.advinnovations.com** (same Hostinger Node.js app; Hostinger auto-pulls
+  `main`). `src/data/site.ts` `INDEXABLE` reads `PUBLIC_SITE_INDEXABLE` at build time: indexable unless it is
+  "false" (then every page `noindex, nofollow` and `robots.txt` disallows all; use that for a preview build).
 - Page roles (Honza, Oct 2026): the Relay-style rich page is the **Automation & AI service page**
   (`templates/Automation.astro`, `/sluzby/automatizace/`, `/en/services/automation/`). The **homepage** is the
   old ADV 3D card stack rebuilt in Astro (`components/home/CardStack.astro`; engine in `scripts/stack/`:
@@ -45,6 +46,7 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 - `npm install --include=dev` (npm `omit=dev` is set globally on this PC).
 
 ## Architecture
+
 - Astro 7, `output: 'static'` + `@astrojs/node` standalone. Only `src/pages/api/contact.ts` runs on the server.
 - `build.inlineStylesheets: 'always'`, `trailingSlash: 'always'`, `format: 'directory'`, sitemap with i18n
   (`cs` default at the root, `en` under `/en/`). Domain in `astro.config.mjs` is a TODO.
@@ -65,6 +67,7 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   `count.ts`, `form.ts`.
 
 ## Rules that matter
+
 - **Case visibility**: `published` everywhere; `draft` and `placeholder` only in `astro dev`
   (`import.meta.env.DEV`). Placeholders are invented companies: never in a production build.
   Today production has one case page: `kesia-live-pricing`.
@@ -81,12 +84,13 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
   text ≥ 12px. Keep the detector at 0.
 - Headline emphasis: `.adv-em`, style switch `EM_STYLE` in `src/data/site.ts`.
 - **GEO/SEO** (`docs/GEO.md`): every page's JSON-LD is one `@graph` from `src/data/seo.ts` (ProfessionalService
-  + WebSite, pages add Service / BreadcrumbList via `<Base schema>`); buyer-facing plain copy and FAQs in
+  and WebSite, pages add Service / BreadcrumbList via `<Base schema>`); buyer-facing plain copy and FAQs in
   `src/i18n/geo.json` (`components/Plain.astro`, `components/Faq.astro` with FAQPage JSON-LD); `/llms.txt` is
   generated (`pages/llms.txt.ts`); robots.txt allows the AI crawlers by name once indexable. Keep the
   automation page's H1 different from the homepage's. New facts go into geo.json only when they are true.
 
 ## Gotchas (from the skill and this build)
+
 - `[data-reveal]` overrides an element's own transitions: site.ts removes it after the reveal.
 - `overflow: hidden` breaks `position: sticky`; use `overflow: clip`.
 - No `box-shadow` inside `preserve-3d`. The hero window uses a plain transform + perspective on its parent.
@@ -98,6 +102,7 @@ Built on Alture's Astro stack, the same as `sdx-website` and `jenomics-website`
 - Prettier reflows templates; re-check inline spacing in built HTML after `npm run format`.
 
 ## Verify before handing over
+
 0. Performance: see `docs/STATUS.md` "Performance" (WebGL scenes are skipped on software GL via `scripts/gl.ts`; hero
    copy entrance must stay CSS-only; fonts live in `src/assets/fonts`).
 1. `npm run build`; `npm run check:format`.

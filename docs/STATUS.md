@@ -1,11 +1,10 @@
 # Status (2026-10-26)
 
-## Preview phase: FLIP AT LAUNCH
+## Live (Nov 2026): https://www.advinnovations.com
 
-- The whole site is **noindex, nofollow** and `robots.txt` disallows everything while it is a preview
-  (Hostinger preview, Honza's colleagues). One switch: `PUBLIC_SITE_INDEXABLE=true` in the build environment
-  (`src/data/site.ts`), then rebuild. Without it: every page carries
-  `<meta name="robots" content="noindex, nofollow">`, `/robots.txt` says `Disallow: /`.
+- Indexable by default since Nov 9 2026 (`src/data/site.ts`: `PUBLIC_SITE_INDEXABLE=false` makes a preview
+  build noindex + `Disallow: /`). The site went live before the old "true to index" switch was set, so the
+  first days on the domain were noindex; fixed in code, no Hostinger setting needed.
 - Repo: https://github.com/MrBeardman/adv-website (main), Hostinger auto-pulls `main`. Push only at verified,
   presentable milestones. Never force-push.
 
@@ -187,7 +186,7 @@ PageSpeed (pagespeed.web.dev, no GPU) first run: mobile 50-60 (LCP 3.9-4.1 s, TB
       inquiry) and the matching lines in `data/submissions` on Hostinger.
 - [ ] **Performance gate (checker agent, after the first full version, before launch)**: run the "Performance gate"
       in the `astro-marketing-site` skill and the section below; record the numbers here.
-- [ ] **Flip the preview switch**: `PUBLIC_SITE_INDEXABLE=true`.
+- [x] **Flip the preview switch** (Nov 9: indexable by default in code; see the top of this file).
 - [ ] **GEO after the domain switch** (`docs/GEO.md` §5–6): `https://<domain>/robots.txt` is ours (the
       Hostinger preview domain serves its own, Googlebot disallowed); `curl -A GPTBot -I` returns 200 (the
       preview edge answers 429); `/llms.txt` and `/sitemap-index.xml` reachable; Search Console + Bing

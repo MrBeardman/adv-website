@@ -13,6 +13,7 @@
         "prodejů."
       ],
       "ctaWork": "Prohlédnout realizace",
+      "ctaServices": "Naše služby",
       "window": {
         "file": "faktury-schvalovani.flow",
         "state": "běží",
@@ -238,6 +239,7 @@
         "sales."
       ],
       "ctaWork": "See our work",
+      "ctaServices": "Our services",
       "window": {
         "file": "invoice-approval.flow",
         "state": "running",
