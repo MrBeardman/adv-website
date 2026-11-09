@@ -137,8 +137,31 @@ ChatGPT, Perplexity, Gemini and Google (AI Overview). Log: named? position? whic
 Console: queries containing "praha", "pohoda", "shoptet", "automatizace". Expect first appearances 2–6 weeks
 after indexing for the live-search engines; longer for answers from memory.
 
+### Log
+
+| Date  | Prompt                                                | 1st                                          | Also                                                    | ADV? | Note                                                                                   |
+| ----- | ----------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------- | ---- | -------------------------------------------------------------------------------------- |
+| Nov 4 | CZ faktury + Pohoda + interní systém + web            | Adaptis IT                                   | Velupasoft, PragueCoding, apios, XART, WEBZI            | no   | preview, noindex                                                                       |
+| Nov 4 | CZ pochopí byznys, AI rutina, dashboard, web, 15 lidí | MATUCHA.DEV                                  | Prahapp, Elementario, Haxo                              | no   | preview, noindex                                                                       |
+| Nov 4 | EN same brief, 15 people                              | Prahapp                                      | INNETIC, Webforte                                       | no   | preview, noindex                                                                       |
+| Nov 9 | CZ faktury + Pohoda + interní systém + web            | Velupasoft                                   | Adaptis IT, NETservis, AKSYSTEM                         | no   | live 4 days but still noindex (switch not set); map card from Google Business profiles |
+| Nov 9 | CZ pochopí byznys, AI rutina, dashboard, web, 15 lidí | MATUCHA.DEV ("Company OS")                   | INNETIC, KOALA42, Bolder Studio (prices from 20 000 Kč) | no   | same                                                                                   |
+| Nov 9 | EN same brief, 15 people                              | Prahapp ("free prototype in 3 working days") | eValue                                                  | no   | same                                                                                   |
+
+Nov 9 reading: the winners did not change; the reasons did not change (plain service lists, named systems, a
+published price or a free prototype, a Google Business profile with reviews that feeds the map card). ADV was
+not indexable until Nov 9, so no engine could have it yet. Next run: early December, after Search Console
+shows the pages indexed and the Google Business profile exists.
+
 ## 8. Open for Honza
 
+- **Live-site findings (Nov 9)**: `https://advinnovations.com/` (no www) answers 200 instead of redirecting
+  to the canonical www host: set a 301 in hPanel (Websites → advinnovations.com → Redirects, or "force www").
+  Submit `https://www.advinnovations.com/sitemap-index.xml` in Google Search Console and Bing Webmaster Tools
+  (Bing feeds ChatGPT's search). Spoofed Googlebot/Bingbot user agents get 403 from Hostinger's bot check;
+  real crawlers come from verified IPs, so confirm with "URL inspection" in Search Console rather than curl.
+  No analytics or cookies are set, so no consent banner is needed; if analytics is wanted, a cookieless one
+  (Plausible, Umami) keeps it that way.
 - Price bands in the FAQs (under 80 000 / 80–250 000 / over 250 000 Kč) reuse the inquiry budget bands
   (`data/inquiry.ts`, still a first guess). Confirm or change: ChatGPT rewards a published range, but it must
   be one you will honour.
