@@ -147,6 +147,7 @@ export function initHeroArt(cv: HTMLCanvasElement) {
     const START = [0.8, 2.0, 3.2];
     const DUR = 3.6;
     const DONE = 7.9;
+    const FLOW = 1.15; // seconds between two tasks sending work in
     const segs = R.map((ring) =>
       Array.from({ length: ring.n }, () => ({
         da: (rnd() - 0.5) * 1.5,
@@ -188,6 +189,9 @@ export function initHeroArt(cv: HTMLCanvasElement) {
             od,
           };
         });
+        // once in order, tasks take turns sending work to the hub
+        const flowing = tau - DONE - 0.3;
+        const active = flowing > 0 ? (Math.floor(flowing / FLOW) * 5) % N : -1;
         c.lineCap = 'round';
         // the tangle: who hands what to whom today; it thins out as things find their place
         links.forEach(([a, b]) => {
@@ -222,6 +226,67 @@ export function initHeroArt(cv: HTMLCanvasElement) {
           c.lineWidth = 1;
           c.stroke();
         });
+        // what the tasks are: every second one carries its name; loose at first, then around the dial
+        if (W >= 500) {
+          c.font = FONT;
+          P.forEach((p, i) => {
+            const label = i % 2 === 0 ? LABELS[i / 2] : '';
+            if (!label) return;
+            const ang = Math.atan2(p.y - cy, p.x - cx);
+            const cos = Math.cos(ang);
+            const sin = Math.sin(ang);
+            const x = lerp(p.x + 9 * (cos >= 0 ? 1 : -1), cx + cos * (R[2].r + 46), p.od);
+            const y = lerp(p.y + 3, cy + sin * (R[2].r + 46) + 3 + (Math.abs(cos) < 0.3 ? sin * 4 : 0), p.od);
+            // out of the way of the cue's wire at the bottom
+            const clear = clamp((Math.abs(ang - Math.PI / 2) - 0.3) / 0.25);
+            c.textAlign = p.od > 0.5 && Math.abs(cos) < 0.3 ? 'center' : cos >= 0 ? 'left' : 'right';
+            c.fillStyle = i === active && flowing % FLOW < 0.9 ? ac(0.95 * clear) : g(lerp(0.3, 0.6, p.od) * clear);
+            c.fillText(label, x, y);
+          });
+        }
+        // a fine dial around the machine, drawn in as the outer ring settles (it leaves the cue's wire free)
+        if (o[2] > 0.02) {
+          c.lineWidth = 1;
+          for (let t = 0; t < 72; t++) {
+            const a = (t / 72) * TAU - rot[2] * 0.25;
+            const down = Math.abs(((((a - Math.PI / 2 + Math.PI) % TAU) + TAU) % TAU) - Math.PI);
+            if (down < 0.14) continue;
+            const long = t % 6 === 0;
+            const r0 = R[2].r + 26;
+            const r1 = r0 + (long ? 9 : 4);
+            c.strokeStyle = g((long ? 0.36 : 0.16) * o[2]);
+            line(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0, cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+          }
+        }
+        // a runner of light on every ring that is in step
+        R.forEach((ring, k) => {
+          const lit = clamp((tau - START[k] - DUR) / 0.7);
+          if (lit <= 0 || RM) return;
+          const a = -ring.dir * tau * 0.9 + k * 2;
+          c.beginPath();
+          c.arc(cx, cy, ring.r, a, a + 0.42);
+          c.strokeStyle = `rgba(255,255,255,${0.8 * lit})`;
+          c.lineWidth = 1.8;
+          c.stroke();
+        });
+        // work flows in: one task after another sends a pulse down its spoke to the hub
+        if (flowing > 0 && !RM) {
+          const k = (flowing % FLOW) / 0.8;
+          if (k < 1) {
+            const p = P[active];
+            const q1 = io(k);
+            const q0 = Math.max(0, q1 - 0.2);
+            c.strokeStyle = g(0.14);
+            c.lineWidth = 1;
+            line(p.x, p.y, cx, cy);
+            c.strokeStyle = ac(0.22);
+            c.lineWidth = 6;
+            line(lerp(p.x, cx, q0), lerp(p.y, cy, q0), lerp(p.x, cx, q1), lerp(p.y, cy, q1));
+            c.strokeStyle = ac(0.95);
+            c.lineWidth = 1.6;
+            line(lerp(p.x, cx, q0), lerp(p.y, cy, q0), lerp(p.x, cx, q1), lerp(p.y, cy, q1));
+          }
+        }
         // the hub: lights up with a tick when everything runs in step
         const done = clamp((tau - DONE) / 0.5);
         box(cx - 13, cy - 13, 26, 26, 7);

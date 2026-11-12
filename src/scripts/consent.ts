@@ -13,8 +13,9 @@
  * server checks the same cookie again (lib/visitor.ts), so a bug on one side cannot measure anyone.
  * No third parties: events go to /api/track/ on this site.
  *
- * The panel (ui/Consent.astro) appears a moment after load when there is no answer yet; any
- * [data-consent-open] (the footer's "Cookie settings") opens it again to change the answer.
+ * The panel (ui/Consent.astro) appears a moment after load when there is no answer yet. Its switch only
+ * previews; "Allow" or "Decline" decides. Then the card folds into a small tab bottom left, which (like
+ * the footer's "Cookie settings", [data-consent-open]) opens it again to change the answer.
  */
 const DAYS = 180;
 const VID = /^[0-9a-f-]{36}$/i;
@@ -97,30 +98,56 @@ export function initConsent(panel: HTMLElement) {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const now = panel.querySelector<HTMLElement>('[data-consent-now]');
   const gate = panel.querySelector<HTMLElement>('[data-consent-gate]');
+  const tab = document.querySelector<HTMLElement>('[data-consent-tab]');
   let closing = 0;
-  const open = () => {
-    clearTimeout(closing);
-    const state = consent();
+  // what the card shows: the stored answer, or what the switch is set to before a button confirms it
+  const show = (state: '' | 'granted' | 'denied') => {
     panel.dataset.state = state;
     gate?.setAttribute('aria-checked', String(state === 'granted'));
+  };
+  // the small tab bottom left: there once an answer exists, away while the card is open
+  const showTab = (on: boolean) => {
+    if (!tab) return;
+    tab.dataset.state = consent();
+    if (on) {
+      tab.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => tab.classList.add('is-in')));
+    } else {
+      tab.classList.remove('is-in');
+      tab.hidden = true;
+    }
+  };
+  const open = () => {
+    clearTimeout(closing);
+    showTab(false);
+    const state = consent();
+    show(state);
     if (now) {
       now.hidden = !state;
       now.textContent = state === 'granted' ? (now.dataset.granted ?? '') : (now.dataset.denied ?? '');
     }
+    panel.classList.remove('is-folding');
     panel.hidden = false;
     requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('is-open')));
   };
-  // the little wire answers first (the gate closes or the line is cut), then the panel leaves
+  // the wire answers first (the gate closes or the line is cut), then the card folds down into the tab
   const close = (state: 'granted' | 'denied') => {
-    panel.dataset.state = state;
-    gate?.setAttribute('aria-checked', String(state === 'granted'));
+    show(state);
     if (now) now.hidden = true;
     closing = window.setTimeout(
       () => {
+        panel.classList.add('is-folding');
         panel.classList.remove('is-open');
-        closing = window.setTimeout(() => (panel.hidden = true), still ? 0 : 450);
+        closing = window.setTimeout(
+          () => {
+            panel.hidden = true;
+            panel.classList.remove('is-folding');
+            showTab(true);
+          },
+          still ? 0 : 520,
+        );
       },
-      still ? 0 : 950,
+      still ? 0 : 800,
     );
   };
   panel.querySelector('[data-consent-grant]')?.addEventListener('click', () => {
@@ -131,23 +158,23 @@ export function initConsent(panel: HTMLElement) {
     deny();
     close('denied');
   });
-  // the switch in the wire does the same as the buttons: on = allow, off = decline
+  // The switch only sets what the card proposes (and which button lights up). Nothing is stored and
+  // nothing is measured until that button is pressed: consent has to be an explicit yes.
   gate?.addEventListener('click', () => {
-    if (consent() === 'granted') {
-      deny();
-      close('denied');
-    } else {
-      grant();
-      close('granted');
-    }
+    if (panel.dataset.state === 'granted') show(consent() ? 'denied' : '');
+    else show('granted');
+    if (now) now.hidden = true;
   });
-  document.querySelectorAll<HTMLElement>('[data-consent-open]').forEach((b) =>
-    b.addEventListener('click', () => {
-      open();
-      panel.querySelector<HTMLElement>('[data-consent-deny]')?.focus({ preventScroll: true });
-    }),
-  );
-  if (consent()) return;
+  const reopen = () => {
+    open();
+    panel.querySelector<HTMLElement>('[data-consent-gate]')?.focus({ preventScroll: true });
+  };
+  document.querySelectorAll<HTMLElement>('[data-consent-open]').forEach((b) => b.addEventListener('click', reopen));
+  tab?.addEventListener('click', reopen);
+  if (consent()) {
+    showTab(true);
+    return;
+  }
   // On a phone the card would sit on the hero's buttons: wait for the first scroll (or a while) there.
   if (innerWidth > 520) setTimeout(open, 1400);
   else {

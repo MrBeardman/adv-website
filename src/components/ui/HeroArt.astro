@@ -35,6 +35,13 @@ const { kind, cue, labels = '' } = Astro.props;
       height: 480px;
     }
   }
+  @media (min-width: 1400px) {
+    /* room for the task names around the dial */
+    .adv-pagehead .adv-art--rings {
+      right: clamp(0px, 6vw - 50px, 40px);
+      width: 520px;
+    }
+  }
   @media (min-width: 1000px) and (min-height: 700px) {
     /* over the hero's output port, bottom centre */
     .adv-art--dataline {

@@ -4,7 +4,9 @@
  * covers the hero's actions or the scroll cue. One question, two buttons of equal weight (declining is as
  * easy as allowing), a link to the policy. The wire on top is the answer drawn in the site's own language:
  * visit, a gate, measurement. The gate is open (nothing flows) until "Allow". The gate is a real switch
- * too: flipping it on allows, flipping it off declines, the same as the two buttons.
+ * too, but it only previews: it lights the wire and the matching button, and that button has to be pressed
+ * (consent is an explicit yes). After the answer the card folds down into a small tab at the left edge
+ * (.adv-consent-tab) that shows the current answer and opens the card again.
  * Without JS it stays hidden and nothing is measured.
  */
 import { pick, type Lang } from '../../i18n';
@@ -50,6 +52,17 @@ const t = pick(consent, lang);
     <button type="button" class="adv-btn adv-btn--ghost adv-btn--sm" data-consent-grant>{t.grant}</button>
   </div>
 </aside>
+<button
+  type="button"
+  class="adv-consent-tab"
+  data-consent-tab
+  data-state=""
+  hidden
+  aria-label={t.settings}
+  title={t.settings}
+>
+  <span class="adv-consent-tab__gate" aria-hidden="true"><i></i></span>
+</button>
 
 <script>
   import { initConsent } from '../../scripts/consent';
@@ -82,6 +95,100 @@ const t = pick(consent, lang);
   .adv-consent.is-open {
     opacity: 1;
     transform: none;
+  }
+  /* answered: the card draws itself down into the corner where the tab then sits */
+  .adv-consent.is-folding {
+    transform-origin: 0 100%;
+    transform: translate(-20px, 4px) scale(0.16, 0.12);
+    border-radius: 80px;
+    transition:
+      opacity 380ms var(--adv-ease-io) 140ms,
+      transform 520ms var(--adv-ease-io),
+      border-radius 520ms var(--adv-ease-io);
+  }
+  .adv-consent.is-folding > * {
+    opacity: 0;
+    transition: opacity 160ms linear;
+  }
+  /* the switch proposes, the lit button confirms */
+  .adv-consent[data-state='granted'] [data-consent-grant] {
+    border-color: var(--adv-accent);
+    background: rgba(var(--adv-accent-rgb), 0.16);
+    color: var(--adv-accent);
+  }
+  .adv-consent[data-state='denied'] [data-consent-deny] {
+    border-color: var(--adv-edge-hi);
+    background: rgba(255, 255, 255, 0.09);
+  }
+  .adv-consent__actions .adv-btn {
+    transition:
+      border-color 250ms var(--adv-ease),
+      background-color 250ms var(--adv-ease),
+      color 250ms var(--adv-ease);
+  }
+
+  /* the tab: a small pill half tucked into the left edge, showing the answer */
+  .adv-consent-tab {
+    position: fixed;
+    left: 0;
+    bottom: 20px;
+    z-index: 80;
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 34px;
+    padding: 0 0 0 8px;
+    border: 1px solid var(--adv-edge);
+    border-left: 0;
+    border-radius: 0 999px 999px 0;
+    background: rgba(12, 14, 20, 0.9);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-100%);
+    transition:
+      opacity 400ms var(--adv-ease),
+      transform 400ms var(--adv-ease),
+      border-color 200ms var(--adv-ease);
+  }
+  .adv-consent-tab[hidden] {
+    display: none;
+  }
+  .adv-consent-tab.is-in {
+    opacity: 0.6;
+    transform: translateX(-10px);
+  }
+  .adv-consent-tab.is-in:hover,
+  .adv-consent-tab.is-in:focus-visible {
+    opacity: 1;
+    transform: none;
+    border-color: var(--adv-edge-hi);
+  }
+  .adv-consent-tab:focus-visible {
+    outline: 2px solid var(--adv-accent);
+    outline-offset: 3px;
+  }
+  .adv-consent-tab__gate {
+    position: relative;
+    width: 24px;
+    height: 14px;
+    border: 1px solid var(--adv-edge-hi);
+    border-radius: 999px;
+  }
+  .adv-consent-tab__gate i {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(var(--adv-grid-rgb), 0.45);
+  }
+  .adv-consent-tab[data-state='granted'] .adv-consent-tab__gate {
+    border-color: var(--adv-accent);
+  }
+  .adv-consent-tab[data-state='granted'] .adv-consent-tab__gate i {
+    transform: translateX(10px);
+    background: var(--adv-accent);
   }
   .adv-consent h2 {
     margin-top: 16px;
@@ -207,6 +314,7 @@ const t = pick(consent, lang);
     }
   }
   @media (prefers-reduced-motion: reduce) {
+    .adv-consent-tab,
     .adv-consent,
     .adv-consent * {
       transition: none !important;

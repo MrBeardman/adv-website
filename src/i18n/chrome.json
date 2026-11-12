@@ -45,7 +45,7 @@
     },
     "art": {
       "scroll": "pokračovat",
-      "rings": "",
+      "rings": "faktury,objednávky,e-maily,tabulky,schválení,reporty,sklad",
       "responsive": "desktop,tablet,mobil",
       "build": "skica,prototyp,software"
     },
@@ -111,7 +111,7 @@
     },
     "art": {
       "scroll": "scroll",
-      "rings": "",
+      "rings": "invoices,orders,e-mails,sheets,approvals,reports,stock",
       "responsive": "desktop,tablet,mobile",
       "build": "sketch,prototype,software"
     },
