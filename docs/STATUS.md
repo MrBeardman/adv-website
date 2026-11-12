@@ -52,6 +52,10 @@
   hero has a scroll cue drawn by the flow grid (`data-scroll`, label "pokračovat" / "scroll"); numbers band
   charts redrawn: bookings against 1× and 2× lines, seven days call to prototype, fees before and now (that
   last one was empty on the live site: its styles lived in the unused `05-kesia.astro`).
+- **Websites copy (Nov 12, Honza's direction)**: `services.json` websites `long` rewritten (we understand the
+  business first; a site you do not look after, runs on its own, anyone can edit it with the editing tool we
+  deliver); `serviceDeep.json` cards "Na mobilu je pomalý nebo nečitelný" and "Google ani AI vás nenajdou"
+  (GEO, AI Overviews, ChatGPT). CLAIMS: "běží automaticky" and the editing tool are promises per project.
 - **Policy facts checked Nov 12**: seat, no DIČ and "oddíl C, vložka 368486" match ARES. n8n runs on our own
   Contabo server, so the policy names Contabo as the recipient (server region still to be stated). STILL
   MISSING from the recipients if inquiries are dispatched to an agent in Agent Dash: the AI provider

@@ -34,9 +34,9 @@
         "lead": "Většinu z toho na první pohled nevidíte. Web vypadá dobře, jen poptávky nechodí.",
         "items": [
           {
-            "title": "Na mobilu se načítá dlouho",
-            "cost": "Většina lidí přijde z telefonu. Než se stránka načte, část z nich je pryč.",
-            "fix": "Rychlý web postavený na výkon, ne šablona s desítkami pluginů."
+            "title": "Na mobilu je pomalý nebo nečitelný",
+            "cost": "Většina lidí přijde z telefonu. Web se dlouho načítá, nebo pro mobil není vůbec připravený a nedá se přečíst. Část z nich je pryč.",
+            "fix": "Rychlý web navržený nejdřív pro mobil a postavený na výkon, ne šablona s desítkami pluginů."
           },
           {
             "title": "Poptávky končí v e-mailu",
@@ -54,9 +54,9 @@
             "fix": "Měření od první návštěvy po zaplacenou objednávku."
           },
           {
-            "title": "Google vás nenajde",
-            "cost": "Lidé hledají přesně to, co nabízíte, ale na prvních místech vidí konkurenci.",
-            "fix": "Struktura, texty a technické SEO podle toho, co lidé opravdu hledají."
+            "title": "Google ani AI vás nenajdou",
+            "cost": "Lidé hledají přesně to, co nabízíte, ale na prvních místech i v odpovědích AI vidí konkurenci.",
+            "fix": "Struktura, texty a technické SEO podle toho, co lidé opravdu hledají. K tomu GEO: web připravený pro AI přehledy Googlu a odpovědi ChatGPT."
           },
           {
             "title": "Nákup se nedokončí",
@@ -301,9 +301,9 @@
         "lead": "Most of it is invisible at first glance. The site looks fine, the inquiries just do not come.",
         "items": [
           {
-            "title": "It loads slowly on a phone",
-            "cost": "Most people arrive on a phone. By the time the page loads, some of them are gone.",
-            "fix": "A fast site built for performance, not a template with dozens of plugins."
+            "title": "Slow or unreadable on a phone",
+            "cost": "Most people arrive on a phone. The page loads slowly, or was never made for a phone and cannot be read. Some of them are gone.",
+            "fix": "A fast site designed for phones first and built for performance, not a template with dozens of plugins."
           },
           {
             "title": "Inquiries end up in an inbox",
@@ -321,9 +321,9 @@
             "fix": "Measurement from the first visit to the paid order."
           },
           {
-            "title": "Google does not find you",
-            "cost": "People search for exactly what you offer but see your competitors first.",
-            "fix": "Structure, copy and technical SEO built around what people actually search for."
+            "title": "Neither Google nor AI finds you",
+            "cost": "People search for exactly what you offer but see your competitors first, in the results and in AI answers.",
+            "fix": "Structure, copy and technical SEO built around what people actually search for. Plus GEO: a site ready for Google AI Overviews and ChatGPT answers."
           },
           {
             "title": "Purchases are not finished",
