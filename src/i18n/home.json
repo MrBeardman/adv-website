@@ -40,12 +40,13 @@
       "grid": {
         "labels": "vytěžit,ověřit,schválit,zapsat,upozornit,roztřídit,spárovat,odeslat",
         "first": "start",
-        "last": "hotovo"
+        "last": "hotovo",
+        "scroll": "pokračovat"
       }
     },
     "tools": {
       "kicker": "Nástroje",
-      "title": "Napojíme to na nástroje, které už používáte."
+      "title": "Napojíme nástroje, které už používáte."
     },
     "statement": {
       "kicker": "Proč",
@@ -266,12 +267,13 @@
       "grid": {
         "labels": "fetch,parse,enrich,approve,sync,notify,route,check",
         "first": "trigger",
-        "last": "done"
+        "last": "done",
+        "scroll": "scroll"
       }
     },
     "tools": {
       "kicker": "Tools",
-      "title": "We connect it to the tools you already use."
+      "title": "We connect the tools you already use."
     },
     "statement": {
       "kicker": "Why",

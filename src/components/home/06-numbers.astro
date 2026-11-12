@@ -1,7 +1,10 @@
 ---
 /**
  * Numbers band: the four headline numbers (data/homeNumbers.ts, the one place they live), each counting
- * up with a thin drawn chart. Placeholders (invented, see the launch checklist in docs/STATUS.md) get a
+ * up with a thin drawn chart. Websites: bookings against a 1× and a 2× reference line, flat until the
+ * relaunch, then up to exactly 2× (the scale is true: 2× is twice as high as 1×). Software: the seven
+ * days from the call to the prototype, filling one by one (Honza, Nov 12 2026: the plain line and the
+ * row of dots looked lazy). Placeholders (invented, see the launch checklist in docs/STATUS.md) get a
  * dashed outline in development builds.
  */
 import Node from '../ui/Node.astro';
@@ -30,6 +33,13 @@ const items = HOME_NUMBERS.filter((n) => ENABLED_SERVICES.some((s) => s.slug ===
 }));
 const [before, after] = t.title.split(t.em);
 const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1];
+// chart captions (decorative: the charts are aria-hidden, the label above says the same)
+const cap =
+  lang === 'cs'
+    ? { relaunch: 'relaunch', after: '+2 měsíce', call: 'hovor', proto: 'prototyp', before: 'před', now: 'teď' }
+    : { relaunch: 'relaunch', after: '+2 months', call: 'call', proto: 'prototype', before: 'before', now: 'now' };
+// bookings: y 36 = 1×, y 12 = 2× (0 at y 60); the relaunch is at x 70
+const RISE = 'M0 37 C8 36 14 35 22 36 S38 38 48 36 S62 35 70 36 C90 35 104 31 120 26 S160 15 200 12';
 ---
 
 <section class="adv-numbers adv-section" aria-labelledby="adv-numbers-title">
@@ -65,24 +75,55 @@ const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1
               )}
               {n.slug === 'business-optimisation' && (
                 <span class="adv-fee">
+                  <b>{cap.before}</b>
                   <i style="--w:1" />
+                  <b>{cap.now}</b>
                   <i style="--w:0.209" />
                 </span>
               )}
               {n.slug === 'websites' && (
-                <svg viewBox="0 0 200 50" preserveAspectRatio="none">
-                  <path
-                    class="adv-mini__line"
-                    pathLength="100"
-                    d="M0 44 L40 42 L80 40 L100 36 L120 28 L150 18 L175 12 L200 6"
-                  />
-                </svg>
+                <span class="adv-rise">
+                  <span class="adv-rise__y">
+                    <b style="--y:0.2">2×</b>
+                    <b style="--y:0.6">1×</b>
+                  </span>
+                  <span class="adv-rise__plot">
+                    <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="adv-rise-fill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0" stop-color="rgb(124 200 255)" stop-opacity="0.3" />
+                          <stop offset="1" stop-color="rgb(124 200 255)" stop-opacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <line class="adv-rise__ref" x1="0" y1="12" x2="200" y2="12" />
+                      <line class="adv-rise__ref" x1="0" y1="36" x2="200" y2="36" />
+                      <line class="adv-rise__mark" x1="70" y1="0" x2="70" y2="60" />
+                    </svg>
+                    <svg class="adv-rise__data" viewBox="0 0 200 60" preserveAspectRatio="none">
+                      <path class="adv-rise__area" d={`${RISE} L200 60 L0 60 Z`} />
+                      <path class="adv-mini__line" d={RISE} />
+                    </svg>
+                    <i class="adv-rise__dot" />
+                  </span>
+                  <span class="adv-rise__x">
+                    <b style="--x:0.35">{cap.relaunch}</b>
+                    <b class="is-end">{cap.after}</b>
+                  </span>
+                </span>
               )}
               {n.slug === 'software' && (
-                <span class="adv-mini__days">
-                  {Array.from({ length: 14 }, (_, k) => (
-                    <i style={`--k:${k}`} />
-                  ))}
+                <span class="adv-week">
+                  <span class="adv-week__ends">
+                    <b>{cap.call}</b>
+                    <b>{cap.proto}</b>
+                  </span>
+                  <span class="adv-week__days">
+                    {Array.from({ length: 7 }, (_, k) => (
+                      <i style={`--k:${k}`}>
+                        <b>{k + 1}</b>
+                      </i>
+                    ))}
+                  </span>
                 </span>
               )}
             </div>
@@ -145,9 +186,35 @@ const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1
     display: flex;
     align-items: flex-end;
   }
-  .adv-mini .adv-fee {
+  /* e-shop fees before and now (these styles used to come from 05-kesia.astro, which no page loads any more) */
+  .adv-fee {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 9px 10px;
     width: 100%;
-    margin: 0 0 6px;
+    margin: 0 0 4px;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--adv-muted);
+  }
+  .adv-fee b {
+    font-weight: 500;
+  }
+  .adv-fee b:nth-of-type(2) {
+    color: var(--adv-accent);
+  }
+  .adv-fee i {
+    display: block;
+    height: 6px;
+    width: calc(var(--w) * 100%);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.22);
+    transform-origin: left;
+  }
+  .adv-fee i:last-child {
+    background: var(--adv-accent);
   }
   .adv-mini__cols {
     display: flex;
@@ -174,41 +241,189 @@ const bars = [0.08, 0.16, 0.25, 0.33, 0.41, 0.5, 0.58, 0.66, 0.75, 0.83, 0.91, 1
     stroke-width: 1.6;
     vector-effect: non-scaling-stroke;
   }
-  .adv-mini__days {
-    display: grid;
-    grid-template-columns: repeat(14, 1fr);
-    gap: 3px;
-    width: 100%;
+  /* the two charts with captions are taller than the plain ones; the label row above takes up the slack */
+  .adv-mini--websites,
+  .adv-mini--software {
+    height: auto;
   }
-  .adv-mini__days i {
-    height: 10px;
+  /* websites: bookings against the 1× and 2× lines */
+  .adv-rise {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 8px;
+    width: 100%;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--adv-muted);
+  }
+  .adv-rise b {
+    font-weight: 500;
+  }
+  .adv-rise__y {
+    position: relative;
+    width: 2ch;
+    height: 60px;
+  }
+  .adv-rise__y b {
+    position: absolute;
+    right: 0;
+    top: calc(var(--y) * 100%);
+    transform: translateY(-50%);
+  }
+  .adv-rise__y b:first-child {
+    color: var(--adv-accent);
+  }
+  .adv-rise__plot {
+    position: relative;
+    height: 60px;
+    border-left: 1px solid var(--adv-edge);
+    border-bottom: 1px solid var(--adv-edge);
+  }
+  .adv-rise__plot svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .adv-rise__ref,
+  .adv-rise__mark {
+    stroke: rgba(255, 255, 255, 0.16);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+    vector-effect: non-scaling-stroke;
+  }
+  .adv-rise__area {
+    fill: url(#adv-rise-fill);
+    stroke: none;
+  }
+  .adv-rise__dot {
+    position: absolute;
+    right: -4px;
+    top: calc(20% - 4px);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--adv-accent);
+    border: 2px solid var(--adv-bg-2, #0c0e14);
+    box-sizing: content-box;
+    margin: -2px;
+  }
+  .adv-rise__x {
+    grid-column: 2;
+    position: relative;
+    height: 12px;
+    margin-top: 8px;
+  }
+  .adv-rise__x b {
+    position: absolute;
+    left: calc(var(--x) * 100%);
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .adv-rise__x b.is-end {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+  /* software: seven days, call to prototype */
+  .adv-week {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--adv-muted);
+  }
+  .adv-week b {
+    font-weight: 500;
+  }
+  .adv-week__ends {
+    display: flex;
+    justify-content: space-between;
+  }
+  .adv-week__ends b:last-child {
+    color: var(--adv-accent);
+  }
+  .adv-week__days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .adv-week__days i {
+    display: grid;
+    gap: 7px;
+    justify-items: center;
+    font-style: normal;
+  }
+  .adv-week__days i::before {
+    content: '';
+    width: 100%;
+    height: 8px;
     border-radius: 2px;
+    background: rgba(124, 200, 255, calc(0.28 + var(--k) * 0.09));
+    transform-origin: left;
+  }
+  .adv-week__days i:last-child::before {
     background: var(--adv-accent);
   }
-  .adv-mini__days i:last-child {
+  .adv-week__days i:last-child b {
+    color: var(--adv-accent);
   }
   .js [data-play].is-armed .adv-mini__cols i {
     transform: scaleY(0);
     transition: transform 900ms var(--adv-ease);
     transition-delay: calc(var(--k) * 60ms);
   }
-  .js [data-play].is-armed .adv-mini__line {
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    transition: stroke-dashoffset 1600ms var(--adv-ease-io);
+  /* drawn by opening a clip from the left: a dash offset goes wrong with non-scaling strokes */
+  .js [data-play].is-armed .adv-rise__data {
+    clip-path: inset(-8px 100% -8px 0);
+    transition: clip-path 1600ms var(--adv-ease-io);
   }
-  .js [data-play].is-armed .adv-mini__days i {
-    opacity: 0.12;
+  .js [data-play].is-armed .adv-fee i {
+    transform: scaleX(0);
+    transition: transform 1400ms var(--adv-ease);
+  }
+  .js [data-play].is-armed .adv-fee i:last-child {
+    transition-delay: 250ms;
+  }
+  .js [data-play].is-armed .adv-rise__area {
+    opacity: 0;
+    transition: opacity 900ms var(--adv-ease) 700ms;
+  }
+  .js [data-play].is-armed .adv-rise__dot {
+    transform: scale(0);
+    transition: transform 400ms var(--adv-ease) 1500ms;
+  }
+  .js [data-play].is-armed .adv-week__days i::before {
+    transform: scaleX(0);
+    transition: transform 420ms var(--adv-ease);
+    transition-delay: calc(var(--k) * 130ms);
+  }
+  .js [data-play].is-armed .adv-week__days i b {
+    opacity: 0.35;
     transition: opacity 300ms var(--adv-ease);
-    transition-delay: calc(var(--k) * 80ms);
+    transition-delay: calc(var(--k) * 130ms + 200ms);
   }
   .js [data-play].is-playing .adv-mini__cols i {
     transform: scaleY(1);
   }
-  .js [data-play].is-playing .adv-mini__line {
-    stroke-dashoffset: 0;
+  .js [data-play].is-playing .adv-rise__data {
+    clip-path: inset(-8px 0 -8px 0);
   }
-  .js [data-play].is-playing .adv-mini__days i {
+  .js [data-play].is-playing .adv-fee i {
+    transform: none;
+  }
+  .js [data-play].is-playing .adv-rise__area {
+    opacity: 1;
+  }
+  .js [data-play].is-playing .adv-rise__dot {
+    transform: none;
+  }
+  .js [data-play].is-playing .adv-week__days i::before {
+    transform: none;
+  }
+  .js [data-play].is-playing .adv-week__days i b {
     opacity: 1;
   }
   @media (max-width: 1000px) {

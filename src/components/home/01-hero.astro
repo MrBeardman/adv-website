@@ -4,7 +4,8 @@
  * Focal point: a tilted glass window with a live workflow in HTML/SVG ("invoice received → extracted →
  * over 50,000 CZK? → approval / booking in Pohoda → done") and a "recent runs" log that ticks.
  * Behind it, the breathing workflow grid from the palette study (scripts/flowGrid.ts), kept clear of
- * the text and the window ([data-grid-avoid]).
+ * the text and the window ([data-grid-avoid]). The grid also draws the scroll cue at the bottom centre
+ * (data-scroll: a node, a wire down the grid line and a pulse; Honza, Nov 12 2026).
  *
  * The window answers the mouse (Honza, Nov 5 2026: "too static"): it leans towards the pointer anywhere in the hero,
  * a soft light follows it across the glass, and the node nearest to it lifts and lights its wires.
@@ -60,6 +61,7 @@ const seedRows = [
     data-labels={t.grid.labels}
     data-first={t.grid.first}
     data-last={t.grid.last}
+    data-scroll={t.grid.scroll}
     aria-hidden="true"></canvas>
   <div class="adv-hero__glow" aria-hidden="true"></div>
   <div class="adv-wrap adv-hero__inner">

@@ -7,6 +7,10 @@
  * [data-grid-avoid] element inside the canvas' parent is kept clear, with margin), narrow screens use
  * a compressed template, and colours come from the CSS tokens (--adv-grid-rgb, --adv-accent-rgb).
  *
+ * data-scroll="label": a scroll cue in the same language, fixed at the bottom centre: a node, a wire down
+ * one grid line to an arrowhead, a pulse that travels it, the label under it. Wide screens only, kept clear
+ * of [data-grid-avoid], fades as the page scrolls; flows never land on it.
+ *
  * Cost: one 2D canvas, at most two flows, paused when off screen or in a hidden tab.
  * Reduced motion: one finished flow is drawn once, statically.
  */
@@ -24,6 +28,9 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   const LAST = cv.dataset.last || 'done';
   // data-flows="off": only the breathing grid and the pointer lens (the calmer homepage hero)
   const FLOWS = cv.dataset.flows !== 'off';
+  const CUE = cv.dataset.scroll || '';
+  const CUE_TRAVEL = 1.3; // seconds the pulse takes down the wire
+  const CUE_PERIOD = 3.4; // one pulse per period
   const TEMPLATES = [
     {
       n: [
@@ -110,6 +117,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   let flows: Flow[] = [];
   let ripples: { x: number; y: number; t0: number }[] = [];
   let avoid: number[][] = []; // in grid cells: [c0, r0, c1, r1]
+  let cue: { x: number; y0: number; y1: number; box: number[] } | null = null;
   let mx = -1e4;
   let my = -1e4;
   let visible = true;
@@ -127,6 +135,28 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
     });
   };
   const overlaps = (a: number[], b: number[]) => !(a[2] < b[0] || a[0] > b[2] || a[3] < b[1] || a[1] > b[3]);
+  // The scroll cue: on a grid line near the centre, ending on the last grid row above the fold (or the
+  // canvas' bottom, whichever is higher). The wire may run in the gap between the copy and the window; only
+  // its own narrow strip and the label under it have to be free.
+  const placeCue = () => {
+    cue = null;
+    if (!CUE || W < 1000) return;
+    const top = cv.getBoundingClientRect().top + scrollY; // the canvas' place on the page
+    const bottom = Math.min(H, innerHeight - top);
+    const y1 = Math.floor((bottom - 44) / cell) * cell;
+    const mid = Math.round(W / 2 / cell);
+    // avoid[] carries a 20px margin for the flows; the cue is small and may come closer
+    const hit = (box: number[]) => avoid.some((a) => overlaps(box, [a[0] + 14, a[1] + 14, a[2] - 14, a[3] - 14]));
+    for (const span of [2, 1])
+      for (const dc of [0, 1, -1, 2, -2]) {
+        const x = (mid + dc) * cell;
+        const y0 = y1 - span * cell;
+        if (y0 < cell * 3) continue;
+        if (hit([x - 12, y0 - 12, x + 12, y1 + 4]) || hit([x - 36, y1 + 8, x + 36, y1 + 26])) continue;
+        cue = { x, y0, y1, box: [x - 48, y0 - 16, x + 48, y1 + 30] };
+        return;
+      }
+  };
 
   function makeFlow(t0: number): Flow | null {
     const narrow = W < 700;
@@ -149,6 +179,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
       const box = [c0 * cell - 14, r0 * cell - 14, (c0 + spanC) * cell + 34, (r0 + spanR) * cell + 30];
       if (box[3] > H - 8) continue;
       if (avoid.some((a) => overlaps(box, a))) continue;
+      if (cue && overlaps(box, cue.box)) continue;
       if (flows.some((f) => overlaps([box[0] - cell, box[1] - cell, box[2] + cell, box[3] + cell], f.box))) continue;
       const nodes: Node[] = tp.n.map(([c, r]) => ({
         x: (c0 + Math.round(c * sx)) * cell,
@@ -327,6 +358,91 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
     c.restore();
   }
 
+  function drawCue(now: number) {
+    if (!cue) return;
+    const fade = 1 - clamp(scrollY / 220);
+    if (fade <= 0) return;
+    const c = ctx!;
+    const { x, y0, y1 } = cue;
+    const len = y1 - y0;
+    // k: 0..1 the pulse travels, above 1 it has arrived and the arrowhead cools down until the next one
+    const k = RM ? 1.2 : (now % CUE_PERIOD) / CUE_TRAVEL;
+    const arrived = k >= 1 ? 1 - clamp((k - 1) / 1.2) : 0;
+    c.save();
+    c.globalAlpha = fade;
+    c.lineCap = 'round';
+    c.lineJoin = 'round';
+    c.strokeStyle = `rgba(${gridRGB},.34)`;
+    c.lineWidth = 1;
+    c.beginPath();
+    c.moveTo(x + 0.5, y0);
+    c.lineTo(x + 0.5, y1);
+    c.stroke();
+    if (k < 1) {
+      const h = len * k;
+      c.strokeStyle = `rgba(${accRGB},.42)`;
+      c.lineWidth = 1.2;
+      c.beginPath();
+      c.moveTo(x + 0.5, y0);
+      c.lineTo(x + 0.5, y0 + h);
+      c.stroke();
+      c.strokeStyle = `rgba(${accRGB},.22)`;
+      c.lineWidth = 6;
+      c.beginPath();
+      c.moveTo(x + 0.5, y0 + Math.max(0, h - 30));
+      c.lineTo(x + 0.5, y0 + h);
+      c.stroke();
+      c.strokeStyle = `rgba(${accRGB},.95)`;
+      c.lineWidth = 1.6;
+      c.beginPath();
+      c.moveTo(x + 0.5, y0 + Math.max(0, h - 26));
+      c.lineTo(x + 0.5, y0 + h);
+      c.stroke();
+    } else if (arrived > 0) {
+      c.strokeStyle = `rgba(${accRGB},${0.42 * arrived})`;
+      c.lineWidth = 1.2;
+      c.beginPath();
+      c.moveTo(x + 0.5, y0);
+      c.lineTo(x + 0.5, y1);
+      c.stroke();
+    }
+    // the node the pulse leaves from: always lit, like a running step
+    c.beginPath();
+    c.roundRect(x - 7 + 0.5, y0 - 7 + 0.5, 14, 14, 4);
+    c.fillStyle = bg2;
+    c.fill();
+    c.fillStyle = `rgba(${accRGB},.14)`;
+    c.fill();
+    c.strokeStyle = `rgba(${accRGB},.9)`;
+    c.lineWidth = 1;
+    c.stroke();
+    c.fillStyle = `rgba(${accRGB},1)`;
+    c.beginPath();
+    c.arc(x + 0.5, y0 + 0.5, 2.2, 0, 7);
+    c.fill();
+    // the arrowhead, lit when the pulse lands
+    const head = (style: string, w: number) => {
+      c.strokeStyle = style;
+      c.lineWidth = w;
+      c.beginPath();
+      c.moveTo(x - 5.5, y1 - 6);
+      c.lineTo(x + 0.5, y1);
+      c.lineTo(x + 6.5, y1 - 6);
+      c.stroke();
+    };
+    head(`rgba(${gridRGB},.55)`, 1.2);
+    if (arrived > 0) head(`rgba(${accRGB},${arrived})`, 1.6);
+    c.font = '500 9.5px "JetBrains Mono", ui-monospace, monospace';
+    c.textAlign = 'center';
+    c.fillStyle = `rgba(${gridRGB},.5)`;
+    c.fillText(CUE.toUpperCase(), x, y1 + 20);
+    if (arrived > 0) {
+      c.fillStyle = `rgba(${accRGB},${0.8 * arrived})`;
+      c.fillText(CUE.toUpperCase(), x, y1 + 20);
+    }
+    c.restore();
+  }
+
   function gridPath() {
     const c = ctx!;
     c.beginPath();
@@ -380,6 +496,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
     }
     flows = flows.filter((f) => now - f.t0 < f.Tf + 1.05);
     flows.forEach((f) => drawFlow(f, now));
+    drawCue(now);
   }
 
   const size = () => {
@@ -411,6 +528,7 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
     b.lineWidth = 1;
     b.stroke();
     measureAvoid();
+    placeCue();
     flows = [];
     ripples = [];
     if (RM) {
@@ -445,7 +563,10 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
     rz = window.setTimeout(size, 140);
   });
   size();
-  document.fonts?.ready.then(measureAvoid);
+  document.fonts?.ready.then(() => {
+    measureAvoid();
+    placeCue();
+  });
   if (!RM) {
     let last = performance.now();
     let frame = 0;

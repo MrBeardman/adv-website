@@ -50,7 +50,8 @@ export const HOME_NUMBERS: HomeNumber[] = [
     short: { en: 'automated a year', cs: 'zautomatizováno ročně' },
     link: { kind: 'service', slug: 'ai-automation' },
     linkLabel: { en: 'See AI and automation', cs: 'Detail AI a automatizace' },
-    // TODO: both placeholders (Oct 30, for the layout). Replace with measured figures.
+    // TODO: the first is a placeholder (Oct 30, for the layout): replace with a measured figure.
+    // The second is Honza's wording (Nov 12 2026): the process runs entirely on its own.
     more: [
       {
         placeholder: true,
@@ -58,9 +59,9 @@ export const HOME_NUMBERS: HomeNumber[] = [
         short: { en: 'of documents with no manual step', cs: 'dokladů bez ruční práce' },
       },
       {
-        placeholder: true,
-        value: { en: '6', cs: '6' },
-        short: { en: 'processes running on their own', cs: 'procesů běží samo' },
+        placeholder: false,
+        value: { en: '100 %', cs: '100 %' },
+        short: { en: 'of the process runs on its own', cs: 'procesu běží samo' },
       },
     ],
   },
