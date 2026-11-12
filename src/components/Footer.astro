@@ -2,6 +2,7 @@
 import Logo from './ui/Logo.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
+import consent from '../i18n/consent.json';
 import services from '../i18n/services.json';
 import { routes } from '../data/routes';
 import { ENABLED_SERVICES } from '../data/capabilities';
@@ -16,6 +17,8 @@ const t = pick(chrome, lang);
 const s = pick(services, lang);
 const titleOf = (slug: string) => s.capabilities.items.find((i) => i.slug === slug)?.title ?? slug;
 const year = new Date().getFullYear();
+// opens the consent panel again (ui/Consent.astro)
+const cookies = pick(consent, lang).settings;
 ---
 
 <footer class="adv-footer">
@@ -59,6 +62,7 @@ const year = new Date().getFullYear();
       {COMPANY.legalName} · {t.footer.seatLabel}: {COMPANY.seat} · {t.footer.icoLabel}: {COMPANY.ico}
       <br />{t.footer.register}
       <a href={routes.privacy(lang)}>{t.footer.privacy}</a>
+      <button type="button" class="adv-footer__cookies" data-consent-open>{cookies}</button>
     </p>
     <div class="adv-footer__base">
       <p>© {year} {t.footer.name}</p>
@@ -129,6 +133,19 @@ const year = new Date().getFullYear();
   .adv-footer__legal a {
     margin-left: 12px;
     color: var(--adv-text);
+  }
+  .adv-footer__cookies {
+    margin-left: 12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--adv-text);
+    cursor: pointer;
+  }
+  .adv-footer__cookies:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .adv-footer__base {
     display: flex;

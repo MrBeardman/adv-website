@@ -4,6 +4,8 @@
  * Phone: optional, checked loosely for shape and strictly for digit count (9 to 15), and only once the
  * field has been left, so the form never argues while someone is typing.
  */
+import { track } from './consent';
+
 const PHONE_SHAPE = /^\+?[\d][\d\s()./-]*$/;
 const phoneOk = (raw: string) => {
   const v = raw.trim();
@@ -27,6 +29,18 @@ document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((form) => {
     phoneErr.hidden = ok;
     return ok;
   };
+  // measurement (scripts/consent.ts; does nothing without consent): the first keystroke in this form
+  form.addEventListener(
+    'input',
+    () => {
+      const fd = new FormData(form);
+      track('form_start', {
+        form: fd.get('source') === 'cta' ? 'cta' : 'contact',
+        service: String(fd.get('service') ?? ''),
+      });
+    },
+    { once: true },
+  );
   phone?.addEventListener('blur', checkPhone);
   phone?.addEventListener('input', () => phone.getAttribute('aria-invalid') === 'true' && checkPhone());
 

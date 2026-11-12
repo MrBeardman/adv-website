@@ -24,6 +24,7 @@ import nodemailer from 'nodemailer';
 import messages from '../../i18n/form.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { forwardToN8n } from '../../lib/n8n';
+import { visitorId, recordEvent } from '../../lib/visitor';
 
 export const prerender = false;
 
@@ -111,6 +112,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   // to n8n → Telegram, before any mail (lib/n8n.ts, short timeout)
   const { why } = await forwardToN8n({ ...entry, kind: 'contact' });
+  // measurement, only with the visitor's consent (lib/visitor.ts)
+  const vid = visitorId(request);
+  if (vid)
+    void recordEvent({ event: 'form_submit', form: source, vid, service, page: entry.page, lang, contact: email });
   await note({ n8n: why });
 
   const host = env('SMTP_HOST');

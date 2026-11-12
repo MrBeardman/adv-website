@@ -3,8 +3,8 @@
     "privacy": {
       "metaTitle": "Ochrana osobních údajů · ADV Innovations",
       "title": "Ochrana osobních údajů",
-      "lead": "Jak zacházíme s údaji, které nám pošlete přes web. Stručně: jen to, co sami napíšete, a jen kvůli odpovědi na vaši poptávku.",
-      "updated": "Poslední aktualizace: 11. listopadu 2026",
+      "lead": "Jak zacházíme s údaji, které nám pošlete přes web. Stručně: jen to, co sami napíšete, a jen kvůli odpovědi na vaši poptávku. Měříme jen s vaším souhlasem.",
+      "updated": "Poslední aktualizace: 12. listopadu 2026",
       "controller": {
         "title": "Kdo údaje zpracovává",
         "body": "Správcem osobních údajů je společnost uvedená níže. S jakýmkoli dotazem k osobním údajům nám napište e-mailem.",
@@ -46,7 +46,9 @@
         },
         {
           "title": "Komu údaje předáváme",
-          "paras": ["Vaši zprávu zpracovávají tito příjemci. Údaje neprodáváme a nepoužíváme je k reklamě ani k rozesílání newsletterů."],
+          "paras": [
+            "Vaši zprávu zpracovávají tito příjemci. Údaje neprodáváme a nepoužíváme je k reklamě ani k rozesílání newsletterů."
+          ],
           "items": [
             "Hostinger: hosting webu a uložení odeslaných zpráv na serveru.",
             "Contabo: pronajatý server, na kterém běží náš automatizační nástroj n8n. Ten zprávu předá do naší interní evidence poptávek.",
@@ -63,8 +65,11 @@
         {
           "title": "Cookies a podobné technologie",
           "paras": [
-            "Web nepoužívá cookies, nástroje na měření návštěvnosti, reklamní pixely ani vložený obsah třetích stran. Písma jsou součástí webu.",
-            "Jediná výjimka: na úvodní stránce si v úložišti vašeho prohlížeče (localStorage) pamatujeme, že jste už viděli nápovědu k tažení karet. Údaj neopouští váš prohlížeč a nikoho podle něj nelze identifikovat. Smažete ho v nastavení prohlížeče."
+            "Bez vašeho souhlasu web nic neměří. Nepoužíváme reklamní pixely, nástroje třetích stran ani vložený obsah. Písma jsou součástí webu.",
+            "Pokud v panelu na stránce měření povolíte, uložíme do vašeho prohlížeče cookie adv_vid s náhodným identifikátorem na 6 měsíců. K němu zaznamenáme, že jste začali vyplňovat formulář, na které stránce a u které služby, ke kterému kroku jste došli, odkud jste na web přišli a zda jste na mobilu, nebo na počítači. Co do formuláře píšete, při tom neukládáme. Pokud formulář odešlete, spojíme identifikátor s vaším e-mailem z poptávky. Díky tomu vidíme, kde se formuláře zadrhávají, a víme, komu se ozvat.",
+            "Právním základem je váš souhlas (čl. 6 odst. 1 písm. a GDPR). Odvolat ho můžete kdykoli odkazem Nastavení cookies v patičce. Identifikátor tím z prohlížeče smažeme a dál neměříme. Záznamy měření uchováváme nejdéle 12 měsíců.",
+            "Vaši volbu si pamatujeme v cookie adv_consent po dobu 6 měsíců, aby se panel neptal znovu. Tato cookie je nezbytná a souhlas nevyžaduje.",
+            "Mimo cookies: na úvodní stránce si v úložišti vašeho prohlížeče (localStorage) pamatujeme, že jste už viděli nápovědu k tažení karet. Údaj neopouští váš prohlížeč a nikoho podle něj nelze identifikovat. Smažete ho v nastavení prohlížeče."
           ]
         },
         {
@@ -76,7 +81,9 @@
         },
         {
           "title": "Změny",
-          "paras": ["Tuto stránku můžeme upravit. Platné znění je vždy to, které vidíte tady, s datem poslední aktualizace nahoře."]
+          "paras": [
+            "Tuto stránku můžeme upravit. Platné znění je vždy to, které vidíte tady, s datem poslední aktualizace nahoře."
+          ]
         }
       ]
     },
@@ -89,8 +96,8 @@
     "privacy": {
       "metaTitle": "Privacy policy · ADV Innovations",
       "title": "Privacy policy",
-      "lead": "How we handle the details you send us through this website. In short: only what you write yourself, and only to answer your inquiry.",
-      "updated": "Last updated: 11 November 2026",
+      "lead": "How we handle the details you send us through this website. In short: only what you write yourself, and only to answer your inquiry. We measure only with your consent.",
+      "updated": "Last updated: 12 November 2026",
       "controller": {
         "title": "Who processes your data",
         "body": "The controller of your personal data is the company below. Email us with any question about personal data.",
@@ -132,7 +139,9 @@
         },
         {
           "title": "Who receives your data",
-          "paras": ["These recipients handle your message. We do not sell your data or use it for advertising or newsletters."],
+          "paras": [
+            "These recipients handle your message. We do not sell your data or use it for advertising or newsletters."
+          ],
           "items": [
             "Hostinger: website hosting and storage of submitted messages on the server.",
             "Contabo: the rented server that runs our automation tool n8n, which passes your message into our internal inquiry records.",
@@ -149,7 +158,10 @@
         {
           "title": "Cookies and similar technologies",
           "paras": [
-            "This site uses no cookies, no analytics tools, no advertising pixels and no embedded third-party content. The fonts are part of the site.",
+            "Without your consent the site measures nothing. We use no advertising pixels, no third-party tools and no embedded content. Fonts are part of the site.",
+            "If you allow measurement in the panel on the page, we store a cookie named adv_vid with a random identifier in your browser for 6 months. With it we record that you started filling in a form, on which page and for which service, which step you reached, where you came from, and whether you are on a phone or a computer. What you type into the form is not stored at that point. If you send the form, we link the identifier to the e-mail in your enquiry. That shows us where the forms get stuck and tells us whom to get back to.",
+            "The legal basis is your consent (Art. 6(1)(a) GDPR). You can withdraw it at any time with the Cookie settings link in the footer. That deletes the identifier from your browser and stops the measurement. We keep measurement records for 12 months at most.",
+            "We remember your choice in a cookie named adv_consent for 6 months so the panel does not ask again. This cookie is strictly necessary and needs no consent.",
             "One exception: on the home page we remember in your browser's storage (localStorage) that you have already seen the hint about dragging the cards. The value never leaves your browser and cannot identify anyone. You can clear it in your browser settings."
           ]
         },
@@ -162,7 +174,9 @@
         },
         {
           "title": "Changes",
-          "paras": ["We may update this page. The current version is always the one you see here, with the date of the last update at the top."]
+          "paras": [
+            "We may update this page. The current version is always the one you see here, with the date of the last update at the top."
+          ]
         }
       ]
     },

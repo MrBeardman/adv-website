@@ -2,7 +2,7 @@
 /**
  * Head of every inner page: H1 with its section node (optionally one word in the emphasis face), a small
  * meta line under it (`kicker`: e.g. "Služba 1 ze 4", case meta), lead, and a slot for extras (back link,
- * chips). A still hairline grid with a navy glow behind it echoes the hero's grid without animating it.
+ * chips; `art`: the page's hero art, ui/HeroArt.astro). A still hairline grid with a navy glow behind it echoes the hero's grid without animating it.
  */
 import Node from './ui/Node.astro';
 
@@ -36,6 +36,7 @@ const parts = i >= 0 ? [title.slice(0, i), em!, title.slice(i + em!.length)] : [
       )
     }
     <slot />
+    <slot name="art" />
   </div>
 </header>
 

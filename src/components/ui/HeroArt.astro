@@ -1,0 +1,52 @@
+---
+/**
+ * A page's hero art with its scroll cue (scripts/heroArt.ts): the service pages' right-hand piece
+ * (`rings`, `responsive`, `build`) and the homepage's `dataline`. Decoration only: wide screens, hidden
+ * from assistive tech. `labels`: the art's own three words, comma separated.
+ */
+interface Props {
+  kind: 'rings' | 'responsive' | 'build' | 'dataline';
+  cue: string;
+  labels?: string;
+}
+const { kind, cue, labels = '' } = Astro.props;
+---
+
+<canvas class={`adv-art adv-art--${kind}`} data-art={kind} data-cue={cue} data-labels={labels} aria-hidden="true"
+></canvas>
+
+<script>
+  import { initHeroArt } from '../../scripts/heroArt';
+  document.querySelectorAll<HTMLCanvasElement>('[data-art]').forEach(initHeroArt);
+</script>
+
+<style is:global>
+  .adv-art {
+    display: none;
+  }
+  @media (min-width: 1240px) {
+    /* in the page head's free right half; the cue ends just above the content below */
+    .adv-pagehead .adv-art {
+      display: block;
+      position: absolute;
+      right: clamp(20px, 6vw, 90px);
+      bottom: -34px;
+      width: 420px;
+      height: 480px;
+    }
+  }
+  @media (min-width: 1000px) and (min-height: 700px) {
+    /* over the hero's output port, bottom centre */
+    .adv-art--dataline {
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 30px;
+      z-index: 2;
+      width: 220px;
+      height: 236px;
+      translate: -50% 0;
+      pointer-events: none;
+    }
+  }
+</style>

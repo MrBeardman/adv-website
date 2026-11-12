@@ -19,6 +19,7 @@ import { FLOWS, classify } from '../../data/inquiry';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { loc } from '../../i18n';
 import { forwardToN8n } from '../../lib/n8n';
+import { visitorId, recordEvent } from '../../lib/visitor';
 
 export const prerender = false;
 
@@ -116,5 +117,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // forward to n8n (lib/n8n.ts: short timeout, the visitor's answer never waits on a slow workflow)
   const { routed, why } = await forwardToN8n(entry);
   await appendFile(file, JSON.stringify({ at: entry.at, n8n: why }) + '\n').catch(() => {});
+  // measurement, only with the visitor's consent (lib/visitor.ts): ties their earlier form events to this inquiry
+  const vid = visitorId(request);
+  if (vid)
+    void recordEvent({ event: 'form_submit', form: 'inquiry', vid, service, page: entry.page, lang, contact: email });
   return json({ ok: true, classified, routed, why });
 };

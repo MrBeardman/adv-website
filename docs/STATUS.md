@@ -56,6 +56,18 @@
   business first; a site you do not look after, runs on its own, anyone can edit it with the editing tool we
   deliver); `serviceDeep.json` cards "Na mobilu je pomalý nebo nečitelný" and "Google ani AI vás nenajdou"
   (GEO, AI Overviews, ChatGPT). CLAIMS: "běží automaticky" and the editing tool are promises per project.
+- **Hero art and scroll cues (Nov 12, on `redesign`, NOT published)**: `scripts/heroArt.ts` +
+  `ui/HeroArt.astro`. Homepage: a data line at the bottom centre. Service pages (wide screens): business
+  optimisation = rings that fall into step, websites = one page reflowing desktop / tablet / phone,
+  prototypes = a sketch a build line turns into an app; each ends in its own scroll cue. New words for
+  approval: `chrome.json` `art` (desktop, tablet, mobil; skica, prototyp, software).
+- **Consent panel and form measurement (Nov 12, on `redesign`, NOT published)**: `ui/Consent.astro`,
+  `scripts/consent.ts`, `lib/visitor.ts`, `api/track.ts`, copy in `consent.json`; footer "Nastavení cookies".
+  Nothing is stored or sent before "Povolit"; the server checks the consent cookie again. Events
+  (form_start, form_step, form_submit with the e-mail) go to the n8n table `adv_form_events` (intake
+  workflow branch "Is Form Event", already published). Privacy policy cookies section rewritten to match:
+  needs Honza's read. Open: the policy says records are kept 12 months, nothing deletes them yet; one test
+  row (step "TEST") sits in `adv_form_events`.
 - **Policy facts checked Nov 12**: seat, no DIČ and "oddíl C, vložka 368486" match ARES. n8n runs on our own
   Contabo server, so the policy names Contabo as the recipient (server region still to be stated). STILL
   MISSING from the recipients if inquiries are dispatched to an agent in Agent Dash: the AI provider

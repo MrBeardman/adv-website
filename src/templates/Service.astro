@@ -8,7 +8,7 @@
  * about"). The drifting lines behind the page, glass cards, sections labelled like the homepage
  * (ui/NodeFrame.astro). Copy per service in i18n/serviceDeep.json (new copy, docs/STATUS.md).
  *
- *   head      the service, its long text, what it covers, its tile icon
+ *   head      the service, its long text, what it covers, its tile icon, its hero art with the scroll cue
  *   proof     the live demo and the three card stats (homeNumbers.ts)
  *   discover  how we start: three steps of getting to know the business
  *   problems  six problems that leak customers, time or money, each with what it costs and what we do
@@ -21,6 +21,7 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Scene from '../components/ui/Scene.astro';
 import ServiceIcon from '../components/ui/ServiceIcon.astro';
+import HeroArt from '../components/ui/HeroArt.astro';
 import NodeFrame from '../components/ui/NodeFrame.astro';
 import Arrow from '../components/ui/Arrow.astro';
 import WorkRows from '../components/WorkRows.astro';
@@ -58,6 +59,13 @@ const number = numberFor(slug);
 const stats = number ? [leadStat(number), ...number.more] : [];
 const work = caseStudiesFor(slug);
 const dev = import.meta.env.DEV;
+// the hero art and scroll cue of each service (scripts/heroArt.ts)
+const ART: Record<string, 'rings' | 'responsive' | 'build'> = {
+  'business-optimisation': 'rings',
+  websites: 'responsive',
+  software: 'build',
+};
+const art = ART[slug];
 const alternates = { cs: routes.service('cs', slug), en: routes.service('en', slug) };
 const nf = (name: string) => ({ name, kind: '', wait: '', done: '' });
 // title, description and structured data for search engines and AI assistants (docs/GEO.md)
@@ -89,6 +97,7 @@ const schema = [
     <ul class="adv-chips adv-svc__chips" data-reveal style="--i:3">
       {copy.covers.map((cv) => <li>{cv}</li>)}
     </ul>
+    {art && <HeroArt slot="art" kind={art} cue={c.art.scroll} labels={(c.art as Record<string, string>)[art]} />}
   </PageHead>
 
   <section class="adv-svc" aria-label={copy.title}>

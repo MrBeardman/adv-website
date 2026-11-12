@@ -3,12 +3,14 @@
  * Homepage hero (Honza, Oct 29 2026): one singular WebGL element instead of the busy workflow. Scattered
  * points and bits of data float around (a business today), get pulled into the A, and leave as a smooth
  * ribbon of lines (a business that runs): scripts/flow/engine.ts, three.js loaded on demand. Headline, sub and the run
- * action sit over its quiet left side. The hero is the first node of the page's workflow (output port).
+ * action sit over its quiet left side. The scroll cue (ui/HeroArt.astro, `dataline`) is the same idea small:
+ * loose bits fall into one line that points down. The hero is the first node of the page's workflow (output port).
  *
  * Reduced motion: one still frame. No WebGL or no JS: the page's own light carries the hero.
  */
 import Arrow from '../ui/Arrow.astro';
 import Play from '../ui/Play.astro';
+import HeroArt from '../ui/HeroArt.astro';
 import { pick, type Lang } from '../../i18n';
 import chrome from '../../i18n/chrome.json';
 import home from '../../i18n/home.json';
@@ -38,6 +40,7 @@ const h = pick(home, lang).hero;
     </div>
     <p class="adv-hf__note" style="--i:4">{c.hero.ctaNote}</p>
   </div>
+  <HeroArt kind="dataline" cue={c.art.scroll} />
   <span class="adv-nf__port adv-nf__port--out adv-hf__port" data-nf-out aria-hidden="true"></span>
 </section>
 

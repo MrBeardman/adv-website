@@ -5,6 +5,8 @@
  * skipped. The rail on the left builds up as the visitor goes: each answered step with its answer, then the
  * current one (nothing ahead of it). Focus moves to each new question.
  */
+import { track } from './consent';
+
 interface Opt {
   id: string;
   label: string;
@@ -50,6 +52,20 @@ export function initInquiry(root: HTMLElement) {
   let step = -1; // -1 pick, 0..n-1 questions, n contact, n+1 run
   const answers: Record<string, string | string[]> = {};
   const flow = () => D.flows[service] ?? [];
+
+  // Measurement (scripts/consent.ts; does nothing without consent): the first touch, then every step
+  // reached. Only which step, never what was typed.
+  let started = false;
+  let reached = -1;
+  const stepName = () => (step < 0 ? 'pick' : step < flow().length ? flow()[step].id : 'contact');
+  const touch = (e: Event) => {
+    if (started || !(e.target as HTMLElement).closest?.('button, textarea, input')) return;
+    started = true;
+    reached = step;
+    track('form_start', { form: 'inquiry', service, step: stepName() });
+  };
+  root.addEventListener('click', touch, true);
+  root.addEventListener('input', touch, true);
 
   const fromUrl = new URLSearchParams(location.search).get('service') ?? '';
   const preset = [root.dataset.preset ?? '', fromUrl].find((s) => s && D.flows[s]);
@@ -219,10 +235,16 @@ export function initInquiry(root: HTMLElement) {
     show(to);
     const h1 = body.offsetHeight;
     if (h0 !== h1 && !reduceMotion)
-      body.animate([{ height: `${h0}px`, overflow: 'hidden' }, { height: `${h1}px`, overflow: 'hidden' }], {
-        duration: 520,
-        easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
-      });
+      body.animate(
+        [
+          { height: `${h0}px`, overflow: 'hidden' },
+          { height: `${h1}px`, overflow: 'hidden' },
+        ],
+        {
+          duration: 520,
+          easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        },
+      );
     const next = [pickEl, qEl, contact, runEl].find((el) => !el.hidden);
     if (next && !reduceMotion)
       next.animate(
@@ -236,6 +258,10 @@ export function initInquiry(root: HTMLElement) {
   function show(to: number) {
     const n = flow().length;
     step = Math.max(-1, Math.min(to, n + 1));
+    if (started && step > reached && step <= n) {
+      reached = step;
+      track('form_step', { form: 'inquiry', service, step: stepName() });
+    }
     root.classList.toggle('is-start', step === -1);
     pickEl.hidden = step !== -1;
     qEl.hidden = !(step >= 0 && step < n);

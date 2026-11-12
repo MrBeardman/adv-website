@@ -43,6 +43,12 @@
     "cta": {
       "assessment": "Domluvit konzultaci"
     },
+    "art": {
+      "scroll": "pokračovat",
+      "rings": "",
+      "responsive": "desktop,tablet,mobil",
+      "build": "skica,prototyp,software"
+    },
     "notFound": {
       "metaTitle": "Stránka nenalezena · ADV Innovations",
       "title": "Tahle stránka neexistuje.",
@@ -102,6 +108,12 @@
     },
     "cta": {
       "assessment": "Book a consultation"
+    },
+    "art": {
+      "scroll": "scroll",
+      "rings": "",
+      "responsive": "desktop,tablet,mobile",
+      "build": "sketch,prototype,software"
     },
     "notFound": {
       "metaTitle": "Page not found · ADV Innovations",

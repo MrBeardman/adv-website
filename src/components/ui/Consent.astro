@@ -1,0 +1,189 @@
+---
+/**
+ * The consent panel (scripts/consent.ts): a small card bottom left, not a bar across the page, so it never
+ * covers the hero's actions or the scroll cue. One question, two buttons of equal weight (declining is as
+ * easy as allowing), a link to the policy. The wire on top is the answer drawn in the site's own language:
+ * visit, a gate, measurement. The gate is open (nothing flows) until "Allow".
+ * Without JS it stays hidden and nothing is measured.
+ */
+import { pick, type Lang } from '../../i18n';
+import consent from '../../i18n/consent.json';
+import { routes } from '../../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pick(consent, lang);
+---
+
+<aside
+  class="adv-consent"
+  data-consent
+  data-state=""
+  hidden
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="adv-consent-t"
+  aria-describedby="adv-consent-d"
+>
+  <div class="adv-consent__wire" aria-hidden="true">
+    <span class="adv-consent__node">{t.you}</span>
+    <span class="adv-consent__line"><i></i></span>
+    <span class="adv-consent__gate"><i></i></span>
+    <span class="adv-consent__line adv-consent__line--out"><i></i></span>
+    <span class="adv-consent__node adv-consent__node--end">{t.measure}</span>
+  </div>
+  <h2 id="adv-consent-t">{t.title}</h2>
+  <p id="adv-consent-d">{t.body} <a class="adv-link" href={routes.privacy(lang)}>{t.more}</a></p>
+  <p class="adv-consent__now" data-consent-now data-granted={t.nowGranted} data-denied={t.nowDenied} hidden></p>
+  <div class="adv-consent__actions">
+    <button type="button" class="adv-btn adv-btn--ghost adv-btn--sm" data-consent-deny>{t.deny}</button>
+    <button type="button" class="adv-btn adv-btn--ghost adv-btn--sm" data-consent-grant>{t.grant}</button>
+  </div>
+</aside>
+
+<script>
+  import { initConsent } from '../../scripts/consent';
+  const panel = document.querySelector<HTMLElement>('[data-consent]');
+  if (panel) initConsent(panel);
+</script>
+
+<style is:global>
+  .adv-consent {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 90;
+    width: min(384px, calc(100vw - 24px));
+    padding: 18px 20px 20px;
+    border: 1px solid var(--adv-edge);
+    border-radius: var(--adv-r-lg);
+    background: rgba(12, 14, 20, 0.94);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 450ms var(--adv-ease),
+      transform 450ms var(--adv-ease);
+  }
+  .adv-consent.is-open {
+    opacity: 1;
+    transform: none;
+  }
+  .adv-consent h2 {
+    margin-top: 16px;
+    font-family: var(--adv-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .adv-consent p {
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--adv-muted);
+  }
+  .adv-consent .adv-consent__now {
+    color: var(--adv-text);
+  }
+  .adv-consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  /* visit, gate, measurement */
+  .adv-consent__wire {
+    display: flex;
+    align-items: center;
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    color: var(--adv-muted);
+  }
+  .adv-consent__node {
+    padding: 4px 9px;
+    border: 1px solid var(--adv-edge);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    transition:
+      color 300ms var(--adv-ease) 650ms,
+      border-color 300ms var(--adv-ease) 650ms,
+      opacity 300ms var(--adv-ease) 250ms;
+  }
+  .adv-consent__line {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: rgba(var(--adv-grid-rgb), 0.22);
+  }
+  .adv-consent__line i {
+    position: absolute;
+    inset: 0;
+    background: var(--adv-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms var(--adv-ease);
+  }
+  .adv-consent__line--out i {
+    transition-delay: 380ms;
+  }
+  .adv-consent__gate {
+    position: relative;
+    width: 28px;
+    height: 16px;
+    border: 1px solid var(--adv-edge-hi);
+    border-radius: 999px;
+    transition: border-color 250ms var(--adv-ease) 200ms;
+  }
+  .adv-consent__gate i {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(var(--adv-grid-rgb), 0.45);
+    transition:
+      transform 300ms var(--adv-ease) 180ms,
+      background-color 300ms var(--adv-ease) 180ms;
+  }
+  .adv-consent[data-state='granted'] .adv-consent__line i {
+    transform: none;
+  }
+  .adv-consent[data-state='granted'] .adv-consent__gate {
+    border-color: var(--adv-accent);
+  }
+  .adv-consent[data-state='granted'] .adv-consent__gate i {
+    transform: translateX(12px);
+    background: var(--adv-accent);
+  }
+  .adv-consent[data-state='granted'] .adv-consent__node--end {
+    color: var(--adv-accent);
+    border-color: var(--adv-accent);
+  }
+  .adv-consent[data-state='denied'] .adv-consent__line--out {
+    background: repeating-linear-gradient(90deg, rgba(var(--adv-grid-rgb), 0.22) 0 3px, transparent 3px 7px);
+  }
+  .adv-consent[data-state='denied'] .adv-consent__node--end {
+    opacity: 0.4;
+  }
+  @media (max-width: 520px) {
+    .adv-consent {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      width: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .adv-consent,
+    .adv-consent * {
+      transition: none !important;
+    }
+  }
+</style>

@@ -1,0 +1,26 @@
+{
+  "cs": {
+    "title": "Smíme měřit, jak web funguje?",
+    "body": "Když dovolíte, uložíme vám do prohlížeče náhodné číslo a zaznamenáme, kde jste začali vyplňovat formulář a kde jste skončili. Žádná reklama, žádné třetí strany. Bez souhlasu neměříme nic.",
+    "more": "Podrobnosti",
+    "deny": "Odmítnout",
+    "grant": "Povolit",
+    "you": "návštěva",
+    "measure": "měření",
+    "nowGranted": "Teď je měření povolené.",
+    "nowDenied": "Teď je měření vypnuté.",
+    "settings": "Nastavení cookies"
+  },
+  "en": {
+    "title": "May we measure how the site works?",
+    "body": "If you allow it, we store a random number in your browser and record where you started filling in a form and where you stopped. No ads, no third parties. Without consent we measure nothing.",
+    "more": "Details",
+    "deny": "Decline",
+    "grant": "Allow",
+    "you": "visit",
+    "measure": "measurement",
+    "nowGranted": "Measurement is on right now.",
+    "nowDenied": "Measurement is off right now.",
+    "settings": "Cookie settings"
+  }
+}
