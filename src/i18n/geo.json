@@ -162,8 +162,8 @@
           "body": "Tvorba webů a e-shopů pro malé a střední firmy v Praze a po celém Česku: rychlé, moderní stránky, prezentační web do 3 dnů, navržené podle toho, co prodáváte a komu, a postavené tak, aby je spravoval váš tým bez agentury. WordPress i Shoptet umíme a stavíme na nich, když to dává smysl; většinou ale doporučíme vlastní řešení, které je rychlejší, bez pluginů a bez měsíčních poplatků. WordPress byl standard, ne nejlepší volba. Web napojíme na rezervace, poptávky, CRM a účetnictví, takže poptávka z webu neskončí v e-mailu, ale ve vašem systému.",
           "facts": [
             { "label": "Co stavíme", "value": "Firemní weby, e-shopy, rezervační systémy, weby s administrací na míru, texty a struktura" },
-            { "label": "Na čem", "value": "Vlastní kód (Astro) nebo WordPress na míru; e-shop na míru, Shoptet nebo Shopify, podle toho, co prodáváte" },
-            { "label": "Napojení", "value": "Poptávky do CRM nebo Telegramu, objednávky do Pohody a Fakturoidu, rezervace do kalendáře" },
+            { "label": "Na čem", "value": "Vlastní kód nebo WordPress na míru; e-shop na míru, Shoptet nebo Shopify, podle toho, co prodáváte" },
+            { "label": "Napojení", "value": "Poptávky do CRM nebo týmového chatu, objednávky do Pohody a Fakturoidu, rezervace do kalendáře" },
             {
               "label": "Reference",
               "value": "Laser Arena Praha, HomeStyle, Kesia",
@@ -174,7 +174,7 @@
         "faq": [
           {
             "q": "Jaké weby stavíte?",
-            "a": "Firemní weby, e-shopy a rezervační systémy. Nejraději ve vlastním kódu (Astro): rychlý, bez pluginů, s administrací přesně pro vaši práci. WordPress umíme a stavíme na něm na míru, bez nakupovaných šablon. E-shopy na míru, na Shoptetu nebo Shopify, podle toho, co prodáváte."
+            "a": "Firemní weby, e-shopy a rezervační systémy. Nejraději ve vlastním kódu: rychlý, bez pluginů, s administrací přesně pro vaši práci. WordPress umíme a stavíme na něm na míru, bez nakupovaných šablon. E-shopy na míru, na Shoptetu nebo Shopify, podle toho, co prodáváte."
           },
           {
             "q": "Stavíte na WordPressu nebo Shoptetu?",
@@ -182,7 +182,7 @@
           },
           {
             "q": "Kolik stojí nový web nebo e-shop?",
-            "a": "Firemní web s texty a administrací obvykle mezi 80 000 a 250 000 Kč, menší prezentace pod tím, e-shop nebo web s rezervacemi a napojením na systémy nad tím. Cenu dostanete písemně po bezplatné konzultaci, rozsah určíme spolu."
+            "a": "Záleží na rozsahu: menší prezentace vyjde jinak než firemní web s administrací, e-shop nebo web s rezervacemi a napojením na systémy. Rozsah určíme spolu na bezplatné konzultaci a cenu pak dostanete písemně a předem."
           },
           {
             "q": "Jak dlouho web trvá?",
@@ -194,7 +194,7 @@
           },
           {
             "q": "Napojíte web na naše systémy?",
-            "a": "Ano. Poptávky z formuláře jdou rovnou do CRM nebo na Telegram, objednávky do Pohody či Fakturoidu, rezervace do kalendáře. Web je pro nás první krok propojené firmy, ne samostatná vizitka."
+            "a": "Ano. Poptávky z formuláře jdou rovnou tam, kde je váš tým hned uvidí: do CRM, e-mailu nebo týmového chatu. Objednávky jdou do Pohody či Fakturoidu, rezervace do kalendáře. Web je pro nás první krok propojené firmy, ne samostatná vizitka."
           },
           {
             "q": "Děláte i texty a SEO?",
@@ -425,8 +425,8 @@
           "body": "Websites and e-shops for small and mid-sized businesses in Prague and across the Czech Republic: fast, modern sites, a presentation website within 3 days, planned around what you sell and who you sell to, and built so your own team runs them without an agency. We know WordPress and Shoptet and build on them when it makes sense; most of the time we recommend a custom solution, which is faster, plugin-free and has no monthly fees. WordPress was the standard, not the best choice. We connect the website to bookings, enquiries, CRM and accounting, so an enquiry from the website does not end in an inbox but in your system.",
           "facts": [
             { "label": "What we build", "value": "Company websites, e-shops, booking systems, sites with a custom admin, content and structure" },
-            { "label": "Built on", "value": "Custom code (Astro) or a custom WordPress build; a custom e-shop, Shoptet or Shopify, depending on what you sell" },
-            { "label": "Integrations", "value": "Enquiries into CRM or Telegram, orders into Pohoda and Fakturoid, bookings into the calendar" },
+            { "label": "Built on", "value": "Custom code or a custom WordPress build; a custom e-shop, Shoptet or Shopify, depending on what you sell" },
+            { "label": "Integrations", "value": "Enquiries into CRM or the team chat, orders into Pohoda and Fakturoid, bookings into the calendar" },
             {
               "label": "References",
               "value": "Laser Arena Praha, HomeStyle, Kesia",
@@ -437,7 +437,7 @@
         "faq": [
           {
             "q": "What kind of websites do you build?",
-            "a": "Company websites, e-shops and booking systems. Preferably in custom code (Astro): fast, plugin-free, with an admin made for your work. We know WordPress and build custom sites on it, without bought themes. E-shops custom-built, on Shoptet or on Shopify, depending on what you sell."
+            "a": "Company websites, e-shops and booking systems. Preferably in custom code: fast, plugin-free, with an admin made for your work. We know WordPress and build custom sites on it, without bought themes. E-shops custom-built, on Shoptet or on Shopify, depending on what you sell."
           },
           {
             "q": "Do you build on WordPress or Shoptet?",
@@ -445,7 +445,7 @@
           },
           {
             "q": "How much does a new website or e-shop cost?",
-            "a": "A company website with content and an admin is usually between 80,000 and 250,000 CZK, a smaller presentation site below that, an e-shop or a site with bookings and integrations above it. You get the price in writing after the free consultation; we define the scope together."
+            "a": "It depends on the scope: a small presentation site costs differently from a company website with an admin, an e-shop or a site with bookings and integrations. We define the scope together in the free consultation, and you then get the price in writing, up front."
           },
           {
             "q": "How long does a website take?",
@@ -457,7 +457,7 @@
           },
           {
             "q": "Will you connect the website to our systems?",
-            "a": "Yes. Enquiries from the form go straight to CRM or Telegram, orders to Pohoda or Fakturoid, bookings to the calendar. For us the website is the first step of a connected business, not a standalone business card."
+            "a": "Yes. Enquiries from the form go straight to where your team sees them: CRM, e-mail or the team chat. Orders go to Pohoda or Fakturoid, bookings to the calendar. For us the website is the first step of a connected business, not a standalone business card."
           },
           {
             "q": "Do you also write the content and do SEO?",
