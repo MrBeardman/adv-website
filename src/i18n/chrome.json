@@ -10,9 +10,9 @@
       "email": "info@advinnovations.com",
       "phone": "+420 606 518 658",
       "phoneHref": "+420606518658",
-      "street": "Rybná 234/20",
+      "street": "Rybná 716/24",
       "city": "Praha",
-      "address": "Rybná 234/20, Praha",
+      "address": "Rybná 716/24, 110 00 Praha 1",
       "web": "www.advinnovations.com"
     },
     "nav": {
@@ -31,8 +31,12 @@
       "live": "Workflow aktivní"
     },
     "footer": {
-      "name": "ADV Innovations",
-      "location": "Rybná 234/20, Praha",
+      "name": "ADV Innovations s.r.o.",
+      "location": "Rybná 716/24, 110 00 Praha 1",
+      "seatLabel": "Sídlo",
+      "icoLabel": "IČO",
+      "register": "Zapsána v obchodním rejstříku vedeném Městským soudem v Praze, oddíl C, vložka 368486.",
+      "privacy": "Ochrana osobních údajů",
       "langLabel": "Jazyk",
       "logoLabel": "ADV Innovations, úvod"
     },
@@ -66,9 +70,9 @@
       "email": "info@advinnovations.com",
       "phone": "+420 606 518 658",
       "phoneHref": "+420606518658",
-      "street": "Rybná 234/20",
+      "street": "Rybná 716/24",
       "city": "Prague",
-      "address": "Rybná 234/20, Prague",
+      "address": "Rybná 716/24, 110 00 Prague 1",
       "web": "www.advinnovations.com"
     },
     "nav": {
@@ -87,8 +91,12 @@
       "live": "Workflow active"
     },
     "footer": {
-      "name": "ADV Innovations",
-      "location": "Rybná 234/20, Prague",
+      "name": "ADV Innovations s.r.o.",
+      "location": "Rybná 716/24, 110 00 Prague 1",
+      "seatLabel": "Registered office",
+      "icoLabel": "Company ID (IČO)",
+      "register": "Registered in the Commercial Register kept by the Municipal Court in Prague, section C, file 368486.",
+      "privacy": "Privacy policy",
       "langLabel": "Language",
       "logoLabel": "ADV Innovations, home"
     },

@@ -114,7 +114,7 @@ hero copy on the homepage, the service "Kde to uniká" sections.
 
 ## 6. Off-site checklist (Honza; nothing on the site can replace this)
 
-1. **Google Business Profile** for ADV Innovations, Rybná 234/20: category "Software company" +
+1. **Google Business Profile** for ADV Innovations, Rybná 716/24: category "Software company" +
    "Website designer", services listed with the same wording as the site, 5+ reviews from real clients
    (Kesia, Laser Arena Praha, HomeStyle).
 2. **Firmy.cz** listing (Seznam): category "Vývoj software na zakázku" + "Tvorba webových stránek", tags

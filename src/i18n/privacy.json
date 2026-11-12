@@ -1,0 +1,174 @@
+{
+  "cs": {
+    "privacy": {
+      "metaTitle": "Ochrana osobních údajů · ADV Innovations",
+      "title": "Ochrana osobních údajů",
+      "lead": "Jak zacházíme s údaji, které nám pošlete přes web. Stručně: jen to, co sami napíšete, a jen kvůli odpovědi na vaši poptávku.",
+      "updated": "Poslední aktualizace: 11. listopadu 2026",
+      "controller": {
+        "title": "Kdo údaje zpracovává",
+        "body": "Správcem osobních údajů je společnost uvedená níže. S jakýmkoli dotazem k osobním údajům nám napište e-mailem.",
+        "nameLabel": "Společnost",
+        "seatLabel": "Sídlo",
+        "icoLabel": "IČO",
+        "registerLabel": "Zápis",
+        "register": "Obchodní rejstřík vedený Městským soudem v Praze, oddíl C, vložka 368486",
+        "emailLabel": "E-mail"
+      },
+      "sections": [
+        {
+          "title": "Jaké údaje zpracováváme a proč",
+          "paras": [
+            "Zpracováváme jen to, co nám sami pošlete přes formuláře na webu: kontaktní formulář, krátký formulář s úkolem a e-mailem a poptávkového průvodce."
+          ],
+          "items": [
+            "Jméno, firma, e-mail, telefon, vybraná služba a text zprávy.",
+            "V poptávkovém průvodci také odpovědi na otázky o problému, velikosti firmy, naléhavosti a rozpočtu.",
+            "Adresa stránky, ze které jste zprávu odeslali."
+          ],
+          "after": [
+            "Účel je jediný: odpovědět na váš dotaz, připravit nabídku a domluvit schůzku. Právním základem je jednání o smlouvě na vaši žádost (čl. 6 odst. 1 písm. b GDPR) a náš oprávněný zájem odpovídat na obchodní dotazy (čl. 6 odst. 1 písm. f GDPR).",
+            "Údaje nám nemusíte dávat. Bez e-mailu vám ale nemůžeme odpovědět."
+          ]
+        },
+        {
+          "title": "Co neukládáme",
+          "paras": [
+            "IP adresu ani údaje o vašem prohlížeči k zprávě neukládáme. IP adresa zůstává v paměti serveru nejvýše 10 minut a slouží jen k omezení spamu.",
+            "Hosting webu zajišťuje Hostinger. Jako každý poskytovatel hostingu může technické údaje o přístupu, například IP adresu, evidovat v provozních záznamech serveru."
+          ]
+        },
+        {
+          "title": "Automatické třídění poptávek",
+          "paras": [
+            "Odpovědi v poptávkovém průvodci automaticky roztřídíme podle naléhavosti, velikosti a priority, abychom věděli, komu a jak rychle odpovědět. Žádné rozhodnutí s právními účinky z toho neplyne. Každou poptávku čte člověk."
+          ]
+        },
+        {
+          "title": "Komu údaje předáváme",
+          "paras": ["Vaši zprávu zpracovávají tito příjemci. Údaje neprodáváme a nepoužíváme je k reklamě ani k rozesílání newsletterů."],
+          "items": [
+            "Hostinger: hosting webu a uložení odeslaných zpráv na serveru.",
+            "Contabo: pronajatý server, na kterém běží náš automatizační nástroj n8n. Ten zprávu předá do naší interní evidence poptávek.",
+            "Telegram: obsah poptávky se zobrazí v interní skupině našeho týmu, abychom ji rychle viděli. Provozovatel Telegramu sídlí mimo Evropskou unii.",
+            "E-mail: zprávu nám může přijít i do firemní e-mailové schránky."
+          ]
+        },
+        {
+          "title": "Jak dlouho údaje uchováváme",
+          "paras": [
+            "Poptávku a komunikaci k ní uchováváme nejdéle 24 měsíců od poslední komunikace. Pokud ze spolupráce vznikne smlouva, uchováváme potřebné údaje po dobu, kterou vyžadují účetní a daňové předpisy a promlčecí lhůty. Smazání můžete požádat kdykoli dříve."
+          ]
+        },
+        {
+          "title": "Cookies a podobné technologie",
+          "paras": [
+            "Web nepoužívá cookies, nástroje na měření návštěvnosti, reklamní pixely ani vložený obsah třetích stran. Písma jsou součástí webu.",
+            "Jediná výjimka: na úvodní stránce si v úložišti vašeho prohlížeče (localStorage) pamatujeme, že jste už viděli nápovědu k tažení karet. Údaj neopouští váš prohlížeč a nikoho podle něj nelze identifikovat. Smažete ho v nastavení prohlížeče."
+          ]
+        },
+        {
+          "title": "Vaše práva",
+          "paras": [
+            "Máte právo na přístup ke svým údajům, jejich opravu nebo výmaz, omezení zpracování, přenositelnost a právo vznést námitku. Napište nám e-mailem a odpovíme do jednoho měsíce.",
+            "Pokud se domníváte, že s údaji nakládáme špatně, můžete podat stížnost u Úřadu pro ochranu osobních údajů (uoou.gov.cz)."
+          ]
+        },
+        {
+          "title": "Změny",
+          "paras": ["Tuto stránku můžeme upravit. Platné znění je vždy to, které vidíte tady, s datem poslední aktualizace nahoře."]
+        }
+      ]
+    },
+    "formNote": {
+      "text": "Údaje použijeme jen k odpovědi na váš dotaz.",
+      "link": "Ochrana osobních údajů"
+    }
+  },
+  "en": {
+    "privacy": {
+      "metaTitle": "Privacy policy · ADV Innovations",
+      "title": "Privacy policy",
+      "lead": "How we handle the details you send us through this website. In short: only what you write yourself, and only to answer your inquiry.",
+      "updated": "Last updated: 11 November 2026",
+      "controller": {
+        "title": "Who processes your data",
+        "body": "The controller of your personal data is the company below. Email us with any question about personal data.",
+        "nameLabel": "Company",
+        "seatLabel": "Registered office",
+        "icoLabel": "Company ID (IČO)",
+        "registerLabel": "Registration",
+        "register": "Commercial Register kept by the Municipal Court in Prague, section C, file 368486",
+        "emailLabel": "Email"
+      },
+      "sections": [
+        {
+          "title": "What data we process and why",
+          "paras": [
+            "We process only what you send us through the forms on this site: the contact form, the short form with a task and an email, and the inquiry guide."
+          ],
+          "items": [
+            "Name, company, email, phone, the service you pick and the text of your message.",
+            "In the inquiry guide, also your answers about the problem, company size, urgency and budget.",
+            "The address of the page you sent the message from."
+          ],
+          "after": [
+            "There is one purpose: to answer your question, prepare an offer and arrange a meeting. The legal basis is negotiating a contract at your request (Art. 6(1)(b) GDPR) and our legitimate interest in answering business inquiries (Art. 6(1)(f) GDPR).",
+            "You do not have to give us your data. Without an email address, though, we cannot reply."
+          ]
+        },
+        {
+          "title": "What we do not store",
+          "paras": [
+            "We do not store your IP address or browser details with your message. The IP address stays in the server's memory for at most 10 minutes and is used only to limit spam.",
+            "Hostinger hosts the website. Like any hosting provider, it may record technical access data, such as the IP address, in its server logs."
+          ]
+        },
+        {
+          "title": "Automatic sorting of inquiries",
+          "paras": [
+            "We sort the answers in the inquiry guide automatically by urgency, size and priority, so we know whom to answer and how fast. No decision with legal effect follows from this. A person reads every inquiry."
+          ]
+        },
+        {
+          "title": "Who receives your data",
+          "paras": ["These recipients handle your message. We do not sell your data or use it for advertising or newsletters."],
+          "items": [
+            "Hostinger: website hosting and storage of submitted messages on the server.",
+            "Contabo: the rented server that runs our automation tool n8n, which passes your message into our internal inquiry records.",
+            "Telegram: the content of your inquiry appears in our team's internal group so we see it quickly. Telegram's operator is based outside the European Union.",
+            "Email: your message may also reach us in a company mailbox."
+          ]
+        },
+        {
+          "title": "How long we keep your data",
+          "paras": [
+            "We keep an inquiry and the communication about it for up to 24 months after the last contact. If the work leads to a contract, we keep the necessary data for as long as accounting and tax rules and limitation periods require. You can ask us to delete it earlier at any time."
+          ]
+        },
+        {
+          "title": "Cookies and similar technologies",
+          "paras": [
+            "This site uses no cookies, no analytics tools, no advertising pixels and no embedded third-party content. The fonts are part of the site.",
+            "One exception: on the home page we remember in your browser's storage (localStorage) that you have already seen the hint about dragging the cards. The value never leaves your browser and cannot identify anyone. You can clear it in your browser settings."
+          ]
+        },
+        {
+          "title": "Your rights",
+          "paras": [
+            "You have the right to access your data, correct or erase it, restrict processing, data portability and the right to object. Email us and we will answer within one month.",
+            "If you think we handle your data wrongly, you can complain to the Czech Office for Personal Data Protection (uoou.gov.cz)."
+          ]
+        },
+        {
+          "title": "Changes",
+          "paras": ["We may update this page. The current version is always the one you see here, with the date of the last update at the top."]
+        }
+      ]
+    },
+    "formNote": {
+      "text": "We use your details only to answer your message.",
+      "link": "Privacy policy"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+---
+/** One line under every form: what the details are used for, with a link to the privacy policy. */
+import { pick, type Lang } from '../../i18n';
+import privacy from '../../i18n/privacy.json';
+import { routes } from '../../data/routes';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+const { lang, class: className } = Astro.props;
+const t = pick(privacy, lang).formNote;
+---
+
+<p class:list={['adv-privacy-note', className]}>
+  {t.text}
+  <a class="adv-link" href={routes.privacy(lang)}>{t.link}</a>
+</p>
+
+<style is:global>
+  .adv-privacy-note {
+    margin-top: 12px;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+</style>

@@ -5,6 +5,7 @@
  */
 import Node from './ui/Node.astro';
 import Arrow from './ui/Arrow.astro';
+import PrivacyNote from './ui/PrivacyNote.astro';
 import { pick, type Lang } from '../i18n';
 import home from '../i18n/home.json';
 import chrome from '../i18n/chrome.json';
@@ -78,6 +79,7 @@ const uid = `cta-${lang}`;
           <button class="adv-btn adv-cta__submit" type="submit">{t.submit}<Arrow /></button>
         </div>
         <p class="adv-form-status" data-status role="status"></p>
+        <PrivacyNote lang={lang} />
       </form>
     </div>
   </div>

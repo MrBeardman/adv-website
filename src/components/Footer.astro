@@ -5,6 +5,7 @@ import chrome from '../i18n/chrome.json';
 import services from '../i18n/services.json';
 import { routes } from '../data/routes';
 import { ENABLED_SERVICES } from '../data/capabilities';
+import { COMPANY } from '../data/company';
 
 interface Props {
   lang: Lang;
@@ -54,6 +55,11 @@ const year = new Date().getFullYear();
         </ul>
       </div>
     </div>
+    <p class="adv-footer__legal">
+      {COMPANY.legalName} · {t.footer.seatLabel}: {COMPANY.seat} · {t.footer.icoLabel}: {COMPANY.ico}
+      <br />{t.footer.register}
+      <a href={routes.privacy(lang)}>{t.footer.privacy}</a>
+    </p>
     <div class="adv-footer__base">
       <p>© {year} {t.footer.name}</p>
       <p class="adv-footer__langs" aria-label={t.footer.langLabel}>
@@ -114,11 +120,21 @@ const year = new Date().getFullYear();
     color: var(--adv-text);
     background-size: 100% 1px;
   }
+  .adv-footer__legal {
+    margin-top: 48px;
+    max-width: 90ch;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+  }
+  .adv-footer__legal a {
+    margin-left: 12px;
+    color: var(--adv-text);
+  }
   .adv-footer__base {
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    margin-top: 64px;
+    margin-top: 24px;
     padding-top: 24px;
     border-top: 1px solid var(--adv-line);
     font-family: var(--adv-mono);

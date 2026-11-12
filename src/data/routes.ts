@@ -23,6 +23,7 @@ export const routes = {
   case: (lang: Lang, slug: string) => `${routes.work(lang)}${slug}/`,
   about: (lang: Lang) => (lang === 'cs' ? '/o-nas/' : '/en/about/'),
   contact: (lang: Lang) => (lang === 'cs' ? '/kontakt/' : '/en/contact/'),
+  privacy: (lang: Lang) => (lang === 'cs' ? '/ochrana-osobnich-udaju/' : '/en/privacy/'),
 };
 
 /** Same page in both languages, for hreflang and the language switch. */

@@ -6,6 +6,7 @@
  */
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
+import PrivacyNote from '../components/ui/PrivacyNote.astro';
 import Arrow from '../components/ui/Arrow.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
@@ -128,6 +129,7 @@ const f = t.fields;
           <button class="adv-btn adv-btn--primary" type="submit">{c.cta.assessment}<Arrow /></button>
           <p class="adv-form-status" data-status role="status"></p>
         </div>
+        <PrivacyNote lang={lang} />
       </form>
       <aside class="adv-contact__aside" data-reveal style="--i:1">
         <p class="adv-pill"><i></i>{t.meta}</p>

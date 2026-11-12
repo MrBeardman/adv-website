@@ -44,7 +44,7 @@
           },
           {
             "q": "Kde působíte?",
-            "a": "Sídlíme v Praze (Rybná 234/20) a pracujeme pro firmy po celém Česku a v Německu. Většinu práce zvládneme na dálku, mapování procesů rádi uděláme u vás ve firmě. Mluvíme česky, anglicky a německy."
+            "a": "Sídlíme v Praze (Rybná 716/24) a pracujeme pro firmy po celém Česku a v Německu. Většinu práce zvládneme na dálku, mapování procesů rádi uděláme u vás ve firmě. Mluvíme česky, anglicky a německy."
           },
           {
             "q": "Jak spolupráce začíná a co stojí první schůzka?",
@@ -253,7 +253,7 @@
           "title": "Fakta o firmě.",
           "body": "ADV Innovations je pražská firma pro automatizaci, firemní software a weby pro malé a střední firmy. Vede ji Jan Matyáš; tým má přes deset let zkušeností s vývojem webů, aplikací a firemních systémů pro české a německé klienty. Pracujeme sami a s partnery Alture, Jenomics a Sisu Vision, takže za jedním kontaktem v ADV jsou ti správní specialisté.",
           "facts": [
-            { "label": "Sídlo", "value": "Rybná 234/20, Praha 1" },
+            { "label": "Sídlo", "value": "Rybná 716/24, Praha 1" },
             { "label": "Trhy", "value": "Česko a Německo; česky, anglicky, německy" },
             { "label": "Služby", "value": "Automatizace a AI, optimalizace firmy, weby a e-shopy, prototypy a software na míru" },
             { "label": "Partneři", "value": "Alture (design a digitální produkty), Jenomics (software a hosting), Sisu Vision (realizace)" }
@@ -307,7 +307,7 @@
           },
           {
             "q": "Where are you based?",
-            "a": "In Prague (Rybná 234/20), working for companies across the Czech Republic and in Germany. Most of the work is done remotely; we like to map the processes at your company in person. We speak Czech, English and German."
+            "a": "In Prague (Rybná 716/24), working for companies across the Czech Republic and in Germany. Most of the work is done remotely; we like to map the processes at your company in person. We speak Czech, English and German."
           },
           {
             "q": "How does it start, and what does the first meeting cost?",
@@ -516,7 +516,7 @@
           "title": "Facts about the company.",
           "body": "ADV Innovations is a Prague company for automation, business software and websites for small and mid-sized businesses. It is led by Jan Matyáš; the team has over ten years of experience building websites, applications and business systems for Czech and German clients. We work on our own and with the partners Alture, Jenomics and Sisu Vision, so one contact at ADV brings the right specialists.",
           "facts": [
-            { "label": "Office", "value": "Rybná 234/20, Prague 1" },
+            { "label": "Office", "value": "Rybná 716/24, Prague 1" },
             { "label": "Markets", "value": "Czech Republic and Germany; Czech, English, German" },
             { "label": "Services", "value": "Automation and AI, business optimisation, websites and e-shops, prototypes and custom software" },
             { "label": "Partners", "value": "Alture (design and digital products), Jenomics (software and hosting), Sisu Vision (delivery)" }

@@ -46,6 +46,27 @@
 
 ## New copy (needs Honza's approval)
 
+- **Copy and charts (Nov 12)**: homepage automation card third stat is now "100 % procesu běží samo" /
+  "100 % of the process runs on its own" (Honza's wording, was the placeholder "6 procesů běží samo"); tools
+  heading "Napojíme nástroje, které už používáte." / "We connect the tools you already use."; the automation
+  hero has a scroll cue drawn by the flow grid (`data-scroll`, label "pokračovat" / "scroll"); numbers band
+  charts redrawn: bookings against 1× and 2× lines, seven days call to prototype, fees before and now (that
+  last one was empty on the live site: its styles lived in the unused `05-kesia.astro`).
+- **Policy facts checked Nov 12**: seat, no DIČ and "oddíl C, vložka 368486" match ARES. n8n runs on our own
+  Contabo server, so the policy names Contabo as the recipient (server region still to be stated). STILL
+  MISSING from the recipients if inquiries are dispatched to an agent in Agent Dash: the AI provider
+  (Anthropic) and Gmail (the reply draft). Planned form-start tracking will change the "no cookies, no
+  measurement" section.
+- **Legal footer + privacy policy (Nov 11)** (`src/data/company.ts`, `src/i18n/privacy.json`, `chrome.json` footer,
+  `templates/Privacy.astro`; routes `/ochrana-osobnich-udaju/`, `/en/privacy/`):
+  - Footer now shows the registered seat Rybná 716/24, 110 00 Praha 1 (the old Rybná 234/20 is gone everywhere,
+    incl. geo.json and the JSON-LD), IČO 17223997, the register entry (MS Praha, C 368486). No DIČ: not a VAT payer.
+  - CLAIMS TO CONFIRM in the policy: retention "24 měsíců od poslední komunikace" (a proposal, not decided);
+    that every inquiry is read by a person (the automatic sorting paragraph); n8n and Telegram as recipients
+    (where n8n runs, and the Telegram transfer, are not stated); Hostinger server logs; the e-mail mailbox
+    (`MAIL_TO` is still unset). Have a lawyer or the DPO read it once before it is called final.
+  - OPEN: the homepage drag hint writes `adv_stack_drag_hint` to localStorage (`HeroSceneGL.js _hintOnce`). The
+    policy discloses it. To make the site strictly storage-free, show the hint once per page load instead.
 - **GEO / SEO layer (Nov 4)** (`src/i18n/geo.json`, CS + EN; research and reasoning in `docs/GEO.md`):
   - "V kostce" / "In short" block (`components/Plain.astro`) on the automation page, the three service pages
     and the about page: one plain paragraph (what, for whom, where, on which systems) + four facts. Names

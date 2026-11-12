@@ -1,0 +1,123 @@
+---
+/**
+ * Privacy policy (/ochrana-osobnich-udaju/, /en/privacy/). Plain legal text: no reveal animations, no
+ * decoration. Company facts come from data/company.ts (the same source as the footer); the copy is in
+ * i18n/privacy.json and is listed in docs/STATUS.md "New copy" with the points Honza has to confirm.
+ */
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { pick, type Lang } from '../i18n';
+import chrome from '../i18n/chrome.json';
+import privacy from '../i18n/privacy.json';
+import { COMPANY } from '../data/company';
+import { both, routes } from '../data/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = pick(chrome, lang);
+const t = pick(privacy, lang).privacy;
+---
+
+<Base lang={lang} title={t.metaTitle} description={t.lead} alternates={both(routes.privacy)}>
+  <PageHead title={t.title} lead={t.lead} />
+  <section class="adv-legal" aria-label={t.title}>
+    <div class="adv-wrap adv-legal__inner">
+      <p class="adv-meta">{t.updated}</p>
+
+      <h2>{t.controller.title}</h2>
+      <p>{t.controller.body}</p>
+      <dl class="adv-legal__card">
+        <div>
+          <dt>{t.controller.nameLabel}</dt>
+          <dd>{COMPANY.legalName}</dd>
+        </div>
+        <div>
+          <dt>{t.controller.seatLabel}</dt>
+          <dd>{COMPANY.seat}</dd>
+        </div>
+        <div>
+          <dt>{t.controller.icoLabel}</dt>
+          <dd>{COMPANY.ico}</dd>
+        </div>
+        <div>
+          <dt>{t.controller.registerLabel}</dt>
+          <dd>{t.controller.register}</dd>
+        </div>
+        <div>
+          <dt>{t.controller.emailLabel}</dt>
+          <dd><a class="adv-link" href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></dd>
+        </div>
+      </dl>
+
+      {
+        t.sections.map((s) => (
+          <>
+            <h2>{s.title}</h2>
+            {s.paras?.map((p) => (
+              <p>{p}</p>
+            ))}
+            {s.items && (
+              <ul>
+                {s.items.map((i) => (
+                  <li>{i}</li>
+                ))}
+              </ul>
+            )}
+            {s.after?.map((p) => (
+              <p>{p}</p>
+            ))}
+          </>
+        ))
+      }
+      <p><a class="adv-link" href={routes.home(lang)}>{c.footer.logoLabel}</a></p>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .adv-legal {
+    padding: clamp(24px, 4vw, 56px) 0 clamp(72px, 9vw, 120px);
+  }
+  .adv-legal__inner {
+    max-width: 72ch;
+  }
+  .adv-legal h2 {
+    margin: 2.6em 0 0.6em;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+    letter-spacing: -0.02em;
+  }
+  .adv-legal p,
+  .adv-legal li {
+    color: var(--adv-muted);
+    line-height: 1.7;
+  }
+  .adv-legal p {
+    margin: 0 0 1em;
+  }
+  .adv-legal ul {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 1em;
+    padding-left: 1.2em;
+  }
+  .adv-legal__card {
+    display: grid;
+    gap: 14px;
+    margin: 20px 0 0;
+    padding: 22px 24px;
+    border: 1px solid var(--adv-line);
+    border-radius: 14px;
+  }
+  .adv-legal__card dt {
+    font-family: var(--adv-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--adv-muted);
+  }
+  .adv-legal__card dd {
+    margin: 4px 0 0;
+    color: var(--adv-text);
+  }
+</style>

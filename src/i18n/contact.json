@@ -7,7 +7,7 @@
       "meta": "Odpověď do jednoho pracovního dne · CZ / EN / DE",
       "phoneLabel": "Telefon",
       "emailLabel": "E-mail",
-      "addressLabel": "Kancelář",
+      "addressLabel": "Sídlo",
       "fields": {
         "name": "Jméno",
         "namePlaceholder": "Vaše jméno",
@@ -36,7 +36,7 @@
       "meta": "Replies within one working day · CZ / EN / DE",
       "phoneLabel": "Phone",
       "emailLabel": "Email",
-      "addressLabel": "Office",
+      "addressLabel": "Registered office",
       "fields": {
         "name": "Name",
         "namePlaceholder": "Your name",
