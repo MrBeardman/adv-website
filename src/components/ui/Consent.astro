@@ -3,7 +3,8 @@
  * The consent panel (scripts/consent.ts): a small card bottom left, not a bar across the page, so it never
  * covers the hero's actions or the scroll cue. One question, two buttons of equal weight (declining is as
  * easy as allowing), a link to the policy. The wire on top is the answer drawn in the site's own language:
- * visit, a gate, measurement. The gate is open (nothing flows) until "Allow".
+ * visit, a gate, measurement. The gate is open (nothing flows) until "Allow". The gate is a real switch
+ * too: flipping it on allows, flipping it off declines, the same as the two buttons.
  * Without JS it stays hidden and nothing is measured.
  */
 import { pick, type Lang } from '../../i18n';
@@ -27,12 +28,19 @@ const t = pick(consent, lang);
   aria-labelledby="adv-consent-t"
   aria-describedby="adv-consent-d"
 >
-  <div class="adv-consent__wire" aria-hidden="true">
-    <span class="adv-consent__node">{t.you}</span>
-    <span class="adv-consent__line"><i></i></span>
-    <span class="adv-consent__gate"><i></i></span>
-    <span class="adv-consent__line adv-consent__line--out"><i></i></span>
-    <span class="adv-consent__node adv-consent__node--end">{t.measure}</span>
+  <div class="adv-consent__wire">
+    <span class="adv-consent__node" aria-hidden="true">{t.you}</span>
+    <span class="adv-consent__line" aria-hidden="true"><i></i></span>
+    <button
+      type="button"
+      class="adv-consent__gate"
+      role="switch"
+      aria-checked="false"
+      aria-label={t.measure}
+      data-consent-gate><i></i></button
+    >
+    <span class="adv-consent__line adv-consent__line--out" aria-hidden="true"><i></i></span>
+    <span class="adv-consent__node adv-consent__node--end" aria-hidden="true">{t.measure}</span>
   </div>
   <h2 id="adv-consent-t">{t.title}</h2>
   <p id="adv-consent-d">{t.body} <a class="adv-link" href={routes.privacy(lang)}>{t.more}</a></p>
@@ -138,7 +146,23 @@ const t = pick(consent, lang);
     height: 16px;
     border: 1px solid var(--adv-edge-hi);
     border-radius: 999px;
+    padding: 0;
+    background: none;
+    cursor: pointer;
     transition: border-color 250ms var(--adv-ease) 200ms;
+  }
+  /* a finger-sized target around the small switch */
+  .adv-consent__gate::before {
+    content: '';
+    position: absolute;
+    inset: -15px -9px;
+  }
+  .adv-consent__gate:hover {
+    border-color: var(--adv-text);
+  }
+  .adv-consent__gate:focus-visible {
+    outline: 2px solid var(--adv-accent);
+    outline-offset: 3px;
   }
   .adv-consent__gate i {
     position: absolute;

@@ -81,11 +81,13 @@ export function track(event: 'form_start' | 'form_step', data: { form: string; s
 export function initConsent(panel: HTMLElement) {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const now = panel.querySelector<HTMLElement>('[data-consent-now]');
+  const gate = panel.querySelector<HTMLElement>('[data-consent-gate]');
   let closing = 0;
   const open = () => {
     clearTimeout(closing);
     const state = consent();
     panel.dataset.state = state;
+    gate?.setAttribute('aria-checked', String(state === 'granted'));
     if (now) {
       now.hidden = !state;
       now.textContent = state === 'granted' ? (now.dataset.granted ?? '') : (now.dataset.denied ?? '');
@@ -96,6 +98,7 @@ export function initConsent(panel: HTMLElement) {
   // the little wire answers first (the gate closes or the line is cut), then the panel leaves
   const close = (state: 'granted' | 'denied') => {
     panel.dataset.state = state;
+    gate?.setAttribute('aria-checked', String(state === 'granted'));
     if (now) now.hidden = true;
     closing = window.setTimeout(
       () => {
@@ -112,6 +115,16 @@ export function initConsent(panel: HTMLElement) {
   panel.querySelector('[data-consent-deny]')?.addEventListener('click', () => {
     deny();
     close('denied');
+  });
+  // the switch in the wire does the same as the buttons: on = allow, off = decline
+  gate?.addEventListener('click', () => {
+    if (consent() === 'granted') {
+      deny();
+      close('denied');
+    } else {
+      grant();
+      close('granted');
+    }
   });
   document.querySelectorAll<HTMLElement>('[data-consent-open]').forEach((b) =>
     b.addEventListener('click', () => {
