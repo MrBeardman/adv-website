@@ -1,7 +1,7 @@
 {
   "cs": {
     "title": "Smíme měřit, jak web funguje?",
-    "body": "Když dovolíte, uložíme vám do prohlížeče náhodné číslo a zaznamenáme, kde jste začali vyplňovat formulář a kde jste skončili. Žádná reklama, žádné třetí strany. Bez souhlasu neměříme nic.",
+    "body": "Když dovolíte, uložíme vám do prohlížeče náhodné číslo a zaznamenáme, které stránky si prohlédnete, na co kliknete a kde vyplňujete formulář. Žádná reklama, žádné třetí strany. Bez souhlasu neměříme nic.",
     "more": "Podrobnosti",
     "deny": "Odmítnout",
     "grant": "Povolit",
@@ -13,7 +13,7 @@
   },
   "en": {
     "title": "May we measure how the site works?",
-    "body": "If you allow it, we store a random number in your browser and record where you started filling in a form and where you stopped. No ads, no third parties. Without consent we measure nothing.",
+    "body": "If you allow it, we store a random number in your browser and record which pages you view, what you click and where you fill in a form. No ads, no third parties. Without consent we measure nothing.",
     "more": "Details",
     "deny": "Decline",
     "grant": "Allow",

@@ -53,8 +53,10 @@ const t = pick(consent, lang);
 
 <script>
   import { initConsent } from '../../scripts/consent';
+  import { initMeasure } from '../../scripts/measure';
   const panel = document.querySelector<HTMLElement>('[data-consent]');
   if (panel) initConsent(panel);
+  initMeasure();
 </script>
 
 <style is:global>

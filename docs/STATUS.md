@@ -56,18 +56,21 @@
   business first; a site you do not look after, runs on its own, anyone can edit it with the editing tool we
   deliver); `serviceDeep.json` cards "Na mobilu je pomalý nebo nečitelný" and "Google ani AI vás nenajdou"
   (GEO, AI Overviews, ChatGPT). CLAIMS: "běží automaticky" and the editing tool are promises per project.
-- **Hero art and scroll cues (Nov 12, on `redesign`, NOT published)**: `scripts/heroArt.ts` +
+- **Hero art and scroll cues (Nov 12)**: `scripts/heroArt.ts` +
   `ui/HeroArt.astro`. Homepage: a data line at the bottom centre. Service pages (wide screens): business
   optimisation = rings that fall into step, websites = one page reflowing desktop / tablet / phone,
   prototypes = a sketch a build line turns into an app; each ends in its own scroll cue. New words for
   approval: `chrome.json` `art` (desktop, tablet, mobil; skica, prototyp, software).
-- **Consent panel and form measurement (Nov 12, on `redesign`, NOT published)**: `ui/Consent.astro`,
-  `scripts/consent.ts`, `lib/visitor.ts`, `api/track.ts`, copy in `consent.json`; footer "Nastavení cookies".
-  Nothing is stored or sent before "Povolit"; the server checks the consent cookie again. Events
-  (form_start, form_step, form_submit with the e-mail) go to the n8n table `adv_form_events` (intake
-  workflow branch "Is Form Event", already published). Privacy policy cookies section rewritten to match:
-  needs Honza's read. Open: the policy says records are kept 12 months, nothing deletes them yet; one test
-  row (step "TEST") sits in `adv_form_events`.
+- **Consent panel and site measurement (Nov 12)**: `ui/Consent.astro`, `scripts/consent.ts`,
+  `scripts/measure.ts`, `lib/visitor.ts`, `api/track.ts`, copy in `consent.json`; footer "Nastavení cookies".
+  The card's switch and both buttons set the answer. Nothing is stored or sent before "Povolit"; the server
+  checks the consent cookie again. Measured with consent: page views, time visible and scroll depth
+  (page_leave), clicks on links and buttons outside forms, form start / step / submit (submit carries the
+  e-mail). Not measured: what is typed or chosen in a form, mouse movement. Events are batched on the
+  server (20 s or 50 events) and go through the n8n intake ("Is Measurement Batch") to the ADV dashboard
+  (`/api/v1/hooks/website-events`), which stores them, deletes them after 12 months and shows them.
+  Privacy policy cookies section rewritten to match: needs Honza's read. The n8n table `adv_form_events`
+  from the first version is no longer used (one test row in it).
 - **Policy facts checked Nov 12**: seat, no DIČ and "oddíl C, vložka 368486" match ARES. n8n runs on our own
   Contabo server, so the policy names Contabo as the recipient (server region still to be stated). STILL
   MISSING from the recipients if inquiries are dispatched to an agent in Agent Dash: the AI provider

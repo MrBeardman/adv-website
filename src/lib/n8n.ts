@@ -6,8 +6,8 @@
  * Environment (Hostinger Node.js app settings, names in .env.example):
  *   N8N_INQUIRY_URL  the webhook's production URL. Not set = stored only.
  *   N8N_INQUIRY_KEY  shared secret, sent as the X-ADV-Key header (n8n Header Auth credential).
- * lib/visitor.ts sends consented measurement events the same way (kind "event"); the workflow keeps those
- * in adv_form_events and tells nobody.
+ * lib/visitor.ts sends consented measurement events the same way, in batches (kind "events"); the workflow
+ * hands those to the ADV dashboard and tells nobody.
  * Both are trimmed: a pasted value with a trailing space or newline would otherwise fail the key check.
  *
  * `why` says what went wrong without revealing anything secret: "no-url", "no-key", "status-403" (n8n

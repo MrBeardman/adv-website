@@ -7,6 +7,8 @@
  *                from asking again), so it needs no consent itself.
  *   adv_vid      a random id, written ONLY after "granted", deleted on "denied".
  *
+ * What is measured: page views, time and scroll depth, clicks on links and buttons (scripts/measure.ts),
+ * and form starts and steps (scripts/form.ts, scripts/inquiry.ts).
  * track() is the only way anything is measured. It does nothing unless adv_consent is "granted", and the
  * server checks the same cookie again (lib/visitor.ts), so a bug on one side cannot measure anyone.
  * No third parties: events go to /api/track/ on this site.
@@ -37,6 +39,8 @@ export const consent = () => read('adv_consent') as '' | 'granted' | 'denied';
 export function grant() {
   write('adv_consent', 'granted', DAYS);
   if (!VID.test(read('adv_vid'))) write('adv_vid', uuid(), DAYS);
+  // scripts/measure.ts starts counting this page from now
+  document.dispatchEvent(new Event('adv:consent'));
 }
 export function deny() {
   write('adv_consent', 'denied', DAYS);
@@ -44,7 +48,18 @@ export function deny() {
 }
 
 /** Record one event. A no-op without consent. */
-export function track(event: 'form_start' | 'form_step', data: { form: string; service?: string; step?: string }) {
+export function track(
+  event: 'page_view' | 'page_leave' | 'click' | 'form_start' | 'form_step',
+  data: {
+    form?: string;
+    service?: string;
+    step?: string;
+    target?: string;
+    href?: string;
+    seconds?: number;
+    depth?: number;
+  },
+) {
   if (consent() !== 'granted') return;
   const q = new URLSearchParams(location.search);
   const utm = ['utm_source', 'utm_medium', 'utm_campaign']
