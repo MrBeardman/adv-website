@@ -14,6 +14,8 @@
  * Cost: one 2D canvas, at most two flows, paused when off screen or in a hidden tab.
  * Reduced motion: one finished flow is drawn once, statically.
  */
+import { goNext } from './cueGo';
+
 export function initFlowGrid(cv: HTMLCanvasElement) {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ctx = cv.getContext('2d');
@@ -138,7 +140,27 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
   // The scroll cue: on a grid line near the centre, ending on the last grid row above the fold (or the
   // canvas' bottom, whichever is higher). The wire may run in the gap between the copy and the window; only
   // its own narrow strip and the label under it have to be free.
-  const placeCue = () => {
+  // the cue is drawn on the canvas; an invisible button over it scrolls to the next section
+  let go: HTMLButtonElement | null = null;
+  const placeGo = () => {
+    if (!cue) {
+      if (go) go.hidden = true;
+      return;
+    }
+    if (!go) {
+      go = document.createElement('button');
+      go.type = 'button';
+      go.setAttribute('aria-label', CUE);
+      go.style.cssText =
+        'position:absolute;z-index:3;padding:0;border:0;border-radius:12px;background:none;cursor:pointer';
+      go.addEventListener('click', () => goNext(cv));
+      host.append(go);
+    }
+    go.hidden = false;
+    const [x0, y0, x1, y1] = cue.box;
+    Object.assign(go.style, { left: `${x0}px`, top: `${y0}px`, width: `${x1 - x0}px`, height: `${y1 - y0}px` });
+  };
+  const placeCueOnly = () => {
     cue = null;
     if (!CUE || W < 1000) return;
     const top = cv.getBoundingClientRect().top + scrollY; // the canvas' place on the page
@@ -156,6 +178,10 @@ export function initFlowGrid(cv: HTMLCanvasElement) {
         cue = { x, y0, y1, box: [x - 48, y0 - 16, x + 48, y1 + 30] };
         return;
       }
+  };
+  const placeCue = () => {
+    placeCueOnly();
+    placeGo();
   };
 
   function makeFlow(t0: number): Flow | null {

@@ -1,8 +1,8 @@
 ---
 /**
  * A page's hero art with its scroll cue (scripts/heroArt.ts): the service pages' right-hand piece
- * (`rings`, `responsive`, `build`) and the homepage's `dataline`. Decoration only: wide screens, hidden
- * from assistive tech. `labels`: the art's own three words, comma separated.
+ * (`rings`, `responsive`, `build`) and the homepage's `dataline`. Wide screens only. The drawing is hidden
+ * from assistive tech; an invisible button over the cue scrolls to the next section (scripts/cueGo.ts). `labels`: the art's own three words, comma separated.
  */
 interface Props {
   kind: 'rings' | 'responsive' | 'build' | 'dataline';
@@ -12,17 +12,46 @@ interface Props {
 const { kind, cue, labels = '' } = Astro.props;
 ---
 
-<canvas class={`adv-art adv-art--${kind}`} data-art={kind} data-cue={cue} data-labels={labels} aria-hidden="true"
-></canvas>
+<div class={`adv-art adv-art--${kind}`}>
+  <canvas data-art={kind} data-cue={cue} data-labels={labels} aria-hidden="true"></canvas>
+  {/* the drawn cue is a picture; this is the control over it */}
+  <button type="button" class="adv-art__go" data-cue-go aria-label={cue}></button>
+</div>
 
 <script>
   import { initHeroArt } from '../../scripts/heroArt';
+  import { goNext } from '../../scripts/cueGo';
   document.querySelectorAll<HTMLCanvasElement>('[data-art]').forEach(initHeroArt);
+  document.querySelectorAll<HTMLElement>('[data-cue-go]').forEach((b) => b.addEventListener('click', () => goNext(b)));
 </script>
 
 <style is:global>
   .adv-art {
     display: none;
+  }
+  .adv-art canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  /* over the wire, the arrowhead and the label */
+  .adv-art__go {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 140px;
+    height: 116px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: none;
+    translate: -50% 0;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .adv-art__go:focus-visible {
+    outline: 2px solid var(--adv-accent);
+    outline-offset: -2px;
   }
   @media (min-width: 1240px) {
     /* in the page head's free right half; the cue ends just above the content below */

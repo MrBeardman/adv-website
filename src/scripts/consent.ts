@@ -131,7 +131,7 @@ export function initConsent(panel: HTMLElement) {
     requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('is-open')));
   };
   // the wire answers first (the gate closes or the line is cut), then the card folds down into the tab
-  const close = (state: 'granted' | 'denied') => {
+  const close = (state: 'granted' | 'denied', atOnce = false) => {
     show(state);
     if (now) now.hidden = true;
     closing = window.setTimeout(
@@ -147,7 +147,7 @@ export function initConsent(panel: HTMLElement) {
           still ? 0 : 520,
         );
       },
-      still ? 0 : 800,
+      still || atOnce ? 0 : 800,
     );
   };
   panel.querySelector('[data-consent-grant]')?.addEventListener('click', () => {
@@ -165,6 +165,17 @@ export function initConsent(panel: HTMLElement) {
     else show('granted');
     if (now) now.hidden = true;
   });
+  // Opened again by someone who has already answered: a click anywhere else, or Escape, puts it away
+  // and leaves the answer as it was. The first time it stays until it gets an answer.
+  const dismiss = () => {
+    if (panel.hidden || !panel.classList.contains('is-open') || !consent()) return;
+    close(consent() as 'granted' | 'denied', true);
+  };
+  document.addEventListener('pointerdown', (e) => {
+    const el = e.target as HTMLElement;
+    if (!panel.contains(el) && !el.closest?.('[data-consent-open], [data-consent-tab]')) dismiss();
+  });
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && dismiss());
   const reopen = () => {
     open();
     panel.querySelector<HTMLElement>('[data-consent-gate]')?.focus({ preventScroll: true });
