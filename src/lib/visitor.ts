@@ -75,7 +75,30 @@ function schedule(ms: number) {
 }
 
 export async function recordEvent(e: SiteEvent): Promise<void> {
-  const entry = { at: new Date().toISOString(), ...e };
+  // The dashboard rejects a whole batch for one over-long or odd value, so every event is cut to its
+  // limits here, whoever called. `page` is always a path (the contact form passes its full referer).
+  const cut = (v: string | undefined, max: number) => (v ?? '').trim().slice(0, max);
+  let page = cut(e.page, 2000);
+  try {
+    if (/^https?:/i.test(page)) page = new URL(page).pathname;
+  } catch {
+    page = '';
+  }
+  const entry = {
+    at: new Date().toISOString(),
+    ...e,
+    page: page.slice(0, 200),
+    ref: cut(e.ref, 200),
+    utm: cut(e.utm, 200),
+    lang: e.lang === 'en' ? 'en' : 'cs',
+    device: e.device === 'mobile' ? 'mobile' : 'desktop',
+    ...(e.target !== undefined && { target: cut(e.target, 120) }),
+    ...(e.href !== undefined && { href: cut(e.href, 200) }),
+    ...(e.form !== undefined && { form: ['inquiry', 'contact', 'cta'].includes(e.form) ? e.form : 'contact' }),
+    ...(e.service !== undefined && { service: cut(e.service, 60) }),
+    ...(e.step !== undefined && { step: cut(e.step, 60) }),
+    ...(e.contact !== undefined && { contact: cut(e.contact, 200) }),
+  };
   const dir = env('SUBMISSIONS_DIR') || path.join(process.cwd(), 'data', 'submissions');
   try {
     await mkdir(dir, { recursive: true });
