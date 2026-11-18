@@ -20,7 +20,9 @@ interface Props {
   description: string;
   /** Path of this page in every language that has it, e.g. { cs: '/', en: '/en/' } */
   alternates: Partial<Record<Lang, string>>;
+  /** Share image, 1200×630. Defaults to the branded card; pass a 1200×630 file for case pages. */
   ogImage?: string;
+  ogImageSize?: [number, number];
   /** Draw the stream of light through this page (needs [data-node] kickers, see scripts/stream.ts). */
   stream?: boolean | 'light';
   /** The page is a workflow canvas: sections in ui/NodeFrame.astro, wired by scripts/canvas.ts. */
@@ -36,7 +38,8 @@ const {
   title,
   description,
   alternates,
-  ogImage = '/media/cases/kesia/cover.webp',
+  ogImage = '/media/og-default.jpg',
+  ogImageSize = [1200, 630],
   stream = false,
   canvas = false,
   drift = true,
@@ -86,7 +89,11 @@ const graph = {
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="ADV Innovations" />
     <meta property="og:image" content={new URL(ogImage, site).href} />
+    <meta property="og:image:width" content={String(ogImageSize[0])} />
+    <meta property="og:image:height" content={String(ogImageSize[1])} />
+    <meta property="og:image:alt" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL(ogImage, site).href} />
     <meta name="theme-color" content="#06070b" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
