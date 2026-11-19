@@ -46,6 +46,13 @@
 
 ## New copy (needs Honza's approval)
 
+- **Inquiry chat (Nov 19, 2026)**: all texts in `src/i18n/chat.json` (greeting, contact step, AI intro, calendar,
+  booking confirmation, AI disclosure under the window, the "Poptávka během dvou minut" card on the contact page and
+  CTA panels). Persona name "ADV Pilot" (`PERSONA` in `src/data/chat.ts`, not a person's name). The AI asks its
+  own questions (`src/lib/chatAgent.ts`); their wording is not fixed copy.
+- **Privacy policy (to add before launch of the chat)**: chat answers are sent to Anthropic (Claude API) to word
+  the follow-up questions; meeting requests are stored on the server and sent to the team.
+
 - **Copy and charts (Nov 12)**: homepage automation card third stat is now "100 % procesu běží samo" /
   "100 % of the process runs on its own" (Honza's wording, was the placeholder "6 procesů běží samo"); tools
   heading "Napojíme nástroje, které už používáte." / "We connect the tools you already use."; the automation

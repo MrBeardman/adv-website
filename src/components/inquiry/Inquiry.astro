@@ -71,7 +71,13 @@ const uid = `inq-${lang}`;
           <div class="adv-inq__services">
             {
               list.map((s) => (
-                <button type="button" class="adv-inq__svc adv-lit" data-inq-service={s.slug}>
+                <button
+                  type="button"
+                  class="adv-inq__svc adv-lit"
+                  data-inq-service={s.slug}
+                  data-chat-open
+                  data-chat-service={s.slug}
+                >
                   <ServiceIcon slug={s.slug} tone="fade" />
                   <span class="adv-inq__svc-text">
                     <span class="adv-inq__svc-name">{s.title}</span>

@@ -8,6 +8,7 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import PrivacyNote from '../components/ui/PrivacyNote.astro';
 import Arrow from '../components/ui/Arrow.astro';
+import ChatStart from '../components/chat/ChatStart.astro';
 import { pick, type Lang } from '../i18n';
 import chrome from '../i18n/chrome.json';
 import contact from '../i18n/contact.json';
@@ -38,99 +39,101 @@ const f = t.fields;
   <PageHead title={t.title} lead={t.line} />
   <section class="adv-contact" aria-label={t.eyebrow}>
     <div class="adv-wrap adv-contact__grid">
-      <form
-        class="adv-panel adv-contact__form"
-        action="/api/contact/"
-        method="post"
-        data-form
-        data-sending={t.sending}
-        data-success={t.success}
-        data-error={t.error}
-        data-mail={c.brand.email}
-        data-reveal
-      >
-        <input type="hidden" name="lang" value={lang} />
-        <input type="hidden" name="source" value="contact" />
-        <div class="adv-hp" aria-hidden="true">
-          <label for="ct-web">Website</label>
-          <input id="ct-web" type="text" name="website_hp" tabindex="-1" autocomplete="off" />
-        </div>
-        <div class="adv-contact__row">
-          <div class="adv-field">
-            <label for="ct-name">{f.name}</label>
-            <input
-              id="ct-name"
-              class="adv-input"
-              name="name"
-              maxlength="120"
-              autocomplete="name"
-              placeholder={f.namePlaceholder}
-            />
+      <ChatStart lang={lang} class="adv-contact__chat">
+        <form
+          class="adv-panel adv-contact__form"
+          action="/api/contact/"
+          method="post"
+          data-form
+          data-sending={t.sending}
+          data-success={t.success}
+          data-error={t.error}
+          data-mail={c.brand.email}
+          data-reveal
+        >
+          <input type="hidden" name="lang" value={lang} />
+          <input type="hidden" name="source" value="contact" />
+          <div class="adv-hp" aria-hidden="true">
+            <label for="ct-web">Website</label>
+            <input id="ct-web" type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="adv-contact__row">
+            <div class="adv-field">
+              <label for="ct-name">{f.name}</label>
+              <input
+                id="ct-name"
+                class="adv-input"
+                name="name"
+                maxlength="120"
+                autocomplete="name"
+                placeholder={f.namePlaceholder}
+              />
+            </div>
+            <div class="adv-field">
+              <label for="ct-company">{f.company}</label>
+              <input
+                id="ct-company"
+                class="adv-input"
+                name="company"
+                maxlength="160"
+                autocomplete="organization"
+                placeholder={f.companyPlaceholder}
+              />
+            </div>
+          </div>
+          <div class="adv-contact__row">
+            <div class="adv-field">
+              <label for="ct-email">{f.email}</label>
+              <input
+                id="ct-email"
+                class="adv-input"
+                type="email"
+                name="email"
+                required
+                maxlength="200"
+                autocomplete="email"
+                placeholder={f.emailPlaceholder}
+              />
+            </div>
+            <div class="adv-field">
+              <label for="ct-phone">{f.phone}</label>
+              <input
+                id="ct-phone"
+                class="adv-input"
+                type="tel"
+                name="phone"
+                maxlength="40"
+                autocomplete="tel"
+                placeholder={f.phonePlaceholder}
+                aria-describedby="ct-phone-err"
+              />
+              <p id="ct-phone-err" class="adv-contact__err" data-phone-error hidden>{f.phoneError}</p>
+            </div>
           </div>
           <div class="adv-field">
-            <label for="ct-company">{f.company}</label>
-            <input
-              id="ct-company"
-              class="adv-input"
-              name="company"
-              maxlength="160"
-              autocomplete="organization"
-              placeholder={f.companyPlaceholder}
-            />
-          </div>
-        </div>
-        <div class="adv-contact__row">
-          <div class="adv-field">
-            <label for="ct-email">{f.email}</label>
-            <input
-              id="ct-email"
-              class="adv-input"
-              type="email"
-              name="email"
-              required
-              maxlength="200"
-              autocomplete="email"
-              placeholder={f.emailPlaceholder}
-            />
+            <label for="ct-service">{f.service}</label>
+            <select id="ct-service" class="adv-input" name="service" data-service-select>
+              <option value="">{f.servicePlaceholder}</option>
+              {options.map((o) => <option value={o.slug}>{o.title}</option>)}
+            </select>
           </div>
           <div class="adv-field">
-            <label for="ct-phone">{f.phone}</label>
-            <input
-              id="ct-phone"
+            <label for="ct-message">{f.message}</label>
+            <textarea
+              id="ct-message"
               class="adv-input"
-              type="tel"
-              name="phone"
-              maxlength="40"
-              autocomplete="tel"
-              placeholder={f.phonePlaceholder}
-              aria-describedby="ct-phone-err"
-            />
-            <p id="ct-phone-err" class="adv-contact__err" data-phone-error hidden>{f.phoneError}</p>
+              name="message"
+              rows="5"
+              maxlength="5000"
+              placeholder={f.messagePlaceholder}></textarea>
           </div>
-        </div>
-        <div class="adv-field">
-          <label for="ct-service">{f.service}</label>
-          <select id="ct-service" class="adv-input" name="service" data-service-select>
-            <option value="">{f.servicePlaceholder}</option>
-            {options.map((o) => <option value={o.slug}>{o.title}</option>)}
-          </select>
-        </div>
-        <div class="adv-field">
-          <label for="ct-message">{f.message}</label>
-          <textarea
-            id="ct-message"
-            class="adv-input"
-            name="message"
-            rows="5"
-            maxlength="5000"
-            placeholder={f.messagePlaceholder}></textarea>
-        </div>
-        <div class="adv-contact__submit">
-          <button class="adv-btn adv-btn--primary" type="submit">{c.cta.assessment}<Arrow /></button>
-          <p class="adv-form-status" data-status role="status"></p>
-        </div>
-        <PrivacyNote lang={lang} />
-      </form>
+          <div class="adv-contact__submit">
+            <button class="adv-btn adv-btn--primary" type="submit">{c.cta.assessment}<Arrow /></button>
+            <p class="adv-form-status" data-status role="status"></p>
+          </div>
+          <PrivacyNote lang={lang} />
+        </form>
+      </ChatStart>
       <aside class="adv-contact__aside" data-reveal style="--i:1">
         <p class="adv-pill"><i></i>{t.meta}</p>
         <dl>

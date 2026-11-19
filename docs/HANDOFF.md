@@ -89,6 +89,26 @@ readable"; a few of the hero's lines "separate on scroll and complement the scro
   `.py` file and run, than inline in a bash heredoc (the heredoc broke twice on this).
 - Verify with a production build and Playwright screenshots (desktop 1440 and phone 390) before pushing.
 
+## Inquiry chat (Nov 19, 2026)
+
+The inquiry runs as a chat with an AI assistant ("ADV Pilot"): launcher bottom right on every page, also opened by
+anything with `[data-chat-open]` (header and hero "Spustit poptávku", the homepage/service inquiry buttons, the cards
+on the contact page and CTA panels; `#chat` or `?chat=1&service=…` on a URL). Old forms stay as the no-JS fallback.
+
+- Flow: service → that service's questions from `data/inquiry.ts` (budget left out, `data/chat.ts`) → contact (lead
+  stored and sent to n8n as an ordinary inquiry, `source: chat`) → up to 3 AI follow-ups (Claude Haiku 5.5,
+  `lib/chatAgent.ts`: fixed question types, JSON-only answers, server counts turns, 2 off-topic answers end it,
+  daily cap) → a 30-min video call slot (`lib/slots.ts`: Mon–Fri 9–17 Prague, 15-min buffer, 24 h–3 weeks ahead,
+  Czech holidays) → booking stored as *pending* (`data/submissions/bookings.jsonl`) and sent to n8n.
+- Endpoint `api/chat.ts` (actions lead / ask / slots / book). UI `components/chat/Chat.astro` + `ChatStart.astro`,
+  conversation `scripts/chat/chat.ts` (loaded on first open).
+- n8n intake: kinds `booking` (meeting request) and `chat` (AI brief without a meeting, sent 15 min after the AI
+  part) go to the Telegram group via "Is Chat Or Booking" → "Prepare Chat Message" → "Notify Chat Or Booking".
+- Env: `ANTHROPIC_API_KEY` (unset = no AI questions), `CHAT_DAILY_CAP`, `N8N_BUSY_URL` (see `.env.example`).
+- **Open:** shared ADV Google calendar + Google credential in n8n (busy feed for `N8N_BUSY_URL`, and the confirm
+  step that creates the event with a Meet link and emails the client); ADV dashboard "Bookings" component;
+  confirmation email; privacy-policy line about Anthropic.
+
 ## Forms → n8n → Telegram
 
 - Both endpoints store first, then forward: `src/pages/api/inquiry.ts` (kind "inquiry") and

@@ -1,0 +1,164 @@
+---
+/**
+ * Where a page used to have a form, a card that starts the inquiry chat (components/chat/Chat.astro).
+ * The old form goes in the default slot: it is shown only without JavaScript (with a note to turn it on),
+ * so a visitor without JS can still write to us.
+ */
+import { pick, type Lang } from '../../i18n';
+import copy from '../../i18n/chat.json';
+import { PERSONA } from '../../data/chat';
+
+interface Props {
+  lang: Lang;
+  service?: string;
+  class?: string;
+}
+const { lang, service, class: cls } = Astro.props;
+const t = pick(copy, lang);
+---
+
+<div class:list={['adv-chat-start', cls]}>
+  <button type="button" class="adv-chat-start__card" data-chat-open data-chat-service={service || undefined}>
+    <span class="adv-chat-start__head">
+      <span class="adv-chat__orb adv-chat__orb--lg" aria-hidden="true"></span>
+      <span>
+        <span class="adv-chat-start__name">{PERSONA.name} <span class="adv-chat__badge">AI</span></span>
+        <span class="adv-chat-start__role">{t.role}</span>
+      </span>
+    </span>
+    <span class="adv-chat-start__title">{t.cardTitle}</span>
+    <span class="adv-chat-start__lead">{t.cardLead}</span>
+    <span class="adv-chat-start__fake" aria-hidden="true">
+      <span>{t.pick}</span>
+      <span class="adv-chat__send"
+        ><svg viewBox="0 0 24 24"
+          ><path
+            d="M12 19V5M5.5 11.5 12 5l6.5 6.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path></svg
+        ></span
+      >
+    </span>
+    <span class="adv-btn adv-btn--primary adv-chat-start__go">{t.cardButton}</span>
+  </button>
+</div>
+<div class:list={['adv-chat-fallback', cls]}>
+  <p class="adv-chat-fallback__note">{t.noscript}</p>
+  <slot />
+</div>
+
+<style is:global>
+  .js .adv-chat-fallback,
+  .no-js .adv-chat-start {
+    display: none;
+  }
+  .adv-chat-fallback__note {
+    margin-bottom: 16px;
+    color: var(--adv-muted);
+  }
+  .adv-chat-start__card {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    width: 100%;
+    padding: clamp(22px, 3vw, 36px);
+    border: 0;
+    border-radius: var(--adv-r-xl);
+    text-align: left;
+    color: var(--adv-text);
+    background: var(--adv-glass-bg);
+    -webkit-backdrop-filter: var(--adv-glass-blur);
+    backdrop-filter: var(--adv-glass-blur);
+    box-shadow: var(--adv-glass-shadow);
+    isolation: isolate;
+    cursor: pointer;
+    transition: transform 320ms var(--adv-ease);
+  }
+  .adv-chat-start__card::before {
+    /* the chat's hue, a thin ring that turns once on hover */
+    --adv-hue: conic-gradient(
+      from var(--adv-hue-a),
+      rgb(var(--adv-l-ice)),
+      rgb(var(--adv-l-cobalt)),
+      rgb(var(--adv-l-violet)),
+      rgb(var(--adv-l-navy)),
+      rgb(var(--adv-l-cobalt)),
+      rgb(var(--adv-l-ice))
+    );
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1.25px;
+    border-radius: inherit;
+    background: var(--adv-hue);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.7;
+    z-index: -1;
+    transition: opacity 400ms var(--adv-ease);
+  }
+  .adv-chat-start__card:hover {
+    transform: translateY(-2px);
+    animation: adv-hue-turn 1.6s var(--adv-ease) 1;
+  }
+  .adv-chat-start__card:hover::before {
+    opacity: 1;
+  }
+  .adv-chat-start__card:focus-visible {
+    outline: 2px solid var(--adv-accent);
+    outline-offset: 4px;
+  }
+  .adv-chat-start__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .adv-chat-start__name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: 600 1.0625rem/1.2 var(--adv-display);
+  }
+  .adv-chat-start__role {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.8125rem;
+    color: var(--adv-muted);
+  }
+  .adv-chat-start__title {
+    margin-top: 6px;
+    font: 600 var(--adv-h3) / 1.2 var(--adv-display);
+  }
+  .adv-chat-start__lead {
+    max-width: 52ch;
+    color: var(--adv-muted);
+    line-height: 1.55;
+  }
+  .adv-chat-start__fake {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 6px 6px 18px;
+    border-radius: 22px;
+    color: rgba(146, 152, 168, 0.9);
+    background: rgba(255, 255, 255, 0.045);
+    box-shadow: inset 0 0 0 1px var(--adv-edge);
+  }
+  .adv-chat-start__go {
+    justify-self: start;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .adv-chat-start__card,
+    .adv-chat-start__card:hover {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>

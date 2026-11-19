@@ -67,6 +67,9 @@ export function initInquiry(root: HTMLElement) {
   root.addEventListener('click', touch, true);
   root.addEventListener('input', touch, true);
 
+  // With the inquiry chat on the page (components/chat/Chat.astro) the service buttons open the chat on
+  // that service instead of running the questions inline.
+  const viaChat = !!document.querySelector('[data-chat]');
   const fromUrl = new URLSearchParams(location.search).get('service') ?? '';
   const preset = [root.dataset.preset ?? '', fromUrl].find((s) => s && D.flows[s]);
 
@@ -276,6 +279,7 @@ export function initInquiry(root: HTMLElement) {
 
   root.querySelectorAll<HTMLButtonElement>('[data-inq-service]').forEach((b) =>
     b.addEventListener('click', () => {
+      if (viaChat) return;
       if (service !== b.dataset.inqService) for (const k in answers) delete answers[k];
       service = b.dataset.inqService!;
       go(0);
@@ -350,7 +354,7 @@ export function initInquiry(root: HTMLElement) {
     });
   }
 
-  if (preset) {
+  if (preset && !viaChat) {
     service = preset;
     show(0);
     // a preset from the URL should not steal focus on load

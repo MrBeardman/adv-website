@@ -34,7 +34,7 @@ const h = pick(home, lang).hero;
     </h1>
     <p class="adv-lead adv-hf__sub" style="--i:2">{c.hero.sub}</p>
     <div class="adv-hf__ctas" style="--i:3">
-      <a class="adv-btn adv-btn--primary" href={'#' + w.inquiryId}><Play />{w.run}</a>
+      <a class="adv-btn adv-btn--primary" href={'#' + w.inquiryId} data-chat-open><Play />{w.run}</a>
       {/* Services, not work, while there are only a few projects (Honza, Nov 9 2026) */}
       <a class="adv-btn adv-btn--ghost" href={routes.services(lang)}>{h.ctaServices}<Arrow /></a>
     </div>

@@ -108,7 +108,7 @@ const sub = ENABLED_SERVICES.map((s) => ({
       </a>
       {/* one split pill: run the inquiry flow (homepage) | plain contact page */}
       <span class="adv-header__cta">
-        <a class="adv-btn adv-btn--primary adv-btn--sm" href={`${routes.home(lang)}#${inquiryId}`}>
+        <a class="adv-btn adv-btn--primary adv-btn--sm" href={`${routes.home(lang)}#${inquiryId}`} data-chat-open>
           <Play />
           {t.nav.run}
         </a>
