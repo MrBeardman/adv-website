@@ -10,6 +10,14 @@
 
 ## Done
 
+- Nov 18 2026, share + security pass: branded 1200x630 default share image (`public/media/og-default.jpg`) with
+  og:image width/height/alt and twitter:image in `Base.astro` (case pages keep their own image and pass
+  `ogImageSize`). Security headers (CSP, HSTS, nosniff, frame, referrer, permissions) from one list in
+  `security-headers.mjs`: prerendered pages via `dist/_headers.json` (written at build, applied by
+  `@astrojs/node` `staticHeaders`), `/api/*` via `src/middleware.ts`. CSP allows inline script/style on purpose
+  (Astro inlines CSS, hero uses inline styles); nothing third-party is allowed. Unknown-URL 404s do not carry
+  the headers. Checked with a production build in Chromium: no CSP violations on home, EN home, automation,
+  contact, Kesia case, privacy.
 - Astro stack scaffold (Jenomics pattern), fonts, media, CS + EN copy ported from PersonalPortfolio
   `adv-rebrand`, data modules (services with the `enabled` switch, case visibility rules, headline numbers,
   partners, routes).
@@ -243,6 +251,12 @@ PageSpeed (pagespeed.web.dev, no GPU) first run: mobile 50-60 (LCP 3.9-4.1 s, TB
 
 ## Open decisions (Honza)
 
+- Privacy page, Telegram: it says the provider sits outside the EU but not on what basis the data goes there
+  (GDPR art. 13(1)(f): adequacy decision or standard contractual clauses). Needs the real setup before any
+  wording is added; same question for Contabo/Hostinger if either stores data outside the EU.
+- Verify on the live site (not checkable from the build): `advinnovations.com` 301-redirects to `www`, response
+  headers arrive through Hostinger's proxy, and the IČO number shows in the footer.
+- `SAME_AS` in `src/data/seo.ts` is empty: add the live LinkedIn and other company profiles.
 - Headline emphasis: default is the same face in Ice; the Relay-style Instrument Serif italic is one switch
   (`EM_STYLE` in `src/data/site.ts`: 'ice' | 'serif' | 'off'). The impeccable detector flags the serif.
 - Logo tile on dark: Ice via `--adv-logo-tile` (brand guide 1.0 says Signal amber; amber is retired).
