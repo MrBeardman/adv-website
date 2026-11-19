@@ -52,6 +52,7 @@
           "items": [
             "Hostinger: hosting webu a uložení odeslaných zpráv na serveru.",
             "Contabo: pronajatý server, na kterém běží náš automatizační nástroj n8n. Ten zprávu předá do naší interní evidence poptávek.",
+            "Anthropic: když poptávku zadáváte v chatu, vaše odpovědi zpracuje AI model Claude od společnosti Anthropic, aby vám položil doplňující otázky a shrnul poptávku pro náš tým. Anthropic sídlí v USA a data z rozhraní API nepoužívá k trénování modelů.",
             "Telegram: obsah poptávky se zobrazí v interní skupině našeho týmu, abychom ji rychle viděli. Provozovatel Telegramu sídlí mimo Evropskou unii.",
             "E-mail: zprávu nám může přijít i do firemní e-mailové schránky."
           ]
@@ -145,6 +146,7 @@
           "items": [
             "Hostinger: website hosting and storage of submitted messages on the server.",
             "Contabo: the rented server that runs our automation tool n8n, which passes your message into our internal inquiry records.",
+            "Anthropic: when you make your inquiry in the chat, your answers are processed by Anthropic's Claude AI model, which asks you follow-up questions and summarises the inquiry for our team. Anthropic is based in the USA and does not use API data to train its models.",
             "Telegram: the content of your inquiry appears in our team's internal group so we see it quickly. Telegram's operator is based outside the European Union.",
             "Email: your message may also reach us in a company mailbox."
           ]

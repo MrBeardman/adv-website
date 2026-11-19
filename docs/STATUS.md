@@ -58,8 +58,8 @@
   booking confirmation, AI disclosure under the window, the "Poptávka během dvou minut" card on the contact page and
   CTA panels). Persona name "ADV Pilot" (`PERSONA` in `src/data/chat.ts`, not a person's name). The AI asks its
   own questions (`src/lib/chatAgent.ts`); their wording is not fixed copy.
-- **Privacy policy (to add before launch of the chat)**: chat answers are sent to Anthropic (Claude API) to word
-  the follow-up questions; meeting requests are stored on the server and sent to the team.
+- **Privacy policy, recipients (added Nov 19 2026, src/i18n/privacy.json)**: new item "Anthropic": chat answers go to
+  Claude to ask follow-ups and summarise; US-based; API data not used for training. Approve the wording.
 
 - **Copy and charts (Nov 12)**: homepage automation card third stat is now "100 % procesu běží samo" /
   "100 % of the process runs on its own" (Honza's wording, was the placeholder "6 procesů běží samo"); tools
