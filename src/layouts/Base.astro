@@ -39,7 +39,7 @@ const {
   title,
   description,
   alternates,
-  ogImage = '/media/og-default.jpg',
+  ogImage = lang === 'en' ? '/media/og-default-en.jpg' : '/media/og-default.jpg',
   ogImageSize = [1200, 630],
   stream = false,
   canvas = false,
