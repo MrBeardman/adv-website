@@ -315,6 +315,7 @@ export function initInquiry(root: HTMLElement) {
           phone: fd.get('phone'),
           website_hp: fd.get('website_hp'),
           page: location.pathname,
+          _t: Math.round(performance.now() / 100) / 10,
         }),
       });
       const body = await res.json().catch(() => ({}));

@@ -56,7 +56,10 @@ document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((form) => {
     status.dataset.state = '';
     status.textContent = '';
     try {
-      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const body = new FormData(form);
+      // seconds since the page loaded: the server treats a send within 3 s, or none at all, as a bot sign
+      body.set('_t', String(Math.round(performance.now() / 100) / 10));
+      const res = await fetch(form.action, { method: 'POST', body });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; message?: string };
       if (res.ok && data.ok) {
         status.dataset.state = 'ok';

@@ -25,6 +25,7 @@ import messages from '../../i18n/form.json';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { forwardToN8n } from '../../lib/n8n';
 import { visitorId, recordEvent } from '../../lib/visitor';
+import { spamCheck } from '../../lib/spam';
 
 export const prerender = false;
 
@@ -95,6 +96,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     service,
     message,
     page: request.headers.get('referer') ?? '',
+    // stored and sent to n8n, but kept out of Telegram and the dashboard (lib/spam.ts)
+    ...(() => {
+      const s = spamCheck({ texts: [message, name, company], email, t: form.get('_t') as string | null });
+      return s.spam ? { spam: true, spamWhy: s.why.join(',') } : {};
+    })(),
     // IP and user agent are deliberately not stored (data minimisation); the IP lives in memory for the rate limit only.
     mail: 'pending',
   };

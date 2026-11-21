@@ -116,6 +116,10 @@ on the contact page and CTA panels; `#chat` or `?chat=1&service=…` on a URL). 
 - Both endpoints store first, then forward: `src/pages/api/inquiry.ts` (kind "inquiry") and
   `src/pages/api/contact.ts` (kind "contact", contact page and the short CTA form), through `src/lib/n8n.ts`
   (env `N8N_INQUIRY_URL`, `N8N_INQUIRY_KEY`; trimmed; the inquiry API answers `why` when a forward fails).
+- Spam (Nov 21 2026): behind the honeypot, `src/lib/spam.ts` scores keyboard mash, a send within 3 s of page load
+  or without the page script (`_t`), our own domain in the text and digit-run emails. Spam is still stored and goes
+  to n8n with `spam: true`; n8n keeps it in `adv_inquiries` (tier `spam`, reasons in `problem`) and skips Telegram
+  and the dashboard ("Not Spam"). A real message caught by mistake is in that table.
 - Stored on the Hostinger server in `data/submissions/` (`inquiries-YYYY-MM.jsonl`, `YYYY-MM.jsonl`).
 - n8n workflow "ADV Website - Inquiry Intake" (id `9ytultcdcrouxu2D`) on vmi3112391.contaboserver.net: stores
   every submission in the data table `adv_inquiries`, then posts to Telegram by tier (hot / warm / cold silent

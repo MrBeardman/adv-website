@@ -19,6 +19,7 @@ import { FLOWS, classify } from '../../data/inquiry';
 import { ENABLED_SERVICES } from '../../data/capabilities';
 import { loc } from '../../i18n';
 import { forwardToN8n } from '../../lib/n8n';
+import { spamCheck } from '../../lib/spam';
 import { visitorId, recordEvent } from '../../lib/visitor';
 
 export const prerender = false;
@@ -89,6 +90,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     }
   }
   const classified = classify(service, answers);
+  const name = str(body.name, 120);
+  const company = str(body.company, 160);
+  const spam = spamCheck({
+    texts: [...Object.values(answers).filter((a): a is string => typeof a === 'string'), name, company],
+    email,
+    t: body._t == null ? null : String(body._t),
+  });
 
   const entry = {
     at: new Date().toISOString(),
@@ -98,11 +106,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     classified,
     answers,
     readable,
-    name: str(body.name, 120),
-    company: str(body.company, 160),
+    name,
+    company,
     email,
     phone,
     page: str(body.page, 200),
+    // stored and sent to n8n, but kept out of Telegram and the dashboard (lib/spam.ts)
+    ...(spam.spam ? { spam: true, spamWhy: spam.why.join(',') } : {}),
   };
   const dir = env('SUBMISSIONS_DIR') || path.join(process.cwd(), 'data', 'submissions');
   const file = path.join(dir, `inquiries-${entry.at.slice(0, 7)}.jsonl`);
