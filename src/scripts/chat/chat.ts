@@ -296,8 +296,34 @@ class Chat {
     if (!this.panel.hidden) requestAnimationFrame(() => this.focusDock());
   }
 
+  /**
+   * The ring turns while the assistant thinks. Done here, not in CSS, so it starts from wherever the ring
+   * is and, when the answer comes, eases out at the speed it was turning and stays where it stops.
+   */
+  hueAnim: Animation | null = null;
   thinking(on: boolean) {
     this.root.classList.toggle('is-thinking', on);
+    const panel = this.root.querySelector<HTMLElement>('.adv-chat__panel');
+    if (!panel || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const now = parseFloat(getComputedStyle(panel).getPropertyValue('--adv-hue-a')) || 0;
+    const at = ((now % 360) + 360) % 360;
+    this.hueAnim?.cancel();
+    panel.style.setProperty('--adv-hue-a', `${at}deg`);
+    const PERIOD = 2200; // ms per turn while thinking
+    if (on) {
+      this.hueAnim = panel.animate(
+        [{ ['--adv-hue-a']: `${at}deg` }, { ['--adv-hue-a']: `${at + 360}deg` }] as Keyframe[],
+        { duration: PERIOD, iterations: Infinity, easing: 'linear' },
+      );
+    } else {
+      // ease-out quad starts at twice the average speed: 140deg in 1.7 s leaves at the thinking speed
+      const end = at + 140;
+      panel.style.setProperty('--adv-hue-a', `${end % 360}deg`);
+      this.hueAnim = panel.animate([{ ['--adv-hue-a']: `${at}deg` }, { ['--adv-hue-a']: `${end}deg` }] as Keyframe[], {
+        duration: (2 * 140 * PERIOD) / 360,
+        easing: 'cubic-bezier(0.5, 1, 0.89, 1)',
+      });
+    }
   }
 
   async post(body: Record<string, unknown>) {

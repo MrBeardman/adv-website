@@ -310,26 +310,18 @@ const data = { lang, flows, services: list, t, persona: PERSONA.name, mail: c.br
   .adv-chat.is-open .adv-chat__panel {
     animation: adv-hue-sweep 2.8s var(--adv-ease) 1;
   }
-  .adv-chat.is-thinking .adv-chat__panel {
-    animation: adv-hue-spin 2.2s linear infinite;
-  }
+  /* the turning while thinking runs in scripts/chat/chat.ts (thinking()), so it can start from where the ring
+     is and slow down to a stop instead of jumping back */
   .adv-chat.is-thinking .adv-chat__hue::after {
     opacity: 0.38;
   }
+  /* ends where the ring rests (0deg), so nothing snaps when it is over */
   @keyframes adv-hue-sweep {
     from {
-      --adv-hue-a: -120deg;
+      --adv-hue-a: -360deg;
     }
     to {
-      --adv-hue-a: 240deg;
-    }
-  }
-  @keyframes adv-hue-spin {
-    from {
       --adv-hue-a: 0deg;
-    }
-    to {
-      --adv-hue-a: 360deg;
     }
   }
   @keyframes adv-hue-turn {
@@ -907,8 +899,7 @@ const data = { lang, flows, services: list, t, persona: PERSONA.name, mail: c.br
     .adv-chat *,
     .adv-chat *::before,
     .adv-chat *::after,
-    .adv-chat.is-open .adv-chat__panel,
-    .adv-chat.is-thinking .adv-chat__panel {
+    .adv-chat.is-open .adv-chat__panel {
       animation: none !important;
       transition: none !important;
     }
