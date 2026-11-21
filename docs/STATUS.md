@@ -58,6 +58,8 @@
   booking confirmation, AI disclosure under the window, the "Poptávka během dvou minut" card on the contact page and
   CTA panels). Persona name "ADV Pilot" (`PERSONA` in `src/data/chat.ts`, not a person's name). The AI asks its
   own questions (`src/lib/chatAgent.ts`); their wording is not fixed copy.
+  Nov 21: the contact step is now four chat questions (name, company, email, phone; `contactName` … `contactPhone`),
+  AI answer pills select instead of sending (`ownAdd` placeholder, multi-choice hint).
 - **Privacy policy, recipients (added Nov 19 2026, src/i18n/privacy.json)**: new item "Anthropic": chat answers go to
   Claude to ask follow-ups and summarise; US-based; API data not used for training. Approve the wording.
 

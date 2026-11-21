@@ -658,7 +658,8 @@ const data = { lang, flows, services: list, t, persona: PERSONA.name, mail: c.br
   .adv-chat__compose:focus-within {
     box-shadow: inset 0 0 0 1.5px var(--adv-accent);
   }
-  .adv-chat__compose textarea {
+  .adv-chat__compose textarea,
+  .adv-chat__compose input {
     flex: 1;
     min-height: 24px;
     max-height: 132px;
@@ -671,7 +672,8 @@ const data = { lang, flows, services: list, t, persona: PERSONA.name, mail: c.br
     color: var(--adv-text);
     font: 400 0.9375rem/1.5 var(--adv-sans);
   }
-  .adv-chat__compose textarea::placeholder {
+  .adv-chat__compose textarea::placeholder,
+  .adv-chat__compose input::placeholder {
     color: rgba(146, 152, 168, 0.8);
   }
   .adv-chat__send {

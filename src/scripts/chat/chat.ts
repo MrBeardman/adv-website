@@ -320,8 +320,11 @@ class Chat {
     return b;
   }
 
-  /** a text box with a send button; resolves with the text */
-  compose(placeholder: string, onSend: (text: string) => void, rows = 1) {
+  /**
+   * a text box with a send button; resolves with the text. With `picked` (the pills chosen above it) the
+   * answer is those pills plus anything typed, and send works as soon as one pill is chosen.
+   */
+  compose(placeholder: string, onSend: (text: string) => void, rows = 1, picked?: () => string[]) {
     const wrap = document.createElement('div');
     wrap.className = 'adv-chat__compose';
     const ta = document.createElement('textarea');
@@ -339,12 +342,13 @@ class Chat {
     const fit = () => {
       ta.style.height = 'auto';
       ta.style.height = `${Math.min(ta.scrollHeight, 132)}px`;
-      send.disabled = !ta.value.trim();
+      send.disabled = !ta.value.trim() && !picked?.().length;
     };
     const go = () => {
-      const v = ta.value.trim();
+      const v = [...(picked?.() ?? []), ta.value.trim()].filter(Boolean).join(', ');
       if (v) onSend(v);
     };
+    (wrap as HTMLElement & { refresh?: () => void }).refresh = fit;
     ta.addEventListener('input', fit);
     ta.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
@@ -441,72 +445,87 @@ class Chat {
     });
   }
 
-  contactForm(run: number, error = ''): Promise<typeof this.contact> {
+  /**
+   * One contact detail as a chat answer: a single-line box with the right keyboard and autofill, an
+   * optional Skip, and a check before it is sent. Resolves with the value ("" when skipped).
+   */
+  field(
+    run: number,
+    o: {
+      name: string;
+      type: string;
+      auto: string;
+      mode?: string;
+      ph: string;
+      optional?: boolean;
+      check?: (v: string) => boolean;
+    },
+  ): Promise<string> {
     return new Promise((resolve) => {
       const f = document.createElement('form');
-      f.className = 'adv-chat__form';
+      f.className = 'adv-chat__compose';
       f.noValidate = true;
-      const field = (name: string, label: string, type: string, auto: string, opt = false) => {
-        const l = document.createElement('label');
-        const s = document.createElement('span');
-        s.textContent = label;
-        if (opt) s.append(' ', Object.assign(document.createElement('em'), { textContent: `(${this.t.optional})` }));
-        const i = document.createElement('input');
-        i.className = 'adv-input';
-        i.name = name;
-        i.type = type;
-        i.autocomplete = auto;
-        i.maxLength = name === 'phone' ? 40 : 200;
-        i.value = (this.contact as Record<string, string>)[name] ?? '';
-        if (!opt) i.required = true;
-        l.append(s, i);
-        return l;
-      };
-      const hp = document.createElement('input');
-      hp.type = 'text';
-      hp.name = 'website_hp';
-      hp.tabIndex = -1;
-      hp.autocomplete = 'off';
-      hp.setAttribute('aria-hidden', 'true');
-      hp.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;opacity:0';
+      const i = document.createElement('input');
+      i.name = o.name;
+      i.type = o.type;
+      i.autocomplete = o.auto as AutoFill;
+      if (o.mode) i.inputMode = o.mode;
+      i.maxLength = o.name === 'phone' ? 40 : 200;
+      i.placeholder = o.ph;
+      i.setAttribute('aria-label', o.ph);
+      i.value = (this.contact as Record<string, string>)[o.name] ?? '';
+      const send = document.createElement('button');
+      send.type = 'submit';
+      send.className = 'adv-chat__send';
+      send.setAttribute('aria-label', this.t.send);
+      send.disabled = !i.value.trim();
+      send.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      f.append(i, send);
+      const nodes: Node[] = [f];
+      if (o.name === 'name') {
+        // bots fill every field; people never see this one
+        const hp = document.createElement('input');
+        hp.type = 'text';
+        hp.name = 'website_hp';
+        hp.tabIndex = -1;
+        hp.autocomplete = 'off';
+        hp.setAttribute('aria-hidden', 'true');
+        hp.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;opacity:0';
+        hp.addEventListener('input', () => ((this as any).hp = hp.value));
+        f.append(hp);
+      }
       const err = document.createElement('p');
       err.className = 'adv-chat__err';
       err.setAttribute('role', 'alert');
-      err.textContent = error;
-      const row = document.createElement('div');
-      row.className = 'adv-chat__row';
-      const btn = document.createElement('button');
-      btn.type = 'submit';
-      btn.className = 'adv-btn adv-btn--primary adv-btn--sm';
-      btn.textContent = this.t.contactSend;
-      row.append(btn);
-      f.append(
-        field('name', this.t.name, 'text', 'name'),
-        field('email', this.t.email, 'email', 'email'),
-        field('phone', this.t.phone, 'tel', 'tel', true),
-        field('company', this.t.company, 'text', 'organization', true),
-        hp,
-        err,
-        row,
-      );
+      nodes.push(err);
+      i.addEventListener('input', () => {
+        send.disabled = !i.value.trim();
+        err.textContent = '';
+      });
       f.addEventListener('submit', (e) => {
         e.preventDefault();
-        const v = Object.fromEntries(new FormData(f)) as Record<string, string>;
-        const c = {
-          name: (v.name ?? '').trim(),
-          email: (v.email ?? '').trim(),
-          phone: (v.phone ?? '').trim(),
-          company: (v.company ?? '').trim(),
-        };
-        if (!c.name || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email)) {
+        const v = i.value.trim();
+        if (!v) return;
+        if (o.check && !o.check(v)) {
           err.textContent = this.t.invalid;
-          f.querySelector<HTMLInputElement>(c.name ? '[name=email]' : '[name=name]')?.focus();
+          i.focus();
           return;
         }
-        (this as any).hp = v.website_hp ?? '';
-        resolve(c);
+        resolve(v);
       });
-      this.setDock(run, f);
+      if (o.optional) {
+        const row = document.createElement('div');
+        row.className = 'adv-chat__row';
+        const skip = document.createElement('button');
+        skip.type = 'button';
+        skip.className = 'adv-chat__link';
+        skip.textContent = this.t.skip;
+        skip.addEventListener('click', () => resolve(''));
+        row.append(skip);
+        nodes.push(row);
+      }
+      this.setDock(run, ...nodes);
     });
   }
 
@@ -637,15 +656,43 @@ class Chat {
       track('form_step', { form: 'chat', service: this.service, step: q.id });
     }
 
-    // contact → the lead is saved
-    await this.say(run, t.contactTitle);
-    let ai = false;
-    let error = '';
-    for (;;) {
-      this.contact = await this.contactForm(run, error);
+    // contact, asked one detail at a time like the rest of the chat → the lead is saved
+    const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    const ask = async (text: string, o: Parameters<typeof this.field>[1]) => {
+      await this.say(run, text);
+      const v = await this.field(run, o);
       this.alive(run);
       this.setDock(run);
-      this.me([this.contact.name, this.contact.email, this.contact.phone].filter(Boolean).join(' · '));
+      this.me(v || t.skipped);
+      return v;
+    };
+    let ai = false;
+    this.contact.name = await ask(t.contactName, { name: 'name', type: 'text', auto: 'name', ph: t.namePh });
+    this.contact.company = await ask(t.contactCompany, {
+      name: 'company',
+      type: 'text',
+      auto: 'organization',
+      ph: t.companyPh,
+      optional: true,
+    });
+    for (;;) {
+      this.contact.email = await ask(t.contactEmail, {
+        name: 'email',
+        type: 'email',
+        auto: 'email',
+        mode: 'email',
+        ph: t.emailPh,
+        check: emailOk,
+      });
+      if (!this.contact.phone)
+        this.contact.phone = await ask(t.contactPhone, {
+          name: 'phone',
+          type: 'tel',
+          auto: 'tel',
+          mode: 'tel',
+          ph: t.phonePh,
+          optional: true,
+        });
       const stop = this.typing();
       const res = await this.post({
         action: 'lead',
@@ -662,8 +709,7 @@ class Chat {
         ai = !!res.body.ai;
         break;
       }
-      error = this.fill(t.error);
-      await this.say(run, error, '', 300);
+      await this.say(run, res.status === 422 ? t.invalid : this.fill(t.error), '', 300);
     }
     track('form_step', { form: 'chat', service: this.service, step: 'contact' });
     this.status(t.leadSaved, true);
@@ -689,21 +735,35 @@ class Chat {
           await this.say(run, res.body.offTopic ? t.aiOffTopic : t.aiDone, '', 300);
           break;
         }
-        await this.say(run, String(res.body.question), '', 200);
+        const many = Array.isArray(res.body.suggestions) && res.body.suggestions.length > 1;
+        await this.say(run, String(res.body.question), many ? t.many : '', 200);
         answer = await new Promise<string>((resolve) => {
           const nodes: Node[] = [];
           const sug: string[] = Array.isArray(res.body.suggestions) ? res.body.suggestions : [];
+          const chosen = new Set<string>();
           if (sug.length) {
             const box = document.createElement('div');
             box.className = 'adv-chat__chips';
+            box.setAttribute('role', 'group');
             sug.forEach((s, i) => {
               const b = this.chip(s, i);
-              b.addEventListener('click', () => resolve(s));
+              b.setAttribute('aria-pressed', 'false');
+              // pills only select; the visitor can pick several, add own words and then send
+              b.addEventListener('click', () => {
+                chosen.has(s) ? chosen.delete(s) : chosen.add(s);
+                b.setAttribute('aria-pressed', String(chosen.has(s)));
+                box.nextElementSibling &&
+                  (box.nextElementSibling as HTMLElement & { refresh?: () => void }).refresh?.();
+              });
               box.append(b);
             });
             nodes.push(box);
           }
-          nodes.push(this.compose(sug.length ? t.own : t.ownLong, resolve, sug.length ? 1 : 2));
+          nodes.push(
+            this.compose(sug.length ? t.ownAdd : t.ownLong, resolve, sug.length ? 1 : 2, () =>
+              sug.filter((s) => chosen.has(s)),
+            ),
+          );
           this.setDock(run, ...nodes);
         });
         this.alive(run);

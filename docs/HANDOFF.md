@@ -102,8 +102,10 @@ on the contact page and CTA panels; `#chat` or `?chat=1&service=…` on a URL). 
   Czech holidays) → booking stored as *pending* (`data/submissions/bookings.jsonl`) and sent to n8n.
 - Endpoint `api/chat.ts` (actions lead / ask / slots / book). UI `components/chat/Chat.astro` + `ChatStart.astro`,
   conversation `scripts/chat/chat.ts` (loaded on first open).
-- n8n intake: kinds `booking` (meeting request) and `chat` (AI brief without a meeting, sent 15 min after the AI
-  part) go to the Telegram group via "Is Chat Or Booking" → "Prepare Chat Message" → "Notify Chat Or Booking".
+- n8n intake: one Telegram message per chat (Nov 21). The chat lead (`source: chat`) is stored and sent to the
+  dashboard but skips Telegram ("Not A Chat Lead"); the message comes with the booking (kind `booking`) or, without
+  one, as kind `chat` 15 min after the AI part or 30 min after the lead (in-memory timer: a restart loses it). Both
+  carry questionnaire answers, AI brief and follow-ups ("Prepare Chat Message"); cold ones are silent.
 - Env: `ANTHROPIC_API_KEY` (unset = no AI questions), `CHAT_DAILY_CAP`, `N8N_BUSY_URL` (see `.env.example`).
 - **Open:** shared ADV Google calendar + Google credential in n8n (busy feed for `N8N_BUSY_URL`, and the confirm
   step that creates the event with a Meet link and emails the client; Honza's personal Google account, n8n

@@ -101,7 +101,11 @@ const pragueTime = (iso: string, lang: Lang) =>
     minute: '2-digit',
   });
 
-/** The AI brief and answers for a visitor who did not book (sent once, a while after the AI part). */
+/**
+ * Everything from a chat whose visitor did not book: questionnaire, AI brief and follow-ups, in one message
+ * (n8n posts chat leads to Telegram only through this or the booking, so the team gets one message per chat).
+ * Sent once: 15 min after the AI part ends or 30 min after the lead, whichever comes first.
+ */
 async function report(s: Session) {
   if (s.reported || s.booked) return;
   s.reported = true;
@@ -111,6 +115,9 @@ async function report(s: Session) {
     sid: s.sid,
     lang: s.lang,
     service: s.service,
+    tier: s.classified.tier,
+    readable: s.readable,
+    page: s.page,
     name: s.contact.name,
     company: s.contact.company,
     email: s.contact.email,
@@ -205,8 +212,18 @@ async function lead(body: Record<string, unknown>, lang: Lang, request: Request)
     done: !aiEnabled(),
     brief: '',
     booked: false,
-    reported: !aiEnabled(),
+    reported: false,
   });
+  // a visitor who leaves mid-chat still reaches the team (a server restart loses this timer; the lead is
+  // already in adv_inquiries and the ADV dashboard)
+  const later = setTimeout(
+    () => {
+      const s = sessions.get(sid);
+      if (s) void report(s);
+    },
+    30 * 60 * 1000,
+  );
+  later.unref?.();
   const vid = visitorId(request);
   if (vid)
     void recordEvent({ event: 'form_submit', form: 'chat', vid, service, page: entry.page, lang, contact: email });
